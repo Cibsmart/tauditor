@@ -1,6 +1,7 @@
 # Anambra Payroll Project
 
 A Laravel Application for Processing and Managing Payroll in Anambra State, Nigeria.
+[](https://gitlab.com/genesys_development/anambra_payroll/anambra_payroll/-/raw/master/contents/Dashboard.png)
 
 ## Installation and Setup (for Frontend and Backend Developers)
 
