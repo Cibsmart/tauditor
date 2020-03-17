@@ -81,6 +81,7 @@ php artisan db:seed
 
 You should be able to access the homepage of the app, if you are using a separate server (e.g. apache or nginx). 
 
+![](https://gitlab.com/genesys_development/anambra_payroll/anambra_payroll/-/raw/master/contents/Login.png)
 
 But if you are using the dev server then run (the output will give the address):
 ```sh
