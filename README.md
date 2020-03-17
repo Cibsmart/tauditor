@@ -4,6 +4,11 @@ A Laravel Application for Processing and Managing Payroll in Anambra State, Nige
 
 ![](https://gitlab.com/genesys_development/anambra_payroll/anambra_payroll/-/raw/master/contents/Dashboard.png)
 
+## Tech Stack
+Backend - Laravel
+Frontend - Vue & Inertia (Inertia removes duplication of routes & authentication on the frontend)
+Styling - Tailwind CSS (Just like bootstraps, but provides only utilities)
+Database - MySQL or MariaDB
 
 ## Installation and Setup (for Frontend and Backend Developers)
 
@@ -27,12 +32,10 @@ composer install
 
 Install JavaScript dependencies
 
-```sh
+```sh 
 yarn
 ```
-
 or
-
 ```sh
 npm ci
 ```
@@ -45,7 +48,6 @@ Build Assets
 yarn run dev
 ```
 or
-
 ```sh
 npm run dev
 ```
