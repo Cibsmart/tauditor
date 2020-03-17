@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+
+Route::get('login', [LoginController::class, 'showLoginForm'])->middleware('guest')->name('login');
+Route::post('login', [LoginController::class, 'login'])->middleware('guest')->name('login.attempt');
+Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register.form');
+Route::post('register', [RegisterController::class, 'register'])->middleware('guest')->name('register.store');

@@ -1057,6 +1057,59 @@
         ]
     },
     {
+        "name": "inertiajs/inertia-laravel",
+        "version": "v0.2.5",
+        "version_normalized": "0.2.5.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/inertiajs/inertia-laravel.git",
+            "reference": "ef618736fb566e5c85d862fa0cf6061422f19046"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/inertiajs/inertia-laravel/zipball/ef618736fb566e5c85d862fa0cf6061422f19046",
+            "reference": "ef618736fb566e5c85d862fa0cf6061422f19046",
+            "shasum": ""
+        },
+        "require-dev": {
+            "orchestra/testbench": "~3.0"
+        },
+        "time": "2020-02-28T14:50:19+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Inertia\\ServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Inertia\\": "src"
+            },
+            "files": [
+                "./helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jonathan Reinink",
+                "email": "jonathan@reinink.ca",
+                "homepage": "https://reinink.ca"
+            }
+        ],
+        "description": "The Laravel adapter for Inertia.js.",
+        "keywords": [
+            "inertia",
+            "laravel"
+        ]
+    },
+    {
         "name": "jakub-onderka/php-console-color",
         "version": "v0.2",
         "version_normalized": "0.2.0.0",
@@ -1365,6 +1418,63 @@
             "Tinker",
             "laravel",
             "psysh"
+        ]
+    },
+    {
+        "name": "laravel/ui",
+        "version": "v2.0.1",
+        "version_normalized": "2.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/laravel/ui.git",
+            "reference": "47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/laravel/ui/zipball/47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83",
+            "reference": "47a0a1dac76f5e73803c86e1f38b2c7e0ae7fa83",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/console": "^7.0",
+            "illuminate/filesystem": "^7.0",
+            "illuminate/support": "^7.0",
+            "php": "^7.2.5"
+        },
+        "require-dev": {
+            "mockery/mockery": "^1.0",
+            "phpunit/phpunit": "^8.0"
+        },
+        "time": "2020-03-03T20:16:46+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Laravel\\Ui\\UiServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Laravel\\Ui\\": "src/",
+                "Illuminate\\Foundation\\Auth\\": "auth-backend/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Taylor Otwell",
+                "email": "taylor@laravel.com"
+            }
+        ],
+        "description": "Laravel UI utilities and presets.",
+        "keywords": [
+            "laravel",
+            "ui"
         ]
     },
     {
@@ -3937,6 +4047,76 @@
         "homepage": "https://github.com/sebastianbergmann/version"
     },
     {
+        "name": "spatie/laravel-permission",
+        "version": "3.11.0",
+        "version_normalized": "3.11.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/spatie/laravel-permission.git",
+            "reference": "e90ed6242a8fa29735529160b9c21cb77b233e7f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/spatie/laravel-permission/zipball/e90ed6242a8fa29735529160b9c21cb77b233e7f",
+            "reference": "e90ed6242a8fa29735529160b9c21cb77b233e7f",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/auth": "^5.8|^6.0|^7.0",
+            "illuminate/container": "^5.8|^6.0|^7.0",
+            "illuminate/contracts": "^5.8|^6.0|^7.0",
+            "illuminate/database": "^5.8|^6.0|^7.0",
+            "php": "^7.2.5"
+        },
+        "require-dev": {
+            "orchestra/testbench": "^3.8|^4.0|^5.0",
+            "phpunit/phpunit": "^8.0|^9.0",
+            "predis/predis": "^1.1"
+        },
+        "time": "2020-03-03T21:31:02+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Spatie\\Permission\\PermissionServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Spatie\\Permission\\": "src"
+            },
+            "files": [
+                "src/helpers.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Freek Van der Herten",
+                "email": "freek@spatie.be",
+                "homepage": "https://spatie.be",
+                "role": "Developer"
+            }
+        ],
+        "description": "Permission handling for Laravel 5.8 and up",
+        "homepage": "https://github.com/spatie/laravel-permission",
+        "keywords": [
+            "acl",
+            "laravel",
+            "permission",
+            "permissions",
+            "rbac",
+            "roles",
+            "security",
+            "spatie"
+        ]
+    },
+    {
         "name": "swiftmailer/swiftmailer",
         "version": "v6.2.3",
         "version_normalized": "6.2.3.0",
@@ -5400,6 +5580,59 @@
             }
         ],
         "description": "A small library for converting tokenized PHP source code into XML and potentially other formats"
+    },
+    {
+        "name": "tightenco/ziggy",
+        "version": "v0.9.0",
+        "version_normalized": "0.9.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tightenco/ziggy.git",
+            "reference": "5344605c9fc2786e0d5626ad031ceafa003f700b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tightenco/ziggy/zipball/5344605c9fc2786e0d5626ad031ceafa003f700b",
+            "reference": "5344605c9fc2786e0d5626ad031ceafa003f700b",
+            "shasum": ""
+        },
+        "require": {
+            "laravel/framework": ">=5.4@dev"
+        },
+        "require-dev": {
+            "mikey179/vfsstream": "^1.6",
+            "orchestra/testbench": "^5.0"
+        },
+        "time": "2020-03-02T22:24:23+00:00",
+        "type": "library",
+        "extra": {
+            "laravel": {
+                "providers": [
+                    "Tightenco\\Ziggy\\ZiggyServiceProvider"
+                ]
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Tightenco\\Ziggy\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Daniel Coulbourne",
+                "email": "daniel@tighten.co"
+            },
+            {
+                "name": "Matt Stauffer",
+                "email": "matt@tighten.co"
+            }
+        ],
+        "description": "Generates a Blade directive exporting all of your named Laravel routes. Also provides a nice route() helper function in JavaScript."
     },
     {
         "name": "tijsverkoyen/css-to-inline-styles",

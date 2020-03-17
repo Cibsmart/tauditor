@@ -12,8 +12,12 @@
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
+        "inertiajs/inertia-laravel": "^0.2.5",
         "laravel/framework": "^7.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "laravel/ui": "^2.0",
+        "spatie/laravel-permission": "^3.11",
+        "tightenco/ziggy": "^0.9.0"
     },
     "require-dev": {
         "facade/ignition": "^2.0",
