@@ -25,3 +25,16 @@ Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->n
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->middleware('guest')->name('register.store');
+
+
+
+/*
+|-------------------------------------------------------------------------------
+| Employee Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('employees.')->group(function () {
+        Route::get('employees', [EmployeeController::class, 'store'])->name('personal.index');
+    });
+});
