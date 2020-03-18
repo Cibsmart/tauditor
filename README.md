@@ -8,7 +8,7 @@ A Laravel Application for Processing and Managing Payroll in Anambra State, Nige
 Backend - Laravel
 Frontend - Vue & Inertia (Inertia removes duplication of routes & authentication on the frontend)
 Styling - Tailwind CSS (Just like bootstraps, but provides only utilities)
-Database - MySQL or MariaDB
+Database - MySQL or MariaDB(Latest Version)
 
 ## Installation and Setup (for Frontend and Backend Developers)
 
