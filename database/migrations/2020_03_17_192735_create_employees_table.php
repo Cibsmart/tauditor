@@ -15,6 +15,7 @@ class CreateEmployeesTable extends Migration
     {
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
+            $table->string('verification_no')->nullable();
             $table->string('last_name');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
@@ -26,6 +27,7 @@ class CreateEmployeesTable extends Migration
             $table->string('residential_address')->nullable();
             $table->string('phone_number', 50)->nullable();
             $table->string('email')->nullable();
+            $table->boolean('active')->default(0);
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
             $table->softDeletes();

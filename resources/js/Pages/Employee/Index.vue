@@ -21,7 +21,7 @@
                   Name
                 </th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  MDA & Department
+                  MDA
                 </th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                   Designation
@@ -32,16 +32,15 @@
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                   Status
                 </th>
-                
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr>
+              <tr v-for="(employee, index) in employees.data" :key="employee.id">
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="flex items-center">
                     <div class="ml-4">
-                      <div class="text-sm leading-5 font-medium text-gray-900">Bernard Lane</div>
+                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ employee.name }}</div>
                       <div class="text-sm leading-5 text-gray-500">WR/PER/00056454</div>
                     </div>
                   </div>
@@ -59,59 +58,23 @@
                   <div class="text-sm leading-5 text-gray-500">Access Bank PLC</div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                    Active
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="employee.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ employee.active ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
                   <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">Edit</a>
                 </td>
               </tr>
+
+              <tr v-if="employees.data.length === 0">
+                <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Beneficiary</td>
+              </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <!-- <div class="bg-white rounded shadow-none overflow-x-auto">
-      <table class="w-full whitespace-no-wrap">
-        <thead>
-          <tr class="text-left font-bold">
-            <th class="px-6 pt-6 pb-4">Employee Name</th>
-            <th class="px-6 pt-6 pb-4">Date of Birth</th>
-            <th class="px-6 pt-6 pb-4" colspan="2">Gender</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(employee, index) in employees.data" :key="employee.id" class="hover:bg-gray-100
-          focus-within:bg-gray-100">
-            <td class="border-t">
-              <inertia-link class="px-6 py-4 flex items-center focus:text-indigo" href="#">
-                {{ employee.name}}
-              </inertia-link>
-            </td>
-            <td class="border-t">
-              <inertia-link class="px-6 py-4 flex items-center focus:text-indigo" href="#">
-                {{ employee.date_of_birth }}
-              </inertia-link>
-            </td>
-            <td class="border-t">
-              <inertia-link class="px-6 py-4 flex items-center focus:text-indigo" href="#">
-                {{ employee.gender }}
-              </inertia-link>
-            </td>
-            <td class="border-t w-px">
-              <inertia-link class="px-6 py-4 flex items-center focus:text-indigo" href="#">
-                <icon name="cheveron-right" class="block w-6 h-6 text-gray-500 fill-current" />
-              </inertia-link>
-            </td>
-          </tr>
-
-          <tr v-if="employees.length === 0">
-            <td class="border-t px-6 py-4" colspan="4">No Schedule Uploaded Yet</td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
     <pagination :links="employees.links" />
   </div>
 </template>

@@ -23,5 +23,6 @@ $factory->define(Employee::class, function (Faker $faker) {
         'residential_address' => $faker->address,
         'phone_number' => $faker->phoneNumber,
         'email' => $faker->email,
+        'active' => $faker->randomElement([0, 1]),
     ];
 });

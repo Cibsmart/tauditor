@@ -10,6 +10,7 @@ class Employee extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
+        'active' => 'boolean'
     ];
 
     public function gender()

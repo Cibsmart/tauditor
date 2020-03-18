@@ -24,13 +24,11 @@ class EmployeeController extends Controller
     {
         $employees = Auth::user()->domain
             ->employees()
-            ->with(['gender'])
             ->paginate()
             ->transform(fn ($employees) => [
                 'id' => $employees->id,
                 'name' => $employees->name,
-                'date_of_birth' => $employees->date_of_birth,
-                'gender' => $employees->gender->name,
+                'active' => $employees->active,
             ]);
 
         // dd($employees);
