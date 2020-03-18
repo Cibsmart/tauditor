@@ -35,6 +35,6 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 */
 Route::middleware('auth')->group(function () {
     Route::name('employees.')->group(function () {
-        Route::get('employees', [EmployeeController::class, 'store'])->name('personal.index');
+        Route::get('employees', [EmployeeController::class, 'index'])->name('personal.index');
     });
 });
