@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             MaritalStatusSeeder::class,
             StateSeeder::class,
             LocalGovernmentSeeder::class,
+            BankSeeder::class,
+            MicroFinanceBankSeeder::class,
             EmployeeSeeder::class,
         ]);
     }

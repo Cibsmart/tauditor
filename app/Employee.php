@@ -18,6 +18,11 @@ class Employee extends Model
         return $this->belongsTo(Gender::class);
     }
 
+    public function bank()
+    {
+        return $this->hasOne(EmployeeBank::class);
+    }
+
     public function getNameAttribute()
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";

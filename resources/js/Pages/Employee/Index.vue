@@ -41,21 +41,25 @@
                   <div class="flex items-center">
                     <div class="ml-4">
                       <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ employee.name }}</div>
-                      <div class="text-sm leading-5 text-gray-500">WR/PER/00056454</div>
+                      <div class="text-sm leading-5 text-gray-600">WR/PER/00056454</div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">Local Government Education Authority</div>
-                  <div class="text-sm leading-5 text-gray-500">Nnewi South LGEA</div>
+                  <div class="text-sm leading-5 text-gray-900">Nnewi South LGEA</div>
+                  <div class="text-sm leading-5 text-gray-600">Omenka Primary School</div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">H/M MASTER</div>
-                  <div class="text-sm leading-5 text-gray-500">G/L 13</div>
+                  <div class="text-sm leading-5 text-gray-600">G/L 13</div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">0048304757</div>
-                  <div class="text-sm leading-5 text-gray-500">Access Bank PLC</div>
+                  <div class="text-sm leading-5 text-gray-900">
+                    {{ employee.account_number }}
+                  </div>
+                  <div class="text-sm leading-5 text-gray-600">
+                    {{ employee.bank_name }}
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="employee.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">

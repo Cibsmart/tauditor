@@ -24,14 +24,15 @@ class EmployeeController extends Controller
     {
         $employees = Auth::user()->domain
             ->employees()
+            ->with(['bank'])
             ->paginate()
             ->transform(fn ($employees) => [
                 'id' => $employees->id,
                 'name' => $employees->name,
                 'active' => $employees->active,
+                'account_number' => $employees->bank->account_number,
+                'bank_name' => $employees->bank->bankable->name,
             ]);
-
-        // dd($employees);
 
         return Inertia::render('Employee/Index', [
             'employees' => $employees,
