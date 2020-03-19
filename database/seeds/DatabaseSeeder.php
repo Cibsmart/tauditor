@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DomainSeeder::class,
-            StaffTypeSeeder::class,
+            BeneficiaryTypeSeeder::class,
             UserSeeder::class,
             GenderSeeder::class,
             MaritalStatusSeeder::class,
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
             DesignationSeeder::class,
-            EmployeeSeeder::class,
+            BeneficiarySeeder::class,
         ]);
     }
 }

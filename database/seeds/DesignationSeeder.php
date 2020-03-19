@@ -21,7 +21,7 @@ class DesignationSeeder extends Seeder
         for($i = 1; $i <= 7; $i++) {
             foreach ($designations as $code => $name) {
                 factory(Designation::class)
-                    ->create(['code' => $code, 'name' => $name, 'staff_type_id' => $i]);
+                    ->create(['code' => $code, 'name' => $name, 'beneficiary_type_id' => $i]);
             }
         }
     }

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StaffType extends Model
+class BeneficiaryType extends Model
 {
     protected $guarded = [];
 

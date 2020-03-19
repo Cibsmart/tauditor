@@ -11,9 +11,9 @@ class MicroFinanceBank extends Model
 
     protected $guarded = [];
 
-    public function employees()
+    public function beneficiaries()
     {
-        return $this->morphMany(EmployeeBank::class, 'bankable');
+        return $this->morphMany(BankDetail::class, 'bankable');
     }
 
     public function bank()

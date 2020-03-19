@@ -4,13 +4,13 @@
 
 use App\State;
 use App\Gender;
-use App\Employee;
+use App\Beneficiary;
 use Carbon\Carbon;
 use App\MaritalStatus;
 use App\LocalGovernment;
 use Faker\Generator as Faker;
 
-$factory->define(Employee::class, function (Faker $faker) {
+$factory->define(Beneficiary::class, function (Faker $faker) {
     return [
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -30,11 +30,13 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 
 /*
 |-------------------------------------------------------------------------------
-| Employee Routes
+| Beneficiary Routes
 |-------------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::name('employees.')->group(function () {
-        Route::get('employees', [EmployeeController::class, 'index'])->name('personal.index');
+    Route::name('beneficiaries.')->group(function () {
+        Route::get('beneficiaries', [BeneficiaryController::class, 'index'])->name('index');
     });
 });
+
+

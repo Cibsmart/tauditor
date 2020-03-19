@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">Employees</h1>
+    <h1 class="mb-8 font-bold text-3xl">Beneficiaries</h1>
     <div class="mb-6 flex justify-between items-center">
       <!-- Search Filter goes here -->
 <!--       <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
       </search-filter> -->
       <div></div>
       <inertia-link href="#" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
-        <span class="hidden md:inline">New Employee</span>
+        <span class="hidden md:inline">New Beneficiary</span>
       </inertia-link>
     </div>
 
@@ -36,11 +36,11 @@
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr v-for="(employee, index) in employees.data" :key="employee.id">
+              <tr v-for="(beneficiary, index) in beneficiaries.data" :key="beneficiary.id">
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="flex items-center">
                     <div class="ml-4">
-                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ employee.name }}</div>
+                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ beneficiary.name }}</div>
                       <div class="text-sm leading-5 text-gray-600">WR/PER/00056454</div>
                     </div>
                   </div>
@@ -55,15 +55,15 @@
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">
-                    {{ employee.account_number }}
+                    {{ beneficiary.account_number }}
                   </div>
                   <div class="text-sm leading-5 text-gray-600">
-                    {{ employee.bank_name }}
+                    {{ beneficiary.bank_name }}
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="employee.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
-                    {{ employee.active ? 'Active' : 'Inactive' }}
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="beneficiary.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    {{ beneficiary.active ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
@@ -71,7 +71,7 @@
                 </td>
               </tr>
 
-              <tr v-if="employees.data.length === 0">
+              <tr v-if="beneficiaries.data.length === 0">
                 <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Beneficiary</td>
               </tr>
             </tbody>
@@ -79,7 +79,7 @@
         </div>
       </div>
     </div>
-    <pagination :links="employees.links" />
+    <pagination :links="beneficiaries.links" />
   </div>
 </template>
 
@@ -89,11 +89,11 @@ import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
 
 export default {
-  metaInfo: { title: 'Employees' }, 
+  metaInfo: { title: 'Beneficiaries' },
   layout: Layout,
 
   props: {
-    employees: Object,
+    beneficiaries: Object,
   },
 
   components: {

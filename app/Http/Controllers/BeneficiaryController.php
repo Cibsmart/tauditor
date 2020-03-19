@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Employee;
+use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class EmployeeController extends Controller
+class BeneficiaryController extends Controller
 {
     public function __construct()
     {
@@ -22,20 +22,20 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Auth::user()->domain
+        $beneficiaries = Auth::user()->domain
             ->employees()
             ->with(['bank'])
             ->paginate()
-            ->transform(fn ($employees) => [
-                'id' => $employees->id,
-                'name' => $employees->name,
-                'active' => $employees->active,
-                'account_number' => $employees->bank->account_number,
-                'bank_name' => $employees->bank->bankable->name,
+            ->transform(fn ($beneficiaries) => [
+                'id' => $beneficiaries->id,
+                'name' => $beneficiaries->name,
+                'active' => $beneficiaries->active,
+                'account_number' => $beneficiaries->bank->account_number,
+                'bank_name' => $beneficiaries->bank->bankable->name,
             ]);
 
-        return Inertia::render('Employee/Index', [
-            'employees' => $employees,
+        return Inertia::render('Beneficiary/Index', [
+            'beneficiaries' => $beneficiaries,
         ]);
     }
 
@@ -63,10 +63,10 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Employee  $employee
+     * @param  \App\Beneficiary  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show(Beneficiary $employee)
     {
         //
     }
@@ -74,10 +74,10 @@ class EmployeeController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Employee  $employee
+     * @param  \App\Beneficiary  $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employee $employee)
+    public function edit(Beneficiary $employee)
     {
         //
     }
@@ -86,10 +86,10 @@ class EmployeeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Employee  $employee
+     * @param  \App\Beneficiary  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, Beneficiary $employee)
     {
         //
     }
@@ -97,10 +97,10 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Employee  $employee
+     * @param  \App\Beneficiary  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy(Beneficiary $employee)
     {
         //
     }

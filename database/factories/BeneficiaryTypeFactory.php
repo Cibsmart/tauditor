@@ -3,10 +3,10 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Domain;
-use App\StaffType;
+use App\BeneficiaryType;
 use Faker\Generator as Faker;
 
-$factory->define(StaffType::class, function (Faker $faker) {
+$factory->define(BeneficiaryType::class, function (Faker $faker) {
     return [
         'code' => $faker->countryCode,
         'name' => $faker->country,

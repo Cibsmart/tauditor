@@ -17,12 +17,12 @@ class CreateDesignationsTable extends Migration
             $table->id();
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('staff_type_id');
+            $table->unsignedBigInteger('beneficiary_type_id');
             $table->timestamps();
 
-            $table->foreign('staff_type_id')
+            $table->foreign('beneficiary_type_id')
                   ->references('id')
-                  ->on('staff_types');
+                  ->on('beneficiary_types');
         });
     }
 

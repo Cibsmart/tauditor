@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Employee extends Model
+class Beneficiary extends Model
 {
     protected $guarded = [];
 
@@ -20,7 +20,7 @@ class Employee extends Model
 
     public function bank()
     {
-        return $this->hasOne(EmployeeBank::class);
+        return $this->hasOne(BankDetail::class);
     }
 
     public function getNameAttribute()

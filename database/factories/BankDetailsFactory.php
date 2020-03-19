@@ -2,12 +2,12 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\EmployeeBank;
+use App\BankDetail;
 use Faker\Generator as Faker;
 
-$factory->define(EmployeeBank::class, function (Faker $faker) {
+$factory->define(BankDetail::class, function (Faker $faker) {
     return [
         'account_number' => $faker->bankAccountNumber,
-        'employee_id' => $faker->randomNumber(),
+        'beneficiary_id' => $faker->randomNumber(),
     ];
 });

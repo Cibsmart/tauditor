@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class EmployeeBank extends Model
+class BankDetail extends Model
 {
     use SoftDeletes;
 
@@ -19,8 +19,8 @@ class EmployeeBank extends Model
         return $this->morphTo();
     }
 
-    public function employee()
+    public function beneficiary()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Beneficiary::class);
     }
 }

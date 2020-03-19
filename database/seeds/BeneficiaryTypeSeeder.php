@@ -1,9 +1,9 @@
 <?php
 
-use App\StaffType;
+use App\BeneficiaryType;
 use Illuminate\Database\Seeder;
 
-class StaffTypeSeeder extends Seeder
+class BeneficiaryTypeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -26,12 +26,12 @@ class StaffTypeSeeder extends Seeder
         ];
 
         foreach($staff_types_state as $code => $name){
-            factory(StaffType::class)
+            factory(BeneficiaryType::class)
                 ->create([ 'code' => $code, 'name' => $name, 'domain_id' => 1 ]);
         }
 
         foreach($staff_types_jaac as $code => $name){
-            factory(StaffType::class)
+            factory(BeneficiaryType::class)
                 ->create([ 'code' => $code, 'name' => $name, 'domain_id' => 2 ]);
         }
     }
