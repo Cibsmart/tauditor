@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DomainSeeder::class,
+            StaffTypeSeeder::class,
             UserSeeder::class,
             GenderSeeder::class,
             MaritalStatusSeeder::class,
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
             LocalGovernmentSeeder::class,
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
+            DesignationSeeder::class,
             EmployeeSeeder::class,
         ]);
     }

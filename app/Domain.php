@@ -13,4 +13,9 @@ class Domain extends Model
     {
         return $this->hasMany(Employee::class);
     }
+
+    public function staff_types()
+    {
+        return $this->hasMany(StaffType::class);
+    }
 }
