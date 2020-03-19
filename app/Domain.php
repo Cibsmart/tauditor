@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Employee;
+use App\Beneficiary;
 use Illuminate\Database\Eloquent\Model;
 
 class Domain extends Model
@@ -11,6 +11,11 @@ class Domain extends Model
 
     public function employees()
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(Beneficiary::class);
+    }
+
+    public function staff_types()
+    {
+        return $this->hasMany(BeneficiaryType::class);
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Bank;
 use Inertia\Inertia;
+use App\MicroFinanceBank;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -31,7 +34,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Relation::$morphMap = [
+            'commercial' => Bank::class,
+            'micro_finance' => MicroFinanceBank::class,
+        ];
     }
 
     public function registerInertia()
