@@ -15,10 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return inertia::render('user/index');
-        
         $users = User::all();
-        return view('app', compact('users'));
+        return inertia::render('users/index');
     }
 
     /**
