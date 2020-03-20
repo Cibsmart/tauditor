@@ -10,7 +10,8 @@ class Beneficiary extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'active' => 'boolean'
+        'active' => 'boolean',
+        'address' => AddressCast::class,
     ];
 
     public function gender()
@@ -21,6 +22,11 @@ class Beneficiary extends Model
     public function bank()
     {
         return $this->hasOne(BankDetail::class);
+    }
+
+    public function next_of_kin()
+    {
+        return $this->hasOne(NextOfKin::class);
     }
 
     public function getNameAttribute()

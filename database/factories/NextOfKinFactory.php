@@ -2,24 +2,15 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\State;
-use App\Gender;
-use App\Beneficiary;
-use Carbon\Carbon;
-use App\MaritalStatus;
-use App\LocalGovernment;
+use App\NextOfKin;
 use Faker\Generator as Faker;
 
-$factory->define(Beneficiary::class, function (Faker $faker) {
+$factory->define(NextOfKin::class, function (Faker $faker) {
     return [
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,
         'middle_name' => $faker->firstName,
-        'date_of_birth' => Carbon::now()->subYears($faker->numberBetween(20, 60)),
-        'gender_id' => factory(Gender::class),
-        'marital_status_id' => factory(MaritalStatus::class),
-        'state_id' => factory(State::class),
-        'local_government_id' => factory(LocalGovernment::class),
+        'relationship_id' => $faker->randomElement([1,2,3,4,5,6,7]),
         'phone_number' => $faker->phoneNumber,
         'email' => $faker->email,
         'address_line_1' => $faker->streetAddress,
@@ -27,6 +18,5 @@ $factory->define(Beneficiary::class, function (Faker $faker) {
         'address_city' => $faker->city,
         'address_state' => $faker->state,
         'address_country' => $faker->country,
-        'active' => $faker->randomElement([0, 1]),
     ];
 });

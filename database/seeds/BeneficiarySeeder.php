@@ -3,6 +3,7 @@
 use App\Bank;
 use App\Domain;
 use App\Gender;
+use App\NextOfKin;
 use App\BankDetail;
 use App\Beneficiary;
 use App\MaritalStatus;
@@ -38,6 +39,10 @@ class BeneficiarySeeder extends Seeder
             fn($beneficiary) => $faker->randomElement([1, 2]) == 1
                 ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make([ 'beneficiary_id' => $beneficiary->id ]))
                 : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make([ 'beneficiary_id' => $beneficiary->id ]))
+        );
+
+        $beneficiaries->each(
+            fn($beneficiary) => $beneficiary->next_of_kin()->save(factory(NextOfKin::class)->make())
         );
     }
 }
