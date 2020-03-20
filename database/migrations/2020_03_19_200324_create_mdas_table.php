@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBeneficiaryTypesTable extends Migration
+class CreateMdasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,15 @@ class CreateBeneficiaryTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('beneficiary_types', function (Blueprint $table) {
+        Schema::create('mdas', function (Blueprint $table) {
             $table->id();
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('domain_id');
+            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->boolean('has_sub')->default(0);
             $table->timestamps();
 
-            $table->unique(['code', 'name', 'domain_id'], 'unique_beneficiary_type');
-
-            $table->foreign('domain_id')
-                  ->references('id')
-                  ->on('domains')
-                  ->onDelete('cascade');
+            $table->foreign('beneficiary_type_id')->references('id')->on('beneficiary_types');
         });
     }
 
@@ -36,6 +32,6 @@ class CreateBeneficiaryTypesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('beneficiary_types');
+        Schema::dropIfExists('mdas');
     }
 }

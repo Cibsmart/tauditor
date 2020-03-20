@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             LocalGovernmentSeeder::class,
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
+            MdaSeeder::class,
+            SubMdaSeeder::class,
             DesignationSeeder::class,
             BeneficiarySeeder::class,
         ]);

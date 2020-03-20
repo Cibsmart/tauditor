@@ -16,13 +16,13 @@ class BeneficiaryTypeSeeder extends Seeder
             'CV' => 'ANAMBRA STATE CIVIL SERVANT',
             'SCO' => 'STATUTORY COMMISSION AND OFFICERS',
             'PA' => 'POLITICAL APPOINTEES',
-            'PEN' => 'ANAMBRA STATE GOVERNMENT PENSIONERS',
+            'ANPEN' => 'ANAMBRA STATE GOVERNMENT PENSIONERS',
         ];
 
         $staff_types_jaac = [
             'LGEA' => 'LOCAL GOVERNMENT EDUCATION AUTHORITY',
             'LGSC' => 'LOCAL GOVERNMENT SERVICE COMMISSION',
-            'PEN' => 'LOCAL GOVERNMENT PENSIONERS',
+            'LGPEN' => 'LOCAL GOVERNMENT PENSIONERS',
         ];
 
         foreach($staff_types_state as $code => $name){
