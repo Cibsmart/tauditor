@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Domain::class, function (Faker $faker) {
     return [
-        'slug' => $faker->slug,
+        'code' => $faker->slug,
         'name' => $faker->name,
     ];
 });
