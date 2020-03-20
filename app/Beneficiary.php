@@ -29,6 +29,11 @@ class Beneficiary extends Model
         return $this->hasOne(NextOfKin::class);
     }
 
+    public function qualifications()
+    {
+        return $this->hasMany(Qualification::class);
+    }
+
     public function getNameAttribute()
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";

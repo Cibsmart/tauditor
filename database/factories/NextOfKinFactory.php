@@ -3,6 +3,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\NextOfKin;
+use App\Relationship;
 use Faker\Generator as Faker;
 
 $factory->define(NextOfKin::class, function (Faker $faker) {
@@ -10,7 +11,7 @@ $factory->define(NextOfKin::class, function (Faker $faker) {
         'last_name' => $faker->lastName,
         'first_name' => $faker->firstName,
         'middle_name' => $faker->firstName,
-        'relationship_id' => $faker->randomElement([1,2,3,4,5,6,7]),
+        'relationship_id' => factory(Relationship::class),
         'phone_number' => $faker->phoneNumber,
         'email' => $faker->email,
         'address_line_1' => $faker->streetAddress,

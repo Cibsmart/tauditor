@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             MdaSeeder::class,
             SubMdaSeeder::class,
             DesignationSeeder::class,
+            QualificationTypeSeeder::class,
             BeneficiarySeeder::class,
         ]);
     }

@@ -6,8 +6,11 @@ use App\Gender;
 use App\NextOfKin;
 use App\BankDetail;
 use App\Beneficiary;
+use App\Relationship;
 use App\MaritalStatus;
+use App\Qualification;
 use App\MicroFinanceBank;
+use App\QualificationType;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -26,6 +29,8 @@ class BeneficiarySeeder extends Seeder
         $marital = MaritalStatus::all();
         $banks = Bank::all();
         $mfbs = MicroFinanceBank::all();
+        $relationships = Relationship::all();
+        $qualifications = QualificationType::all();
 
         $beneficiaries = factory(Beneficiary::class, 50)->create([
           'domain_id' => fn () => $domains->random()->id,
@@ -35,14 +40,18 @@ class BeneficiarySeeder extends Seeder
           'local_government_id' => 1,
         ]);
 
-        $beneficiaries->each(
-            fn($beneficiary) => $faker->randomElement([1, 2]) == 1
+        $beneficiaries->each(function ($beneficiary) use ($faker, $banks, $mfbs, $relationships, $qualifications){
+            $faker->randomElement([1, 2]) == 1
                 ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make([ 'beneficiary_id' => $beneficiary->id ]))
-                : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make([ 'beneficiary_id' => $beneficiary->id ]))
-        );
+                : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make([ 'beneficiary_id' => $beneficiary->id ]));
 
-        $beneficiaries->each(
-            fn($beneficiary) => $beneficiary->next_of_kin()->save(factory(NextOfKin::class)->make())
-        );
+            $beneficiary->next_of_kin()
+                        ->save(factory(NextOfKin::class)
+                            ->make(['relationship_id' => $relationships->random()->id]));
+
+            $beneficiary->qualifications()
+                        ->saveMany(factory(Qualification::class, $faker->randomElement([1,2,3,4,5]))
+                            ->make(['qualification_type_id' => $qualifications->random()->id]));
+        });
     }
 }

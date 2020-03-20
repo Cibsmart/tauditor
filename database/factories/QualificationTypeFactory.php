@@ -1,0 +1,13 @@
+<?php
+
+/** @var \Illuminate\Database\Eloquent\Factory $factory */
+
+use App\QualificationType;
+use Faker\Generator as Faker;
+
+$factory->define(QualificationType::class, function (Faker $faker) {
+    return [
+        'code' => $faker->countryCode,
+        'name' => $faker->domainName,
+    ];
+});
