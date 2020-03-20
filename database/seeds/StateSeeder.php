@@ -1,6 +1,8 @@
 <?php
 
 use App\State;
+use App\LocalGovernment;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class StateSeeder extends Seeder
@@ -12,19 +14,22 @@ class StateSeeder extends Seeder
      */
     public function run()
     {
-        $states = [
-        'AB' => 'Abia',
-        'AN' => 'Anambra',
-        'EN' => 'Enugu',
-        'EB' => 'Ebonyi',
-        'IM' => 'Imo',
-      ];
+        //Get the content of of sub_mda.json
+        $json =  file_get_contents(storage_path() .'/json/state_lga.json');
 
-        foreach ($states as $key => $value) {
-            factory(State::class)->create([
-              'code' => $key,
-              'name' => $value,
-            ]);
+        //Convert json to an array
+        $data = json_decode($json, true);
+
+        foreach($data as $states){
+            $state = Str::of($states['states']['name'])->upper()->replace('STATE', '')->trim();
+            $state_id = factory(State::class)->create(['name' => $state,])->id;
+
+            $lgas = $states['states']['locals'];
+
+            foreach($lgas as $lga){
+                $lga = Str::of($lga['name'])->upper()->trim();
+                factory(LocalGovernment::class)->create(['name' => $lga, 'state_id' => $state_id]);
+            }
         }
     }
 }

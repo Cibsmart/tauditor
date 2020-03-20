@@ -18,7 +18,6 @@ class DatabaseSeeder extends Seeder
             GenderSeeder::class,
             MaritalStatusSeeder::class,
             StateSeeder::class,
-            LocalGovernmentSeeder::class,
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
             MdaSeeder::class,

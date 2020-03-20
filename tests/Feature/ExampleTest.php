@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use SubMdaSeeder;
+use StateSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -18,7 +18,7 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
 
-        $this->seed();
+        $this->seed(StateSeeder::class);
 
         $this->assertFalse(false);
     }
