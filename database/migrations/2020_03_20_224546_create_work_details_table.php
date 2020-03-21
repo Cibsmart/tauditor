@@ -16,6 +16,8 @@ class CreateWorkDetailsTable extends Migration
         Schema::create('work_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('beneficiary_id');
+            $table->unsignedBigInteger('designation_id');
+            $table->unsignedBigInteger('salary_structure_id')->nullable();
             $table->date('date_of_appointment')->nullable();
             $table->string('place_of_appointment')->nullable();
             $table->date('confirmed')->nullable();

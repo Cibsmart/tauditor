@@ -15,7 +15,8 @@ class DesignationSeeder extends Seeder
         $designations = [
             'HM' => 'HEAD MASTER',
             'PEO' => 'PRINCIPAL EXECUTIVE OFFICER',
-            'DR' => 'DIRECTOR'
+            'DR' => 'DIRECTOR',
+            'PEN' => 'PENSIONER',
         ];
 
         for($i = 1; $i <= 7; $i++) {

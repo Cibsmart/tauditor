@@ -24,9 +24,14 @@ class Beneficiary extends Model
         return $this->hasOne(BankDetail::class);
     }
 
-    public function mda_details()
+    public function mda_detail()
     {
         return $this->hasOne(MdaDetail::class);
+    }
+
+    public function work_detail()
+    {
+        return $this->hasOne(WorkDetail::class);
     }
 
     public function next_of_kin()

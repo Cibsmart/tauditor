@@ -8,6 +8,7 @@ use App\Gender;
 use App\NextOfKin;
 use App\MdaDetail;
 use App\BankDetail;
+use App\WorkDetail;
 use App\Beneficiary;
 use App\Relationship;
 use App\MaritalStatus;
@@ -63,9 +64,16 @@ class BeneficiarySeeder extends Seeder
                             ->saveMany(factory(Qualification::class, $faker->randomElement([1, 2, 3, 4, 5]))
                                 ->make(['qualification_type_id' => fn() => $qualifications->random()->id]));
 
-                $beneficiary->mda_details()
+                $beneficiary->mda_detail()
                             ->save(factory(MdaDetail::class)
                                 ->make($this->mda_attributes($beneficiary)));
+
+                $beneficiary->work_detail()
+                            ->save(factory(WorkDetail::class)
+                                ->make([
+                                    'beneficiary_id' => $beneficiary->id,
+                                    'designation_id' => $beneficiary->beneficiary_type->designations->random()->id,
+                                ]));
             });
         }
     }

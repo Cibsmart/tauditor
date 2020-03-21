@@ -15,7 +15,7 @@ class CreateDesignationsTable extends Migration
     {
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 20);
+            $table->string('code', 20)->nullable();
             $table->string('name');
             $table->unsignedBigInteger('beneficiary_type_id');
             $table->timestamps();

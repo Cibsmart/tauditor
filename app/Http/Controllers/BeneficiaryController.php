@@ -24,7 +24,7 @@ class BeneficiaryController extends Controller
     {
         $beneficiaries = Auth::user()->domain
             ->beneficiaries()
-            ->with(['bank', 'mda_details'])
+            ->with(['bank', 'mda_detail'])
             ->paginate()
             ->transform(fn ($beneficiaries) => [
                 'id' => $beneficiaries->id,
@@ -33,10 +33,10 @@ class BeneficiaryController extends Controller
                 'active' => $beneficiaries->active,
                 'account_number' => $beneficiaries->bank->account_number,
                 'bank_name' => $beneficiaries->bank->bankable->name,
-                'mda' => $beneficiaries->mda_details->mda->name,
-                'sub_mda' => $beneficiaries->mda_details->sub_mda->name,
-                'sub_sub_mda' => $beneficiaries->mda_details->sub_sub_mda->name,
-                'designation' => '',
+                'mda' => $beneficiaries->mda_detail->mda->name,
+                'sub_mda' => $beneficiaries->mda_detail->sub_mda->name,
+                'sub_sub_mda' => $beneficiaries->mda_detail->sub_sub_mda->name,
+                'designation' => $beneficiaries->work_detail->designation->name,
                 'grade_level' => '',
                 'step' => '',
             ]);
