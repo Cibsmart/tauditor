@@ -29,9 +29,16 @@ class BeneficiaryController extends Controller
             ->transform(fn ($beneficiaries) => [
                 'id' => $beneficiaries->id,
                 'name' => $beneficiaries->name,
+                'verification_number' => $beneficiaries->verification_number,
                 'active' => $beneficiaries->active,
                 'account_number' => $beneficiaries->bank->account_number,
                 'bank_name' => $beneficiaries->bank->bankable->name,
+                'mda' => '',
+                'sub_mda' => '',
+                'sub_sub_mda' => '',
+                'designation' => '',
+                'grade_level' => '',
+                'step' => '',
             ]);
 
         return Inertia::render('Beneficiary/Index', [

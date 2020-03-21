@@ -16,11 +16,12 @@ class CreateWorkDetailsTable extends Migration
         Schema::create('work_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('beneficiary_id');
+            $table->unsignedBigInteger('beneficiary_type_id');
             $table->date('date_of_appointment')->nullable();
             $table->string('place_of_appointment')->nullable();
-            $table->unsignedBigInteger('mda_id');
             $table->date('confirmed')->nullable();
-            $table->date('last_promotion')->nullable();
+            $table->date('last_promotion_date')->nullable();
+            $table->date('retirement_date')->nullable();
             $table->timestamps();
         });
     }

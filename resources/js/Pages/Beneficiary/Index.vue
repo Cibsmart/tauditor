@@ -41,17 +41,23 @@
                   <div class="flex items-center">
                     <div class="ml-4">
                       <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ beneficiary.name }}</div>
-                      <div class="text-sm leading-5 text-gray-600">WR/PER/00056454</div>
+                      <div class="text-sm leading-5 text-gray-600">{{ beneficiary.verification_number }}</div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">Nnewi South LGEA</div>
-                  <div class="text-sm leading-5 text-gray-600">Omenka Primary School</div>
+                  <div class="text-sm leading-5 text-gray-900">{{ beneficiary.mda }}</div>
+                  <div class="text-sm leading-5 text-gray-600">
+                      {{ beneficiary.sub_mda }}
+                      {{ beneficiary.sub_sub_mda }}
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">H/M MASTER</div>
-                  <div class="text-sm leading-5 text-gray-600">G/L 13</div>
+                  <div class="text-sm leading-5 text-gray-900">{{ beneficiary.designation }}</div>
+                  <div class="text-sm leading-5 text-gray-600">
+                      {{ beneficiary.grade_level }}
+                      {{ beneficiary.step }}
+                  </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">
@@ -62,7 +68,10 @@
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full" :class="beneficiary.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                        :class="beneficiary.active
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'">
                     {{ beneficiary.active ? 'Active' : 'Inactive' }}
                   </span>
                 </td>
