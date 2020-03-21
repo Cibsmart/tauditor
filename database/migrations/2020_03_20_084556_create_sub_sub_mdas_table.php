@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubMdasTable extends Migration
+class CreateSubSubMdasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateSubMdasTable extends Migration
      */
     public function up()
     {
-        Schema::create('sub_mdas', function (Blueprint $table) {
+        Schema::create('sub_sub_mdas', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('mda_id');
-            $table->boolean('has_sub')->default(0);
+            $table->unsignedBigInteger('sub_mda_id');
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateSubMdasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sub_mdas');
+        Schema::dropIfExists('sub_sub_mdas');
     }
 }

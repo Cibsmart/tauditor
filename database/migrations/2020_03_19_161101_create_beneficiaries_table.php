@@ -31,14 +31,18 @@ class CreateBeneficiariesTable extends Migration
             $table->string('address_city')->nullable();
             $table->string('address_state')->nullable();
             $table->string('address_country')->nullable();
-            $table->boolean('active')->default(0);
             $table->unsignedBigInteger('domain_id');
+            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->boolean('active')->default(0);
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('domain_id')
-                  ->references('id')
-                  ->on('domains');
+            $table->foreign('domain_id')->references('id')->on('domains');
+            $table->foreign('beneficiary_type_id')->references('id')->on('beneficiary_types');
+            $table->foreign('gender_id')->references('id')->on('genders');
+            $table->foreign('marital_status_id')->references('id')->on('marital_statuses');
+            $table->foreign('state_id')->references('id')->on('states');
+            $table->foreign('local_government_id')->references('id')->on('local_governments');
         });
     }
 

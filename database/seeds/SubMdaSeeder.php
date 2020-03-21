@@ -25,7 +25,15 @@ class SubMdaSeeder extends Seeder
             foreach ($mdas as $mda => $depts) {
                 $mda_id = $dbmdas->firstWhere('code', $mda)->id;
                 foreach ($depts as $dept) {
-                    factory(SubMda::class)->create(['name' => $dept, 'mda_id' => $mda_id]);
+
+                    $attributes = ['name' => $dept, 'mda_id' => $mda_id];
+
+                    //SEC has Sub_Sub_MDAs, so we set the flag for those
+                    $attributes = $mda === 'SEC'
+                        ? array_merge($attributes, ['has_sub' => 1])
+                        : $attributes;
+
+                    factory(SubMda::class)->create($attributes);
                 }
             }
         }

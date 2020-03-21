@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkDetailsTable extends Migration
+class CreateMdaDetailsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateWorkDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('work_details', function (Blueprint $table) {
+        Schema::create('mda_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('beneficiary_id');
-            $table->date('date_of_appointment')->nullable();
-            $table->string('place_of_appointment')->nullable();
-            $table->date('confirmed')->nullable();
-            $table->date('last_promotion_date')->nullable();
-            $table->date('retirement_date')->nullable();
+            $table->unsignedBigInteger('mda_id');
+            $table->unsignedBigInteger('sub_mda_id')->nullable();
+            $table->unsignedBigInteger('sub_sub_mda_id')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ class CreateWorkDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('work_details');
+        Schema::dropIfExists('mda_details');
     }
 }

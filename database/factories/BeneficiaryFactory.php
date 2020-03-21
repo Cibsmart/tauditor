@@ -8,6 +8,7 @@ use App\Beneficiary;
 use Carbon\Carbon;
 use App\MaritalStatus;
 use App\LocalGovernment;
+use App\BeneficiaryType;
 use Faker\Generator as Faker;
 
 $factory->define(Beneficiary::class, function (Faker $faker) {

@@ -11,4 +11,9 @@ class Mda extends Model
     protected $casts = [
         'has_sub' => 'boolean',
     ];
+
+    public function subs()
+    {
+        return $this->hasMany(SubMda::class);
+    }
 }

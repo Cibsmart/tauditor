@@ -12,4 +12,11 @@ class BeneficiaryType extends Model
     {
         return $this->hasMany(Designation::class);
     }
+
+    public function mdas()
+    {
+        return $this->hasMany(Mda::class);
+    }
+
+
 }

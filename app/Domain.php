@@ -9,12 +9,12 @@ class Domain extends Model
 {
     protected $guarded = [];
 
-    public function employees()
+    public function beneficiaries()
     {
         return $this->hasMany(Beneficiary::class);
     }
 
-    public function staff_types()
+    public function beneficiary_types()
     {
         return $this->hasMany(BeneficiaryType::class);
     }

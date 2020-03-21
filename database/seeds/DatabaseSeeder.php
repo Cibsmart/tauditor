@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             MicroFinanceBankSeeder::class,
             MdaSeeder::class,
             SubMdaSeeder::class,
+            SubSubMdaSeeder::class,
             DesignationSeeder::class,
             QualificationTypeSeeder::class,
             BeneficiarySeeder::class,

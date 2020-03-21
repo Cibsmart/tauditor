@@ -23,8 +23,8 @@ class BeneficiaryController extends Controller
     public function index()
     {
         $beneficiaries = Auth::user()->domain
-            ->employees()
-            ->with(['bank'])
+            ->beneficiaries()
+            ->with(['bank', 'mda_details'])
             ->paginate()
             ->transform(fn ($beneficiaries) => [
                 'id' => $beneficiaries->id,
@@ -33,9 +33,9 @@ class BeneficiaryController extends Controller
                 'active' => $beneficiaries->active,
                 'account_number' => $beneficiaries->bank->account_number,
                 'bank_name' => $beneficiaries->bank->bankable->name,
-                'mda' => '',
-                'sub_mda' => '',
-                'sub_sub_mda' => '',
+                'mda' => $beneficiaries->mda_details->mda->name,
+                'sub_mda' => $beneficiaries->mda_details->sub_mda->name,
+                'sub_sub_mda' => $beneficiaries->mda_details->sub_sub_mda->name,
                 'designation' => '',
                 'grade_level' => '',
                 'step' => '',
