@@ -29,6 +29,11 @@ class Beneficiary extends Model
         return $this->hasOne(MdaDetail::class);
     }
 
+    public function salary()
+    {
+        return $this->hasOne(SalaryDetail::class);
+    }
+
     public function work_detail()
     {
         return $this->hasOne(WorkDetail::class);
