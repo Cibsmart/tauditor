@@ -2,7 +2,7 @@
     <div>
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" :href="route('dashboard')">
-          <icon name="dashboard" class="w-4 h-4 mr-2" 
+          <icon name="dashboard" class="w-4 h-4 mr-2"
               :class="isActive('') ? 'fill-current text-white' : 'fill-current text-indigo-300 hover:fill-current group-hover:text-white'" />
           <div :class="isActive('') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
             Dashboard
@@ -11,18 +11,26 @@
       </div>
 
       <div class="mb-4">
-        <inertia-link class="py-3 flex items-center group" href="#" >
-          <icon name="users" class="w-4 h-4 mr-2" 
-              :class="isActive('#') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-          <div :class="isActive('#') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
-            Employees
+        <inertia-link class="py-3 flex items-center group" href="#" @click="activate('beneficiaries')" preserve-scroll>
+          <icon name="users" class="w-4 h-4 mr-2"
+              :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+          <div :class="isActive('beneficiaries') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
+            Beneficiaries
           </div>
+            <icon v-show="menus.beneficiaries" name="cheveron-down" class="w-4 h-4 ml-2"
+                  :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+            <icon v-show="! menus.beneficiaries" name="cheveron-right" class="w-4 h-4 ml-2"
+                  :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
         </inertia-link>
+
+          <div v-if="menus.beneficiaries" class="ml-4 mt-2">
+              <sub-menu :url="url" label="Beneficiaries" :uri="uri('beneficiaries.index')"></sub-menu>
+          </div>
       </div>
 
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" href="#">
-          <icon name="office" class="w-4 h-4 mr-2" 
+          <icon name="office" class="w-4 h-4 mr-2"
               :class="isActive('#') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
           <div :class="isActive('#') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
             Payroll
@@ -32,7 +40,7 @@
 
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" href="#">
-          <icon name="store-front" class="w-4 h-4 mr-2" 
+          <icon name="store-front" class="w-4 h-4 mr-2"
               :class="isActive('#') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
           <div :class="isActive('#') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
             Setup
@@ -42,7 +50,7 @@
 
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" href="#">
-          <icon name="printer" class="w-4 h-4 mr-2" 
+          <icon name="printer" class="w-4 h-4 mr-2"
               :class="isActive('#') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
           <div :class="isActive('#') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
             Reports
@@ -52,7 +60,7 @@
 
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" href="#" @click="activate('audit')" preserve-scroll>
-          <icon name="printer" class="w-4 h-4 mr-2" 
+          <icon name="printer" class="w-4 h-4 mr-2"
               :class="isActive('#') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
           <div :class="isActive('#') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
             Audit System
@@ -73,7 +81,7 @@ import Icon from '@/Shared/Icon'
 import SubMenu from '@/Shared/SubMenu'
 
 export default{
-  
+
   components: {
     Icon,
     SubMenu,
@@ -87,7 +95,7 @@ export default{
     return{
       menus: {
         dashboard: false,
-        employees: false,
+        beneficiaries: false,
         payroll: false,
         setup: false,
         reports: false,
@@ -95,7 +103,7 @@ export default{
       },
     }
   },
-  
+
   methods: {
     isActive(...urls) {
       if (urls[0] === '') {

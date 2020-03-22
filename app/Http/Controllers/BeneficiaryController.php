@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class BeneficiaryController extends Controller
 {
@@ -22,9 +22,11 @@ class BeneficiaryController extends Controller
      */
     public function index()
     {
+        $filters = Request::all('search');
         $beneficiaries = Auth::user()->domain
             ->beneficiaries()
             ->with(['bank', 'mda_detail'])
+            ->filters(Request::only('search'))
             ->paginate()
             ->transform(fn ($beneficiaries) => [
                 'id' => $beneficiaries->id,
@@ -42,6 +44,7 @@ class BeneficiaryController extends Controller
             ]);
 
         return Inertia::render('Beneficiary/Index', [
+            'filters' => $filters,
             'beneficiaries' => $beneficiaries,
         ]);
     }

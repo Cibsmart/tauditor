@@ -58,4 +58,28 @@ class Beneficiary extends Model
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
     }
+
+    public function scopeFilters($query, array $filters)
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('last_name', 'like', '%' . $search . '%')
+                      ->orWhere('first_name', 'like', '%' . $search . '%')
+                      ->orWhere('middle_name', 'like', '%' . $search . '%')
+                      ->orWhere('verification_number', 'like', '%' . $search . '%')
+                      ->orWhereHas('mda_detail', function($query) use ($search){
+                          $query->whereHas('mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                          $query->orWhereHas('sub_mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                          $query->orWhereHas('sub_sub_mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      })->orWhereHas('work_detail', function($query) use ($search){
+                          $query->whereHas('designation', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      })->orWhereHas('bank', function ($query) use ($search) {
+                          $query->where('account_number', 'like', '%' . $search . '%')
+                               ->orWhereHasMorph('bankable',
+                                   [Bank::class, MicroFinanceBank::class],
+                                   fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      });
+            });
+        });
+    }
 }
