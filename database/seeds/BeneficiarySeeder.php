@@ -1,22 +1,24 @@
 <?php
 
-use App\Mda;
 use App\Bank;
 use App\State;
 use App\Domain;
 use App\Gender;
+use App\BasicPay;
 use App\NextOfKin;
 use App\MdaDetail;
 use App\BankDetail;
 use App\WorkDetail;
 use App\Beneficiary;
 use App\Relationship;
+use App\SalaryDetail;
 use App\MaritalStatus;
 use App\Qualification;
-use App\BeneficiaryType;
 use App\LocalGovernment;
 use App\MicroFinanceBank;
+use App\StructuredSalary;
 use App\QualificationType;
+use App\PersonalizedSalary;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 
@@ -50,11 +52,36 @@ class BeneficiarySeeder extends Seeder
                 'beneficiary_type_id' => fn() => $domain->beneficiary_types->random()->id,
             ]);
 
-            $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $relationships, $qualifications, $faker){
+            $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $relationships, $qualifications, $domain, $faker){
 
                 $faker->randomElement([1,2]) == 1
                     ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
                     : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
+
+                $salary = $beneficiary->salary_detail()
+                            ->save(factory(SalaryDetail::class)
+                                ->make(['beneficiary_id' => $beneficiary->id ]));
+//                dd($salary);
+                $rand = $faker->randomElement([1,2]) == 1 ;
+                if($rand) {
+                    $payable = factory(PersonalizedSalary::class)
+                        ->create(['salary_detail_id' => $salary->id]);
+
+                    $payable->salary()->save($salary);
+                    $payable->basic()->save(factory(BasicPay::class)->make([
+                                'annual' => $faker->numberBetween(120000, 1200000),
+                                'monthly' => $faker->numberBetween(10000, 100000)
+                            ]));
+                }else {
+                    $payable = factory(StructuredSalary::class)->create([
+                            'salary_detail_id' => $salary->id,
+                            'salary_structure_id' => fn(
+                            ) => $domain->structures->random()->salary_structures->random()->id,
+                            'grade_level_id' => $faker->numberBetween(1, 17),
+                            'step_id' => $faker->numberBetween(1, 15)
+                        ]);
+                    $payable->salary()->save($salary);
+                }
 
                 $beneficiary->next_of_kin()
                             ->save(factory(NextOfKin::class)

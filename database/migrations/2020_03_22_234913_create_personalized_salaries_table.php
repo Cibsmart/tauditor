@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSalaryDetailsTable extends Migration
+class CreatePersonalizedSalariesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,12 @@ class CreateSalaryDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('salary_details', function (Blueprint $table) {
+        Schema::create('personalized_salaries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('beneficiary_id');
-            $table->nullableMorphs('payable');
+            $table->unsignedBigInteger('salary_detail_id');
             $table->timestamps();
 
-            $table->foreign('beneficiary_id')->references('id')->on('beneficiaries');
-
+            $table->foreign('salary_detail_id')->references('id')->on('salary_details');
         });
     }
 
@@ -31,6 +29,6 @@ class CreateSalaryDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('salary_details');
+        Schema::dropIfExists('personalized_salaries');
     }
 }

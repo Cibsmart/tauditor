@@ -29,7 +29,7 @@ class Beneficiary extends Model
         return $this->hasOne(MdaDetail::class);
     }
 
-    public function salary()
+    public function salary_detail()
     {
         return $this->hasOne(SalaryDetail::class);
     }

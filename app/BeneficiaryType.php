@@ -17,6 +17,4 @@ class BeneficiaryType extends Model
     {
         return $this->hasMany(Mda::class);
     }
-
-
 }

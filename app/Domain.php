@@ -18,4 +18,9 @@ class Domain extends Model
     {
         return $this->hasMany(BeneficiaryType::class);
     }
+
+    public function structures()
+    {
+        return $this->hasMany(Structure::class);
+    }
 }

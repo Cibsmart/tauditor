@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use App\Bank;
 use Inertia\Inertia;
+use App\SalaryStructure;
 use App\MicroFinanceBank;
+use App\StructuredSalary;
+use App\PersonalizedSalary;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
@@ -37,6 +40,9 @@ class AppServiceProvider extends ServiceProvider
         Relation::$morphMap = [
             'commercial' => Bank::class,
             'micro_finance' => MicroFinanceBank::class,
+            'structured' => StructuredSalary::class,
+            'personalized' => PersonalizedSalary::class,
+            'salary_structure' => SalaryStructure::class,
         ];
     }
 

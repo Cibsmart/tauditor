@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             SubSubMdaSeeder::class,
             DesignationSeeder::class,
             QualificationTypeSeeder::class,
+            GradeLevelSeeder::class,
+            StepSeeder::class,
+            StructureSeeder::class,
+            SalaryStructureSeeder::class,
             BeneficiarySeeder::class,
         ]);
     }
