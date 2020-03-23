@@ -14,6 +14,11 @@ class Beneficiary extends Model
         'address' => AddressCast::class,
     ];
 
+    /*
+    |-------------------------------------------------------------------------------
+    | Relationships
+    |-------------------------------------------------------------------------------
+    */
     public function gender()
     {
         return $this->belongsTo(Gender::class);
@@ -59,6 +64,13 @@ class Beneficiary extends Model
         return $this->belongsTo(Domain::class);
     }
 
+
+
+    /*
+    |-------------------------------------------------------------------------------
+    | Methods
+    |-------------------------------------------------------------------------------
+    */
     public function getNameAttribute()
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";

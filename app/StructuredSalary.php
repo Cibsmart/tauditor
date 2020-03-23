@@ -18,8 +18,18 @@ class StructuredSalary extends Model
         return $this->belongsTo(SalaryStructure::class);
     }
 
-    public function basic_amount()
+    public function basic_pay()
     {
-        return $this->structure()->basic->annual;
+        return $this->structure()->basic;
+    }
+
+    public function grade_level()
+    {
+        return $this->belongsTo(GradeLevel::class);
+    }
+
+    public function step()
+    {
+        return $this->belongsTo(Step::class);
     }
 }

@@ -8,9 +8,7 @@ class WorkDetail extends Model
 {
     protected $guarded = [];
 
-    protected $casts = [
-
-    ];
+    protected $casts = [];
 
     public function designation()
     {

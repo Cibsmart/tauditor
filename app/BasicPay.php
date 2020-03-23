@@ -13,4 +13,24 @@ class BasicPay extends Model
     {
         return $this->morphTo();
     }
+
+    public function setAnnualAttribute($value)
+    {
+        return $this->attributes['annual'] = $value * 100;
+    }
+
+    public function getAnnualAttribute($value)
+    {
+        return $value / 100;
+    }
+
+    public function setMonthlyAttribute($value)
+    {
+        return $this->attributes['monthly'] = $value * 100;
+    }
+
+    public function getMonthlyAttribute($value)
+    {
+        return $value / 100;
+    }
 }

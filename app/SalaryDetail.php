@@ -8,7 +8,7 @@ class SalaryDetail extends Model
 {
     protected $guarded = [];
 
-    //A polymorphic relationship to either Structure or Personalize
+    //A polymorphic relationship to either Structure or Personalize Salary
     public function payable()
     {
         return $this->morphTo();
