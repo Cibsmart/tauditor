@@ -61,13 +61,14 @@ class BeneficiarySeeder extends Seeder
                 $salary = $beneficiary->salary_detail()
                             ->save(factory(SalaryDetail::class)
                                 ->make(['beneficiary_id' => $beneficiary->id ]));
-//                dd($salary);
-                $rand = $faker->randomElement([1,2]) == 1 ;
+
+                $rand = $faker->randomElement([1,2]);
+
                 if($rand) {
                     $payable = factory(PersonalizedSalary::class)
                         ->create(['salary_detail_id' => $salary->id]);
 
-                    $payable->salary()->save($salary);
+                    $payable->salary()->update($salary->toArray());
                     $payable->basic()->save(factory(BasicPay::class)->make([
                                 'annual' => $faker->numberBetween(120000, 1200000),
                                 'monthly' => $faker->numberBetween(10000, 100000)
@@ -75,12 +76,11 @@ class BeneficiarySeeder extends Seeder
                 }else {
                     $payable = factory(StructuredSalary::class)->create([
                             'salary_detail_id' => $salary->id,
-                            'salary_structure_id' => fn(
-                            ) => $domain->structures->random()->salary_structures->random()->id,
+                            'salary_structure_id' => fn() => $domain->structures->random()->salary_structures->random()->id,
                             'grade_level_id' => $faker->numberBetween(1, 17),
                             'step_id' => $faker->numberBetween(1, 15)
                         ]);
-                    $payable->salary()->save($salary);
+                    $payable->salary()->update($salary->toArray());
                 }
 
                 $beneficiary->next_of_kin()

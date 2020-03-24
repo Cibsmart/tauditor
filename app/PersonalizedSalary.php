@@ -18,6 +18,8 @@ class PersonalizedSalary extends Model
         return $this->morphOne(BasicPay::class, 'basicable');
     }
 
+
+
     public function basic_pay()
     {
         return $this->basic;

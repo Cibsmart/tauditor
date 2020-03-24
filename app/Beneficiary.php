@@ -39,6 +39,11 @@ class Beneficiary extends Model
         return $this->hasOne(SalaryDetail::class);
     }
 
+    public function allowance_details()
+    {
+        return $this->hasMany(AllowanceDetail::class);
+    }
+
     public function work_detail()
     {
         return $this->hasOne(WorkDetail::class);
@@ -71,6 +76,40 @@ class Beneficiary extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
+
+    public function basic()
+    {
+
+    }
+
+    public function applyAllowance(Allowance $allowance)
+    {
+        $this->allowance_details()->create([
+            'amount' => $allowance->amount(5000),
+            'allowance_id' => $allowance->id
+        ]);
+
+        return $this;
+    }
+
+    public function removeAllowance(AllowanceDetail $allowance_detail)
+    {
+        $allowance_detail->unapply();
+
+        return $this->fresh();
+    }
+
+    public function allowances()
+    {
+        return $this->allowance_details()->get()
+                           ->load(['allowance.allowance_name'])
+                           ->transform(fn($allowance) => [
+                               'id' => $allowance->id,
+                               'name' => $allowance->allowance->allowance_name->name,
+                               'amount' => $allowance->amount,
+                           ]);
+    }
+
     public function getNameAttribute()
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
