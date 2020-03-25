@@ -17,6 +17,7 @@ class CreateStructureGradeLevelStepsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('structure_grade_level_id');
             $table->unsignedBigInteger('step_id');
+            $table->unsignedBigInteger('basic_monthly');
             $table->timestamps();
 
             $table->foreign('structure_grade_level_id')->references('id')->on('structure_grade_levels');

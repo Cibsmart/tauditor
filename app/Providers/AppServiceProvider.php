@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Bank;
+use App\FixedValue;
 use Inertia\Inertia;
 use App\SalaryStructure;
+use App\PercentageValue;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
 use App\PersonalizedSalary;
@@ -42,7 +44,8 @@ class AppServiceProvider extends ServiceProvider
             'micro_finance' => MicroFinanceBank::class,
             'structured' => StructuredSalary::class,
             'personalized' => PersonalizedSalary::class,
-            'salary_structure' => SalaryStructure::class,
+            'fixed_value' => FixedValue::class,
+            'percentage_value' => PercentageValue::class,
         ];
     }
 

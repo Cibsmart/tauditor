@@ -16,15 +16,15 @@ class CreateStructuredSalariesTable extends Migration
         Schema::create('structured_salaries', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('salary_detail_id');
-            $table->unsignedBigInteger('salary_structure_id');
-            $table->unsignedBigInteger('grade_level_id');
-            $table->unsignedBigInteger('step_id');
+            $table->unsignedBigInteger('structure_grade_level_step_id');
             $table->timestamps();
 
             $table->foreign('salary_detail_id')->references('id')->on('salary_details');
-            $table->foreign('salary_structure_id')->references('id')->on('salary_structures');
-            $table->foreign('grade_level_id')->references('id')->on('grade_levels');
-            $table->foreign('step_id')->references('id')->on('steps');
+            $table->foreign('structure_grade_level_step_id')
+                  ->references('id')
+                  ->on('structure_grade_level_steps');
+
+            $table->unique(['salary_detail_id', 'structure_grade_level_step_id'], 'unique_structured_salaries');
         });
     }
 

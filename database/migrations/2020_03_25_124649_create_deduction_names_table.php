@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBasicPaysTable extends Migration
+class CreateDeductionNamesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,14 @@ class CreateBasicPaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('basic_pays', function (Blueprint $table) {
+        Schema::create('deduction_names', function (Blueprint $table) {
             $table->id();
-            $table->morphs('basicable');
-            $table->unsignedBigInteger('annual');
-            $table->unsignedBigInteger('monthly');
+            $table->string('code', 20);
+            $table->string('name');
+            $table->unsignedBigInteger('domain_id');
             $table->timestamps();
+
+            $table->foreign('domain_id')->references('id')->on('domains');
         });
     }
 
@@ -29,6 +31,6 @@ class CreateBasicPaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('basic_pays');
+        Schema::dropIfExists('deduction_names');
     }
 }

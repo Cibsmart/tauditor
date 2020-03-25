@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Allowance extends Model
+class Deduction extends Model
 {
     protected $guarded = [];
 
@@ -19,14 +19,14 @@ class Allowance extends Model
         return $this->morphTo();
     }
 
-    public function allowance_details()
+    public function deduction_details()
     {
-        return $this->hasMany(AllowanceDetail::class);
+        return $this->hasMany(DeductionDetail::class);
     }
 
-    public function allowance_name()
+    public function deduction_name()
     {
-        return $this->belongsTo(AllowanceName::class);
+        return $this->belongsTo(DeductionName::class);
     }
 
 
@@ -42,7 +42,7 @@ class Allowance extends Model
 
     public function applyTo(Beneficiary $beneficiary)
     {
-        $this->allowance_details()->create([
+        $this->deduction_details()->create([
             'amount' => $this->amount(500),
             'beneficiary_id' => $beneficiary->id
         ]);

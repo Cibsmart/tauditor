@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AllowanceType extends Model
+class DeductionType extends Model
 {
-
+    //
 }

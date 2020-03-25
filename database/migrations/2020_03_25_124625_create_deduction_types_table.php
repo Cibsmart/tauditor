@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonalizedSalariesTable extends Migration
+class CreateDeductionTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,13 @@ class CreatePersonalizedSalariesTable extends Migration
      */
     public function up()
     {
-        Schema::create('personalized_salaries', function (Blueprint $table) {
+        Schema::create('deduction_types', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('amount');
+            $table->string('name');
+            $table->unsignedBigInteger('domain_id');
             $table->timestamps();
+
+            $table->foreign('domain_id')->references('id')->on('domains');
         });
     }
 
@@ -27,6 +30,6 @@ class CreatePersonalizedSalariesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('personalized_salaries');
+        Schema::dropIfExists('deduction_types');
     }
 }

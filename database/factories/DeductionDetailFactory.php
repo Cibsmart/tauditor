@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\BasicPay;
+use App\DeductionDetail;
 use Faker\Generator as Faker;
 
-$factory->define(BasicPay::class, function (Faker $faker) {
+$factory->define(DeductionDetail::class, function (Faker $faker) {
     return [
         //
     ];

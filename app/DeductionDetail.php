@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AllowanceDetail extends Model
+class DeductionDetail extends Model
 {
     use SoftDeletes;
 
@@ -16,9 +16,9 @@ class AllowanceDetail extends Model
         return $this->belongsTo(Beneficiary::class);
     }
 
-    public function allowance()
+    public function deduction()
     {
-        return $this->belongsTo(Allowance::class);
+        return $this->belongsTo(Deduction::class);
     }
 
     public function unapply()
