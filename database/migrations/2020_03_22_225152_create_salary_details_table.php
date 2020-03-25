@@ -15,8 +15,11 @@ class CreateSalaryDetailsTable extends Migration
     {
         Schema::create('salary_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('beneficiary_id');
             $table->morphs('payable');
             $table->timestamps();
+
+            $table->foreign('beneficiary_id')->references('id')->on('beneficiaries');
         });
     }
 

@@ -15,12 +15,12 @@ class CreateAllowanceNamesTable extends Migration
     {
         Schema::create('allowance_names', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('allowance_type_id');
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('domain_id');
             $table->timestamps();
 
-            $table->foreign('domain_id')->references('id')->on('domains');
+            $table->foreign('allowance_type_id')->references('id')->on('allowance_types');
         });
     }
 

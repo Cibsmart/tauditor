@@ -49,7 +49,7 @@ class BeneficiarySeeder extends Seeder
                 'marital_status_id' => fn() => $marital->random()->id,
                 'state_id' => fn() => $state->random()->id,
                 'local_government_id' => fn() => $lga->random()->id,
-                'beneficiary_type_id' => fn() => $domain->beneficiary_types->random()->id,
+                'beneficiary_type_id' => fn() => $domain->beneficiaryTypes->random()->id,
             ]);
 
             $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $relationships, $qualifications, $domain, $faker){
@@ -58,28 +58,11 @@ class BeneficiarySeeder extends Seeder
                     ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
                     : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
-                $salary = $beneficiary->salary_detail()
-                            ->save(factory(SalaryDetail::class)
-                                ->make(['beneficiary_id' => $beneficiary->id ]));
+                $payable = factory(PersonalizedSalary::class)->create();
 
-                $rand = $faker->randomElement([1,2]);
+                $payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
-                if($rand) {
-                    $payable = factory(PersonalizedSalary::class)->create(['amount' => $faker->numberBetween(10000, 100000)]);
-
-                    $payable->basic()->save(factory(BasicPay::class)->make([
-
-                            ]));
-                }else {
-                    $payable = factory(StructuredSalary::class)->create([
-                            'salary_structure_id' => fn() => $domain->structures->random()->salary_structures->random()->id,
-                            'grade_level_id' => $faker->numberBetween(1, 17),
-                            'step_id' => $faker->numberBetween(1, 15)
-                        ]);
-                    $payable->salary()->update($salary->toArray());
-                }
-
-                $beneficiary->next_of_kin()
+                $beneficiary->nextOfKin()
                             ->save(factory(NextOfKin::class)
                                 ->make(['relationship_id' => fn() => $relationships->random()->id]));
 
@@ -87,15 +70,15 @@ class BeneficiarySeeder extends Seeder
                             ->saveMany(factory(Qualification::class, $faker->randomElement([1, 2, 3, 4, 5]))
                                 ->make(['qualification_type_id' => fn() => $qualifications->random()->id]));
 
-                $beneficiary->mda_detail()
+                $beneficiary->mdaDetail()
                             ->save(factory(MdaDetail::class)
                                 ->make($this->mda_attributes($beneficiary)));
 
-                $beneficiary->work_detail()
+                $beneficiary->workDetail()
                             ->save(factory(WorkDetail::class)
                                 ->make([
                                     'beneficiary_id' => $beneficiary->id,
-                                    'designation_id' => $beneficiary->beneficiary_type->designations->random()->id,
+                                    'designation_id' => $beneficiary->beneficiaryType->designations->random()->id,
                                 ]));
             });
         }
@@ -103,7 +86,7 @@ class BeneficiarySeeder extends Seeder
 
     public function mda_attributes($beneficiary)
     {
-        $beneficiary_type = $beneficiary->beneficiary_type;
+        $beneficiary_type = $beneficiary->beneficiaryType;
 
         //Pick a random MDA and assign to beneficiary
         $mda = $beneficiary_type->mdas->random();

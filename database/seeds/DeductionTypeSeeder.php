@@ -1,5 +1,7 @@
 <?php
 
+use App\AllowanceType;
+use App\DeductionType;
 use Illuminate\Database\Seeder;
 
 class DeductionTypeSeeder extends Seeder
@@ -11,6 +13,16 @@ class DeductionTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $deduction_types = [
+            'STATUTORY DEDUCTIONS',
+            'DUES',
+            'LOANS'
+        ];
+
+        for($i = 1; $i <= 2; $i++) {
+            foreach ($deduction_types as $code => $name) {
+                factory(DeductionType::class)->create(['code' => $code, 'name' => $name, 'domain_id' => $i]);
+            }
+        }
     }
 }

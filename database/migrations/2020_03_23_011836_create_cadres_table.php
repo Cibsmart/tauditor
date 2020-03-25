@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStructureGradeLevelsTable extends Migration
+class CreateCadresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateStructureGradeLevelsTable extends Migration
      */
     public function up()
     {
-        Schema::create('structure_grade_levels', function (Blueprint $table) {
+        Schema::create('cadres', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('structure_id');
             $table->unsignedBigInteger('grade_level_id');
@@ -31,6 +31,6 @@ class CreateStructureGradeLevelsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('structure_grade_levels');
+        Schema::dropIfExists('cadres');
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\DeductionType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -29,8 +30,11 @@ class DatabaseSeeder extends Seeder
             GradeLevelSeeder::class,
             StepSeeder::class,
             StructureSeeder::class,
-            SalaryStructureSeeder::class,
-            BeneficiarySeeder::class,
+            AllowanceTypeSeeder::class,
+            AllowanceNameSeeder::class,
+            AllowanceSeeder::class,
+            DeductionTypeSeeder::class,
+//            BeneficiarySeeder::class,
         ]);
     }
 }

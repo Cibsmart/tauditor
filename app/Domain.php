@@ -14,7 +14,7 @@ class Domain extends Model
         return $this->hasMany(Beneficiary::class);
     }
 
-    public function beneficiary_types()
+    public function beneficiaryTypes()
     {
         return $this->hasMany(BeneficiaryType::class);
     }

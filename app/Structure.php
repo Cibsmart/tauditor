@@ -8,26 +8,21 @@ class Structure extends Model
 {
     protected $guarded = [];
 
-    public function salary_structures()
+    public function cadre()
     {
-        return $this->hasMany(SalaryStructure::class);
-    }
-
-    public function grades()
-    {
-        return $this->hasMany(StructureGradeLevel::class, );
+        return $this->hasMany(Cadre::class, );
     }
 
     public function steps()
     {
         return $this->hasManyThrough(
-            StructureGradeLevelStep::class,
-            StructureGradeLevel::class,
+            CadreStep::class,
+            Cadre::class,
             'grade_level_id',
             'structure_grade_level_id');
     }
 
-    public function salary_details()
+    public function salaryDetails()
     {
         return $this->hasManyThrough(
             SalaryDetail::class,

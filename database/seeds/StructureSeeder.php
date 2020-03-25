@@ -13,9 +13,9 @@ class StructureSeeder extends Seeder
     public function run()
     {
         $structures = [
-            'CONMESS' => 'CONSOLIDATED MEDICAL SALARY STRUCTURE',
-            'CONHESS' => 'CONSOLIDATED HEALTH SALARY STRUCTURE',
-            'CONTISS' => 'CONSOLIDATED CIVIL SERVANT SALARY STRUCTURE',
+            'CONHESS_NURSE_CALL' => 'CONSOLIDATED HEALTH SALARY STRUCTURE (NURSE CALL)',
+//            'CONMESS' => 'CONSOLIDATED MEDICAL SALARY STRUCTURE',
+//            'CONTISS' => 'CONSOLIDATED CIVIL SERVANT SALARY STRUCTURE',
         ];
 
         for($i = 1; $i <= 2; $i++) {

@@ -20,7 +20,7 @@ class FixedValue extends Model
 
     public function setAmountAttribute($value)
     {
-        return $this->attributes['monthly'] = $value * 100;
+        return $this->attributes['Amount'] = $value * 100;
     }
 
     public function getAmountAttribute($value)

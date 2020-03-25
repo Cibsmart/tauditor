@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 
 $factory->define(PersonalizedSalary::class, function (Faker $faker) {
     return [
-        'salary_detail_id' => factory(SalaryDetail::class),
+        'monthly_basic' => $faker->numberBetween(10000, 100000),
     ];
 });

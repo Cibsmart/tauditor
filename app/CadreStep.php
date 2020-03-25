@@ -4,18 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PersonalizedSalary extends Model
+class CadreStep extends Model
 {
     protected $guarded = [];
 
-    public function salary()
+    public function cadre()
     {
-        return $this->morphOne(SalaryDetail::class, 'payable');
-    }
-
-    public function basicPay()
-    {
-        return $this->monthly_basic;
+        return $this->belongsTo(Cadre::class);
     }
 
     public function setMonthlyBasicAttribute($value)

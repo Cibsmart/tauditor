@@ -15,7 +15,7 @@ class CreateStructuresTable extends Migration
     {
         Schema::create('structures', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 50);
+            $table->string('code');
             $table->string('name');
             $table->boolean('active')->default(1);
             $table->unsignedBigInteger('domain_id');

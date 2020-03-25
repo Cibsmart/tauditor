@@ -15,11 +15,14 @@ class CreateAllowanceTypesTable extends Migration
     {
         Schema::create('allowance_types', function (Blueprint $table) {
             $table->id();
+            $table->string('code', 20);
             $table->string('name');
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
 
             $table->foreign('domain_id')->references('id')->on('domains');
+
+            $table->unique(['name', 'domain_id']);
         });
     }
 

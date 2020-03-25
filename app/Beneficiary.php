@@ -24,37 +24,42 @@ class Beneficiary extends Model
         return $this->belongsTo(Gender::class);
     }
 
-    public function bank()
+    public function bankDetail()
     {
         return $this->hasOne(BankDetail::class);
     }
 
-    public function mda_detail()
+    public function mdaDetail()
     {
         return $this->hasOne(MdaDetail::class);
     }
 
-    public function salary_detail()
+    public function salaryDetail()
     {
         return $this->hasOne(SalaryDetail::class);
     }
 
-    public function allowance_details()
+    public function allowanceDetails()
     {
         return $this->hasMany(AllowanceDetail::class);
     }
 
-    public function work_detail()
+    public function deductionDetails()
+    {
+        return $this->hasMany(DeductionDetail::class);
+    }
+
+    public function workDetail()
     {
         return $this->hasOne(WorkDetail::class);
     }
 
-    public function next_of_kin()
+    public function nextOfKin()
     {
         return $this->hasOne(NextOfKin::class);
     }
 
-    public function beneficiary_type()
+    public function beneficiaryType()
     {
         return $this->belongsTo(BeneficiaryType::class);
     }
@@ -80,6 +85,19 @@ class Beneficiary extends Model
     public function basic()
     {
 
+    }
+
+    public function setBasic($type, $value)
+    {
+        $salary_type = $type === 1
+            ? new PersonalizedSalary(['monthly_basic' => $value])
+            : new StructuredSalary(['structure_grade_level_step_id' => $value]) ;
+
+        $salary = $this->salaryDetail->create();
+
+//        $salary->payable()->save($salary_type);
+
+        return $this;
     }
 
     public function applyAllowance(Allowance $allowance)
@@ -108,6 +126,34 @@ class Beneficiary extends Model
                                'name' => $allowance->allowance->allowance_name->name,
                                'amount' => $allowance->amount,
                            ]);
+    }
+
+    public function applyDeduction(Deduction $deduction)
+    {
+        $this->deduction_details()->create([
+            'amount' => $deduction->amount(5000),
+            'deduction_id' => $deduction->id
+        ]);
+
+        return $this;
+    }
+
+    public function removeDeduction(DeductionDetail $deduction_detail)
+    {
+        $deduction_detail->unapply();
+
+        return $this->fresh();
+    }
+
+    public function deductions()
+    {
+        return $this->deduction_details()->get()
+                    ->load(['deduction.deduction_name'])
+                    ->transform(fn($deduction) => [
+                        'id' => $deduction->id,
+                        'name' => $deduction->deduction->deduction_name->name,
+                        'amount' => $deduction->amount,
+                    ]);
     }
 
     public function getNameAttribute()

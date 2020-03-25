@@ -19,12 +19,12 @@ class Allowance extends Model
         return $this->morphTo();
     }
 
-    public function allowance_details()
+    public function allowanceDetails()
     {
         return $this->hasMany(AllowanceDetail::class);
     }
 
-    public function allowance_name()
+    public function allowanceName()
     {
         return $this->belongsTo(AllowanceName::class);
     }
@@ -42,7 +42,7 @@ class Allowance extends Model
 
     public function applyTo(Beneficiary $beneficiary)
     {
-        $this->allowance_details()->create([
+        $this->allowanceDetails()->create([
             'amount' => $this->amount(500),
             'beneficiary_id' => $beneficiary->id
         ]);

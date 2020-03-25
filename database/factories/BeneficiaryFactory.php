@@ -29,5 +29,7 @@ $factory->define(Beneficiary::class, function (Faker $faker) {
         'address_state' => $faker->state,
         'address_country' => $faker->country,
         'active' => $faker->randomElement([0, 1]),
+        'domain_id' => $faker->randomElement([1, 2]),
+        'beneficiary_type_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7]),
     ];
 });

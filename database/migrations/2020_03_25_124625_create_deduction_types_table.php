@@ -15,6 +15,7 @@ class CreateDeductionTypesTable extends Migration
     {
         Schema::create('deduction_types', function (Blueprint $table) {
             $table->id();
+            $table->string('code', 20);
             $table->string('name');
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();

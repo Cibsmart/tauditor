@@ -19,12 +19,12 @@ class Deduction extends Model
         return $this->morphTo();
     }
 
-    public function deduction_details()
+    public function deductionDetails()
     {
         return $this->hasMany(DeductionDetail::class);
     }
 
-    public function deduction_name()
+    public function deductionName()
     {
         return $this->belongsTo(DeductionName::class);
     }
@@ -42,7 +42,7 @@ class Deduction extends Model
 
     public function applyTo(Beneficiary $beneficiary)
     {
-        $this->deduction_details()->create([
+        $this->deductionDetails()->create([
             'amount' => $this->amount(500),
             'beneficiary_id' => $beneficiary->id
         ]);

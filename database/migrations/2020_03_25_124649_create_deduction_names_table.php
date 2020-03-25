@@ -15,12 +15,12 @@ class CreateDeductionNamesTable extends Migration
     {
         Schema::create('deduction_names', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('deduction_type_id');
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('domain_id');
             $table->timestamps();
 
-            $table->foreign('domain_id')->references('id')->on('domains');
+            $table->foreign('deduction_type_id')->references('id')->on('deduction_types');
         });
     }
 

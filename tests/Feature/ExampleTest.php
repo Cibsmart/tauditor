@@ -2,11 +2,9 @@
 
 namespace Tests\Feature;
 
-use MdaSeeder;
-use StateSeeder;
-use MicroFinanceBankSeeder;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use AllowanceSeeder;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
 {
@@ -20,7 +18,7 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
 
-        $this->seed();
+        $this->seed(AllowanceSeeder::class);
 
         $this->assertFalse(false);
     }

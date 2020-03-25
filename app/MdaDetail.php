@@ -13,12 +13,12 @@ class MdaDetail extends Model
         return $this->belongsTo(Mda::class);
     }
 
-    public function sub_mda()
+    public function subMda()
     {
         return $this->belongsTo(SubMda::class)->withDefault();
     }
 
-    public function sub_sub_mda()
+    public function subSubMda()
     {
         return $this->belongsTo(SubSubMda::class)->withDefault();
     }

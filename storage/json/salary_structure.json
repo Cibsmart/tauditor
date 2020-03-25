@@ -1,0 +1,1084 @@
+{
+    "CONHESS_NURSE_CALL": [
+        {
+            "GRADE": "5",
+            "STEP": "1",
+            "MBA": "31233.75",
+            "CALL DUTY": "6192",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3123.38"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "2",
+            "MBA": "31721.06",
+            "CALL DUTY": "6456",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3172.11"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "3",
+            "MBA": "32208.38",
+            "CALL DUTY": "6720",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3220.84"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "4",
+            "MBA": "32695.69",
+            "CALL DUTY": "6984",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3269.57"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "5",
+            "MBA": "33183",
+            "CALL DUTY": "7224",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3318.30"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "6",
+            "MBA": "33670.31",
+            "CALL DUTY": "7488",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3367.03"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "7",
+            "MBA": "34157.63",
+            "CALL DUTY": "7752",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3415.76"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "8",
+            "MBA": "34644.94",
+            "CALL DUTY": "7992",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3464.49"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "9",
+            "MBA": "35132.25",
+            "CALL DUTY": "8256",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3513.23"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "10",
+            "MBA": "35619.56",
+            "CALL DUTY": "8520",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3561.96"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "11",
+            "MBA": "36106.88",
+            "CALL DUTY": "8784",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3610.69"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "12",
+            "MBA": "36594.19",
+            "CALL DUTY": "9024",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3659.42"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "13",
+            "MBA": "37081.5",
+            "CALL DUTY": "9288",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3708.15"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "14",
+            "MBA": "37568.81",
+            "CALL DUTY": "9552",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3756.88"
+        },
+        {
+            "GRADE": "5",
+            "STEP": "15",
+            "MBA": "38056.13",
+            "CALL DUTY": "9792",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3805.61"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "1",
+            "MBA": "33812.8",
+            "CALL DUTY": "8328",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3381.28"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "2",
+            "MBA": "34952.65",
+            "CALL DUTY": "8616",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3495.27"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "3",
+            "MBA": "36092.55",
+            "CALL DUTY": "8952",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3609.26"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "4",
+            "MBA": "37232.4",
+            "CALL DUTY": "9264",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3723.24"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "5",
+            "MBA": "38372.25",
+            "CALL DUTY": "9576",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3837.23"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "6",
+            "MBA": "39512.15",
+            "CALL DUTY": "9888",
+            "HAZARD": "3000",
+            "INDUCEMENT": "3951.22"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "7",
+            "MBA": "40652",
+            "CALL DUTY": "10224",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4065.20"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "8",
+            "MBA": "41791.85",
+            "CALL DUTY": "10536",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4179.19"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "9",
+            "MBA": "42931.75",
+            "CALL DUTY": "10848",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4293.18"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "10",
+            "MBA": "44071.6",
+            "CALL DUTY": "11160",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4407.16"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "11",
+            "MBA": "45211.5",
+            "CALL DUTY": "11496",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4521.15"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "12",
+            "MBA": "46351.35",
+            "CALL DUTY": "11784",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4635.14"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "13",
+            "MBA": "47491.2",
+            "CALL DUTY": "12120",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4749.12"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "14",
+            "MBA": "48631.1",
+            "CALL DUTY": "12432",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4863.11"
+        },
+        {
+            "GRADE": "6",
+            "STEP": "15",
+            "MBA": "49770.95",
+            "CALL DUTY": "12744",
+            "HAZARD": "3000",
+            "INDUCEMENT": "4977.10"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "1",
+            "MBA": "50655.95",
+            "CALL DUTY": "10824",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5065.60"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "2",
+            "MBA": "52285.6",
+            "CALL DUTY": "11208",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5228.56"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "3",
+            "MBA": "53915.2",
+            "CALL DUTY": "11568",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5391.52"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "4",
+            "MBA": "55544.8",
+            "CALL DUTY": "11952",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5554.48"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "5",
+            "MBA": "57174.4",
+            "CALL DUTY": "12312",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5717.44"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "6",
+            "MBA": "58804",
+            "CALL DUTY": "12696",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5880.40"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "7",
+            "MBA": "60433.6",
+            "CALL DUTY": "13080",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6043.36"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "8",
+            "MBA": "62063.25",
+            "CALL DUTY": "13464",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6206.33"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "9",
+            "MBA": "63692.85",
+            "CALL DUTY": "13848",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6369.29"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "10",
+            "MBA": "65322.45",
+            "CALL DUTY": "14208",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6532.25"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "11",
+            "MBA": "66952.05",
+            "CALL DUTY": "14592",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6695.21"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "12",
+            "MBA": "68581.65",
+            "CALL DUTY": "14976",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6858.17"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "13",
+            "MBA": "70211.25",
+            "CALL DUTY": "15336",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7021.13"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "14",
+            "MBA": "71840.9",
+            "CALL DUTY": "15720",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7184.09"
+        },
+        {
+            "GRADE": "7",
+            "STEP": "15",
+            "MBA": "73470.5",
+            "CALL DUTY": "16104",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7347.05"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "1",
+            "MBA": "58342.5",
+            "CALL DUTY": "12744",
+            "HAZARD": "3000",
+            "INDUCEMENT": "5834.25"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "2",
+            "MBA": "60259.45",
+            "CALL DUTY": "13200",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6025.95"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "3",
+            "MBA": "62176.35",
+            "CALL DUTY": "13656",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6217.64"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "4",
+            "MBA": "64093.3",
+            "CALL DUTY": "14088",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6409.33"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "5",
+            "MBA": "66010.25",
+            "CALL DUTY": "14544",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6601.03"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "6",
+            "MBA": "67927.15",
+            "CALL DUTY": "15000",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6792.72"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "7",
+            "MBA": "69844.1",
+            "CALL DUTY": "15456",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6984.41"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "8",
+            "MBA": "71761.05",
+            "CALL DUTY": "15888",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7176.11"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "9",
+            "MBA": "73678",
+            "CALL DUTY": "16344",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7367.80"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "10",
+            "MBA": "75594.9",
+            "CALL DUTY": "16800",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7559.49"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "11",
+            "MBA": "77511.85",
+            "CALL DUTY": "17256",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7751.19"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "12",
+            "MBA": "79428.8",
+            "CALL DUTY": "17688",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7942.88"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "13",
+            "MBA": "81345.7",
+            "CALL DUTY": "18144",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8134.57"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "14",
+            "MBA": "83262.65",
+            "CALL DUTY": "18576",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8326.27"
+        },
+        {
+            "GRADE": "8",
+            "STEP": "15",
+            "MBA": "85179.6",
+            "CALL DUTY": "19032",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8517.96"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "1",
+            "MBA": "68484.4",
+            "CALL DUTY": "15024",
+            "HAZARD": "3000",
+            "INDUCEMENT": "6848.44"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "2",
+            "MBA": "70311.6",
+            "CALL DUTY": "15504",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7031.16"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "3",
+            "MBA": "72425.5",
+            "CALL DUTY": "16008",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7242.55"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "4",
+            "MBA": "74539.35",
+            "CALL DUTY": "16488",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7453.94"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "5",
+            "MBA": "76653.25",
+            "CALL DUTY": "16992",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7665.33"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "6",
+            "MBA": "78767.15",
+            "CALL DUTY": "17472",
+            "HAZARD": "3000",
+            "INDUCEMENT": "7876.72"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "7",
+            "MBA": "80881.05",
+            "CALL DUTY": "17976",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8088.11"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "8",
+            "MBA": "82994.9",
+            "CALL DUTY": "18480",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8299.49"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "9",
+            "MBA": "85108.8",
+            "CALL DUTY": "18960",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8510.88"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "10",
+            "MBA": "87222.7",
+            "CALL DUTY": "19464",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8722.27"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "11",
+            "MBA": "89336.55",
+            "CALL DUTY": "19944",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8933.66"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "12",
+            "MBA": "91450.45",
+            "CALL DUTY": "20448",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9145.05"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "13",
+            "MBA": "93564.35",
+            "CALL DUTY": "20928",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9356.44"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "14",
+            "MBA": "95678.2",
+            "CALL DUTY": "21432",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9567.82"
+        },
+        {
+            "GRADE": "9",
+            "STEP": "15",
+            "MBA": "97792.1",
+            "CALL DUTY": "21912",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9779.21"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "1",
+            "MBA": "80789.3",
+            "CALL DUTY": "17328",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8078.93"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "2",
+            "MBA": "82705.85",
+            "CALL DUTY": "18096",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8270.59"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "3",
+            "MBA": "84622.4",
+            "CALL DUTY": "18864",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8462.24"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "4",
+            "MBA": "86538.95",
+            "CALL DUTY": "19608",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8653.90"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "5",
+            "MBA": "88455.45",
+            "CALL DUTY": "20376",
+            "HAZARD": "3000",
+            "INDUCEMENT": "8845.55"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "6",
+            "MBA": "90372",
+            "CALL DUTY": "21144",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9037.20"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "7",
+            "MBA": "92288.55",
+            "CALL DUTY": "21912",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9228.86"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "8",
+            "MBA": "94205.1",
+            "CALL DUTY": "22680",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9420.51"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "9",
+            "MBA": "96121.6",
+            "CALL DUTY": "23448",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9612.16"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "10",
+            "MBA": "98038.15",
+            "CALL DUTY": "24216",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9803.82"
+        },
+        {
+            "GRADE": "10",
+            "STEP": "11",
+            "MBA": "99954.7",
+            "CALL DUTY": "24984",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9995.47"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "1",
+            "MBA": "95477.85",
+            "CALL DUTY": "19368",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9547.79"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "2",
+            "MBA": "97565.25",
+            "CALL DUTY": "20184",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9756.53"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "3",
+            "MBA": "99652.65",
+            "CALL DUTY": "20976",
+            "HAZARD": "3000",
+            "INDUCEMENT": "9965.27"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "4",
+            "MBA": "101740",
+            "CALL DUTY": "21792",
+            "HAZARD": "3000",
+            "INDUCEMENT": "10174.00"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "5",
+            "MBA": "103827.4",
+            "CALL DUTY": "22608",
+            "HAZARD": "3000",
+            "INDUCEMENT": "10382.74"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "6",
+            "MBA": "105914.8",
+            "CALL DUTY": "23424",
+            "HAZARD": "3000",
+            "INDUCEMENT": "10591.48"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "7",
+            "MBA": "108002.2",
+            "CALL DUTY": "24216",
+            "HAZARD": "3000",
+            "INDUCEMENT": "10800.22"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "8",
+            "MBA": "110089.6",
+            "CALL DUTY": "25032",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11008.96"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "9",
+            "MBA": "112177",
+            "CALL DUTY": "25848",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11217.70"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "10",
+            "MBA": "114264.4",
+            "CALL DUTY": "26640",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11426.44"
+        },
+        {
+            "GRADE": "11",
+            "STEP": "11",
+            "MBA": "116351.85",
+            "CALL DUTY": "27456",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11635.19"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "1",
+            "MBA": "112871.25",
+            "CALL DUTY": "21432",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11287.13"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "2",
+            "MBA": "115780.2",
+            "CALL DUTY": "22296",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11578.02"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "3",
+            "MBA": "118689.15",
+            "CALL DUTY": "23160",
+            "HAZARD": "3000",
+            "INDUCEMENT": "11868.92"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "4",
+            "MBA": "121598.15",
+            "CALL DUTY": "24024",
+            "HAZARD": "3000",
+            "INDUCEMENT": "12159.82"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "5",
+            "MBA": "124507.1",
+            "CALL DUTY": "24912",
+            "HAZARD": "3000",
+            "INDUCEMENT": "12450.71"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "6",
+            "MBA": "127416.05",
+            "CALL DUTY": "25776",
+            "HAZARD": "3000",
+            "INDUCEMENT": "12741.61"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "7",
+            "MBA": "130325",
+            "CALL DUTY": "26640",
+            "HAZARD": "3000",
+            "INDUCEMENT": "13032.50"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "8",
+            "MBA": "133233.95",
+            "CALL DUTY": "27528",
+            "HAZARD": "3000",
+            "INDUCEMENT": "13323.40"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "9",
+            "MBA": "136142.95",
+            "CALL DUTY": "28392",
+            "HAZARD": "3000",
+            "INDUCEMENT": "13614.30"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "10",
+            "MBA": "139051.9",
+            "CALL DUTY": "29256",
+            "HAZARD": "3000",
+            "INDUCEMENT": "13905.19"
+        },
+        {
+            "GRADE": "12",
+            "STEP": "11",
+            "MBA": "141960.85",
+            "CALL DUTY": "30120",
+            "HAZARD": "3000",
+            "INDUCEMENT": "14196.09"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "1",
+            "MBA": "141971.3",
+            "CALL DUTY": "23736",
+            "HAZARD": "3000",
+            "INDUCEMENT": "14197.13"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "2",
+            "MBA": "146122.1",
+            "CALL DUTY": "24888",
+            "HAZARD": "3000",
+            "INDUCEMENT": "14612.21"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "3",
+            "MBA": "150272.9",
+            "CALL DUTY": "26064",
+            "HAZARD": "3000",
+            "INDUCEMENT": "15027.29"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "4",
+            "MBA": "154423.7",
+            "CALL DUTY": "27216",
+            "HAZARD": "3000",
+            "INDUCEMENT": "15442.37"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "5",
+            "MBA": "158574.5",
+            "CALL DUTY": "28392",
+            "HAZARD": "3000",
+            "INDUCEMENT": "15857.45"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "6",
+            "MBA": "162725.3",
+            "CALL DUTY": "29544",
+            "HAZARD": "3000",
+            "INDUCEMENT": "16272.53"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "7",
+            "MBA": "166876.1",
+            "CALL DUTY": "30720",
+            "HAZARD": "3000",
+            "INDUCEMENT": "16687.61"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "8",
+            "MBA": "171026.9",
+            "CALL DUTY": "31872",
+            "HAZARD": "3000",
+            "INDUCEMENT": "17102.69"
+        },
+        {
+            "GRADE": "13",
+            "STEP": "9",
+            "MBA": "175177.75",
+            "CALL DUTY": "33024",
+            "HAZARD": "3000",
+            "INDUCEMENT": "17517.78"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "1",
+            "MBA": "174170.9",
+            "CALL DUTY": "26232",
+            "HAZARD": "3000",
+            "INDUCEMENT": "17417.09"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "2",
+            "MBA": "179093.3",
+            "CALL DUTY": "27648",
+            "HAZARD": "3000",
+            "INDUCEMENT": "17909.33"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "3",
+            "MBA": "184015.7",
+            "CALL DUTY": "29040",
+            "HAZARD": "3000",
+            "INDUCEMENT": "18401.57"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "4",
+            "MBA": "188938.05",
+            "CALL DUTY": "30456",
+            "HAZARD": "3000",
+            "INDUCEMENT": "18893.81"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "5",
+            "MBA": "193860.45",
+            "CALL DUTY": "31848",
+            "HAZARD": "3000",
+            "INDUCEMENT": "19386.05"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "6",
+            "MBA": "198782.85",
+            "CALL DUTY": "33240",
+            "HAZARD": "3000",
+            "INDUCEMENT": "19878.29"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "7",
+            "MBA": "203705.25",
+            "CALL DUTY": "34656",
+            "HAZARD": "3000",
+            "INDUCEMENT": "20370.53"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "8",
+            "MBA": "208627.65",
+            "CALL DUTY": "36048",
+            "HAZARD": "3000",
+            "INDUCEMENT": "20862.77"
+        },
+        {
+            "GRADE": "14",
+            "STEP": "9",
+            "MBA": "213550",
+            "CALL DUTY": "37440",
+            "HAZARD": "3000",
+            "INDUCEMENT": "21355.00"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "1",
+            "MBA": "214327.2",
+            "CALL DUTY": "29256",
+            "HAZARD": "3000",
+            "INDUCEMENT": "21432.72"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "2",
+            "MBA": "219987.55",
+            "CALL DUTY": "30840",
+            "HAZARD": "3000",
+            "INDUCEMENT": "21998.76"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "3",
+            "MBA": "225647.9",
+            "CALL DUTY": "32424",
+            "HAZARD": "3000",
+            "INDUCEMENT": "22564.79"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "4",
+            "MBA": "231308.25",
+            "CALL DUTY": "34032",
+            "HAZARD": "3000",
+            "INDUCEMENT": "23130.83"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "5",
+            "MBA": "236968.6",
+            "CALL DUTY": "35616",
+            "HAZARD": "3000",
+            "INDUCEMENT": "23696.86"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "6",
+            "MBA": "242628.95",
+            "CALL DUTY": "37200",
+            "HAZARD": "3000",
+            "INDUCEMENT": "24262.90"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "7",
+            "MBA": "248289.3",
+            "CALL DUTY": "38784",
+            "HAZARD": "3000",
+            "INDUCEMENT": "24828.93"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "8",
+            "MBA": "253949.65",
+            "CALL DUTY": "40392",
+            "HAZARD": "3000",
+            "INDUCEMENT": "25394.97"
+        },
+        {
+            "GRADE": "15",
+            "STEP": "9",
+            "MBA": "259610",
+            "CALL DUTY": "41096",
+            "HAZARD": "3000",
+            "INDUCEMENT": "25961.00"
+        }
+    ]
+}

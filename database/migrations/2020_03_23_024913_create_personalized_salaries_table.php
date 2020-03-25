@@ -15,7 +15,7 @@ class CreatePersonalizedSalariesTable extends Migration
     {
         Schema::create('personalized_salaries', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('amount');
+            $table->unsignedBigInteger('monthly_basic');
             $table->timestamps();
         });
     }
