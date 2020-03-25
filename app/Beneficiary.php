@@ -81,7 +81,6 @@ class Beneficiary extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-
     public function basic()
     {
 
