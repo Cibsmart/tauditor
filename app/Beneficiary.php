@@ -3,6 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Beneficiary extends Model
 {
@@ -19,57 +23,57 @@ class Beneficiary extends Model
     | Relationships
     |-------------------------------------------------------------------------------
     */
-    public function gender()
+    public function gender() : BelongsTo
     {
         return $this->belongsTo(Gender::class);
     }
 
-    public function bankDetail()
+    public function bankDetail() : HasOne
     {
         return $this->hasOne(BankDetail::class);
     }
 
-    public function mdaDetail()
+    public function mdaDetail() : HasOne
     {
         return $this->hasOne(MdaDetail::class);
     }
 
-    public function salaryDetail()
+    public function salaryDetail() : HasOne
     {
         return $this->hasOne(SalaryDetail::class);
     }
 
-    public function allowanceDetails()
+    public function allowanceDetails() : HasMany
     {
         return $this->hasMany(AllowanceDetail::class);
     }
 
-    public function deductionDetails()
+    public function deductionDetails() : HasMany
     {
         return $this->hasMany(DeductionDetail::class);
     }
 
-    public function workDetail()
+    public function workDetail() : HasOne
     {
         return $this->hasOne(WorkDetail::class);
     }
 
-    public function nextOfKin()
+    public function nextOfKin() : HasOne
     {
         return $this->hasOne(NextOfKin::class);
     }
 
-    public function beneficiaryType()
+    public function beneficiaryType() : BelongsTo
     {
         return $this->belongsTo(BeneficiaryType::class);
     }
 
-    public function qualifications()
+    public function qualifications() : HasMany
     {
         return $this->hasMany(Qualification::class);
     }
 
-    public function domain()
+    public function domain() : BelongsTo
     {
         return $this->belongsTo(Domain::class);
     }
@@ -81,25 +85,25 @@ class Beneficiary extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function basic()
+    public function basic() : int
     {
 
     }
 
-    public function setBasic($type, $value)
+    public function setBasic($type, $value) : Beneficiary
     {
-        $salary_type = $type === 1
+        $payable = $type === 1
             ? new PersonalizedSalary(['monthly_basic' => $value])
             : new StructuredSalary(['structure_grade_level_step_id' => $value]) ;
 
         $salary = $this->salaryDetail->create();
 
-//        $salary->payable()->save($salary_type);
+        $payable->salary()->save($salary);
 
         return $this;
     }
 
-    public function applyAllowance(Allowance $allowance)
+    public function applyAllowance(Allowance $allowance) : Beneficiary
     {
         $this->allowance_details()->create([
             'amount' => $allowance->amount(5000),
@@ -109,14 +113,14 @@ class Beneficiary extends Model
         return $this;
     }
 
-    public function removeAllowance(AllowanceDetail $allowance_detail)
+    public function removeAllowance(AllowanceDetail $allowance_detail) : Beneficiary
     {
         $allowance_detail->unapply();
 
         return $this->fresh();
     }
 
-    public function allowances()
+    public function allowances() : Collection
     {
         return $this->allowance_details()->get()
                            ->load(['allowance.allowance_name'])
@@ -127,7 +131,7 @@ class Beneficiary extends Model
                            ]);
     }
 
-    public function applyDeduction(Deduction $deduction)
+    public function applyDeduction(Deduction $deduction) : Beneficiary
     {
         $this->deduction_details()->create([
             'amount' => $deduction->amount(5000),
@@ -137,14 +141,14 @@ class Beneficiary extends Model
         return $this;
     }
 
-    public function removeDeduction(DeductionDetail $deduction_detail)
+    public function removeDeduction(DeductionDetail $deduction_detail) : Beneficiary
     {
         $deduction_detail->unapply();
 
         return $this->fresh();
     }
 
-    public function deductions()
+    public function deductions() : Collection
     {
         return $this->deduction_details()->get()
                     ->load(['deduction.deduction_name'])
@@ -155,12 +159,12 @@ class Beneficiary extends Model
                     ]);
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute() : string
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
     }
 
-    public function scopeFilters($query, array $filters)
+    public function scopeFilters($query, array $filters) : void
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
@@ -168,13 +172,13 @@ class Beneficiary extends Model
                       ->orWhere('first_name', 'like', '%' . $search . '%')
                       ->orWhere('middle_name', 'like', '%' . $search . '%')
                       ->orWhere('verification_number', 'like', '%' . $search . '%')
-                      ->orWhereHas('mda_detail', function($query) use ($search){
+                      ->orWhereHas('mdaDetail', function($query) use ($search){
                           $query->whereHas('mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas('sub_mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas('sub_sub_mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                      })->orWhereHas('work_detail', function($query) use ($search){
+                          $query->orWhereHas('subMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                          $query->orWhereHas('subSubMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      })->orWhereHas('workDetail', function($query) use ($search){
                           $query->whereHas('designation', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                      })->orWhereHas('bank', function ($query) use ($search) {
+                      })->orWhereHas('bankDetail', function ($query) use ($search) {
                           $query->where('account_number', 'like', '%' . $search . '%')
                                ->orWhereHasMorph('bankable',
                                    [Bank::class, MicroFinanceBank::class],
