@@ -3,33 +3,42 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StructuredSalary extends Model
 {
     protected $guarded = [];
 
-    public function salary()
+    /*
+    |-------------------------------------------------------------------------------
+    | Relationships
+    |-------------------------------------------------------------------------------
+    */
+    public function salary() : MorphOne
     {
         return $this->morphOne(SalaryDetail::class, 'payable');
     }
 
-    public function structure()
+    public function cadreStep() : BelongsTo
     {
-        return $this->belongsTo(SalaryStructure::class);
+        return $this->belongsTo(CadreStep::class);
     }
 
-    public function basicPay()
+
+    /*
+    |-------------------------------------------------------------------------------
+    | Methods
+    |-------------------------------------------------------------------------------
+    */
+    public function basicPay() : float
     {
-        return $this->structure()->basic;
+        return $this->cadreStep->monthly_basic;
     }
 
-    public function gradeLevel()
+    public function allowances()
     {
-        return $this->belongsTo(GradeLevel::class);
-    }
-
-    public function step()
-    {
-        return $this->belongsTo(Step::class);
+        return $this->cadreStep->allowances->allowance;
     }
 }

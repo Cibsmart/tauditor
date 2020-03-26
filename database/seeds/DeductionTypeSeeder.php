@@ -14,9 +14,9 @@ class DeductionTypeSeeder extends Seeder
     public function run()
     {
         $deduction_types = [
-            'STATUTORY DEDUCTIONS',
-            'DUES',
-            'LOANS'
+            'STATUTORY' =>'STATUTORY',
+            'DUES' => 'DUES',
+            'LOANS' => 'LOANS'
         ];
 
         for($i = 1; $i <= 2; $i++) {

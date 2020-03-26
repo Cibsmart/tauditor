@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class LocalGovernment extends Model
 {
-    //
+    protected $guarded = [];
 }

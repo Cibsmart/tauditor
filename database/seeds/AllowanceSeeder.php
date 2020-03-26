@@ -4,8 +4,13 @@ use App\Step;
 use App\Cadre;
 use App\Structure;
 use App\CadreStep;
+use App\Allowance;
 use App\GradeLevel;
+use App\FixedValue;
+use App\AllowanceName;
+use App\PercentageValue;
 use Illuminate\Support\Str;
+use App\CadreStepAllowance;
 use Illuminate\Database\Seeder;
 
 class AllowanceSeeder extends Seeder
@@ -17,9 +22,10 @@ class AllowanceSeeder extends Seeder
      */
     public function run()
     {
-        $salary_structures = Structure::all();
-        $grades = GradeLevel::all();
         $steps = Step::all();
+        $grades = GradeLevel::all();
+        $allowance_names = AllowanceName::all();
+        $salary_structures = Structure::all();
 
         //Get the content of of sub_mda.json
         $json =  file_get_contents(storage_path() .'/json/salary_structure.json');
@@ -33,17 +39,28 @@ class AllowanceSeeder extends Seeder
             foreach ($structures as $items) {
 
                 $cadre_id = '';
-                $grade_id = '';
                 $step_id = '';
+                $cadre_step_id = '';
 
                 foreach ($items as $key => $item) {
                     if(! in_array($key, ['GRADE', 'STEP', 'MBA'])){
+                        $allowance_name_id = $allowance_names->firstWhere('name', $key)->id;
+
+                        $amount = $item <= 20
+                            ? factory(PercentageValue::class)->create(['percentage' => $item])
+                            : factory(FixedValue::class)->create(['amount' => $item]);
+
+                        $allowance = $amount->value()->save(factory(Allowance::class)
+                            ->make(['allowance_name_id' => $allowance_name_id]));
+
+//                        dd($allowance->cadreAllowance());
+                        $allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
                         continue;
                     }
 
                     if($key == 'MBA'){
-                        factory(CadreStep::class)
-                            ->create(['cadre_id' => $cadre_id, 'step_id' => $step_id, 'monthly_basic' => $item]);
+                        $cadre_step_id = factory(CadreStep::class)
+                            ->create(['cadre_id' => $cadre_id, 'step_id' => $step_id, 'monthly_basic' => $item])->id;
                         continue;
                     }
 
@@ -55,7 +72,7 @@ class AllowanceSeeder extends Seeder
 
                     if($key == 'GRADE'){
                         $gd = str_pad($item, 2, '0', STR_PAD_LEFT);
-                        $grade_id = $steps->firstWhere('code', $gd)->id;
+                        $grade_id = $grades->firstWhere('code', $gd)->id;
                         $cadre = factory(Cadre::class)->raw(['structure_id' => $structure_id, 'grade_level_id' => $grade_id]);
                         $cadre_id = Cadre::firstOrCreate($cadre);
                         continue;

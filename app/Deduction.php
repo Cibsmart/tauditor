@@ -3,6 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Deduction extends Model
 {
@@ -14,17 +17,17 @@ class Deduction extends Model
     | Relationship
     |-------------------------------------------------------------------------------
     */
-    public function valuable()
+    public function valuable() : MorphTo
     {
         return $this->morphTo();
     }
 
-    public function deductionDetails()
+    public function deductionDetails() : HasMany
     {
         return $this->hasMany(DeductionDetail::class);
     }
 
-    public function deductionName()
+    public function deductionName() : BelongsTo
     {
         return $this->belongsTo(DeductionName::class);
     }
@@ -35,7 +38,7 @@ class Deduction extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function amount($value)
+    public function amount(float $value) : float
     {
         return $this->valuable->amount($value);
     }
@@ -43,7 +46,7 @@ class Deduction extends Model
     public function applyTo(Beneficiary $beneficiary)
     {
         $this->deductionDetails()->create([
-            'amount' => $this->amount(500),
+            'amount' => $this->amount($beneficiary->basic()),
             'beneficiary_id' => $beneficiary->id
         ]);
 

@@ -15,6 +15,7 @@ use App\MaritalStatus;
 use App\Qualification;
 use App\LocalGovernment;
 use App\MicroFinanceBank;
+use App\StructuredSalary;
 use App\QualificationType;
 use App\PersonalizedSalary;
 use Illuminate\Database\Seeder;
@@ -56,9 +57,23 @@ class BeneficiarySeeder extends Seeder
                     ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
                     : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
-                $payable = factory(PersonalizedSalary::class)->create();
+                $cadre_step_id = 1;
+
+                if(!$domain->structures->random()->steps->isEmpty()) {
+                    $cadre_step_id = $domain->structures->random()->steps->random()->id;
+                }
+
+                $payable = $faker->randomElement([1, 2]) == 1
+                    ? factory(PersonalizedSalary::class)->create()
+                    : factory(StructuredSalary::class)
+                        ->create(['cadre_step_id' => $cadre_step_id]);
 
                 $payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
+
+                if($payable instanceof StructuredSalary)
+                {
+                    dd($payable->allowances());
+                }
 
                 $beneficiary->nextOfKin()
                             ->save(factory(NextOfKin::class)

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class WorkDetail extends Model
 {
@@ -10,7 +11,7 @@ class WorkDetail extends Model
 
     protected $casts = [];
 
-    public function designation()
+    public function designation() : BelongsTo
     {
         return $this->belongsTo(Designation::class);
     }

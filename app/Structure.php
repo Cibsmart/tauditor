@@ -3,26 +3,28 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Structure extends Model
 {
     protected $guarded = [];
 
-    public function cadre()
+    public function cadre() : HasMany
     {
         return $this->hasMany(Cadre::class, );
     }
 
-    public function steps()
+    public function steps() : HasManyThrough
     {
         return $this->hasManyThrough(
             CadreStep::class,
             Cadre::class,
-            'grade_level_id',
-            'structure_grade_level_id');
+            'structure_id',
+            'step_id');
     }
 
-    public function salaryDetails()
+    public function salaryDetails() : HasManyThrough
     {
         return $this->hasManyThrough(
             SalaryDetail::class,

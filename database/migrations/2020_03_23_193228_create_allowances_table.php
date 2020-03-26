@@ -15,7 +15,7 @@ class CreateAllowancesTable extends Migration
     {
         Schema::create('allowances', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('allowance_name_id')->unique();
+            $table->unsignedBigInteger('allowance_name_id');
             $table->morphs('valuable');
             $table->timestamps();
 

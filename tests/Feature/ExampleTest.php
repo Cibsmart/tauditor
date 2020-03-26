@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use AllowanceSeeder;
 use Tests\TestCase;
+use BeneficiarySeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class ExampleTest extends TestCase
@@ -18,7 +19,8 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
 
-        $this->seed(AllowanceSeeder::class);
+        $this->seed();
+        $this->seed(BeneficiarySeeder::class);
 
         $this->assertFalse(false);
     }

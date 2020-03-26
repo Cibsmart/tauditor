@@ -3,18 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class PercentageValue extends Model
 {
     protected $guarded = [];
 
-    public function value()
+    public function value() : MorphOne
     {
-        return $this->morphOne(Allowance::class, 'amountable');
+        return $this->morphOne(Allowance::class, 'valuable');
     }
 
-    public function amount($amount)
+    public function amount(float $base_value) : float
     {
-        return $amount * $this->percentage / 100;
+        return $base_value * $this->percentage / 100;
     }
 }

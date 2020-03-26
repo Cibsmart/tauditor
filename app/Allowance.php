@@ -3,6 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Float_;
+use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\String_;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Allowance extends Model
 {
@@ -14,19 +21,24 @@ class Allowance extends Model
     | Relationship
     |-------------------------------------------------------------------------------
     */
-    public function valuable()
+    public function valuable() : MorphTo
     {
         return $this->morphTo();
     }
 
-    public function allowanceDetails()
+    public function allowanceDetails() : HasMany
     {
         return $this->hasMany(AllowanceDetail::class);
     }
 
-    public function allowanceName()
+    public function allowanceName() : BelongsTo
     {
         return $this->belongsTo(AllowanceName::class);
+    }
+
+    public function cadreAllowance() : HasOne
+    {
+        return $this->hasOne(CadreStepAllowance::class);
     }
 
 
@@ -35,15 +47,15 @@ class Allowance extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function amount($value)
+    public function amount(float $base_value = null) : float
     {
-        return $this->valuable->amount($value);
+        return $this->valuable->amount($base_value);
     }
 
-    public function applyTo(Beneficiary $beneficiary)
+    public function applyTo(Beneficiary $beneficiary) : Allowance
     {
         $this->allowanceDetails()->create([
-            'amount' => $this->amount(500),
+            'amount' => $this->amount($beneficiary->basic()),
             'beneficiary_id' => $beneficiary->id
         ]);
 

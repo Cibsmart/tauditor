@@ -28,7 +28,9 @@ class AllowanceNameSeeder extends Seeder
                     ->create([
                         'code' => $code,
                         'name' => $name,
-                        'allowance_type_id' => $allowance_types->firstWhere('code', 'OTHERS')->id
+                        'allowance_type_id' => $allowance_types
+                            ->where('domain_id', $i)
+                            ->where('code', 'OTHERS')->first()->id
                     ]);
             }
         }

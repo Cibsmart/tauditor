@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -22,12 +23,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function domain()
+    public function domain() : BelongsTo
     {
         return $this->belongsTo(Domain::class);
     }
 
-    public function setPasswordAttribute($value)
+    public function setPasswordAttribute(string $value) : string
     {
         return $this->attributes['password'] = Hash::make($value);
     }

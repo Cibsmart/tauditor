@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SubMda extends Model
 {
@@ -12,7 +13,7 @@ class SubMda extends Model
         'has_sub' => 'boolean',
     ];
 
-    public function subs()
+    public function subs() : HasMany
     {
         return $this->hasMany(SubSubMda::class);
     }

@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Float_;
+use phpDocumentor\Reflection\Types\Integer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -85,16 +87,16 @@ class Beneficiary extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function basic() : int
+    public function basic() : float
     {
-
+        return $this->salaryDetail->basicPay();
     }
 
-    public function setBasic($type, $value) : Beneficiary
+    public function setBasic(int $type, int $value) : Beneficiary
     {
         $payable = $type === 1
             ? new PersonalizedSalary(['monthly_basic' => $value])
-            : new StructuredSalary(['structure_grade_level_step_id' => $value]) ;
+            : new StructuredSalary(['cadre_step_id' => $value]) ;
 
         $salary = $this->salaryDetail->create();
 
@@ -105,8 +107,8 @@ class Beneficiary extends Model
 
     public function applyAllowance(Allowance $allowance) : Beneficiary
     {
-        $this->allowance_details()->create([
-            'amount' => $allowance->amount(5000),
+        $this->allowanceDetails()->create([
+            'amount' => $allowance->amount($this->basic()),
             'allowance_id' => $allowance->id
         ]);
 
@@ -122,19 +124,19 @@ class Beneficiary extends Model
 
     public function allowances() : Collection
     {
-        return $this->allowance_details()->get()
+        return $this->allowanceDetails()->get()
                            ->load(['allowance.allowance_name'])
                            ->transform(fn($allowance) => [
                                'id' => $allowance->id,
-                               'name' => $allowance->allowance->allowance_name->name,
+                               'name' => $allowance->allowance->allowanceName->name,
                                'amount' => $allowance->amount,
                            ]);
     }
 
     public function applyDeduction(Deduction $deduction) : Beneficiary
     {
-        $this->deduction_details()->create([
-            'amount' => $deduction->amount(5000),
+        $this->deductionDetails()->create([
+            'amount' => $deduction->amount($this->basic()),
             'deduction_id' => $deduction->id
         ]);
 
@@ -150,11 +152,11 @@ class Beneficiary extends Model
 
     public function deductions() : Collection
     {
-        return $this->deduction_details()->get()
+        return $this->deductionDetails()->get()
                     ->load(['deduction.deduction_name'])
                     ->transform(fn($deduction) => [
                         'id' => $deduction->id,
-                        'name' => $deduction->deduction->deduction_name->name,
+                        'name' => $deduction->deduction->deductionName->name,
                         'amount' => $deduction->amount,
                     ]);
     }

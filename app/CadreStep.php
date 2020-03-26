@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CadreStep extends Model
 {
@@ -13,17 +15,17 @@ class CadreStep extends Model
     | Relationships
     |-------------------------------------------------------------------------------
     */
-    public function cadre()
+    public function cadre() : BelongsTo
     {
         return $this->belongsTo(Cadre::class);
     }
 
-    public function allowances()
+    public function allowances() : HasMany
     {
         return $this->hasMany(CadreStepAllowance::class);
     }
 
-    public function deductions()
+    public function deductions() : HasMany
     {
         return $this->hasMany(CadreStepDeduction::class);
     }
@@ -34,12 +36,12 @@ class CadreStep extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function setMonthlyBasicAttribute($value)
+    public function setMonthlyBasicAttribute(float $value) : int
     {
         return $this->attributes['monthly_basic'] = $value * 100;
     }
 
-    public function getMonthlyBasicAttribute($value)
+    public function getMonthlyBasicAttribute(int $value) : float
     {
         return $value / 100;
     }

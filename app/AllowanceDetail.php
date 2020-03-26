@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AllowanceDetail extends Model
 {
@@ -11,17 +12,28 @@ class AllowanceDetail extends Model
 
     protected $guarded = [];
 
-    public function beneficiary()
+    /*
+    |-------------------------------------------------------------------------------
+    | Relationships
+    |-------------------------------------------------------------------------------
+    */
+    public function beneficiary() : BelongsTo
     {
         return $this->belongsTo(Beneficiary::class);
     }
 
-    public function allowance()
+    public function allowance() : BelongsTo
     {
         return $this->belongsTo(Allowance::class);
     }
 
-    public function unapply()
+
+    /*
+    |-------------------------------------------------------------------------------
+    | Methods
+    |-------------------------------------------------------------------------------
+    */
+    public function unapply() : int
     {
         return $this->delete();
     }
