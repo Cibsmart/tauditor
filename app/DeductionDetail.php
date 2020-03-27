@@ -12,6 +12,11 @@ class DeductionDetail extends Model
 
     protected $guarded = [];
 
+    /*
+    |-------------------------------------------------------------------------------
+    | Relationship
+    |-------------------------------------------------------------------------------
+    */
     public function beneficiary() : BelongsTo
     {
         return $this->belongsTo(Beneficiary::class);
@@ -22,8 +27,24 @@ class DeductionDetail extends Model
         return $this->belongsTo(Deduction::class);
     }
 
+
+    /*
+    |-------------------------------------------------------------------------------
+    | Methods
+    |-------------------------------------------------------------------------------
+    */
     public function unapply() : int
     {
         return $this->delete();
+    }
+
+    public function setAmountAttribute(float $value) : int
+    {
+        return $this->attributes['Amount'] = $value * 100;
+    }
+
+    public function getAmountAttribute(int $value) : float
+    {
+        return $value / 100;
     }
 }

@@ -30,19 +30,19 @@ class BeneficiaryController extends Controller
             ->with($this->relationships())
             ->filters(Request::only('search'))
             ->paginate()
-            ->transform(fn ($beneficiaries) => [
+            ->transform(fn (Beneficiary $beneficiaries) => [
                 'id' => $beneficiaries->id,
                 'name' => $beneficiaries->name,
                 'verification_number' => $beneficiaries->verification_number,
                 'active' => $beneficiaries->active,
-                'account_number' => $beneficiaries->bankDetail->account_number,
-                'bank_name' => $beneficiaries->bankDetail->bankable->name,
-                'mda' => $beneficiaries->mdaDetail->mda->name,
-                'sub_mda' => $beneficiaries->mdaDetail->subMda->name,
-                'sub_sub_mda' => $beneficiaries->mdaDetail->subSubMda->name,
-                'designation' => $beneficiaries->workDetail->designation->name,
-                'grade_level' => $beneficiaries->salaryDetail->payable->grade_level->name ?? '',
-                'step' => $beneficiaries->salaryDetail->payable->step->name ?? '',
+                'account_number' => $beneficiaries->accountNumber(),
+                'bank_name' => $beneficiaries->bankName(),
+                'mda' => $beneficiaries->mdaName(),
+                'sub_mda' => $beneficiaries->subMdaName(),
+                'sub_sub_mda' => $beneficiaries->subSubMdaName(),
+                'designation' => $beneficiaries->designationName(),
+                'grade_level' => $beneficiaries->gradeLevelName(),
+                'step' => $beneficiaries->stepName(),
             ]);
 
         return Inertia::render('Beneficiary/Index', [
@@ -127,7 +127,7 @@ class BeneficiaryController extends Controller
             'workDetail.designation',
             'salaryDetail',
             'salaryDetail.payable' => function(MorphTo $morphTo){
-                $morphTo->morphWith([StructuredSalary::class => ['grade_level', 'step']]);
+                $morphTo->morphWith([StructuredSalary::class => ['cadreStep.cadre', 'cadreStep.step']]);
                 }
         ];
     }

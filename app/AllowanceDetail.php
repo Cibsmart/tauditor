@@ -37,4 +37,14 @@ class AllowanceDetail extends Model
     {
         return $this->delete();
     }
+
+    public function setAmountAttribute(float $value) : int
+    {
+        return $this->attributes['Amount'] = $value * 100;
+    }
+
+    public function getAmountAttribute(int $value) : float
+    {
+        return $value / 100;
+    }
 }

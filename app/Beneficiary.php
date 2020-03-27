@@ -4,11 +4,27 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Reflection\Types\Float_;
+use phpDocumentor\Reflection\Types\Mixed_;
 use phpDocumentor\Reflection\Types\Integer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+/**
+ * @property int id
+ * @property string verification_number
+ * @property string name
+ * @property string last_name
+ * @property string first_name
+ * @property string middle_name
+ * @property boolean active
+ *
+ * @property mixed salaryDetail
+ * @property mixed bankDetail
+ * @property mixed mdaDetail
+ * @property mixed workDetail
+ */
 
 class Beneficiary extends Model
 {
@@ -92,6 +108,52 @@ class Beneficiary extends Model
         return $this->salaryDetail->basicPay();
     }
 
+    public function accountNumber() : string
+    {
+        return $this->bankDetail->account_number;
+    }
+
+    public function bankName() : string
+    {
+        return $this->bankDetail->bankable->name;
+    }
+
+    public function mdaName() : string
+    {
+        return $this->mdaDetail->mda->name;
+    }
+
+    public function subMdaName()
+    {
+        return $this->mdaDetail->subMda->name;
+    }
+
+    public function subSubMdaName()
+    {
+        return $this->mdaDetail->subSubMda->name;
+    }
+
+    public function designationName() : string
+    {
+        return $this->workDetail->designation->name;
+    }
+
+    public function gradeLevelName()
+    {
+        return $this->salaryDetail->payable->gradeLevel()->name;
+    }
+
+    public function stepName()
+    {
+        return $this->salaryDetail->payable->step()->name;
+    }
+
+    /**
+     * Set Beneficiaries Basic Pay
+     * @param  int  $type
+     * @param  int  $value
+     * @return Beneficiary
+     */
     public function setBasic(int $type, int $value) : Beneficiary
     {
         $payable = $type === 1
@@ -105,6 +167,11 @@ class Beneficiary extends Model
         return $this;
     }
 
+    /**
+     * Apply an Allowance to a Beneficiary
+     * @param  Allowance  $allowance
+     * @return Beneficiary
+     */
     public function applyAllowance(Allowance $allowance) : Beneficiary
     {
         $this->allowanceDetails()->create([
@@ -115,6 +182,12 @@ class Beneficiary extends Model
         return $this;
     }
 
+
+    /**
+     * Remove an Allowance from a Beneficiary
+     * @param  AllowanceDetail  $allowance_detail
+     * @return Beneficiary
+     */
     public function removeAllowance(AllowanceDetail $allowance_detail) : Beneficiary
     {
         $allowance_detail->unapply();
@@ -161,11 +234,20 @@ class Beneficiary extends Model
                     ]);
     }
 
+    /**
+     * Get Beneficiary's Last, First and Middle Name as a single string
+     * @return string
+     */
     public function getNameAttribute() : string
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
     }
 
+    /**
+     * Search Beneficiaries and Relationships
+     * @param $query
+     * @param  array  $filters
+     */
     public function scopeFilters($query, array $filters) : void
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
@@ -185,6 +267,11 @@ class Beneficiary extends Model
                                ->orWhereHasMorph('bankable',
                                    [Bank::class, MicroFinanceBank::class],
                                    fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
+                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {
+                                   $query->whereHas('gradeLevel', fn($query) => where('name', 'like', '%' . $search . '%'));
+                                   $query->whereHas('step', fn($query) => where('name', 'like', '%' . $search . '%'));
+                               });
                       });
             });
         });

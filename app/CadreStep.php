@@ -20,6 +20,11 @@ class CadreStep extends Model
         return $this->belongsTo(Cadre::class);
     }
 
+    public function step() : BelongsTo
+    {
+        return $this->belongsTo(Step::class);
+    }
+
     public function allowances() : HasMany
     {
         return $this->hasMany(CadreStepAllowance::class);

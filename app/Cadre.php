@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed gradeLevel
+ */
 class Cadre extends Model
 {
     protected $guarded = [];
@@ -13,6 +16,11 @@ class Cadre extends Model
     public function structure() : BelongsTo
     {
         return $this->belongsTo(Structure::class);
+    }
+
+    public function gradeLevel() : BelongsTo
+    {
+        return $this->belongsTo(GradeLevel::class);
     }
 
     public function steps() : HasMany

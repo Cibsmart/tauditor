@@ -11,6 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int id
+ *
+ * @property mixed valuable
+ */
 class Allowance extends Model
 {
     protected $guarded = [];
@@ -21,6 +26,10 @@ class Allowance extends Model
     | Relationship
     |-------------------------------------------------------------------------------
     */
+    /**
+     * A Polymorphic relationship to Fixed or Percentage value types
+     * @return MorphTo
+     */
     public function valuable() : MorphTo
     {
         return $this->morphTo();
@@ -47,11 +56,23 @@ class Allowance extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
+
+    /**
+     * Get the Allowance Amount
+     * @param  float|null  $base_value
+     * @return float
+     */
     public function amount(float $base_value = null) : float
     {
         return $this->valuable->amount($base_value);
     }
 
+
+    /**
+     * Apply Selected Allowance to a Beneficiary
+     * @param  Beneficiary  $beneficiary
+     * @return Allowance
+     */
     public function applyTo(Beneficiary $beneficiary) : Allowance
     {
         $this->allowanceDetails()->create([

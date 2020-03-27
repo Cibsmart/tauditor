@@ -20,6 +20,21 @@ class PersonalizedSalary extends Model
         return $this->monthly_basic;
     }
 
+    public function cadre() : Cadre
+    {
+        return new Cadre();
+    }
+
+    public function gradeLevel() : GradeLevel
+    {
+        return new GradeLevel();
+    }
+
+    public function step() : Step
+    {
+        return new Step();
+    }
+
     public function setMonthlyBasicAttribute(float $value) : int
     {
         return $this->attributes['monthly_basic'] = $value * 100;
