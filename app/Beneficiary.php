@@ -123,12 +123,12 @@ class Beneficiary extends Model
         return $this->mdaDetail->mda->name;
     }
 
-    public function subMdaName()
+    public function subMdaName() : ?string
     {
         return $this->mdaDetail->subMda->name;
     }
 
-    public function subSubMdaName()
+    public function subSubMdaName() : ?string
     {
         return $this->mdaDetail->subSubMda->name;
     }
@@ -138,12 +138,12 @@ class Beneficiary extends Model
         return $this->workDetail->designation->name;
     }
 
-    public function gradeLevelName()
+    public function gradeLevelName() : ?string
     {
         return $this->salaryDetail->payable->gradeLevel()->name;
     }
 
-    public function stepName()
+    public function stepName() : ?string
     {
         return $this->salaryDetail->payable->step()->name;
     }
@@ -267,11 +267,11 @@ class Beneficiary extends Model
                                ->orWhereHasMorph('bankable',
                                    [Bank::class, MicroFinanceBank::class],
                                    fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
-                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
-                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {
-                                   $query->whereHas('gradeLevel', fn($query) => where('name', 'like', '%' . $search . '%'));
-                                   $query->whereHas('step', fn($query) => where('name', 'like', '%' . $search . '%'));
-                               });
+//                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
+//                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {
+//                                   $query->whereHas('gradeLevel', fn($query) => where('name', 'like', '%' . $search . '%'));
+//                                   $query->whereHas('step', fn($query) => where('name', 'like', '%' . $search . '%'));
+//                               });
                       });
             });
         });

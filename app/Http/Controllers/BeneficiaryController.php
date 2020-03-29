@@ -119,16 +119,17 @@ class BeneficiaryController extends Controller
 
     public function relationships()
     {
+        // Relationships Eager Loaded with Beneficiaries
+        // to avoid multiple Database Round Trip
         return [
             'bankDetail',
             'mdaDetail.mda',
             'mdaDetail.subMda',
             'mdaDetail.subSubMda',
             'workDetail.designation',
-            'salaryDetail',
             'salaryDetail.payable' => function(MorphTo $morphTo){
-                $morphTo->morphWith([StructuredSalary::class => ['cadreStep.cadre', 'cadreStep.step']]);
-                }
+                $morphTo->morphWith([StructuredSalary::class => ['cadreStep.cadre.gradeLevel', 'cadreStep.step']]);
+            }
         ];
     }
 }

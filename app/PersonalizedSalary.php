@@ -5,16 +5,33 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Reflection\Types\Float_;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PersonalizedSalary extends Model
 {
     protected $guarded = [];
 
+    /*
+    |-------------------------------------------------------------------------------
+    | Relationships
+    |-------------------------------------------------------------------------------
+    */
     public function salary() : MorphOne
     {
         return $this->morphOne(SalaryDetail::class, 'payable');
     }
 
+    public function cadreStep() : BelongsTo
+    {
+        return $this->belongsTo(CadreStep::class);
+    }
+
+
+    /*
+    |-------------------------------------------------------------------------------
+    | Methods
+    |-------------------------------------------------------------------------------
+    */
     public function basicPay() : float
     {
         return $this->monthly_basic;
