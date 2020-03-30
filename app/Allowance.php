@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use function array_merge;
 
 /**
  * @property int id
@@ -71,14 +72,21 @@ class Allowance extends Model
     /**
      * Apply Selected Allowance to a Beneficiary
      * @param  Beneficiary  $beneficiary
+     * @param  int|null  $allowable_id
      * @return Allowance
      */
-    public function applyTo(Beneficiary $beneficiary) : Allowance
+    public function applyTo(Beneficiary $beneficiary, int $allowable_id = null) : Allowance
     {
-        $this->allowanceDetails()->create([
+        $attributes = [
             'amount' => $this->amount($beneficiary->basic()),
-            'beneficiary_id' => $beneficiary->id
-        ]);
+            'beneficiary_id' => $beneficiary->id,
+        ];
+
+        $attributes = $allowable_id
+            ? array_merge($attributes, ['allowable_id' => $allowable_id])
+            : $attributes;
+
+        $this->allowanceDetails()->create($attributes);
 
         return $this;
     }

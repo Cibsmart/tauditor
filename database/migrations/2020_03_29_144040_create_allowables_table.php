@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAllowanceDetailsTable extends Migration
+class CreateAllowablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,16 @@ class CreateAllowanceDetailsTable extends Migration
      */
     public function up()
     {
-        Schema::create('allowance_details', function (Blueprint $table) {
+        Schema::create('allowables', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('beneficiary_id');
+            $table->morphs('allowable');
             $table->unsignedBigInteger('allowance_id');
-            $table->unsignedBigInteger('amount');
-            $table->unsignedBigInteger('allowable_id')->default('0');
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('beneficiary_id')->references('id')->on('beneficiaries');
             $table->foreign('allowance_id')->references('id')->on('allowances');
 
-//            $table->unique(['beneficiary_id', 'allowance_id'], 'unique_beneficiary_allowances');
+            $table->unique(['allowable_type', 'allowable_id', 'allowance_id'], 'unique_allowable_allowance');
         });
     }
 
@@ -36,6 +33,6 @@ class CreateAllowanceDetailsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('allowance_details');
+        Schema::dropIfExists('allowables');
     }
 }

@@ -54,46 +54,4 @@ class StructuredSalary extends Model
     {
         return $this->cadreStep->step;
     }
-
-    public function allowances() : Collection
-    {
-        return $this->cadreStep->allowances;
-    }
-
-    public function deductions() : Collection
-    {
-        return $this->cadreStep->deductions;
-    }
-
-    /**
-     * Synchronize all Allowances of a Salary Structure to a Beneficiary
-     * @param  Beneficiary  $beneficiary
-     * @return StructuredSalary
-     */
-    public function syncAllowances(Beneficiary $beneficiary) : StructuredSalary
-    {
-        $allowances = $this->allowances();
-
-        foreach ($allowances as $allowance) {
-            $allowance->allowance->applyTo($beneficiary);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Synchronize all Deductions of a Salary Structure to a Beneficiary
-     * @param  Beneficiary  $beneficiary
-     * @return StructuredSalary
-     */
-    public function syncDeductions(Beneficiary $beneficiary) : StructuredSalary
-    {
-        $deductions = $this->deductions();
-
-        foreach ($deductions as $deduction) {
-            $deduction->deduction->applyTo($beneficiary);
-        }
-
-        return $this;
-    }
 }

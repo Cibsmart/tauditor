@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use function is_null;
+use function in_array;
+use function array_merge;
 
 /**
  * @property int id
@@ -24,10 +27,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property mixed bankDetail
  * @property mixed mdaDetail
  * @property mixed workDetail
+ * @property mixed beneficiaryType
+ * @property mixed domain
+ * @property mixed structure
  */
 
 class Beneficiary extends Model
 {
+
+
     protected $guarded = [];
 
     protected $casts = [
@@ -41,6 +49,7 @@ class Beneficiary extends Model
     | Relationships
     |-------------------------------------------------------------------------------
     */
+
     public function gender() : BelongsTo
     {
         return $this->belongsTo(Gender::class);
@@ -83,7 +92,12 @@ class Beneficiary extends Model
 
     public function beneficiaryType() : BelongsTo
     {
-        return $this->belongsTo(BeneficiaryType::class);
+        return $this->belongsTo(BeneficiaryType::class)->withDefault();
+    }
+
+    public function salaryStructure() : BelongsTo
+    {
+        return $this->belongsTo(Structure::class);
     }
 
     public function qualifications() : HasMany
@@ -93,7 +107,7 @@ class Beneficiary extends Model
 
     public function domain() : BelongsTo
     {
-        return $this->belongsTo(Domain::class);
+        return $this->belongsTo(Domain::class)->withDefault();
     }
 
 
@@ -148,6 +162,11 @@ class Beneficiary extends Model
         return $this->salaryDetail->payable->step()->name;
     }
 
+    public function isPensioner() : bool
+    {
+        return in_array($this->beneficiaryType->code, ['ANPEN', 'LGPEN']);
+    }
+
     /**
      * Set Beneficiaries Basic Pay
      * @param  int  $type
@@ -170,18 +189,24 @@ class Beneficiary extends Model
     /**
      * Apply an Allowance to a Beneficiary
      * @param  Allowance  $allowance
+     * @param  int|null  $allowable_id
      * @return Beneficiary
      */
-    public function applyAllowance(Allowance $allowance) : Beneficiary
+    public function applyAllowance(Allowance $allowance, int $allowable_id = null) : Beneficiary
     {
-        $this->allowanceDetails()->create([
+        $attributes = [
             'amount' => $allowance->amount($this->basic()),
-            'allowance_id' => $allowance->id
-        ]);
+            'allowance_id' => $allowance->id,
+        ];
+
+        $attributes = $allowable_id
+            ? array_merge($attributes, ['allowable_id' => $allowable_id])
+            : $attributes;
+
+        $this->allowanceDetails()->firstOrCreate($attributes);
 
         return $this;
     }
-
 
     /**
      * Remove an Allowance from a Beneficiary
@@ -206,12 +231,23 @@ class Beneficiary extends Model
                            ]);
     }
 
-    public function applyDeduction(Deduction $deduction) : Beneficiary
+    /**
+     * @param  Deduction  $deduction
+     * @param  Deductible  $deductible
+     * @return Beneficiary
+     */
+    public function applyDeduction(Deduction $deduction, Deductible $deductible) : Beneficiary
     {
-        $this->deductionDetails()->create([
+        $attributes = [
             'amount' => $deduction->amount($this->basic()),
             'deduction_id' => $deduction->id
-        ]);
+        ];
+
+        $attributes = $deductible
+            ? array_merge($attributes, ['deductible_id' => $deductible->id])
+            : $attributes;
+
+        $this->deductionDetails()->create($attributes);
 
         return $this;
     }
@@ -232,6 +268,26 @@ class Beneficiary extends Model
                         'name' => $deduction->deduction->deductionName->name,
                         'amount' => $deduction->amount,
                     ]);
+    }
+
+    /**
+     * Synchronize all Attachable Allowances to a Beneficiary
+     * @return Beneficiary
+     */
+    public function syncAllowances() : Beneficiary
+    {
+        if($this->isPensioner()){
+            return $this;
+        }
+
+        $this->domain->syncAllowancesTo($this);
+        $this->beneficiaryType->syncAllowancesTo($this);
+        $this->structure->syncAllowancesTo($this);
+//        $this->cadre->syncAllowancesTo($this);
+//        $this->cadreStep->syncAllowancesTo($this);
+//        $this->mdaStructure->syncAllowancesTo($this);
+
+        return $this;
     }
 
     /**

@@ -2,10 +2,14 @@
 
 namespace App;
 
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * @property mixed allowables
+ */
 class CadreStep extends Model
 {
     protected $guarded = [];
@@ -25,14 +29,12 @@ class CadreStep extends Model
         return $this->belongsTo(Step::class);
     }
 
-    public function allowances() : HasMany
+    /**
+     * @return MorphMany
+     */
+    public function allowables() : MorphMany
     {
-        return $this->hasMany(CadreStepAllowance::class);
-    }
-
-    public function deductions() : HasMany
-    {
-        return $this->hasMany(CadreStepDeduction::class);
+        return $this->morphMany(Allowable::class, 'allowable')->with('allowance');
     }
 
 
@@ -49,5 +51,21 @@ class CadreStep extends Model
     public function getMonthlyBasicAttribute(int $value) : float
     {
         return $value / 100;
+    }
+
+    /**
+     * Synchronize all Domain Allowances to a Beneficiary
+     * @param  Beneficiary  $beneficiary
+     * @return Beneficiary
+     */
+    public function syncAllowancesTo(Beneficiary $beneficiary) : Beneficiary
+    {
+        $allowables = $this->allowables;
+
+        foreach ($allowables as $allowable) {
+            $beneficiary->applyAllowance($allowable->allowance, $allowable->id);
+        }
+
+        return $beneficiary;
     }
 }

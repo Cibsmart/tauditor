@@ -3,10 +3,17 @@
 namespace App\Providers;
 
 use App\Bank;
+use App\Cadre;
+use App\Domain;
+use App\Structure;
+use App\CadreStep;
 use App\FixedValue;
+use App\GradeLevel;
 use Inertia\Inertia;
+use App\MdaStructure;
 use App\SalaryStructure;
 use App\PercentageValue;
+use App\BeneficiaryType;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
 use App\PersonalizedSalary;
@@ -40,12 +47,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::$morphMap = [
+            'cadre' => Cadre::class,
+            'domain' => Domain::class,
             'commercial' => Bank::class,
-            'micro_finance' => MicroFinanceBank::class,
-            'structured' => StructuredSalary::class,
-            'personalized' => PersonalizedSalary::class,
+            'cadre_step' => CadreStep::class,
             'fixed_value' => FixedValue::class,
+            'mda_structure' => MdaStructure::class,
+            'salary_structure' => Structure::class,
+            'structured' => StructuredSalary::class,
+            'micro_finance' => MicroFinanceBank::class,
+            'personalized' => PersonalizedSalary::class,
             'percentage_value' => PercentageValue::class,
+            'beneficiary_type' => BeneficiaryType::class,
         ];
     }
 
