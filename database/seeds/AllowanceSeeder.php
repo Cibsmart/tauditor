@@ -33,48 +33,54 @@ class AllowanceSeeder extends Seeder
         //Convert json to an array
         $data = json_decode($json, true);
 
-        foreach ($data as $code => $structures) {
-            $structure_id = $salary_structures->firstWhere('code', $code)->id;
+        for($i = 1; $i <= 2; $i++) {
+            foreach ($data as $code => $structures) {
+                $structure_id = $salary_structures->firstWhere('code', $code)->id;
 
-            foreach ($structures as $items) {
+                foreach ($structures as $items) {
 
-                $cadre_id = '';
-                $step_id = '';
-                $cadre_step_id = '';
+                    $cadre_id = '';
+                    $step_id = '';
+                    $cadre_step_id = '';
 
-                foreach ($items as $key => $item) {
-                    if(! in_array($key, ['GRADE', 'STEP', 'MBA'])){
-                        $allowance_name_id = $allowance_names->firstWhere('name', $key)->id;
+                    foreach ($items as $key => $item) {
+                        if (! in_array($key, ['GRADE', 'STEP', 'MBA'])) {
+                            $allowance_name_id = $allowance_names->firstWhere('name', $key)->id;
 
-                        $amount = $item <= 20
-                            ? factory(PercentageValue::class)->create(['percentage' => $item])
-                            : factory(FixedValue::class)->create(['amount' => $item]);
+                            $amount = $item <= 20
+                                ? factory(PercentageValue::class)->create(['percentage' => $item])
+                                : factory(FixedValue::class)->create(['amount' => $item]);
 
-                        $allowance = $amount->value()->save(factory(Allowance::class)
-                            ->make(['allowance_name_id' => $allowance_name_id]));
+                            $allowance = $amount->value()->save(factory(Allowance::class)
+                                ->make(['allowance_name_id' => $allowance_name_id, 'domain_id' => $i]));
 
-                        $allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
-                        continue;
-                    }
+                            $allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
+                            continue;
+                        }
 
-                    if($key == 'MBA'){
-                        $cadre_step_id = factory(CadreStep::class)
-                            ->create(['cadre_id' => $cadre_id, 'step_id' => $step_id, 'monthly_basic' => $item])->id;
-                        continue;
-                    }
+                        if ($key == 'MBA') {
+                            $cadre_step_id = factory(CadreStep::class)
+                                ->create([
+                                    'cadre_id' => $cadre_id, 'step_id' => $step_id, 'monthly_basic' => $item
+                                ])->id;
+                            continue;
+                        }
 
-                    if($key == 'STEP'){
-                        $st = str_pad($item, 2, '0', STR_PAD_LEFT);
-                        $step_id = $steps->firstWhere('code', $st)->id;
-                        continue;
-                    }
+                        if ($key == 'STEP') {
+                            $st = str_pad($item, 2, '0', STR_PAD_LEFT);
+                            $step_id = $steps->firstWhere('code', $st)->id;
+                            continue;
+                        }
 
-                    if($key == 'GRADE'){
-                        $gd = str_pad($item, 2, '0', STR_PAD_LEFT);
-                        $grade_id = $grades->firstWhere('code', $gd)->id;
-                        $cadre = factory(Cadre::class)->raw(['structure_id' => $structure_id, 'grade_level_id' => $grade_id]);
-                        $cadre_id = Cadre::firstOrCreate($cadre);
-                        continue;
+                        if ($key == 'GRADE') {
+                            $gd = str_pad($item, 2, '0', STR_PAD_LEFT);
+                            $grade_id = $grades->firstWhere('code', $gd)->id;
+                            $cadre = factory(Cadre::class)->raw([
+                                'structure_id' => $structure_id, 'grade_level_id' => $grade_id
+                            ]);
+                            $cadre_id = Cadre::firstOrCreate($cadre);
+                            continue;
+                        }
                     }
                 }
             }

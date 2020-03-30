@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AllowancesController;
+use App\Http\Controllers\DeductionsController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
@@ -36,6 +38,32 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 Route::middleware('auth')->group(function () {
     Route::name('beneficiaries.')->group(function () {
         Route::get('beneficiaries', [BeneficiaryController::class, 'index'])->name('index');
+//        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
+//        Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Allowances Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('allowances.')->group(function () {
+        Route::get('allowances', [AllowancesController::class, 'index'])->name('index');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Deductions Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('deductions.')->group(function () {
+        Route::get('deductions', [DeductionsController::class, 'index'])->name('index');
     });
 });
 

@@ -281,8 +281,8 @@ class Beneficiary extends Model
         }
 
         $this->domain->syncAllowancesTo($this);
-        $this->beneficiaryType->syncAllowancesTo($this);
-        $this->structure->syncAllowancesTo($this);
+//        $this->beneficiaryType->syncAllowancesTo($this);
+//        $this->structure->syncAllowancesTo($this);
 //        $this->cadre->syncAllowancesTo($this);
 //        $this->cadreStep->syncAllowancesTo($this);
 //        $this->mdaStructure->syncAllowancesTo($this);

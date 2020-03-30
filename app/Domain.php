@@ -30,6 +30,16 @@ class Domain extends Model
         return $this->hasMany(Structure::class);
     }
 
+    public function allowances() : HasMany
+    {
+        return $this->hasMany(Allowance::class);
+    }
+
+    public function deductions() : HasMany
+    {
+        return $this->hasMany(Deduction::class);
+    }
+
     public function allowables() : MorphMany
     {
         return $this->morphMany(Allowable::class, 'allowable');

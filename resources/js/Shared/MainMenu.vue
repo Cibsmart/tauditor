@@ -1,32 +1,69 @@
 <template>
     <div>
-      <div class="mb-4">
-        <inertia-link class="py-3 flex items-center group" :href="route('dashboard')">
-          <icon name="dashboard" class="w-4 h-4 mr-2"
-              :class="isActive('') ? 'fill-current text-white' : 'fill-current text-indigo-300 hover:fill-current group-hover:text-white'" />
-          <div :class="isActive('') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
-            Dashboard
-          </div>
-        </inertia-link>
-      </div>
 
-      <div class="mb-4">
-        <inertia-link class="py-3 flex items-center group" href="#" @click="activate('beneficiaries')" preserve-scroll>
-          <icon name="users" class="w-4 h-4 mr-2"
-              :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-          <div :class="isActive('beneficiaries') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
-            Beneficiaries
-          </div>
-            <icon v-show="menus.beneficiaries" name="cheveron-down" class="w-4 h-4 ml-2"
-                  :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-            <icon v-show="! menus.beneficiaries" name="cheveron-right" class="w-4 h-4 ml-2"
-                  :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-        </inertia-link>
+        <div class="mb-4">
+            <inertia-link class="py-3 flex items-center group" :href="route('dashboard')">
+                <icon name="dashboard" class="w-4 h-4 mr-2"
+                      :class="isActive('') ? 'fill-current text-white' : 'fill-current text-indigo-300 hover:fill-current group-hover:text-white'" />
+                <div :class="isActive('') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
+                    Dashboard
+                </div>
+            </inertia-link>
+        </div>
 
-          <div v-if="menus.beneficiaries" class="ml-4 mt-2">
-              <sub-menu :url="url" label="Beneficiaries" :uri="uri('beneficiaries.index')"></sub-menu>
-          </div>
-      </div>
+        <div class="mb-4">
+            <inertia-link class="py-3 flex items-center group" href="#" @click="activate('beneficiaries')" preserve-scroll>
+                <icon name="users" class="w-4 h-4 mr-2"
+                      :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <div :class="isActive('beneficiaries') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
+                    Beneficiaries
+                </div>
+                <icon v-show="menus.beneficiaries" name="cheveron-down" class="w-4 h-4 ml-2"
+                      :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <icon v-show="! menus.beneficiaries" name="cheveron-right" class="w-4 h-4 ml-2"
+                      :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+            </inertia-link>
+
+            <div v-if="menus.beneficiaries" class="ml-4 mt-2">
+                <sub-menu :url="url" label="Beneficiaries" :uri="uri('beneficiaries.index')"></sub-menu>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <inertia-link class="py-3 flex items-center group" href="#" @click="activate('allowances')" preserve-scroll>
+                <icon name="users" class="w-4 h-4 mr-2"
+                      :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <div :class="isActive('allowances') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
+                    Allowances
+                </div>
+                <icon v-show="menus.allowances" name="cheveron-down" class="w-4 h-4 ml-2"
+                      :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <icon v-show="! menus.allowances" name="cheveron-right" class="w-4 h-4 ml-2"
+                      :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+            </inertia-link>
+
+            <div v-if="menus.allowances" class="ml-4 mt-2">
+                <sub-menu :url="url" label="Allowances" :uri="uri('allowances.index')"></sub-menu>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <inertia-link class="py-3 flex items-center group" href="#" @click="activate('deductions')" preserve-scroll>
+                <icon name="users" class="w-4 h-4 mr-2"
+                      :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <div :class="isActive('deductions') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
+                    Deductions
+                </div>
+                <icon v-show="menus.deductions" name="cheveron-down" class="w-4 h-4 ml-2"
+                      :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+                <icon v-show="! menus.deductions" name="cheveron-right" class="w-4 h-4 ml-2"
+                      :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
+            </inertia-link>
+
+            <div v-if="menus.deductions" class="ml-4 mt-2">
+                <sub-menu :url="url" label="Deduction" :uri="uri('deductions.index')"></sub-menu>
+            </div>
+        </div>
 
       <div class="mb-4">
         <inertia-link class="py-3 flex items-center group" href="#">
@@ -96,6 +133,8 @@ export default{
       menus: {
         dashboard: false,
         beneficiaries: false,
+        allowances: false,
+        deductions: false,
         payroll: false,
         setup: false,
         reports: false,
@@ -115,7 +154,7 @@ export default{
 
     activate(menu){
       for(let key in this.menus ){
-        if(this.menus[key] != this.menus[menu]){
+        if(this.menus[key] !== this.menus[menu]){
           this.menus[key] = false
         }
       }

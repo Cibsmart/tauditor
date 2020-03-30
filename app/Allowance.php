@@ -16,6 +16,7 @@ use function array_merge;
  * @property int id
  *
  * @property mixed valuable
+ * @property mixed allowanceName
  */
 class Allowance extends Model
 {
@@ -68,6 +69,10 @@ class Allowance extends Model
         return $this->valuable->amount($base_value);
     }
 
+    public function name()
+    {
+        return $this->allowanceName->name;
+    }
 
     /**
      * Apply Selected Allowance to a Beneficiary
