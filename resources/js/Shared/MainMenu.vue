@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div class="mb-4">
             <inertia-link class="py-3 flex items-center group" :href="route('dashboard')">
                 <icon name="dashboard" class="w-4 h-4 mr-2"
@@ -18,50 +17,50 @@
                 <div :class="isActive('beneficiaries') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
                     Beneficiaries
                 </div>
-                <icon v-show="menus.beneficiaries" name="cheveron-down" class="w-4 h-4 ml-2"
+                <icon v-if="menus.beneficiaries" name="cheveron-down" class="ml-2"
                       :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-                <icon v-show="! menus.beneficiaries" name="cheveron-right" class="w-4 h-4 ml-2"
+                <icon v-else name="cheveron-right" class="ml-2"
                       :class="isActive('beneficiaries') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
             </inertia-link>
 
             <div v-if="menus.beneficiaries" class="ml-4 mt-2">
-                <sub-menu :url="url" label="Beneficiaries" :uri="uri('beneficiaries.index')"></sub-menu>
+                <sub-menu :url="url" label="Beneficiaries" :uri="uri('beneficiaries.index')" icon="users"></sub-menu>
             </div>
         </div>
 
         <div class="mb-4">
             <inertia-link class="py-3 flex items-center group" href="#" @click="activate('allowances')" preserve-scroll>
-                <icon name="users" class="w-4 h-4 mr-2"
+                <icon name="shopping-cart" class="w-4 h-4 mr-2"
                       :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
                 <div :class="isActive('allowances') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
                     Allowances
                 </div>
-                <icon v-show="menus.allowances" name="cheveron-down" class="w-4 h-4 ml-2"
+                <icon v-show="menus.allowances" name="cheveron-down" class="ml-2"
                       :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-                <icon v-show="! menus.allowances" name="cheveron-right" class="w-4 h-4 ml-2"
+                <icon v-show="! menus.allowances" name="cheveron-right" class="ml-2"
                       :class="isActive('allowances') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
             </inertia-link>
 
             <div v-if="menus.allowances" class="ml-4 mt-2">
-                <sub-menu :url="url" label="Allowances" :uri="uri('allowances.index')"></sub-menu>
+                <sub-menu :url="url" label="Allowances" :uri="uri('allowances.index')" icon="shopping-cart"></sub-menu>
             </div>
         </div>
 
         <div class="mb-4">
             <inertia-link class="py-3 flex items-center group" href="#" @click="activate('deductions')" preserve-scroll>
-                <icon name="users" class="w-4 h-4 mr-2"
+                <icon name="trash" class="w-4 h-4 mr-2"
                       :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
                 <div :class="isActive('deductions') ? 'text-white' : 'text-indigo-300 group-hover:text-white' ">
                     Deductions
                 </div>
-                <icon v-show="menus.deductions" name="cheveron-down" class="w-4 h-4 ml-2"
+                <icon v-show="menus.deductions" name="cheveron-down" class="ml-2"
                       :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
-                <icon v-show="! menus.deductions" name="cheveron-right" class="w-4 h-4 ml-2"
+                <icon v-show="! menus.deductions" name="cheveron-right" class="ml-2"
                       :class="isActive('deductions') ? 'fill-current text-white' : 'fill-current text-indigo-300 group-hover:fill-current group-hover:text-white'" />
             </inertia-link>
 
             <div v-if="menus.deductions" class="ml-4 mt-2">
-                <sub-menu :url="url" label="Deduction" :uri="uri('deductions.index')"></sub-menu>
+                <sub-menu :url="url" label="Deduction" :uri="uri('deductions.index')" icon="trash"></sub-menu>
             </div>
         </div>
 

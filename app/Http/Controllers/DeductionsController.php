@@ -2,18 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Deduction;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use function compact;
 
 class DeductionsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        //
+        $deductions = Auth::user()->domain
+            ->deductions()
+            ->paginate()
+            ->transform(fn(Deduction $deductions) => [
+                'id' => $deductions->id,
+                'name' => $deductions->name(),
+                'amount' => $deductions->amount(),
+                'value_type' => '',
+            ]);
+
+        return Inertia::render('Deductions/Index', compact('deductions'));
     }
 
     /**

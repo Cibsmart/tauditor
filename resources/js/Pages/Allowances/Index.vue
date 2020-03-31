@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">Beneficiaries</h1>
+    <h1 class="mb-8 font-bold text-3xl">Allowances</h1>
     <div class="mb-6 flex justify-between items-center">
       <!-- Search Filter goes here -->
 <!--      <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->

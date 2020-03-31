@@ -72,7 +72,7 @@ class BeneficiarySeeder extends Seeder
 
                 if($payable instanceof StructuredSalary)
                 {
-                    $beneficiary->syncAllowances();
+//                    $beneficiary->syncAllowances();
 //                    $payable->syncDeductions($beneficiary);
                 }
 

@@ -51,6 +51,7 @@
         <div class="flex flex-grow overflow-hidden">
           <!-- Main Menu on the Left Side Bar Visible on Medium Screen-->
           <main-menu :url="url()" class="bg-indigo-800 flex-shrink-0 w-64 p-12 hidden md:block overflow-y-auto" />
+          
           <!-- Display Screen on the Right of the Main Menu becomes Full screen on sm -->
           <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto" scroll-region>
             <flash-messages />

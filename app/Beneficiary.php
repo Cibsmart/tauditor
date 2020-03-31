@@ -271,26 +271,6 @@ class Beneficiary extends Model
     }
 
     /**
-     * Synchronize all Attachable Allowances to a Beneficiary
-     * @return Beneficiary
-     */
-    public function syncAllowances() : Beneficiary
-    {
-        if($this->isPensioner()){
-            return $this;
-        }
-
-        $this->domain->syncAllowancesTo($this);
-//        $this->beneficiaryType->syncAllowancesTo($this);
-//        $this->structure->syncAllowancesTo($this);
-//        $this->cadre->syncAllowancesTo($this);
-//        $this->cadreStep->syncAllowancesTo($this);
-//        $this->mdaStructure->syncAllowancesTo($this);
-
-        return $this;
-    }
-
-    /**
      * Get Beneficiary's Last, First and Middle Name as a single string
      * @return string
      */
