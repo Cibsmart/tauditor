@@ -1,9 +1,8 @@
 <template>
-    <div class="mb-2">
-      <inertia-link class="py-2 flex items-center group" :href="'/' + uri" >
-          <icon :name="icon" class="w-4 h-4 mr-2"
-                :class="isActive(uri) ? 'fill-current text-white' : 'fill-current text-indigo-300 hover:fill-current group-hover:text-white'"/>
-        <div :class="isActive(uri) ? 'text-white' : 'text-indigo-300 group-hover:text-white' " class="whitespace-no-wrap" :title="label" v-text="label">
+    <div class="hover:bg-gray-100" :class="isActive(uri) ? 'bg-gray-200' : 'bg-white'">
+      <inertia-link class="px-12 py-6 flex items-center group" :href="'/' + uri" >
+<!--        <icon :name="icon" class="w-4 h-4 ml-4 mr-2 text-indigo-800 group-hover:text-orange-800"/>-->
+        <div class="ml-6 font-semibold whitespace-no-wrap text-indigo-800 group-hover:text-orange-800" :title="label" v-text="label">
         </div>
       </inertia-link>
     </div>
@@ -25,7 +24,11 @@ export default {
     icon : String,
   },
 
-  methods: {
+    mounted() {
+      // console.log(this.isActive(this.uri))
+    },
+
+    methods: {
     isActive(...urls) {
       if (urls[0] === '') {
         return this.url === ''

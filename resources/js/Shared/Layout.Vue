@@ -6,20 +6,20 @@
         <!-- Uppder Part of the Screen containing Branding, Header and Profile -->
         <div class="md:flex">
           <!-- Branding and Main Menu for Mobile Screen -->
-          <div class="bg-indigo-900 md:flex-shrink-0 md:w-64 py-4 flex items-center justify-between md:justify-center">
+          <div class="bg-gray-100 md:flex-shrink-0 md:w-64 py-4 flex items-center justify-between md:justify-center">
             <!-- Logo -->
             <inertia-link class="mt-1" href="/">
-              <logo class="fill-current text-white" width="120" height="28" />
+              <logo class="text-indigo-900" width="120" height="28" />
             </inertia-link>
             <!-- Menu for Mobile Screen Visible only on Mobile screen -->
             <dropdown class="md:hidden" placement="bottom-end">
-              <svg class="fill-current text-white w-6 h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" /></svg>
-              <div slot="dropdown" class="mt-2 px-8 py-4 shadow-lg bg-indigo-800 rounded">
+              <icon name="list" class="text-indigo-800 w-6 h-6" />
+              <div slot="dropdown" class="mt-2 shadow-lg bg-white rounded">
                 <main-menu :url="url()" />
               </div>
             </dropdown>
           </div>
-          
+
           <!-- Header and Profile with Dropdown -->
           <div class="bg-white border-b w-full p-4 md:py-0 md:px-12 text-sm md:text-base flex justify-between items-center">
             <!-- Header -->
@@ -50,8 +50,8 @@
         <!-- Lower part of the screen -->
         <div class="flex flex-grow overflow-hidden">
           <!-- Main Menu on the Left Side Bar Visible on Medium Screen-->
-          <main-menu :url="url()" class="bg-indigo-800 flex-shrink-0 w-64 p-12 hidden md:block overflow-y-auto" />
-          
+          <main-menu :url="url()" class="bg-white flex-shrink-0 w-64 hidden md:block overflow-y-auto" />
+
           <!-- Display Screen on the Right of the Main Menu becomes Full screen on sm -->
           <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto" scroll-region>
             <flash-messages />
