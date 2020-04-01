@@ -51,7 +51,11 @@ or
 ```sh
 npm run dev
 ```
+Continously Build Assets on each change
 
+```sh
+npm run watch
+```
 
 Setup configuration:
 
