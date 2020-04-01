@@ -38,7 +38,7 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 Route::middleware('auth')->group(function () {
     Route::name('beneficiaries.')->group(function () {
         Route::get('beneficiaries', [BeneficiaryController::class, 'index'])->name('index');
-//        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
+        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
 //        Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
     });
 });
