@@ -18,77 +18,57 @@
             <thead>
               <tr>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  Name
+                  Deduction Name
                 </th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  MDA
+                  Amount
                 </th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  Designation
+                  Deduction Type
                 </th>
-                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  Bank Details
-                </th>
-                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                  Status
-                </th>
+                
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr v-for="(beneficiary, index) in beneficiaries.data" :key="beneficiary.id">
+              <tr v-for="(deduction, index) in deductions.data" :key="deduction.id">
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="flex items-center">
                     <div class="ml-4">
-                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ beneficiary.name }}</div>
-                      <div class="text-sm leading-5 text-gray-600">{{ beneficiary.verification_number }}</div>
+                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ deduction.name }}</div>
+                      <!-- <div class="text-sm leading-5 text-gray-600">{{ deduction.verification_number }}</div> -->
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ beneficiary.mda }}</div>
-                  <div class="text-sm leading-5 text-gray-600">
+                  <div class="text-sm leading-5 text-gray-900">{{ deduction.amount }}</div>
+                  <!-- <div class="text-sm leading-5 text-gray-600">
                       {{ beneficiary.sub_mda }}
                       {{ beneficiary.sub_sub_mda }}
-                  </div>
+                  </div> -->
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{ beneficiary.designation }}</div>
-                  <div class="text-sm leading-5 text-gray-600">
+                  <div class="text-sm leading-5 text-gray-900">{{ deduction.type }}</div>
+                  <!-- <div class="text-sm leading-5 text-gray-600">
                       {{ beneficiary.grade_level }}
                       {{ beneficiary.step }}
-                  </div>
+                  </div> -->
                 </td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">
-                    {{ beneficiary.account_number }}
-                  </div>
-                  <div class="text-sm leading-5 text-gray-600">
-                    {{ beneficiary.bank_name }}
-                  </div>
-                </td>
-                <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                        :class="beneficiary.active
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'">
-                    {{ beneficiary.active ? 'Active' : 'Inactive' }}
-                  </span>
-                </td>
+                
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
                   <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">Edit</a>
                 </td>
               </tr>
 
-              <tr v-if="beneficiaries.data.length === 0">
-                <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Beneficiary</td>
+              <tr v-if="deductions.data.length === 0">
+                <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Deduction</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <pagination :links="beneficiaries.links" />
+    <pagination :links="deductions.links" />
   </div>
 </template>
 
@@ -103,11 +83,11 @@ import pickBY from 'lodash/pickBY'
 import throttle from 'lodash/throttle'
 
 export default {
-  metaInfo: { title: 'Beneficiaries' },
+  metaInfo: { title: 'deductions' },
   layout: Layout,
 
   props: {
-    beneficiaries: Object,
+    deductions: Object,
     filters: Object,
   },
 

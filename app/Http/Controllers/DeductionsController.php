@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Deduction;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeductionsController extends Controller
 {
@@ -13,7 +16,21 @@ class DeductionsController extends Controller
      */
     public function index()
     {
-        //
+        $filters = Request::all('search');
+        $deductions =  Auth::user()->domain
+            ->deductions()
+            ->paginate()
+            ->transform(fn(Deduction $deductions) => [
+                'id' => $deductions->id,
+                'name' => $deductions->name(),
+                'amount' => $deductions->amount(),
+                'type' => $deductions->type(),
+            ]);
+
+        return Inertia::render('Deductions/Index', [
+            'filters' => $filters,
+            'deductions' => $deductions,
+        ]);
     }
 
     /**
