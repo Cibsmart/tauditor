@@ -58,7 +58,8 @@ class BeneficiaryController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Beneficiary/Create');
+        $filters = Request::all('search'); 
+        return Inertia::render('Beneficiary/Create', ['filters' => $filters ]);
     }
 
     /**
@@ -69,7 +70,26 @@ class BeneficiaryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'last_name' => 'required',
+            'first_name' => 'required',
+            'date_of_birth' => 'required',
+            'domain_id' => 'required',
+            'beneficiary_type_id' => 'required',
+        ]);
+
+        try{
+            
+            Beneficiary::Create(['last_name'=>$request->last_name,'first_name'=>$request->first_name,
+            'date_of_birth'=>$request->date_of_birth,'domain_id'=>$request->domain_id,
+            'beneficiary_type_id'=>$request->beneficiary_type_id
+            ]);
+
+            return back()->with('success',"Beneficiary Created");
+        }catch(Exception $e){
+            return back()->with('errors',$e);
+        }
+        
     }
 
     /**
