@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1 class="mb-8 font-bold text-3xl">Beneficiaries</h1>
+    <h1 class="mb-8 font-bold text-3xl">Deductions</h1>
     <div class="mb-6 flex justify-between items-center">
       <!-- Search Filter goes here -->
       <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
       </search-filter>
       <div></div>
       <inertia-link href="#" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
-        <span class="hidden md:inline">New Beneficiary</span>
+        <span class="hidden md:inline">New Deduction</span>
       </inertia-link>
     </div>
 

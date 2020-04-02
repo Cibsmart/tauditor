@@ -22,9 +22,9 @@ class DeductionsController extends Controller
             ->paginate()
             ->transform(fn(Deduction $deductions) => [
                 'id' => $deductions->id,
-                'name' => $deductions->name(),
-                'amount' => $deductions->amount(),
-                'type' => $deductions->type(),
+                'name' => $deductions->deductionName->name,
+                'amount' => $deductions->deductionDetails[0]->amount,
+                'type' => $deductions->deductionName->deductionType->name,
             ]);
 
         return Inertia::render('Deductions/Index', [
