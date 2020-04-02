@@ -4,29 +4,42 @@ namespace App\Http\Controllers;
 
 use App\Allowance;
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
+
 
 class AllowancesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Inertia\Response
      */
+
     public function index()
     {
+        $filters = Request::all('search');
+
         $allowances = Auth::user()->domain
             ->allowances()
+            ->filters(Request::only('search'))
             ->paginate()
             ->transform(fn(Allowance $allowances) => [
                 'id' => $allowances->id,
                 'name' => $allowances->name(),
+                'type' => $allowances->type(),
                 'amount' => $allowances->amount(),
-                'value_type' => '',
+                'value_type' => $allowances->valuable_type,
             ]);
 
-        return Inertia::render('Allowances/Index', compact('allowances'));
+        return Inertia::render('Allowances/Index', [
+            'allowances' => $allowances
+        ]);
     }
 
     /**

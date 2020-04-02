@@ -74,6 +74,11 @@ class Allowance extends Model
         return $this->allowanceName->name;
     }
 
+    public function type()
+    {
+        return $this->allowanceName->allowanceType->name;
+    }
+
     /**
      * Apply Selected Allowance to a Beneficiary
      * @param  Beneficiary  $beneficiary
@@ -94,5 +99,17 @@ class Allowance extends Model
         $this->allowanceDetails()->create($attributes);
 
         return $this;
+    }
+
+    public function scopeFilters($query, array $filters) : void
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('amount', 'like', '%' . $search . '%')
+                      ->orWhere('type', 'like', '%' . $search . '%')
+                      ->orWhere('value_type', 'like', '%' . $search . '%');
+            });
+        });
     }
 }
