@@ -30,21 +30,22 @@
               </tr>
             </thead>
             <tbody class="bg-white">
-              <tr >
+              <tr v-for="allowance in allowances.data" :key="allowance.id" >
+                  <!-- {{allowance}} -->
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="flex items-center">
                     <div class="ml-4">
-                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >CALL DUTY</div>
-                      <div class="text-sm leading-5 text-gray-600">OTHER ALLOWANCES</div>
+                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ allowance.name }}</div>
+                    <div class="text-sm leading-5 text-gray-600">{{allowance.type}}</div>
                     </div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">FIXED</div>
+                  <div class="text-sm leading-5 text-gray-900">{{allowance.value_type}}</div>
 
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">6000.15</div>
+                  <div class="text-sm leading-5 text-gray-900">{{allowance.amount}}</div>
                   <div class="text-sm leading-5 text-gray-600">
 
                   </div>
