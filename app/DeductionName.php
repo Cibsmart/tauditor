@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DeductionName extends Model
 {
@@ -12,5 +13,10 @@ class DeductionName extends Model
     public function deductions() : HasMany
     {
         return $this->hasMany(Deduction::class);
+    }
+    
+    public function deductionType() : BelongsTo
+    {
+        return $this->belongsTo(DeductionType::class);
     }
 }
