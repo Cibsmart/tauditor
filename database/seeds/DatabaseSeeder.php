@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             DomainSeeder::class,
+            RolesAndPermissionsSeeder::class,
             BeneficiaryTypeSeeder::class,
             UserSeeder::class,
             GenderSeeder::class,
@@ -36,7 +37,7 @@ class DatabaseSeeder extends Seeder
             DeductionTypeSeeder::class,
             DeductionNameSeeder::class,
             DeductionSeeder::class,
-//            BeneficiarySeeder::class,
+            BeneficiarySeeder::class,
         ]);
     }
 }

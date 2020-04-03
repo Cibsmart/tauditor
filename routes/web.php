@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AllowancesController;
 use App\Http\Controllers\DeductionsController;
 use App\Http\Controllers\BeneficiaryController;
@@ -38,8 +39,8 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 Route::middleware('auth')->group(function () {
     Route::name('beneficiaries.')->group(function () {
         Route::get('beneficiaries', [BeneficiaryController::class, 'index'])->name('index');
-//        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
-//        Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
+        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
+        Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
     });
 });
 
@@ -68,6 +69,21 @@ Route::middleware('auth')->group(function () {
         Route::get('deductions', [DeductionsController::class, 'index'])->name('index');
         Route::get('deductions/create', [DeductionsController::class, 'create'])->name('create');
         Route::post('deductions/store', [DeductionsController::class, 'store'])->name('store');
+    });
+});
+
+
+
+/*
+|-------------------------------------------------------------------------------
+| Payroll Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('payroll.')->group(function () {
+//        Route::get('payroll', [PayrollController::class, 'index'])->name('index');
+//        Route::get('payroll/create', [PayrollController::class, 'create'])->name('create');
+        Route::post('payroll/store', [PayrollController::class, 'store'])->name('store');
     });
 });
 

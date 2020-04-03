@@ -45,6 +45,11 @@ class Domain extends Model
         return $this->morphMany(Allowable::class, 'allowable');
     }
 
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class);
+    }
+
     /**
      * Synchronize all Domain Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary

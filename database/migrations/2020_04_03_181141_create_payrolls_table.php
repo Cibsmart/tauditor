@@ -17,9 +17,11 @@ class CreatePayrollsTable extends Migration
             $table->id();
             $table->unsignedSmallInteger('month');
             $table->unsignedBigInteger('year');
+            $table->boolean('approved')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
