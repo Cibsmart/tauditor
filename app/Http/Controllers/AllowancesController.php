@@ -32,12 +32,13 @@ class AllowancesController extends Controller
             ->transform(fn(Allowance $allowances) => [
                 'id' => $allowances->id,
                 'name' => $allowances->name(),
-                'type' => $allowances->type(),
                 'amount' => $allowances->amount(),
-                'value_type' => $allowances->valuable_type,
+                'value_type' => $allowances->valueType(),
+                'deduction_type' => $allowances->allowanceType()->name,
             ]);
 
         return Inertia::render('Allowances/Index', [
+            'filters' => $filters,
             'allowances' => $allowances
         ]);
     }

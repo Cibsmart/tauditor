@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('allowances.')->group(function () {
         Route::get('allowances', [AllowancesController::class, 'index'])->name('index');
+        Route::get('allowances/create', [AllowancesController::class, 'create'])->name('create');
+        Route::post('allowances/store', [AllowancesController::class, 'store'])->name('store');
     });
 });
 
@@ -64,6 +66,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('deductions.')->group(function () {
         Route::get('deductions', [DeductionsController::class, 'index'])->name('index');
+        Route::get('deductions/create', [DeductionsController::class, 'create'])->name('create');
+        Route::post('deductions/store', [DeductionsController::class, 'store'])->name('store');
     });
 });
 

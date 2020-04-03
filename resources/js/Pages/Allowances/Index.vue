@@ -36,7 +36,7 @@
                   <div class="flex items-center">
                     <div class="ml-4">
                       <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ allowance.name }}</div>
-                    <div class="text-sm leading-5 text-gray-600">{{allowance.type}}</div>
+                    <div class="text-sm leading-5 text-gray-600">{{allowance.deduction_type}}</div>
                     </div>
                   </div>
                 </td>
@@ -45,9 +45,10 @@
 
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="text-sm leading-5 text-gray-900">{{allowance.amount}}</div>
-                  <div class="text-sm leading-5 text-gray-600">
-
+                  <div class="text-sm leading-5 text-gray-900">
+                      <span v-if="allowance.value_type === 'FIXED'" class="line-through">N</span>
+                      {{allowance.amount}}
+                      <span v-if="allowance.value_type === 'PERCENTAGE'">%</span>
                   </div>
                 </td>
 

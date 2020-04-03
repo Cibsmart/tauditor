@@ -74,9 +74,14 @@ class Allowance extends Model
         return $this->allowanceName->name;
     }
 
-    public function type()
+    public function allowanceType()
     {
-        return $this->allowanceName->allowanceType->name;
+        return $this->allowanceName->allowanceType;
+    }
+
+    public function valueType()
+    {
+        return $this->valuable->type();
     }
 
     /**
