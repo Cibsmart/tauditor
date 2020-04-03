@@ -15,14 +15,14 @@
             <inertia-link class="px-12 py-6 flex items-center group"
                           href="#" @click="menu.active = !menu.active" preserve-scroll>
                 <icon :name="menu.icon" class="w-4 h-4 mr-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
-                <div class="font-bold" :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" v-text="menu.label">
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
+                <div class="font-bold" :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" v-text="menu.label">
                 </div>
 
                 <icon v-if="menu.active" name="cheveron-down" class="ml-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
                 <icon v-else name="cheveron-right" class="ml-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
             </inertia-link>
         </div>
         <div>

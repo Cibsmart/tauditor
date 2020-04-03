@@ -1,0 +1,15 @@
+
+.btn {
+    @apply px-6 py-3 flex items-center rounded text-sm font-bold whitespace-no-wrap
+}
+
+.btn-indigo {
+    @apply bg-indigo-800 text-white;
+}
+
+.btn-indigo:focus{
+    @apply bg-orange-800
+}
+.btn-indigo:hover{
+    @apply bg-orange-800
+}

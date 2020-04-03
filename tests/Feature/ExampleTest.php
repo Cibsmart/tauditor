@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use Carbon\Carbon;
 use AllowanceSeeder;
 use Tests\TestCase;
 use BeneficiarySeeder;
@@ -19,8 +20,9 @@ class ExampleTest extends TestCase
     public function testBasicTest()
     {
 
-        $this->seed();
-        $this->seed(BeneficiarySeeder::class);
+        $time = Carbon::now()->months(5);
+
+        dd($time);
 
         $this->assertFalse(false);
     }
