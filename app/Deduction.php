@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int id
+ * @property mixed deductionName
+ * @property mixed valuable
  */
 
 class Deduction extends Model
@@ -42,9 +44,19 @@ class Deduction extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function amount(float $value) : float
+    public function amount(float $base_value = null) : float
     {
-        return $this->valuable->amount($value);
+        return $this->valuable->amount($base_value);
+    }
+
+    public function name()
+    {
+        return $this->deductionName->name;
+    }
+
+    public function type()
+    {
+        return $this->deductionName->deductionType;
     }
 
     public function applyTo(Beneficiary $beneficiary)

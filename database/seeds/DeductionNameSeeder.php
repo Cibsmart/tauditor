@@ -1,6 +1,7 @@
 <?php
 
 use App\DeductionName;
+use App\DeductionType;
 use Illuminate\Database\Seeder;
 
 class DeductionNameSeeder extends Seeder
@@ -12,13 +13,21 @@ class DeductionNameSeeder extends Seeder
      */
     public function run()
     {
-        for($j = 1; $j <= 2; $j++) {
-            for($i = 1; $i <= 6; $i++) {
-                factory(DeductionName::class)->create([
-                    'code' => 'deduction'.$i.$j,
-                    'name' => 'deduction'.$i.$j,
-                    'deduction_type_id' => $i,
-                ]);
+
+        $others = [
+            'TAX' => 'TAX',
+            'AISHA' => 'AISHA',
+            'PENSION' => 'PENSION',
+        ];
+
+        for($i = 1; $i <= 2; $i++) {
+            foreach ($others as $code => $name) {
+                factory(DeductionName::class)
+                    ->create([
+                        'code' => $code,
+                        'name' => $name,
+                        'deduction_type_id' => 1
+                    ]);
             }
         }
     }

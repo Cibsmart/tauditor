@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             AllowanceNameSeeder::class,
             AllowanceSeeder::class,
             DeductionTypeSeeder::class,
+            DeductionNameSeeder::class,
+            DeductionSeeder::class,
 //            BeneficiarySeeder::class,
         ]);
     }

@@ -15,7 +15,7 @@ class CreateDeductionsTable extends Migration
     {
         Schema::create('deductions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('deduction_name_id')->unique();
+            $table->unsignedBigInteger('deduction_name_id');
             $table->morphs('valuable');
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
