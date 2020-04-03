@@ -23,6 +23,8 @@ class DeductionsController extends Controller
         $filters = Request::all('search');
         $deductions =  Auth::user()->domain
             ->deductions()
+            ->with($this->relationships())
+            ->filters(Request::only('search'))
             ->paginate()
             ->transform(fn(Deduction $deductions) => [
                 'id' => $deductions->id,
@@ -101,5 +103,15 @@ class DeductionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function relationships()
+    {
+        // Relationships Eager Loaded with Beneficiaries
+        // to avoid multiple Database Round Trip
+        return [
+            'deductionDetails.deduction',
+            'deductionName.deductionType',
+        ];
     }
 }

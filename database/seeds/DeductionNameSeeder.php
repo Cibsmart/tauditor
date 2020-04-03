@@ -17,7 +17,7 @@ class DeductionNameSeeder extends Seeder
                 factory(DeductionName::class)->create([
                     'code' => 'deduction'.$i.$j,
                     'name' => 'deduction'.$i.$j,
-                    'deduction_type_id' => $i,
+                    'deduction_type_id' => ($i*$j),
                 ]);
             }
         }

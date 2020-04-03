@@ -56,4 +56,21 @@ class Deduction extends Model
 
         return $this;
     }
+
+    /**
+     * Search Beneficiaries and Relationships
+     * @param $query
+     * @param  array  $filters
+     */
+    public function scopeFilters($query, array $filters) : void
+    {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->whereHas('deductionDetails', function($query) use ($search){
+                $query->where('amount', 'like', '%' . $search . '%');
+            })->orWhereHas('deductionName', function($query) use ($search){
+                $query->where('name', 'like', '%' . $search . '%')
+                ->orWhereHas('deductionType', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+            });
+        });
+    }
 }
