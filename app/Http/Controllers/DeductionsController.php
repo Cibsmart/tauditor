@@ -18,15 +18,16 @@ class DeductionsController extends Controller
     public function index()
     {
         $filters = Request::all('search');
-        $deductions =  Auth::user()->domain
-            ->deductions()
-            ->paginate()
-            ->transform(fn(Deduction $deductions) => [
-                'id' => $deductions->id,
-                'name' => $deductions->name(),
-                'amount' => $deductions->amount(),
-                'type' => $deductions->type()->name,
-            ]);
+        $deductions =  Auth::user()
+                           ->deductions()
+                           ->paginate()
+                           ->transform(fn(Deduction $deductions) => [
+                                'id' => $deductions->id,
+                                'name' => $deductions->name(),
+                                'amount' => $deductions->amount(),
+                                'value_type' => $deductions->valueType(),
+                                'deduction_type' => $deductions->deductionType()->name,
+                            ]);
 
         return Inertia::render('Deductions/Index', [
             'filters' => $filters,

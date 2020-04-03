@@ -25,25 +25,25 @@ class BeneficiaryController extends Controller
     public function index()
     {
         $filters = Request::all('search');
-        $beneficiaries = Auth::user()->domain
-            ->beneficiaries()
-            ->with($this->relationships())
-            ->filters(Request::only('search'))
-            ->paginate()
-            ->transform(fn (Beneficiary $beneficiaries) => [
-                'id' => $beneficiaries->id,
-                'name' => $beneficiaries->name,
-                'verification_number' => $beneficiaries->verification_number,
-                'active' => $beneficiaries->active,
-                'account_number' => $beneficiaries->accountNumber(),
-                'bank_name' => $beneficiaries->bankName(),
-                'mda' => $beneficiaries->mdaName(),
-                'sub_mda' => $beneficiaries->subMdaName(),
-                'sub_sub_mda' => $beneficiaries->subSubMdaName(),
-                'designation' => $beneficiaries->designationName(),
-                'grade_level' => $beneficiaries->gradeLevelName(),
-                'step' => $beneficiaries->stepName(),
-            ]);
+        $beneficiaries = Auth::user()
+                             ->beneficiaries()
+                             ->with($this->relationships())
+                             ->filters(Request::only('search'))
+                             ->paginate()
+                             ->transform(fn (Beneficiary $beneficiaries) => [
+                                 'id' => $beneficiaries->id,
+                                 'name' => $beneficiaries->name,
+                                 'verification_number' => $beneficiaries->verification_number,
+                                 'active' => $beneficiaries->active,
+                                 'account_number' => $beneficiaries->accountNumber(),
+                                 'bank_name' => $beneficiaries->bankName(),
+                                 'mda' => $beneficiaries->mdaName(),
+                                 'sub_mda' => $beneficiaries->subMdaName(),
+                                 'sub_sub_mda' => $beneficiaries->subSubMdaName(),
+                                 'designation' => $beneficiaries->designationName(),
+                                 'grade_level' => $beneficiaries->gradeLevelName(),
+                                 'step' => $beneficiaries->stepName(),
+                             ]);
 
         return Inertia::render('Beneficiary/Index', [
             'filters' => $filters,

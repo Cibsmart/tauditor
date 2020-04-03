@@ -23,4 +23,9 @@ class PercentageValue extends Model
             ? $base_value * $this->percentage / 100
             : $this->percentage;
     }
+
+    public function type()
+    {
+        return 'PERCENTAGE';
+    }
 }

@@ -19,6 +19,11 @@ class FixedValue extends Model
         return $this->amount;
     }
 
+    public function type()
+    {
+        return 'FIXED';
+    }
+
     public function setAmountAttribute(float $value) : int
     {
         return $this->attributes['Amount'] = $value * 100;

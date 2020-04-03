@@ -54,9 +54,14 @@ class Deduction extends Model
         return $this->deductionName->name;
     }
 
-    public function type()
+    public function deductionType()
     {
         return $this->deductionName->deductionType;
+    }
+
+    public function valueType()
+    {
+        return $this->valuable->type();
     }
 
     public function applyTo(Beneficiary $beneficiary)

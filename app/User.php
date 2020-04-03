@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+/**
+ * @property mixed domain
+ */
 class User extends Authenticatable
 {
     use Notifiable, HasRoles, SoftDeletes;
@@ -31,5 +34,20 @@ class User extends Authenticatable
     public function setPasswordAttribute(string $value) : string
     {
         return $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function beneficiaries()
+    {
+        return $this->domain->beneficiaries();
+    }
+
+    public function allowances()
+    {
+        return $this->domain->allowances();
+    }
+
+    public function deductions()
+    {
+        return $this->domain->deductions();
     }
 }
