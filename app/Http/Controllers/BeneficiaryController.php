@@ -6,6 +6,12 @@ use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\StructuredSalary;
+use App\LocalGovernment;
+use App\State;
+use App\Domain;
+use App\Gender;
+use App\MaritalStatus;
+use App\BeneficiaryType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -35,14 +41,14 @@ class BeneficiaryController extends Controller
                 'name' => $beneficiaries->name,
                 'verification_number' => $beneficiaries->verification_number,
                 'active' => $beneficiaries->active,
-                'account_number' => $beneficiaries->accountNumber(),
-                'bank_name' => $beneficiaries->bankName(),
-                'mda' => $beneficiaries->mdaName(),
-                'sub_mda' => $beneficiaries->subMdaName(),
-                'sub_sub_mda' => $beneficiaries->subSubMdaName(),
-                'designation' => $beneficiaries->designationName(),
-                'grade_level' => $beneficiaries->gradeLevelName(),
-                'step' => $beneficiaries->stepName(),
+                // 'account_number' => $beneficiaries->accountNumber(),
+                // 'bank_name' => $beneficiaries->bankName(),
+                // 'mda' => $beneficiaries->mdaName(),
+                // 'sub_mda' => $beneficiaries->subMdaName(),
+                // 'sub_sub_mda' => $beneficiaries->subSubMdaName(),
+                // 'designation' => $beneficiaries->designationName(),
+                // 'grade_level' => $beneficiaries->gradeLevelName(),
+                // 'step' => $beneficiaries->stepName(),
             ]);
 
         return Inertia::render('Beneficiary/Index', [
@@ -58,8 +64,23 @@ class BeneficiaryController extends Controller
      */
     public function create()
     {
+        $lga = LocalGovernment::all();
+        $states = State::all();
+        $domains = Domain::all();
+        $gender = Gender::all();
+        $marital_status = MaritalStatus::all();
+        $beneficiary_types = BeneficiaryType::all();
+      
         $filters = Request::all('search'); 
-        return Inertia::render('Beneficiary/Create', ['filters' => $filters ]);
+        return Inertia::render('Beneficiary/Create',[
+            'filters' => $filters,
+            'lga' => $lga,
+            'states' => $states,
+            'domains' => $domains,
+            'gender' => $gender,
+            'marital_status' => $marital_status,
+            'beneficiary_types' => $beneficiary_types,
+        ]);
     }
 
     /**
@@ -90,8 +111,7 @@ class BeneficiaryController extends Controller
                     'address_line_2' => 'nullable|string',
                     'address_city' => 'nullable|string',
                     'address_state' => 'nullable|string',
-                    'address_country' => 'nullable|string',
-                    'address_city' => 'nullable|string',      
+                    'address_country' => 'nullable|string',    
                     'domain_id' => 'required|interger|min:1',
                     'beneficiary_type_id' => 'required|interger|min:1',
                     'active' => 'nullable',
@@ -168,3 +188,4 @@ class BeneficiaryController extends Controller
         ];
     }
 }
+                                                  
