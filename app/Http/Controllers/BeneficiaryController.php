@@ -89,22 +89,22 @@ class BeneficiaryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-      
+      //dd(Request::all('first_name'));
         try{
 
             Beneficiary::create(
                 Request::validate([
-                    'verification_number'=>'nullable|sting',
+                    'verification_number'=>'nullable|string',
                     'last_name' => 'required|string',
                     'first_name' => 'required|string',
                     'middle_name' => 'nullable|string',
                     'date_of_birth' => 'required|date',
-                    'gender_id' => 'nullable|interger|min:1',
-                    'marital_status_id' => 'nullable|interger|min:1',
-                    'state_id' => 'nullable|interger|min:1',
-                    'local_government_id' => 'nullable|interger|min:1',
+                    'gender_id' => 'nullable|integer|min:1',
+                    'marital_status_id' => 'nullable|integer|min:1',
+                    'state_id' => 'nullable|integer|min:1',
+                    'local_government_id' => 'nullable|integer|min:1',
                     'phone_number' => 'nullable|string',
                     'email' => 'nullable|email',
                     'address_line_1' => 'nullable|string',
@@ -112,8 +112,8 @@ class BeneficiaryController extends Controller
                     'address_city' => 'nullable|string',
                     'address_state' => 'nullable|string',
                     'address_country' => 'nullable|string',    
-                    'domain_id' => 'required|interger|min:1',
-                    'beneficiary_type_id' => 'required|interger|min:1',
+                    'domain_id' => 'required|integer|min:1',
+                    'beneficiary_type_id' => 'required|integer|min:1',
                     'active' => 'nullable',
                 ])
             );
