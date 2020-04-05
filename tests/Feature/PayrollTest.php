@@ -4,14 +4,32 @@ namespace Tests\Feature;
 
 use App\Payroll;
 use Carbon\Carbon;
+use Tests\Setup\UserFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use function array_merge;
 
 class PayrollTest extends TestCase
 {
     use RefreshDatabase;
+
+    private $attributes;
+
+    protected function setUp() : void
+    {
+        parent::setUp();
+
+        $date = Carbon::now();
+
+        $this->attributes = [
+            'month' => $date->month,
+            'month_name' => $date->monthName,
+            'year' => $date->year,
+        ];
+    }
+
 
     /** @test */
     public function anUnauthenticatedUserCannotCreatePayroll()
@@ -34,20 +52,11 @@ class PayrollTest extends TestCase
     /** @test */
     public function anAuthorizedCanCreatePayroll()
     {
-        //Given we have an authorized user
-        $this->signIn()->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
-        $date = Carbon::now();
-        $user = Auth::user();
+        $user = $this->signIn()->givePermissionTo('create_payroll');
 
-        $user->givePermissionTo('create_payroll');
-
-        $attributes = [
-            'month' => $date->month,
-            'month_name' => $date->monthName,
-            'year' => $date->year,
-            'domain_id' => $user->domain->id,
-        ];
+        $attributes = array_merge($this->attributes, ['domain_id' => $user->domain->id]);
 
         //An the user sends a request to run payroll
         $this->post(route('payroll.store'));
@@ -60,19 +69,9 @@ class PayrollTest extends TestCase
     /** @test */
     public function payrollCanOnlyBeGeneratedOnceInAMonth()
     {
-        $this->signIn();;
+        $user = $this->signIn()->givePermissionTo('create_payroll');
 
-        $date = Carbon::now();
-        $user = Auth::user();
-
-        $user->givePermissionTo('create_payroll');
-
-        $attributes = [
-            'month' => $date->month,
-            'month_name' => $date->monthName,
-            'year' => $date->year,
-            'domain_id' => $user->domain->id,
-        ];
+        $attributes = array_merge($this->attributes, ['domain_id' => $user->domain->id]);
 
         $this->post(route('payroll.store'));
 
@@ -87,13 +86,11 @@ class PayrollTest extends TestCase
     /** @test */
     public function anAuthorizedUserCanViewPayroll()
     {
-        $this->signIn()->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
-        $user = Auth::user();
+        $user = $this->signIn()->givePermissionTo('view_payroll');
 
         $user->domain->payrolls()->saveMany(factory(Payroll::class, 5)->make());
-
-        $user->givePermissionTo('view_payroll');
 
         $this->get(route('payroll.index'))
              ->assertStatus(200)
