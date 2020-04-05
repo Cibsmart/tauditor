@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Payroll;
 use App\PaySchedule;
 use Illuminate\Http\Request;
+use function redirect;
 
 class PayScheduleController extends Controller
 {
@@ -30,12 +32,12 @@ class PayScheduleController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return void
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

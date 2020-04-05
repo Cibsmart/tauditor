@@ -10,9 +10,13 @@ class PayrollPolicy
 {
     use HandlesAuthorization;
 
+    public function index(User $user)
+    {
+        return $user->can('view_payroll');
+    }
 
     public function create(User $user)
     {
-        return $user->can('generate_payroll');
+        return $user->can('create_payroll');
     }
 }

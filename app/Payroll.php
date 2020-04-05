@@ -5,29 +5,40 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property mixed id
  * @property mixed month
  * @property mixed year
- * @property  domain_id
+ * @property mixed approved
+ * @property mixed updated_at
+ * @property mixed archived
+ * @property mixed generated
+ * @property mixed month_name
  */
 class Payroll extends Model
 {
     protected $guarded = [];
+
+    protected $dates = ['generated'];
+
+    protected $casts =[
+      'approved' => 'boolean',
+      'archived' => 'boolean',
+    ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-
-    public function generatePaySchedule()
+    public function generatedBy()
     {
-        //Get a list of all active beneficiary
+        return $this->user->name ?? null;
+    }
 
-        //For each beneficiary
-        //1. Basic Pay
-        //2. Allowances
-        //3. Deduction
-
-        //Then save in pay_schedules table
+    public function dateGenerated()
+    {
+        return $this->generated
+            ? $this->generated->timezone('Africa/Lagos')->diffForHumans()
+            : $this->generated;
     }
 }

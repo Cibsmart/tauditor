@@ -35,12 +35,14 @@ class RolesAndPermissionsSeeder extends Seeder
             'assign_allowance',
             'assign_deduction',
             'update_salary_structure',
-            'generate_payroll',
+            'create_payroll',
+            'run_payroll',
             'approve_updates',
+            'view_payroll',
             'view_pay_slip',
             'view_mfb_schedule',
             'download_mfb_schedule',
-            'view_pay_schedule'
+            'view_pay_schedule',
         ];
 
         foreach ($permissions as $permission) {
@@ -49,7 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $admin->givePermissionTo('view_beneficiaries', 'create_beneficiaries', 'edit_beneficiaries',
             'create_allowance', 'create_deduction', 'assign_allowance', 'assign_deduction', 'update_salary_structure',
-            'generate_payroll','view_pay_slip', 'view_mfb_schedule', 'download_mfb_schedule', 'view_pay_schedule');
+            'create_payroll', 'run_payroll', 'view_pay_slip', 'view_mfb_schedule', 'download_mfb_schedule', 'view_pay_schedule', 'view_payroll');
 
         $hod->givePermissionTo($permissions);
 

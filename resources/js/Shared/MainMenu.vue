@@ -69,7 +69,11 @@ export default{
                   index: { id: 1, label: 'Deductions', uri: this.uri('deductions.index'), },
               }
           },
-          payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false },
+          payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false,
+              subs: {
+                  index: { id: 1, label: 'Payroll', uri: this.uri('payroll.index'), },
+              }
+          },
           setup: { id: 6, name: 'setup',  label: 'Setup', icon: 'store-front', active: false },
           reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false },
           audit: { id: 8, name: 'audit',  label: 'Audit System', icon: 'brief-case', active: false },

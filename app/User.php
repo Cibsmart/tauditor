@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
+ * @property mixed id
  * @property mixed domain
  * @property mixed last_name
  * @property mixed first_name
@@ -60,11 +61,6 @@ class User extends Authenticatable
 
     public function payrolls()
     {
-        return $this->domain->payrolls;
-    }
-
-    public function payroll()
-    {
-        return $this->hasMany(Payroll::class);
+        return $this->domain->payrolls();
     }
 }

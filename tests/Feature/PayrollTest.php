@@ -4,29 +4,17 @@ namespace Tests\Feature;
 
 use App\Payroll;
 use Carbon\Carbon;
-use RolesAndPermissionsSeeder;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use function route;
 
 class PayrollTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected function setUp() : void
-    {
-        parent::setUp(); //
-
-        $this->seed(RolesAndPermissionsSeeder::class);
-
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
-    }
-
     /** @test */
-    public function anUnauthenticatedUserCannotGeneratePayroll()
+    public function anUnauthenticatedUserCannotCreatePayroll()
     {
         $response = $this->post(route('payroll.store'));
 
@@ -34,11 +22,10 @@ class PayrollTest extends TestCase
     }
 
     /** @test */
-    public function anUnauthorizedUserCannotGeneratePayroll()
+    public function anUnauthorizedUserCannotCreatePayroll()
     {
         $this->signIn();
 
-        //An the user sends a request to run payroll
         $response = $this->post(route('payroll.store'));
 
         $response->assertStatus(403);
@@ -53,12 +40,12 @@ class PayrollTest extends TestCase
         $date = Carbon::now();
         $user = Auth::user();
 
-        $user->givePermissionTo('generate_payroll');
+        $user->givePermissionTo('create_payroll');
 
         $attributes = [
             'month' => $date->month,
+            'month_name' => $date->monthName,
             'year' => $date->year,
-            'user_id' => $user->id,
             'domain_id' => $user->domain->id,
         ];
 
@@ -71,19 +58,19 @@ class PayrollTest extends TestCase
     }
 
     /** @test */
-    public function payrollCanOnBeGeneratedOnceInAMonth()
+    public function payrollCanOnlyBeGeneratedOnceInAMonth()
     {
-        $this->signIn();; //->withoutExceptionHandling();
+        $this->signIn();;
 
         $date = Carbon::now();
         $user = Auth::user();
 
-        $user->givePermissionTo('generate_payroll');
+        $user->givePermissionTo('create_payroll');
 
         $attributes = [
             'month' => $date->month,
+            'month_name' => $date->monthName,
             'year' => $date->year,
-            'user_id' => $user->id,
             'domain_id' => $user->domain->id,
         ];
 
@@ -94,30 +81,27 @@ class PayrollTest extends TestCase
 
         $response = $this->post(route('payroll.store'));
 
-        $response->assertSessionHas('message');
+        $response->assertSessionHas('error');
     }
 
     /** @test */
-    public function aPayrollHasPaySchedules()
+    public function anAuthorizedUserCanViewPayroll()
     {
         $this->signIn()->withoutExceptionHandling();
 
-        $date = Carbon::now();
         $user = Auth::user();
 
-        $user->givePermissionTo('generate_payroll');
+        $user->domain->payrolls()->saveMany(factory(Payroll::class, 5)->make());
 
-        $attributes = [
-            'month' => $date->month,
-            'year' => $date->year,
-            'user_id' => $user->id,
-            'domain_id' => $user->domain->id,
-        ];
+        $user->givePermissionTo('view_payroll');
 
-        //An the user sends a request to run payroll
-        $response = $this->post(route('payroll.store'));
-
-        $payroll = $response->original;
-        $this->assertDatabaseHas('pay_schedules', ['payroll_id', $payroll->id]);
+        $this->get(route('payroll.index'))
+             ->assertStatus(200)
+             ->assertPropCount('payrolls.data', 5)
+             ->assertPropValue('payrolls.data', function ($payrolls) {
+                 $this->assertEquals(
+                     ['id', 'month', 'year', 'approved', 'archived', 'generated', 'generated_by'],
+                     array_keys($payrolls[0]));
+             });
     }
 }

@@ -4,9 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Payroll;
 use Carbon\Carbon;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use function back;
+use Illuminate\Database\QueryException;
+use function sleep;
+use function compact;
+use function redirect;
 
 class PayrollController extends Controller
 {
@@ -18,11 +22,27 @@ class PayrollController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        //
+        $this->authorize('index', Payroll::class);
+
+        $payrolls = Auth::user()->payrolls()->latest()
+                        ->paginate()
+                        ->transform(fn(Payroll $payroll) => [
+                            'id' => $payroll->id,
+                            'month' => $payroll->month_name,
+                            'year' => $payroll->year,
+                            'approved' => $payroll->approved,
+                            'archived' => $payroll->archived,
+                            'generated' => $payroll->dateGenerated(),
+                            'generated_by' => $payroll->generatedBy(),
+                        ]);
+
+        return Inertia::render('Payroll/Index', [
+            'payrolls' => $payrolls,
+        ]);
     }
 
     /**
@@ -51,22 +71,21 @@ class PayrollController extends Controller
 
         $attributes = [
             'month' => $date->month,
+            'month_name' => $date->monthName,
             'year' => $date->year,
-            'domain_id' => $user->domain->id
         ];
 
-        $payroll = $user->payroll()->first($attributes);
+        $payroll = $user->payrolls()->where($attributes)->first();
 
         if($payroll)
         {
-            return back()->with('message', "You cannot regenerate payroll for $date->monthName $date->year");
+            return back()->with('error', "You Cannot Regenerate Payroll for $date->monthName $date->year");
         }
 
-        $payroll = $user->payroll()->create($attributes);
+        $user->payrolls()->create($attributes);
 
-        $payroll->generatePaySchedule();
-
-        return $payroll;
+        return redirect()->route('payroll.index')
+                         ->with('success', "Payroll for $date->monthName $date->year Created Successfully");
     }
 
     /**

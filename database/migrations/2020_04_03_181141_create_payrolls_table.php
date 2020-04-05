@@ -16,12 +16,17 @@ class CreatePayrollsTable extends Migration
         Schema::create('payrolls', function (Blueprint $table) {
             $table->id();
             $table->unsignedSmallInteger('month');
+            $table->string('month_name', 20);
             $table->unsignedBigInteger('year');
             $table->boolean('approved')->default(0);
-            $table->unsignedBigInteger('user_id');
+            $table->boolean('archived')->default(0);
+            $table->timestamp('generated')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['month', 'month_name', 'year', 'domain_id'], 'unique_payrolls');
         });
     }
 
