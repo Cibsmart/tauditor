@@ -205,7 +205,7 @@ class Beneficiary extends Model
     public function applyAllowance(Allowance $allowance, int $allowable_id = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $allowance->amount($this->basic()),
+            'amount' => $allowance->amount($this),
             'allowance_id' => $allowance->id,
         ];
 
@@ -246,10 +246,10 @@ class Beneficiary extends Model
      * @param  Deductible  $deductible
      * @return Beneficiary
      */
-    public function applyDeduction(Deduction $deduction, Deductible $deductible) : Beneficiary
+    public function applyDeduction(Deduction $deduction, int $deductible = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $deduction->amount($this->basic()),
+            'amount' => $deduction->amount($this),
             'deduction_id' => $deduction->id
         ];
 

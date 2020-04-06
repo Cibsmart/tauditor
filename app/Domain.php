@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int id
+ * @property mixed code
+ * @property mixed name
  * @property mixed allowables
  */
 class Domain extends Model

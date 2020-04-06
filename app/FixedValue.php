@@ -9,11 +9,6 @@ class FixedValue extends Model
 {
     protected $guarded = [];
 
-    public function value() : MorphOne
-    {
-        return $this->morphOne(Allowance::class, 'valuable');
-    }
-
     public function amount() : float
     {
         return $this->amount;

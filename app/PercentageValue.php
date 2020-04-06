@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use function number_format;
 
 /**
  * @property mixed percentage
@@ -12,16 +13,14 @@ class PercentageValue extends Model
 {
     protected $guarded = [];
 
-    public function value() : MorphOne
+    public function amount(Beneficiary $beneficiary = null) : float
     {
-        return $this->morphOne(Allowance::class, 'valuable');
-    }
+        if(! $beneficiary){
+            return $this->percentage;
+        }
 
-    public function amount(float $base_value = null) : float
-    {
-        return $base_value
-            ? $base_value * $this->percentage / 100
-            : $this->percentage;
+        $amount = $beneficiary->basic() * $this->percentage / 100;
+        return number_format($amount, 2, '.', '');
     }
 
     public function type()

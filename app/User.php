@@ -14,6 +14,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed domain
  * @property mixed last_name
  * @property mixed first_name
+ * @property mixed email
  */
 class User extends Authenticatable
 {

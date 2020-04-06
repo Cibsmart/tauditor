@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Payroll;
+use App\Compute\Tax;
 use App\Actions\ComputeTaxAction;
 use Facades\Tests\Setup\BeneficiaryFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -49,9 +50,10 @@ class RunPayrollTest extends TestCase
     /** @test */
     public function example()
     {
-        $beneficiary = BeneficiaryFactory::withPersonalizedSalary()->withMfb()->create();
+        $beneficiary = BeneficiaryFactory::withPersonalizedSalary()
+                                         ->create();
 
-        $tax = (new ComputeTaxAction())->execute($beneficiary);
+        $tax = (new Tax())->compute($beneficiary);
 
         dump($beneficiary->basic() * 12);
         dump($beneficiary->monthlyAllowance() * 12);

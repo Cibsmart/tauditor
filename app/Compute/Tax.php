@@ -1,13 +1,14 @@
 <?php
 
 
-namespace App\Actions;
+namespace App\Compute;
 
 
 use App\Beneficiary;
-use function count;
+use App\Contracts\Computable;
+use function number_format;
 
-class ComputeTaxAction
+class Tax implements Computable
 {
     private Beneficiary $beneficiary;
     private float $annual_basic = 0.0;
@@ -21,48 +22,48 @@ class ComputeTaxAction
     private array $amounts = [300000, 300000, 500000, 500000, 1600000, 3200000]; // tax amount break points
     private array $rates = [7, 11, 15, 19, 21, 24]; //Percentage rates
 
-    public function execute(Beneficiary $beneficiary)
+    public function compute(Beneficiary $beneficiary)
     {
         $this->beneficiary = $beneficiary;
 
-        return $this->annualBasic()
-                    ->annualAllowance()
-                    ->annualGross()
-                    ->tax();
+        return $this->getAnnualBasic()
+                    ->getAnnualAllowance()
+                    ->computeAnnualGross()
+                    ->thenComputeTax();
     }
 
-    private function annualBasic()
+    private function getAnnualBasic()
     {
         $this->annual_basic = $this->beneficiary->basic() * 12;
 
         return $this;
     }
 
-    private function annualAllowance()
+    private function getAnnualAllowance()
     {
         $this->annual_allowance = $this->beneficiary->monthlyAllowance() * 12;
 
         return $this;
     }
 
-    private function annualGross()
+    private function computeAnnualGross()
     {
         $this->annual_gross = $this->annual_basic + $this->annual_allowance;
 
         return $this;
     }
 
-    private function tax()
+    private function thenComputeTax()
     {
         if($this->beneficiary->isPensioner()){
-            return $this->annual_basic * 1 / 100;
+            return  $this->formatTax($this->annual_basic * 1 / 100);
         }
 
-        if($this->annual_gross < 30000){
-            return $this->annual_gross * 1 / 100;
+        if($this->annual_gross < 400000){
+            return $this->formatTax($this->annual_gross * 1 / 100);
         }
 
-        return $this->gradedTax();
+        return $this->formatTax($this->gradedTax());
     }
 
     private function exemptions()
@@ -100,5 +101,11 @@ class ComputeTaxAction
         }
 
         return $tax;
+    }
+
+    public function formatTax($annual_tax)
+    {
+        $monthly_tax = $annual_tax / 12;
+        return number_format($monthly_tax, 2, '.', '');
     }
 }
