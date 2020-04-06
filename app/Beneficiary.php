@@ -122,6 +122,11 @@ class Beneficiary extends Model
         return $this->salaryDetail->basicPay();
     }
 
+    public function monthlyAllowance() : float
+    {
+        return $this->allowanceDetails->sum('amount');
+    }
+
     public function accountNumber() : string
     {
         return $this->bankDetail->account_number;
@@ -130,6 +135,11 @@ class Beneficiary extends Model
     public function bankName() : string
     {
         return $this->bankDetail->bankable->name;
+    }
+
+    public function bank()
+    {
+        return $this->bankDetail->bankable();
     }
 
     public function mdaName() : string

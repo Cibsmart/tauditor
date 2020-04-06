@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\Domain;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -79,7 +80,7 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $domains = Domain::query()
-                        ->orderBy('slug')
+                        ->orderBy('code')
                         ->get();
 
         return Inertia::render('Auth/Register', compact('domains'));

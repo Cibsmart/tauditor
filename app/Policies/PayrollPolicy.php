@@ -19,4 +19,9 @@ class PayrollPolicy
     {
         return $user->can('create_payroll');
     }
+
+    public function payrun(User $user)
+    {
+        return $user->can('run_payroll');
+    }
 }

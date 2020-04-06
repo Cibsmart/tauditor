@@ -15,7 +15,7 @@ class PayrollTest extends TestCase
 {
     use RefreshDatabase;
 
-    private $attributes;
+    private array $attributes;
 
     protected function setUp() : void
     {

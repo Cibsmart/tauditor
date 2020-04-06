@@ -30,6 +30,11 @@ class Payroll extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function schedules()
+    {
+        return $this->hasMany(PaySchedule::class);
+    }
+
     public function generatedBy()
     {
         return $this->user->name ?? null;
