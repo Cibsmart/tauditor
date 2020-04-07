@@ -8,7 +8,6 @@ use Facades\Tests\Setup\BeneficiaryFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use function factory;
 
 class ComputeTaxTest extends TestCase
 {
@@ -25,4 +24,5 @@ class ComputeTaxTest extends TestCase
 
         $this->assertEquals(4261.67, $tax);
     }
+
 }

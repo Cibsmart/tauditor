@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function is_null;
 use function in_array;
 use function array_merge;
+use function number_format;
+use const PHP_ROUND_HALF_UP;
 
 /**
  * @property int id

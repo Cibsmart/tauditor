@@ -12,6 +12,18 @@ use function resolve;
  */
 class ComputedValue extends Model
 {
+
+    public function allowance()
+    {
+        return $this->morphTo(Allowance::class, 'valuable');
+    }
+
+    public function deduction()
+    {
+        return $this->morphTo(Deduction::class, 'valuable');
+    }
+
+
     public function amount(Beneficiary $beneficiary = null)
     {
         if(! $beneficiary){

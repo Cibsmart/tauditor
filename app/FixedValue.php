@@ -9,6 +9,16 @@ class FixedValue extends Model
 {
     protected $guarded = [];
 
+    public function allowance()
+    {
+        return $this->morphTo(Allowance::class, 'valuable');
+    }
+
+    public function deduction()
+    {
+        return $this->morphTo(Deduction::class, 'valuable');
+    }
+
     public function amount() : float
     {
         return $this->amount;
