@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->domain->deductions();
     }
+
+    public function deductionstype()
+    {
+        return $this->domain->deductionstype();
+    }
+
+    public function deductionsname()
+    {
+        return $this->domain->deductionsname();
+    }
 }
