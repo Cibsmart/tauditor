@@ -62,6 +62,7 @@ export default{
           allowances: { id: 3, name: 'allowances',  label: 'Allowances', icon: 'shopping-cart', active: false,
               subs: {
                   index: { id: 1, label: 'Allowances', uri: this.uri('allowances.index'), },
+                  create: { id: 2, label: 'New Allowance', uri: this.uri('allowances.create'), }
               }
           },
           deductions: { id: 4, name: 'deductions',  label: 'Deductions', icon: 'trash', active: false,

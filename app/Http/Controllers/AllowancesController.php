@@ -5,7 +5,12 @@ namespace App\Http\Controllers;
 use App\Allowance;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Exception;
+use App\Domain;
+use App\AllowanceName;
+use App\PercentageValue;
+use App\FixedValue;
 
 
 class AllowancesController extends Controller
@@ -50,7 +55,31 @@ class AllowancesController extends Controller
      */
     public function create()
     {
-        //
+        // $filters = Request::all('search');
+        $allowances = Auth::user()->domain
+            ->allowances()
+            // ->filters(Request::only('search'))
+            ->paginate()
+            ->transform(fn(Allowance $allowances) => [
+                'id' => $allowances->id,
+                'name' => $allowances->name(),
+                'amount' => $allowances->amount(),
+                'value_type' => $allowances->valueType(),
+            ]);
+        
+        $allowance_names = AllowanceName::all();
+        $fixed_values = FixedValue::all();
+        $percentage_values = PercentageValue::all();
+        // dd($fixed_value);
+
+        return Inertia::render('Allowances/Create', [
+            'allowances' => $allowances,
+             'allowance_names'  =>  $allowance_names,
+             'fixed_values' => $fixed_values,
+             'percentage_values' => $percentage_values,
+             
+        ]);
+
     }
 
     /**
@@ -59,9 +88,69 @@ class AllowancesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        //
+       // dd(Request::all());
+
+       $request->validate([
+        'percentage' => 'required|max:100|nullable',
+        'allowance_name_id' => 'required',
+        'percentage_type' => 'required|nullable',
+        'amount' => 'required|nullable',
+        'fixed_value' => 'required|nullable',
+    ]);
+        try{
+            $request = Request::all();
+            //check the type of allowance
+            if($request['allowance_type'] == "percentage_type"){
+              
+                //create thepercentage value
+                $percentage_amount = $request['percentage'];
+               
+                $percentage_value = new PercentageValue();
+                $percentage_value->percentage = $percentage_amount;
+                $percentage_value->save();
+
+                //then create the allowance
+                $allowance = new Allowance();
+                $allowance->allowance_name_id = $request['allowance_name_id'];
+                $allowance->domain_id = 1;
+                $allowance->valuable_type = "percentage_type";
+                $allowance->valuable_id = $percentage_value->id;
+
+                $allowance->save();              
+
+                return back()->with('success',"Percentage Type Allowance Created");
+             
+            
+            }else if ($request['allowance_type'] == "fixed_value"){
+            
+
+                //create the fixed values
+                $fixed_amount =  $request['amount'];
+                $fixed_value = new FixedValue();
+                $fixed_value->amount = $fixed_amount;
+                $fixed_value->save();
+
+                //then create the allowance
+                $allowance = new Allowance();
+                $allowance->allowance_name_id = $request['allowance_name_id'];
+                $allowance->domain_id = 1;
+                $allowance->valuable_type = "fixed_value";
+                $allowance->valuable_id = $fixed_value->id;
+
+                $allowance->save(); 
+
+                return back()->with('success',"Fixed Value Allowance Created");
+            }else{
+                return back()->with('error',"Invalid Request");
+            }
+        }catch(Exception $e){
+
+            return back()->with('error',$e);
+        }
+
     }
 
     /**
