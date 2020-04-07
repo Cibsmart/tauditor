@@ -8,10 +8,11 @@ use App\DeductionType;
 use App\DeductionName;
 use App\FixedValue;
 use App\PercentageValue;
+use App\ComputedValue;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Request;
+//  use Illuminate\Support\Facades\Request;
 use function compact;
 
 class DeductionsController extends Controller
@@ -99,6 +100,13 @@ class DeductionsController extends Controller
         elseif($data['value_type'] == "percentage_value" ){
             $valuable_p = PercentageValue::create([
                 'percentage'=>$data['percentage_value'],
+                ]);
+            
+            $valuable_id = $valuable_p->id;
+        }
+        elseif($data['value_type'] == "computed_value" ){
+            $valuable_p = ComputedValue::create([
+                'computer'=>'compute_'.$data['deductionname'],
                 ]);
             
             $valuable_id = $valuable_p->id;

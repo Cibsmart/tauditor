@@ -16,8 +16,7 @@
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Deduction Type
           </label>
-          <select-input v-model="form.deductiontype">
-          <!-- <select-input v-model="selected"> -->
+          <select-input @input="nameChange" v-model="form.deductiontype">
             <option disabled value="">Select Deduction Type</option>
             <option
               v-for="(deductiontype, index) in deductiontypes.data" 
@@ -38,7 +37,7 @@
               v-model="form.deductionname"
               style = "position:absolute; top:0px; left:0px; width:100%;"
             >
-              <option v-for="(deductionname, index) in deductionnames.data" 
+              <option v-for="(deductionname, index) in deductionnamesData" 
                   :key="deductionname.deduction_name_id"
                   :value="deductionname.deduction_name_id"
               >
@@ -56,20 +55,19 @@
         </div>
 
         <div class="col-start-1 col-end-3">
-          <input type="radio" value="fixed_value" v-model="form.value_type">
-          <label class="tracking-wide text-gray-700 font-bold">
-            Value-based Deduction
+          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+            Value Type
           </label>
-        </div>
-        <div class="col-end-6 col-span-2">
-          <input type="radio" value="percentage_value" v-model="form.value_type">
-          <label class="tracking-wide text-gray-700 font-bold">
-            Percentage Deduction
-          </label>
+          <select-input v-model="form.value_type">
+            <option disabled value="">Select Value Type</option>
+            <option value="percentage_value">Percentage Value Type</option>
+            <option value="fixed_value">fixed Value Type</option>
+            <option value="computed_value">Computed Value Type</option>
+          </select-input>
           <div class="text-red-600" v-if="$page.errors.value_type">{{ $page.errors.value_type[0] }}</div>
         </div>
 
-        <div class="col-start-1 col-end-3" v-show="form.value_type==='percentage_value'">
+        <div class="col-start-1 col-end-3" v-show="form.value_type === 'percentage_value'">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Percentage Deduction
           </label>
@@ -77,7 +75,7 @@
           <div class="text-red-600" v-if="$page.errors.percentage_value">{{ $page.errors.percentage_value[0] }}</div>
         </div>
 
-        <div class="col-start-1 col-end-3" v-show="form.value_type==='fixed_value'">
+        <div class="col-start-1 col-end-3" v-show="form.value_type === 'fixed_value'">
           <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             Value-based Deduction
           </label>
@@ -132,29 +130,23 @@ export default {
       form: {
         deductiontype:'',
         deductionname:'',
+        value_type:'',
         percentage_value:'',
         fixed_value:'',
-        value_type:'',
       },
-      
+      deductionnamesData: [],
     }
   },
 
   methods: {
+    nameChange(value) {
+      this.deductionnamesData = this.deductionnames.data.filter(item => {
+        return item.deduction_name_id == value;
+      })
+    },
     submit() {
       this.$inertia.post('store', this.form)
     },
   },
-
-
-  // watch: {
-  //   form: {
-  //     handler: throttle(function() {
-  //       let query = pickBY(this.form)
-  //         this.$inertia.replace(this.route('deductions.create', Object.keys(query).length ? query : { remember: 'forget'}))
-  //     }, 300),
-  //     deep: true,
-  //   },
-  // },
 }
 </script>

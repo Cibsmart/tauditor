@@ -51,10 +51,10 @@ class AllowanceSeeder extends Seeder
                                 ? factory(PercentageValue::class)->create(['percentage' => $item])
                                 : factory(FixedValue::class)->create(['amount' => $item]);
 
-                            $allowance = $amount->value()->save(factory(Allowance::class)
+                            $allowance = $amount->allowance()->save(factory(Allowance::class)
                                 ->make(['allowance_name_id' => $allowance_name_id, 'domain_id' => $i]));
 
-                            $allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
+                            //$allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
                             continue;
                         }
 
