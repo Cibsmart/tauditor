@@ -2,17 +2,11 @@
 
 namespace Tests\Feature;
 
-use App\CadreStep;
-use App\Allowance;
-use App\StructuredSalary;
-use App\PersonalizedSalary;
-use Facades\Tests\Setup\BeneficiaryFactory;
+use Facades\Tests\Setup\BeneficiaryTestFactory as BeneficiaryFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use function round;
-use function factory;
-use const PHP_ROUND_HALF_UP;
+
 
 class BeneficiaryTest extends TestCase
 {

@@ -8,7 +8,7 @@ use App\Allowance;
 use Faker\Generator;
 use function factory;
 
-class AllowanceFactory
+class AllowanceTestFactory
 {
     /**
      * @var Generator
@@ -22,7 +22,7 @@ class AllowanceFactory
 
     public function create($attributes = [])
     {
-        \Facades\AllowanceFactory::clearResolvedInstance('AllowanceFactory');
+        \Facades\AllowanceFactory::clearResolvedInstance('AllowanceTestFactory');
 
         $allowance = factory(Allowance::class)->create();
     }

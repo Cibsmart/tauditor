@@ -23,7 +23,7 @@ use App\StructuredSalary;
 use App\PersonalizedSalary;
 use function factory;
 
-class BeneficiaryFactory
+class BeneficiaryTestFactory
 {
     private Generator $faker;
     private $bank = null;
@@ -42,6 +42,10 @@ class BeneficiaryFactory
         $this->faker = $faker;
     }
 
+    /**
+     * @param  MicroFinanceBank|null  $micro_finance_bank
+     * @return $this
+     */
     public function withMfb(MicroFinanceBank $micro_finance_bank = null)
     {
         $this->bank = $micro_finance_bank ?? factory(MicroFinanceBank::class)->create() ;
@@ -56,6 +60,10 @@ class BeneficiaryFactory
         return $this;
     }
 
+    /**
+     * @param  PersonalizedSalary|null  $personalized_salary
+     * @return $this
+     */
     public function withPersonalizedSalary(PersonalizedSalary $personalized_salary = null)
     {
         if($personalized_salary){
@@ -149,7 +157,7 @@ class BeneficiaryFactory
 
     public function create($override = [])
     {
-        \Facades\BeneficiaryFactory::clearResolvedInstance('BeneficiaryFactory');
+        \Facades\BeneficiaryFactory::clearResolvedInstance('BeneficiaryTestFactory');
 
         $beneficiary = factory(Beneficiary::class)->create($override);
 

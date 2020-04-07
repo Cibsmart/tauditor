@@ -6,8 +6,8 @@ use App\User;
 use App\State;
 use App\Gender;
 use App\Domain;
-use App\Beneficiary;
 use Carbon\Carbon;
+use App\Beneficiary;
 use App\MaritalStatus;
 use App\LocalGovernment;
 use App\BeneficiaryType;
@@ -30,10 +30,10 @@ $factory->define(Beneficiary::class, function (Faker $faker) {
         'address_city' => $faker->city,
         'address_state' => $faker->state,
         'address_country' => $faker->country,
-        'active' => 0,
+        'pensioner' => 0,
         'domain_id' => factory(Domain::class),
         'beneficiary_type_id' => factory(BeneficiaryType::class),
     ];
 });
 
-$factory->state(User::class, 'active', ['active' => 1]);
+$factory->state(Beneficiary::class, 'pensioner', ['pensioner' => 1]);

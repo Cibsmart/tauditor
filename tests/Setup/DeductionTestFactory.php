@@ -8,7 +8,7 @@ use App\Deduction;
 use Faker\Generator;
 use function factory;
 
-class DeductionFactory
+class DeductionTestFactory
 {
     /**
      * @var Generator
@@ -22,7 +22,7 @@ class DeductionFactory
 
     public function create($attributes = [])
     {
-        \Facades\DeductionFactory::clearResolvedInstance('DeductionFactory');
+        \Facades\DeductionFactory::clearResolvedInstance('DeductionTestFactory');
 
         $allowance = factory(Deduction::class)->create();
 

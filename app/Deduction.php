@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int id
  * @property mixed deductionName
  * @property mixed valuable
+ * @property mixed deduction
+ * @property mixed amount
  */
 
 class Deduction extends Model

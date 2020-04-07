@@ -46,19 +46,4 @@ class RunPayrollTest extends TestCase
 
         $this->assertNotEquals(0, $payroll->schedules->count());
     }
-
-    /** @test */
-    public function example()
-    {
-        $beneficiary = BeneficiaryFactory::withPersonalizedSalary()
-                                         ->create();
-
-        $tax = (new Tax())->compute($beneficiary);
-
-        dump($beneficiary->basic() * 12);
-        dump($beneficiary->monthlyAllowance() * 12);
-        dump($tax);
-
-        $this->assertTrue(true);
-    }
 }

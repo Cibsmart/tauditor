@@ -23,7 +23,6 @@ use const PHP_ROUND_HALF_UP;
  * @property string last_name
  * @property string first_name
  * @property string middle_name
- * @property boolean active
  *
  * @property mixed salaryDetail
  * @property mixed bankDetail
@@ -32,6 +31,9 @@ use const PHP_ROUND_HALF_UP;
  * @property mixed beneficiaryType
  * @property mixed domain
  * @property mixed structure
+ * @property mixed status
+ * @property mixed pensioner
+ * @property mixed allowanceDetails
  */
 
 class Beneficiary extends Model
@@ -42,7 +44,6 @@ class Beneficiary extends Model
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'active' => 'boolean',
         'address' => AddressCast::class,
     ];
 
@@ -51,6 +52,11 @@ class Beneficiary extends Model
     | Relationships
     |-------------------------------------------------------------------------------
     */
+
+    public function status()
+    {
+        return $this->hasOne(BeneficiaryStatus::class);
+    }
 
     public function gender() : BelongsTo
     {
@@ -119,6 +125,18 @@ class Beneficiary extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
+
+    public function isActive() : bool
+    {
+        return $this->status->active;
+    }
+
+
+    public function isPensioner() : bool
+    {
+        return $this->pensioner;
+    }
+
     public function basic() : float
     {
         return $this->salaryDetail->basicPay();
@@ -177,11 +195,6 @@ class Beneficiary extends Model
     public function stepName() : ?string
     {
         return $this->salaryDetail->payable->step()->name;
-    }
-
-    public function isPensioner() : bool
-    {
-        return in_array($this->beneficiaryType->code, ['ANPEN', 'LGPEN']);
     }
 
     /**
@@ -280,7 +293,7 @@ class Beneficiary extends Model
     {
         return $this->deductionDetails()->get()
                     ->load(['deduction.deduction_name'])
-                    ->transform(fn($deduction) => [
+                    ->transform(fn(Deduction $deduction) => [
                         'id' => $deduction->id,
                         'name' => $deduction->deduction->deductionName->name,
                         'amount' => $deduction->amount,

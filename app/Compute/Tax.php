@@ -3,10 +3,8 @@
 
 namespace App\Compute;
 
-
 use App\Beneficiary;
 use App\Contracts\Computable;
-use function number_format;
 
 class Tax implements Computable
 {
