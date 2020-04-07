@@ -21,7 +21,6 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function beneficiary_with_structured_salary_has_basic_pay()
     {
-
         $beneficiary = BeneficiaryFactory::withMonthlyBasicOf($monthly_basic = 100000.12)
                                          ->withStructuredSalary()
                                          ->create();
@@ -62,8 +61,24 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function beneficiary_computes_sum_of_total_allowances()
     {
-        $beneficiary = BeneficiaryFactory::withAllowances(5)->create();
+        $beneficiary = BeneficiaryFactory::withValuableAmountOf($amount = 500)
+                                         ->withAllowances($number = 5)
+                                         ->create();
 
-        $this->assertNotEquals(0, $beneficiary->monthlyAllowance());
+        $sum = round($amount, 2) * $number;
+
+        $this->assertEquals($sum, $beneficiary->monthlyAllowance());
+    }
+
+    /** @test */
+    public function beneficiary_computes_sum_of_total_deductions()
+    {
+        $beneficiary = BeneficiaryFactory::withValuableAmountOf($amount = 500)
+                                         ->withDeductions($number = 5)
+                                         ->create();
+
+        $sum = round($amount, 2) * $number;
+
+        $this->assertEquals($sum, $beneficiary->monthlyDeduction());
     }
 }

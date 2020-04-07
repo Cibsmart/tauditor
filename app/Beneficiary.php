@@ -129,6 +129,11 @@ class Beneficiary extends Model
         return $this->allowanceDetails->sum('amount');
     }
 
+    public function monthlyDeduction() : float
+    {
+        return $this->deductionDetails->sum('amount');
+    }
+
     public function accountNumber() : string
     {
         return $this->bankDetail->account_number;

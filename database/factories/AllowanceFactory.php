@@ -11,9 +11,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Allowance::class, function (Faker $faker) {
 
-    $valuable = $faker->randomElement([1,2]) == 1
-        ? factory(FixedValue::class)->create()
-        : factory(PercentageValue::class)->create();
+    $valuable = factory(FixedValue::class)->create();
 
     return [
         'allowance_name_id' => factory(AllowanceName::class),

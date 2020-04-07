@@ -17,6 +17,7 @@ use Faker\Generator;
 use App\SalaryDetail;
 use App\Qualification;
 use App\AllowanceDetail;
+use App\DeductionDetail;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
 use App\PersonalizedSalary;
@@ -33,6 +34,8 @@ class BeneficiaryFactory
     private int $qualification_count = 0;
     private ?float $monthly_basic = null;
     private ?int $allowance_count = null;
+    private ?int $deduction_count = null;
+    private ?float $valuable_amount = null;
 
     public function __construct(Generator $faker)
     {
@@ -130,6 +133,20 @@ class BeneficiaryFactory
         return $this;
     }
 
+    public function withDeductions($deduction_count = 0)
+    {
+        $this->deduction_count = $deduction_count;
+
+        return $this;
+    }
+
+    public function withValuableAmountOf(float $valuable_amount)
+    {
+        $this->valuable_amount = $valuable_amount;
+
+        return $this;
+    }
+
     public function create($override = [])
     {
         \Facades\BeneficiaryFactory::clearResolvedInstance('BeneficiaryFactory');
@@ -159,7 +176,20 @@ class BeneficiaryFactory
         }
 
         if($this->allowance_count){
-            factory(AllowanceDetail::class, $this->allowance_count)->create(['beneficiary_id' => $beneficiary->id]);
+
+            $attributes = $this->valuable_amount
+                ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
+                : ['beneficiary_id' => $beneficiary->id];
+
+            factory(AllowanceDetail::class, $this->allowance_count)->create($attributes);
+        }
+
+        if($this->deduction_count){
+            $attributes = $this->valuable_amount
+                ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
+                : ['beneficiary_id' => $beneficiary->id];
+
+            factory(DeductionDetail::class, $this->deduction_count)->create($attributes);
         }
 
         return $beneficiary;

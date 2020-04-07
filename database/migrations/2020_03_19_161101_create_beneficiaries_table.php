@@ -34,6 +34,7 @@ class CreateBeneficiariesTable extends Migration
             $table->unsignedBigInteger('domain_id');
             $table->unsignedBigInteger('beneficiary_type_id');
             $table->boolean('active')->default(0);
+            $table->boolean('pensioner')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
