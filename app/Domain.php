@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int id
+ * @property mixed code
+ * @property mixed name
  * @property mixed allowables
  */
 class Domain extends Model
@@ -53,6 +55,11 @@ class Domain extends Model
     public function allowables() : MorphMany
     {
         return $this->morphMany(Allowable::class, 'allowable');
+    }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payroll::class);
     }
 
     /**

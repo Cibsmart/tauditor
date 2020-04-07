@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use const PHP_ROUND_HALF_UP;
 
 /**
  * @property mixed allowables
@@ -45,7 +46,7 @@ class CadreStep extends Model
     */
     public function setMonthlyBasicAttribute(float $value) : int
     {
-        return $this->attributes['monthly_basic'] = $value * 100;
+        return $this->attributes['monthly_basic'] = round($value * 100);
     }
 
     public function getMonthlyBasicAttribute(int $value) : float

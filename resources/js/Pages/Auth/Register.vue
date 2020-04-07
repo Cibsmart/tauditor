@@ -3,7 +3,7 @@
       <div class="px-10 py-12">
         <h1 class="text-center font-bold text-3xl">Account Sign Up</h1>
         <div class="mx-auto mt-6 w-24 border-b-2" />
-        
+
         <text-input v-model="form.first_name" label="First Name" type="first_name" class="mt-10"
                     :errors="$page.errors.first_name" />
 
@@ -16,17 +16,18 @@
         <text-input v-model="form.password" label="Password" type="password"  class="mt-6"
                     :errors="$page.errors.password" />
 
-        <text-input v-model="form.password_confirmation" label="Confirm Password" type="password"             class="mt-6" :errors="$page.errors.password_confirmation" />
+        <text-input v-model="form.password_confirmation" label="Confirm Password" type="password"
+                    class="mt-6" :errors="$page.errors.password_confirmation" />
 
         <select-input v-model="form.domain_id" label="Domain" :errors="$page.errors.domain_id" class="mt-6">
           <option :value="null" />
-          <option v-for="domain in domains" :key="domain.id" :value="domain.id" v-text="domain.slug" />
+          <option v-for="domain in domains" :key="domain.id" :value="domain.id" v-text="domain.code" />
         </select-input>
       </div>
 
       <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
         <inertia-link :href="route('login')" class="hover:underline"> Login </inertia-link>
-        <button type="submit" 
+        <button type="submit"
             class="px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap hover:bg-orange-600 focus:bg-orange-500">
           Sign Up
         </button>
@@ -49,7 +50,7 @@ export default{
     TextInput,
     Logo,
   },
-  
+
   props: {
     errors: Object,
     domains: Array,

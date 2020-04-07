@@ -15,14 +15,14 @@
             <inertia-link class="px-12 py-6 flex items-center group"
                           href="#" @click="menu.active = !menu.active" preserve-scroll>
                 <icon :name="menu.icon" class="w-4 h-4 mr-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
-                <div class="font-bold" :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" v-text="menu.label">
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
+                <div class="font-bold" :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" v-text="menu.label">
                 </div>
 
                 <icon v-if="menu.active" name="cheveron-down" class="ml-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
                 <icon v-else name="cheveron-right" class="ml-2"
-                      :class="isActive(menu.name) ? 'text-white' : 'text-indigo-800 group-hover:text-orange-800'" />
+                      :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'" />
             </inertia-link>
         </div>
         <div>
@@ -69,7 +69,11 @@ export default{
                   index: { id: 1, label: 'Deductions', uri: this.uri('deductions.index'), },
               }
           },
-          payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false },
+          payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false,
+              subs: {
+                  index: { id: 1, label: 'Payroll', uri: this.uri('payroll.index'), },
+              }
+          },
           setup: { id: 6, name: 'setup',  label: 'Setup', icon: 'store-front', active: false },
           reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false },
           audit: { id: 8, name: 'audit',  label: 'Audit System', icon: 'brief-case', active: false },

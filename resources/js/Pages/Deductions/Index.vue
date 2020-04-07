@@ -86,7 +86,7 @@ import pickBY from 'lodash/pickBY'
 import throttle from 'lodash/throttle'
 
 export default {
-  metaInfo: { title: 'deductions' },
+  metaInfo: { title: 'Deductions' },
   layout: Layout,
 
   props: {

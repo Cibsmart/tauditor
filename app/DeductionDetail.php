@@ -40,7 +40,7 @@ class DeductionDetail extends Model
 
     public function setAmountAttribute(float $value) : int
     {
-        return $this->attributes['Amount'] = $value * 100;
+        return $this->attributes['Amount'] = round($value * 100);
     }
 
     public function getAmountAttribute(int $value) : float
