@@ -17,6 +17,7 @@ class CreateStatusesTable extends Migration
             $table->id();
             $table->string('code', 20);
             $table->string('name');
+            $table->boolean('state');
             $table->timestamps();
         });
     }

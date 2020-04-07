@@ -7,6 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Status::class, function (Faker $faker) {
     return [
-        //
+        'code' => $faker->countryCode,
+        'name' => $faker->country,
     ];
 });
