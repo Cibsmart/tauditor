@@ -25,9 +25,5 @@ class UserSeeder extends Seeder
             'domain_id' => 1,
             'remember_token' => Str::random(10),
         ]);
-
-        $super_admin = Role::create(['name' => 'super_admin']);
-
-        $user->assignRole('super_admin');
     }
 }

@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Allowance;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Exception;
-use App\Domain;
+use App\Allowance;
+use App\FixedValue;
+use Inertia\Inertia;
 use App\AllowanceName;
 use App\PercentageValue;
-use App\FixedValue;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class AllowancesController extends Controller
@@ -28,11 +27,11 @@ class AllowancesController extends Controller
 
     public function index()
     {
-        $filters = Request::all('search');
+        $filters = request()->all('search');
 
         $allowances = Auth::user()->domain
             ->allowances()
-            ->filters(Request::only('search'))
+            ->filters(request()->only('search'))
             ->paginate()
             ->transform(fn(Allowance $allowances) => [
                 'id' => $allowances->id,
@@ -51,14 +50,13 @@ class AllowancesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create()
     {
         // $filters = Request::all('search');
         $allowances = Auth::user()->domain
             ->allowances()
-            // ->filters(Request::only('search'))
             ->paginate()
             ->transform(fn(Allowance $allowances) => [
                 'id' => $allowances->id,
@@ -66,7 +64,7 @@ class AllowancesController extends Controller
                 'amount' => $allowances->amount(),
                 'value_type' => $allowances->valueType(),
             ]);
-        
+
         $allowance_names = AllowanceName::all();
         $fixed_values = FixedValue::all();
         $percentage_values = PercentageValue::all();
@@ -77,7 +75,7 @@ class AllowancesController extends Controller
              'allowance_names'  =>  $allowance_names,
              'fixed_values' => $fixed_values,
              'percentage_values' => $percentage_values,
-             
+
         ]);
 
     }
@@ -104,10 +102,10 @@ class AllowancesController extends Controller
             $request = Request::all();
             //check the type of allowance
             if($request['allowance_type'] == "percentage_type"){
-              
+
                 //create thepercentage value
                 $percentage_amount = $request['percentage'];
-               
+
                 $percentage_value = new PercentageValue();
                 $percentage_value->percentage = $percentage_amount;
                 $percentage_value->save();
@@ -119,13 +117,13 @@ class AllowancesController extends Controller
                 $allowance->valuable_type = "percentage_type";
                 $allowance->valuable_id = $percentage_value->id;
 
-                $allowance->save();              
+                $allowance->save();
 
                 return back()->with('success',"Percentage Type Allowance Created");
-             
-            
+
+
             }else if ($request['allowance_type'] == "fixed_value"){
-            
+
 
                 //create the fixed values
                 $fixed_amount =  $request['amount'];
@@ -140,7 +138,7 @@ class AllowancesController extends Controller
                 $allowance->valuable_type = "fixed_value";
                 $allowance->valuable_id = $fixed_value->id;
 
-                $allowance->save(); 
+                $allowance->save();
 
                 return back()->with('success',"Fixed Value Allowance Created");
             }else{

@@ -30,11 +30,11 @@ class BeneficiaryController extends Controller
      */
     public function index()
     {
-        $filters = Request::all('search');
+        $filters = request()->all('search');
         $beneficiaries = Auth::user()
                              ->beneficiaries()
                              ->with($this->relationships())
-                             ->filters(Request::only('search'))
+                             ->filters(request()->only('search'))
                              ->paginate()
                              ->transform(fn (Beneficiary $beneficiary) => [
                                  'id' => $beneficiary->id,
