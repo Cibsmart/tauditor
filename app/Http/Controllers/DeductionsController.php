@@ -10,6 +10,10 @@ use function compact;
 
 class DeductionsController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -99,5 +103,15 @@ class DeductionsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function relationships()
+    {
+        // Relationships Eager Loaded with Beneficiaries
+        // to avoid multiple Database Round Trip
+        return [
+            'deductionDetails.deduction',
+            'deductionName.deductionType',
+        ];
     }
 }
