@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property mixed deduction
+ * @property mixed amount
+ * @property mixed id
+ */
 class DeductionDetail extends Model
 {
     use SoftDeletes;

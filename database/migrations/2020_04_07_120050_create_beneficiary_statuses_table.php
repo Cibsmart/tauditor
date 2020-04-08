@@ -17,7 +17,7 @@ class CreateBeneficiaryStatusesTable extends Migration
             $table->id();
             $table->boolean('active')->default(0);
             $table->unsignedBigInteger('beneficiary_id');
-            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('status_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

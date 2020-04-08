@@ -6,7 +6,7 @@
       <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
       </search-filter>
       <div></div>
-      <inertia-link href="#" class="btn btn-indigo">
+      <inertia-link href="#" class="btn btn-big btn-indigo">
         <span class="hidden md:inline">New Beneficiary</span>
       </inertia-link>
     </div>

@@ -2,7 +2,9 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property mixed id
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed archived
  * @property mixed generated
  * @property mixed month_name
+ * @property mixed user_id
  */
 class Payroll extends Model
 {
@@ -30,6 +33,11 @@ class Payroll extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function domain() : BelongsTo
+    {
+        return $this->belongsTo(Domain::class);
+    }
+
     public function schedules()
     {
         return $this->hasMany(PaySchedule::class);
@@ -45,5 +53,13 @@ class Payroll extends Model
         return $this->generated
             ? $this->generated->timezone('Africa/Lagos')->diffForHumans()
             : $this->generated;
+    }
+
+    public function payrollGenerated(User $user)
+    {
+        $this->user_id = $user->id;
+        $this->generated = Carbon::now();
+
+        $this->update();
     }
 }

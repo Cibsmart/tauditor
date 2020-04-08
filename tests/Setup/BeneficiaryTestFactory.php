@@ -3,15 +3,12 @@
 
 namespace Tests\Setup;
 
-
 use App\Bank;
 use App\NextOfKin;
 use App\MdaDetail;
 use App\CadreStep;
-use App\Allowance;
 use App\BankDetail;
 use App\WorkDetail;
-use App\FixedValue;
 use App\Beneficiary;
 use Faker\Generator;
 use App\SalaryDetail;
@@ -20,7 +17,9 @@ use App\AllowanceDetail;
 use App\DeductionDetail;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
+use App\BeneficiaryStatus;
 use App\PersonalizedSalary;
+use Facades\BeneficiaryFactory;
 use function factory;
 
 class BeneficiaryTestFactory
@@ -36,6 +35,7 @@ class BeneficiaryTestFactory
     private ?int $allowance_count = null;
     private ?int $deduction_count = null;
     private ?float $valuable_amount = null;
+    private int $beneficiary_status = 0;
 
     public function __construct(Generator $faker)
     {
@@ -99,7 +99,7 @@ class BeneficiaryTestFactory
         return $this;
     }
 
-    public function withMonthlyBasicOf(float $monthly_basic)
+    public function withMonthlyBasic(float $monthly_basic)
     {
         $this->monthly_basic = $monthly_basic;
 
@@ -148,18 +148,34 @@ class BeneficiaryTestFactory
         return $this;
     }
 
-    public function withValuableAmountOf(float $valuable_amount)
+    public function withValuableAmount(float $valuable_amount)
     {
         $this->valuable_amount = $valuable_amount;
 
         return $this;
     }
 
+    public function activeState()
+    {
+        $this->beneficiary_status = 1;
+
+        return $this;
+    }
+
+    public function inactiveState()
+    {
+        $this->beneficiary_status = 0;
+
+        return $this;
+    }
+
     public function create($override = [])
     {
-        \Facades\BeneficiaryFactory::clearResolvedInstance('BeneficiaryTestFactory');
+        BeneficiaryFactory::clearResolvedInstance('BeneficiaryTestFactory');
 
         $beneficiary = factory(Beneficiary::class)->create($override);
+
+        $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make(['beneficiary_id' => $beneficiary->id, 'active' => $this->beneficiary_status]));
 
         if($this->bank) {
             $this->bank->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
@@ -170,13 +186,13 @@ class BeneficiaryTestFactory
         }
 
         if($this->next_of_kin){
-            $beneficiary->nextOfKin()->save(factory(NextOfKin::class)->make());
+            $beneficiary->nextOfKin()->save(factory(NextOfKin::class)->make(['beneficiary_id' => $beneficiary->id]));
         }
 
         $beneficiary->qualifications()->saveMany(factory(Qualification::class, $this->qualification_count)->make());
 
         if($this->mda){
-            $beneficiary->mdaDetail()->save(factory(MdaDetail::class)->make());
+            $beneficiary->mdaDetail()->save(factory(MdaDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
         }
 
         if($this->work_detail){

@@ -5,26 +5,61 @@ namespace App\Actions;
 
 
 use App\Payroll;
-use function redirect;
+use App\Beneficiary;
+use App\PaySchedule;
 
 class RunPayrollAction
 {
     public function execute(Payroll $payroll)
     {
         $this->runPayroll($payroll);
-
-
     }
 
     private function runPayroll(Payroll $payroll)
     {
         //Get a list of all active beneficiary
-
+        $active_beneficiaries = $payroll->domain->beneficiaries()
+                                                ->active()
+                                                ->cursor();
         //For each beneficiary
-        //1. Basic Pay
-        //2. Allowances
-        //3. Deduction
+        foreach ($active_beneficiaries as $beneficiary)
+        {
+            $basic_pay = $beneficiary->basic();
+            $total_allowance = $beneficiary->totalMonthlyAllowance();
+            $total_deduction = $beneficiary->totalMonthlyDeduction();
 
-        //Then save in pay_schedules table
+            $gross_pay = $basic_pay + $total_allowance;
+            $net_pay = $gross_pay - $total_deduction;
+
+            $mda = $beneficiary->mdaDetail;
+
+            $bank = $beneficiary->bankDetail;
+
+            $pay_schedule = [
+                'beneficiary_code' => $bank->account_number,
+                'beneficiary_name' => $beneficiary->name,
+                'account_number' => $bank->account_number,
+                'bank_name' => $bank->bankable->name,
+                'net_pay' => $net_pay,
+                'basic_pay' => $basic_pay,
+                'gross_pay' => $gross_pay,
+                'total_allowance' => $total_allowance,
+                'total_deduction' => $total_deduction,
+                'allowances' => $beneficiary->allowances(),
+                'deductions' => $beneficiary->deductions(),
+
+                'beneficiary_id' => $beneficiary->id,
+                'verification_number' => $beneficiary->id, //TODO: Should be updated to $beneficiary->verification_number
+                'beneficiary_type_id' => $beneficiary->beneficiary_type_id,
+                'bankable_type' => $bank->bankable_type,
+                'bankable_id' => $bank->bankable_id,
+
+                'mda_id' => $mda->mda_id,
+                'sub_mda_id' => $mda->sub_mda_id,
+                'sub_sub_mda_id' => $mda->sub_sub_mda_id,
+            ];
+
+            $payroll->schedules()->create($pay_schedule);
+        }
     }
 }

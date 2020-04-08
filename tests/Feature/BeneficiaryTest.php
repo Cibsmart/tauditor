@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use Facades\Tests\Setup\BeneficiaryTestFactory as BeneficiaryFactory;
+use Facades\Tests\Setup\BeneficiaryTestFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -15,7 +15,7 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function beneficiary_with_structured_salary_has_basic_pay()
     {
-        $beneficiary = BeneficiaryFactory::withMonthlyBasicOf($monthly_basic = 100000.12)
+        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 100000.12)
                                          ->withStructuredSalary()
                                          ->create();
 
@@ -25,7 +25,7 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function structured_salary_basic_pay_is_rounded_half_up_to_two_decimal_point()
     {
-        $beneficiary = BeneficiaryFactory::withMonthlyBasicOf($monthly_basic = 100000.12945454)
+        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 100000.12945454)
                                          ->withStructuredSalary()
                                          ->create();
 
@@ -35,7 +35,7 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function beneficiary_with_personalized_salary_has_basic_pay()
     {
-        $beneficiary = BeneficiaryFactory::withMonthlyBasicOf($monthly_basic = 85000)
+        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 85000)
                                          ->withPersonalizedSalary()
                                          ->create();
 
@@ -45,7 +45,7 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function personalized_salary_basic_pay_is_rounded_half_up_to_two_decimal_point()
     {
-        $beneficiary = BeneficiaryFactory::withMonthlyBasicOf($monthly_basic = 50000.12945454)
+        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 50000.12945454)
                                          ->withPersonalizedSalary()
                                          ->create();
 
@@ -55,24 +55,42 @@ class BeneficiaryTest extends TestCase
     /** @test */
     public function beneficiary_computes_sum_of_total_allowances()
     {
-        $beneficiary = BeneficiaryFactory::withValuableAmountOf($amount = 500)
+        $beneficiary = BeneficiaryTestFactory::withValuableAmount($amount = 500)
                                          ->withAllowances($number = 5)
                                          ->create();
 
         $sum = round($amount, 2) * $number;
 
-        $this->assertEquals($sum, $beneficiary->monthlyAllowance());
+        $this->assertEquals($sum, $beneficiary->totalMonthlyAllowance());
     }
 
     /** @test */
     public function beneficiary_computes_sum_of_total_deductions()
     {
-        $beneficiary = BeneficiaryFactory::withValuableAmountOf($amount = 500)
+        $beneficiary = BeneficiaryTestFactory::withValuableAmount($amount = 500)
                                          ->withDeductions($number = 5)
                                          ->create();
 
         $sum = round($amount, 2) * $number;
 
-        $this->assertEquals($sum, $beneficiary->monthlyDeduction());
+        $this->assertEquals($sum, $beneficiary->totalMonthlyDeduction());
+    }
+
+    /** @test */
+    public function beneficiary_can_retrieve_applied_allowances()
+    {
+        $beneficiary = BeneficiaryTestFactory::withAllowances($number = 5)
+                                             ->create();
+
+        $this->assertEquals($number, $beneficiary->allowances()->count());
+    }
+
+    /** @test */
+    public function beneficiary_can_retrieve_applied_deductions()
+    {
+        $beneficiary = BeneficiaryTestFactory::withDeductions($number = 5)
+                                             ->create();
+
+        $this->assertEquals($number, $beneficiary->deductions()->count());
     }
 }

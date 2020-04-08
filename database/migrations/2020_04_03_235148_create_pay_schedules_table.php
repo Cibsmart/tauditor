@@ -15,17 +15,32 @@ class CreatePaySchedulesTable extends Migration
     {
         Schema::create('pay_schedules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('beneficiary_id');
+            $table->string('beneficiary_code');
+            $table->string('beneficiary_name');
             $table->string('account_number')->nullable();
             $table->string('bank_name');
             $table->unsignedBigInteger('net_pay');
+
             $table->unsignedBigInteger('basic_pay');
-            $table->unsignedBigInteger('total_allowances')->default(0);
-            $table->unsignedBigInteger('total_deductions')->default(0);
-            $table->text('allowances')->nullable();
-            $table->text('deductions')->nullable();
+            $table->unsignedBigInteger('gross_pay');
+            $table->unsignedBigInteger('total_allowance')->default(0);
+            $table->unsignedBigInteger('total_deduction');
+            $table->text('allowances');
+            $table->text('deductions');
+
             $table->unsignedBigInteger('payroll_id');
+            $table->unsignedBigInteger('beneficiary_id');
+
+            $table->string('verification_number');
+            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->string('bankable_type');
+            $table->unsignedBigInteger('bankable_id');
+            $table->unsignedBigInteger('mda_id');
+            $table->unsignedBigInteger('sub_mda_id')->nullable();
+            $table->unsignedBigInteger('sub_sub_mda_id')->nullable();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
