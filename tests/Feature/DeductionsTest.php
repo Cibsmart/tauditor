@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Domain;
 use App\Deduction;
+use App\ValueType;
 use App\DeductionName;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -32,7 +33,7 @@ class DeductionsTest extends TestCase
             'amount' => $amount,
         ];
 
-        $this->post(route('deduction.store'), $attributes);
+        $this->post(route('deductions.store'), $attributes);
 
         $this->assertDatabaseHas('deductions', $attributes);
     }

@@ -13,10 +13,10 @@ class MaritalStatusSeeder extends Seeder
     public function run()
     {
         $status = [
-          'S' => 'Single',
-          'M' => 'Married',
-          'D' => 'Divorced',
-          'W' => 'Widow(er)',
+          'S' => 'SINGLE',
+          'M' => 'MARRIED',
+          'D' => 'DIVORCED',
+          'W' => 'WIDOW(ER)',
         ];
 
         foreach ($status as $key => $value) {

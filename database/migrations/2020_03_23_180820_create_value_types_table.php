@@ -15,6 +15,8 @@ class CreateValueTypesTable extends Migration
     {
         Schema::create('value_types', function (Blueprint $table) {
             $table->id();
+            $table->string('code');
+            $table->string('name');
             $table->timestamps();
         });
     }

@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-           
+
             DomainSeeder::class,
             RolesAndPermissionsSeeder::class,
             BeneficiaryTypeSeeder::class,
@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             GradeLevelSeeder::class,
             StepSeeder::class,
             StructureSeeder::class,
+            ValueTypeSeeder::class,
             AllowanceTypeSeeder::class,
             AllowanceNameSeeder::class,
             AllowanceSeeder::class,

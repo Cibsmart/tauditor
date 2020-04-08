@@ -1,5 +1,6 @@
 <?php
 
+use App\MaritalStatus;
 use Illuminate\Database\Seeder;
 
 class ValueTypeSeeder extends Seeder
@@ -11,6 +12,17 @@ class ValueTypeSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $types = [
+            'computed' => 'COMPUTED VALUE',
+            'fixed' => 'FIXED VALUE',
+            'percentage' => 'PERCENTAGE VALUE',
+        ];
+
+        foreach ($types as $key => $value) {
+            factory(MaritalStatus::class)->create([
+                'code' => $key,
+                'name' => $value,
+            ]);
+        }
     }
 }
