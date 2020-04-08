@@ -17,6 +17,7 @@ use App\LocalGovernment;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
 use App\QualificationType;
+use App\BeneficiaryStatus;
 use App\PersonalizedSalary;
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
@@ -52,6 +53,8 @@ class BeneficiarySeeder extends Seeder
             ]);
 
             $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $relationships, $qualifications, $domain, $faker){
+
+                $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make());
 
                 $faker->randomElement([1,2]) == 1
                     ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))

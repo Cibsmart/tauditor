@@ -22,10 +22,15 @@ class StatusSeeder extends Seeder
         $iStatus = [
             'RT' => 'RETIRED',
             'RS' => 'RESIGNED',
-            'TE' => 'TENURE ENDED',
-            'AS' => 'APPOINTMENT SUSPENDED',
-            'AT' => 'APPOINTMENT TERMINATED',
+            'SS' => 'SUSPENDED',
             'DD' => 'DECEASED',
+            'SK' => 'SICK',
+            'SL' => 'STUDY LEAVE',
+            'AB' => 'ABSCONDED',
+            'DM' => 'DISMISSED',
+            'VR' => 'VOLUNTARY RETIREMENT',
+            'LV' => 'LEAVE WITHOUT PAY',
+            'EX' => 'EXCLUSION FROM PAYROLL',
         ];
 
         foreach ($aStatus as $key => $value) {

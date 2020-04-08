@@ -34,7 +34,7 @@ class DeductionSeeder extends Seeder
                     : factory(FixedValue::class)->create(['amount' => $value]);
 
                 //Create Allowance
-                $amount->value()->save(factory(Deduction::class)
+                $amount->deduction()->save(factory(Deduction::class)
                     ->make(['deduction_name_id' => $deduction_name_id, 'domain_id' => $i]));
             }
         }
