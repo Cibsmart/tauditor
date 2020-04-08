@@ -34,7 +34,7 @@ class BeneficiaryController extends Controller
                                  'id' => $beneficiary->id,
                                  'name' => $beneficiary->name,
                                  'verification_number' => $beneficiary->verification_number,
-                                 'active' => $beneficiary->active,
+                                 'active' => $beneficiary->status->active,
                                  'account_number' => $beneficiary->accountNumber(),
                                  'bank_name' => $beneficiary->bankName(),
                                  'mda' => $beneficiary->mdaName(),
@@ -122,6 +122,7 @@ class BeneficiaryController extends Controller
         // Relationships Eager Loaded with Beneficiaries
         // to avoid multiple Database Round Trip
         return [
+            'status',
             'bankDetail',
             'mdaDetail.mda',
             'mdaDetail.subMda',
