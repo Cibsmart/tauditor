@@ -6,6 +6,12 @@ use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\StructuredSalary;
+use App\LocalGovernment;
+use App\State;
+use App\Domain;
+use App\Gender;
+use App\MaritalStatus;
+use App\BeneficiaryType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -54,22 +60,71 @@ class BeneficiaryController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
-        //
+        $lga = LocalGovernment::all();
+        $states = State::all();
+        $domains = Domain::all();
+        $gender = Gender::all();
+        $marital_status = MaritalStatus::all();
+        $beneficiary_types = BeneficiaryType::all();
+
+        $filters = Request::all('search');
+        return Inertia::render('Beneficiary/Create',[
+            'filters' => $filters,
+            'lga' => $lga,
+            'states' => $states,
+            'domains' => $domains,
+            'gender' => $gender,
+            'marital_status' => $marital_status,
+            'beneficiary_types' => $beneficiary_types,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        //
+      //dd(Request::all('first_name'));
+        try{
+
+            Beneficiary::create(
+                Request::validate([
+                    'verification_number'=>'nullable|string',
+                    'last_name' => 'required|string',
+                    'first_name' => 'required|string',
+                    'middle_name' => 'nullable|string',
+                    'date_of_birth' => 'required|date',
+                    'gender_id' => 'nullable|integer|min:1',
+                    'marital_status_id' => 'nullable|integer|min:1',
+                    'state_id' => 'nullable|integer|min:1',
+                    'local_government_id' => 'nullable|integer|min:1',
+                    'phone_number' => 'nullable|string',
+                    'email' => 'nullable|email',
+                    'address_line_1' => 'nullable|string',
+                    'address_line_2' => 'nullable|string',
+                    'address_city' => 'nullable|string',
+                    'address_state' => 'nullable|string',
+                    'address_country' => 'nullable|string',
+                    'domain_id' => 'required|integer|min:1',
+                    'beneficiary_type_id' => 'required|integer|min:1',
+                    'active' => 'nullable',
+                ])
+            );
+
+            return back()->with('success',"Beneficiary Created");
+
+        }catch(Exception $e){
+
+            return back()->with('errors',$e);
+        }
+
     }
 
     /**
@@ -122,7 +177,6 @@ class BeneficiaryController extends Controller
         // Relationships Eager Loaded with Beneficiaries
         // to avoid multiple Database Round Trip
         return [
-            'status',
             'bankDetail',
             'mdaDetail.mda',
             'mdaDetail.subMda',

@@ -113,7 +113,7 @@ export default {
 
   components: {
     Icon,
-    Pagination,
+    Pagination,   
     SearchFilter,
   },
 
