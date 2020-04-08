@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function is_null;
 use function in_array;
 use function array_merge;
+use function number_format;
+use const PHP_ROUND_HALF_UP;
 
 /**
  * @property int id
@@ -122,6 +124,11 @@ class Beneficiary extends Model
         return $this->salaryDetail->basicPay();
     }
 
+    public function monthlyAllowance() : float
+    {
+        return $this->allowanceDetails->sum('amount');
+    }
+
     public function accountNumber() : string
     {
         return $this->bankDetail->account_number;
@@ -130,6 +137,11 @@ class Beneficiary extends Model
     public function bankName() : string
     {
         return $this->bankDetail->bankable->name;
+    }
+
+    public function bank()
+    {
+        return $this->bankDetail->bankable();
     }
 
     public function mdaName() : string
@@ -195,7 +207,7 @@ class Beneficiary extends Model
     public function applyAllowance(Allowance $allowance, int $allowable_id = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $allowance->amount($this->basic()),
+            'amount' => $allowance->amount($this),
             'allowance_id' => $allowance->id,
         ];
 
@@ -236,10 +248,10 @@ class Beneficiary extends Model
      * @param  Deductible  $deductible
      * @return Beneficiary
      */
-    public function applyDeduction(Deduction $deduction, Deductible $deductible) : Beneficiary
+    public function applyDeduction(Deduction $deduction, int $deductible = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $deduction->amount($this->basic()),
+            'amount' => $deduction->amount($this),
             'deduction_id' => $deduction->id
         ];
 

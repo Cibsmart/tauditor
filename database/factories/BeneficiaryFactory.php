@@ -2,8 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\User;
 use App\State;
 use App\Gender;
+use App\Domain;
 use App\Beneficiary;
 use Carbon\Carbon;
 use App\MaritalStatus;
@@ -28,8 +30,10 @@ $factory->define(Beneficiary::class, function (Faker $faker) {
         'address_city' => $faker->city,
         'address_state' => $faker->state,
         'address_country' => $faker->country,
-        'active' => $faker->randomElement([0, 1]),
-        'domain_id' => $faker->randomElement([1, 2]),
-        'beneficiary_type_id' => $faker->randomElement([1, 2, 3, 4, 5, 6, 7]),
+        'active' => 0,
+        'domain_id' => factory(Domain::class),
+        'beneficiary_type_id' => factory(BeneficiaryType::class),
     ];
 });
+
+$factory->state(User::class, 'active', ['active' => 1]);

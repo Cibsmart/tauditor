@@ -54,7 +54,7 @@ class PersonalizedSalary extends Model
 
     public function setMonthlyBasicAttribute(float $value) : int
     {
-        return $this->attributes['monthly_basic'] = $value * 100;
+        return $this->attributes['monthly_basic'] = round($value * 100);
     }
 
     public function getMonthlyBasicAttribute(int $value) : float

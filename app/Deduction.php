@@ -44,9 +44,9 @@ class Deduction extends Model
     | Methods
     |-------------------------------------------------------------------------------
     */
-    public function amount(float $base_value = null) : float
+    public function amount(Beneficiary $beneficiary = null)
     {
-        return $this->valuable->amount($base_value);
+        return $this->valuable->amount($beneficiary);
     }
 
     public function name()

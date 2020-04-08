@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 /**
+ * @property mixed id
  * @property mixed domain
+ * @property mixed last_name
+ * @property mixed first_name
+ * @property mixed email
  */
 class User extends Authenticatable
 {
@@ -36,6 +40,11 @@ class User extends Authenticatable
         return $this->attributes['password'] = Hash::make($value);
     }
 
+    public function getNameAttribute() : string
+    {
+        return "{$this->last_name} {$this->first_name}";
+    }
+
     public function beneficiaries()
     {
         return $this->domain->beneficiaries();
@@ -49,5 +58,10 @@ class User extends Authenticatable
     public function deductions()
     {
         return $this->domain->deductions();
+    }
+
+    public function payrolls()
+    {
+        return $this->domain->payrolls();
     }
 }

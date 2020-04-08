@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AllowancesController;
 use App\Http\Controllers\DeductionsController;
+use App\Http\Controllers\RunPayrollController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PayScheduleController;
 use App\Http\Controllers\Auth\RegisterController;
 
 /*
@@ -38,8 +41,8 @@ Route::post('register', [RegisterController::class, 'register'])->middleware('gu
 Route::middleware('auth')->group(function () {
     Route::name('beneficiaries.')->group(function () {
         Route::get('beneficiaries', [BeneficiaryController::class, 'index'])->name('index');
-       Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
-       Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
+        Route::get('beneficiaries/create', [BeneficiaryController::class, 'create'])->name('create');
+        Route::post('beneficiaries/store', [BeneficiaryController::class, 'store'])->name('store');
     });
 });
 
@@ -72,3 +75,41 @@ Route::middleware('auth')->group(function () {
 });
 
 
+
+/*
+|-------------------------------------------------------------------------------
+| Payroll Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('payroll.')->group(function () {
+        Route::get('payroll', [PayrollController::class, 'index'])->name('index');
+        Route::get('payroll/create', [PayrollController::class, 'create'])->name('create');
+        Route::post('payroll/store', [PayrollController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Pay Schedule Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('pay_schedule.')->group(function () {
+//        Route::get('pay_schedule', [PayScheduleController::class, 'index'])->name('index');
+        Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Invokable Controller Routes (Controllers that perform has one method)
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('actions.')->group(function () {
+        Route::post('payroll/{payroll}/run_payroll', RunPayrollController::class)->name('run_payroll');
+    });
+});

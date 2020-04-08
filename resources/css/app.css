@@ -2,6 +2,7 @@
 
 @import "tailwindcss/components";
 
+@import "forms";
 @import "nprogress";
 
 @import "tailwindcss/utilities";

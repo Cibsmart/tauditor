@@ -8,15 +8,17 @@ use App\Domain;
 use App\Structure;
 use App\CadreStep;
 use App\FixedValue;
-use App\GradeLevel;
 use Inertia\Inertia;
+use App\Compute\Tax;
 use App\MdaStructure;
-use App\SalaryStructure;
+use App\ComputedValue;
 use App\PercentageValue;
 use App\BeneficiaryType;
+use App\Compute\Prorate;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
 use App\PersonalizedSalary;
+use App\Actions\ComputeTaxAction;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
@@ -36,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerInertia();
+        $this->registerBindings();
         $this->registerLengthAwarePaginator();
     }
 
@@ -55,11 +58,18 @@ class AppServiceProvider extends ServiceProvider
             'mda_structure' => MdaStructure::class,
             'salary_structure' => Structure::class,
             'structured' => StructuredSalary::class,
+            'computed_value' => ComputedValue::class,
             'micro_finance' => MicroFinanceBank::class,
             'personalized' => PersonalizedSalary::class,
             'percentage_value' => PercentageValue::class,
             'beneficiary_type' => BeneficiaryType::class,
         ];
+    }
+
+    public function registerBindings()
+    {
+        $this->app->bind('compute_tax', Tax::class);
+        $this->app->bind('compute_prorate', Prorate::class);
     }
 
     public function registerInertia()
@@ -78,7 +88,7 @@ class AppServiceProvider extends ServiceProvider
                         'email' => Auth::user()->email,
                         'domain' => [
                             'id' => Auth::user()->domain->id,
-                            'name' => Auth::user()->domain->slug,
+                            'name' => Auth::user()->domain->code,
                         ]
                     ] : null,
                 ];

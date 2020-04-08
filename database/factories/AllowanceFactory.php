@@ -4,12 +4,21 @@
 
 use App\Domain;
 use App\Allowance;
+use App\FixedValue;
 use App\AllowanceName;
+use App\PercentageValue;
 use Faker\Generator as Faker;
 
 $factory->define(Allowance::class, function (Faker $faker) {
+
+    $valuable = $faker->randomElement([1,2]) == 1
+        ? factory(FixedValue::class)->create()
+        : factory(PercentageValue::class)->create();
+
     return [
         'allowance_name_id' => factory(AllowanceName::class),
         'domain_id' => factory(Domain::class),
+        'valuable_type' => Str::snake(class_basename($valuable)),
+        'valuable_id' => $valuable->id,
     ];
 });
