@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use phpDocumentor\Reflection\Types\Float_;
 use phpDocumentor\Reflection\Types\Mixed_;
@@ -23,7 +24,6 @@ use const PHP_ROUND_HALF_UP;
  * @property string last_name
  * @property string first_name
  * @property string middle_name
- *
  * @property mixed salaryDetail
  * @property mixed bankDetail
  * @property mixed mdaDetail
@@ -39,13 +39,14 @@ use const PHP_ROUND_HALF_UP;
 class Beneficiary extends Model
 {
 
-
     protected $guarded = [];
 
     protected $casts = [
         'date_of_birth' => 'date',
         'address' => AddressCast::class,
     ];
+
+    protected $with = ['status'];
 
     /*
     |-------------------------------------------------------------------------------
@@ -118,6 +119,11 @@ class Beneficiary extends Model
         return $this->belongsTo(Domain::class)->withDefault();
     }
 
+    public function paySchedule()
+    {
+        return $this->hasMany(PaySchedule::class);
+    }
+
 
 
     /*
@@ -142,12 +148,12 @@ class Beneficiary extends Model
         return $this->salaryDetail->basicPay();
     }
 
-    public function monthlyAllowance() : float
+    public function totalMonthlyAllowance() : float
     {
         return $this->allowanceDetails->sum('amount');
     }
 
-    public function monthlyDeduction() : float
+    public function totalMonthlyDeduction() : float
     {
         return $this->deductionDetails->sum('amount');
     }
@@ -253,8 +259,8 @@ class Beneficiary extends Model
     public function allowances() : Collection
     {
         return $this->allowanceDetails()->get()
-                           ->load(['allowance.allowance_name'])
-                           ->transform(fn($allowance) => [
+                           ->load(['allowance.allowanceName'])
+                           ->transform(fn(AllowanceDetail $allowance) => [
                                'id' => $allowance->id,
                                'name' => $allowance->allowance->allowanceName->name,
                                'amount' => $allowance->amount,
@@ -292,8 +298,8 @@ class Beneficiary extends Model
     public function deductions() : Collection
     {
         return $this->deductionDetails()->get()
-                    ->load(['deduction.deduction_name'])
-                    ->transform(fn(Deduction $deduction) => [
+                    ->load(['deduction.deductionName'])
+                    ->transform(fn(DeductionDetail $deduction) => [
                         'id' => $deduction->id,
                         'name' => $deduction->deduction->deductionName->name,
                         'amount' => $deduction->amount,
@@ -307,6 +313,28 @@ class Beneficiary extends Model
     public function getNameAttribute() : string
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
+    }
+
+    public function setLastNameAttribute(string $value) : string
+    {
+        return $this->attributes['last_name'] = Str::upper($value);
+    }
+
+    public function setFirstNameAttribute(string $value) : string
+    {
+        return $this->attributes['first_name'] = Str::upper($value);
+    }
+
+    public function setMiddleNameAttribute(string $value) : string
+    {
+        return $this->attributes['middle_name'] = Str::upper($value);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where(function($query){
+            $query->whereHas('status', fn($query) => $query->where('active', 1));
+        });
     }
 
     /**

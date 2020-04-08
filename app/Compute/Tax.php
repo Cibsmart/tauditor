@@ -39,7 +39,7 @@ class Tax implements Computable
 
     private function getAnnualAllowance()
     {
-        $this->annual_allowance = $this->beneficiary->monthlyAllowance() * 12;
+        $this->annual_allowance = $this->beneficiary->totalMonthlyAllowance() * 12;
 
         return $this;
     }
@@ -104,6 +104,7 @@ class Tax implements Computable
     public function formatTax($annual_tax)
     {
         $monthly_tax = $annual_tax / 12;
-        return number_format($monthly_tax, 2, '.', '');
+
+        return round($monthly_tax, 2);
     }
 }
