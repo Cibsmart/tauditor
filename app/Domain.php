@@ -42,6 +42,16 @@ class Domain extends Model
         return $this->hasMany(Deduction::class);
     }
 
+    public function deductionstype() : HasMany
+    {
+        return $this->hasMany(DeductionType::class);
+    }
+
+    public function deductionsname() : HasMany
+    {
+        return $this->hasMany(DeductionName::class);
+    }
+
     public function allowables() : MorphMany
     {
         return $this->morphMany(Allowable::class, 'allowable');

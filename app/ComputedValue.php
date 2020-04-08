@@ -12,6 +12,7 @@ use function resolve;
  */
 class ComputedValue extends Model
 {
+    protected $guarded = [];
 
     public function allowance()
     {

@@ -25,7 +25,8 @@ class DeductionNameSeeder extends Seeder
                     ->create([
                         'code' => $code,
                         'name' => $name,
-                        'deduction_type_id' => 1
+                        'deduction_type_id' => 1,
+                        'domain_id' => 1
                     ]);
             }
         }
