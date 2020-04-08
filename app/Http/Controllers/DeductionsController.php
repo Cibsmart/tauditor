@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Deduction;
+use App\FixedValue;
+use Inertia\Inertia;
+use App\ComputedValue;
 use App\DeductionType;
 use App\DeductionName;
-use App\FixedValue;
 use App\PercentageValue;
-use App\ComputedValue;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeductionsController extends Controller
 {
@@ -18,6 +18,8 @@ class DeductionsController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -50,27 +52,13 @@ class DeductionsController extends Controller
      */
     public function create()
     {
-        $deductiontypes =  Auth::user()
-            ->deductionstype()
-            ->paginate()
-            ->transform(fn(DeductionType $deductiontypes) => [
-                'deduction_type_id' => $deductiontypes->id,
-                'deduction_type' => $deductiontypes->name,
-                ]);
+        $deduction_types =  Auth::user()->deductionTypes()->get();
+        $deduction_names =  Auth::user()->deductionNames()->get();
 
-        $deductionnames =  Auth::user()
-            ->deductionsname()
-            ->paginate()
-            ->transform(fn(DeductionName $deductionnames) => [
-                'deduction_type_id' => $deductionnames->deduction_type_id,
-                'deduction_name_id' => $deductionnames->id,
-                'deduction_name' => $deductionnames->name,
-                ]);
-
-        return Inertia::render('Deductions/create',
-            ['deductiontypes' => $deductiontypes,
-            'deductionnames' => $deductionnames,
-            ]);
+        return Inertia::render('Deductions/Create', [
+            'deduction_types' => $deduction_types,
+            'deduction_names' => $deduction_names,
+        ]);
     }
 
     /**
@@ -81,9 +69,10 @@ class DeductionsController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
-            'deductiontype' => ['required'],
-            'deductionname' => ['required'],
+            'deduction_type' => ['required'],
+            'deduction_name' => ['required'],
             'value_type' => ['required'],
             'fixed_value' => ['nullable', 'integer', 'min:100', 'max:1000000'],
             'percentage_value' => ['nullable', 'integer', 'min:1', 'max: 50'],
@@ -107,32 +96,32 @@ class DeductionsController extends Controller
         }
         elseif($data['value_type'] == "computed_value" ){
             $valuable_p = ComputedValue::create([
-                'computer'=>'compute_'.$data['deductionname'],
+                'computer'=>'compute_'.$data['deduction_name'],
                 ]);
 
             $valuable_id = $valuable_p->id;
         }
 
-        if(!(is_int($data['deductionname']))){
+        if(!(is_int($data['deduction_name']))){
             $NewDeductionName = DeductionName::create([
-                'deduction_type_id'=>$data['deductiontype'],
-                'code'=>$data['deductionname'],
-                'name'=>$data['deductionname'],
+                'deduction_type_id'=>$data['deduction_type'],
+                'code'=>$data['deduction_name'],
+                'name'=>$data['deduction_name'],
                 'domain_id'=>Auth::user()->domain_id,
             ]);
 
             $NewDeductionName_id = $NewDeductionName->id;
 
             Deduction::create([
-                'deduction_name_id'=>$NewDeductionName_id,
-                'valuable_type'=>$data['value_type'],
-                'valuable_id'=>$valuable_id,
+                'deduction_name_id'=> $NewDeductionName_id,
+                'valuable_type'=> $data['value_type'],
+                'valuable_id'=> $valuable_id,
                 'domain_id'=>Auth::user()->domain_id,
             ]);
 
         }else{
             Deduction::create([
-                'deduction_name_id'=>$data['deductionname'],
+                'deduction_name_id'=>$data['deduction_name'],
                 'valuable_type'=>$data['value_type'],
                 'valuable_id'=>$valuable_id,
                 'domain_id'=>Auth::user()->domain_id,

@@ -42,12 +42,12 @@ class Domain extends Model
         return $this->hasMany(Deduction::class);
     }
 
-    public function deductionstype() : HasMany
+    public function deductionTypes() : HasMany
     {
         return $this->hasMany(DeductionType::class);
     }
 
-    public function deductionsname() : HasMany
+    public function deductionNames() : HasMany
     {
         return $this->hasMany(DeductionName::class);
     }
