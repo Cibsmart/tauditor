@@ -15,12 +15,12 @@ class PercentageValue extends Model
 
     public function allowance()
     {
-        return $this->morphTo(Allowance::class, 'valuable');
+        return $this->morphOne(Allowance::class, 'valuable');
     }
 
     public function deduction()
     {
-        return $this->morphTo(Deduction::class, 'valuable');
+        return $this->morphOne(Deduction::class, 'valuable');
     }
 
 

@@ -68,6 +68,7 @@ export default{
           deductions: { id: 4, name: 'deductions',  label: 'Deductions', icon: 'trash', active: false,
               subs: {
                   index: { id: 1, label: 'Deductions', uri: this.uri('deductions.index'), },
+                  create: { id: 2, label: 'New Deduction', uri: this.uri('deductions.create'), }
               }
           },
           payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false,

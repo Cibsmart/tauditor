@@ -1,5 +1,6 @@
 <?php
 
+use App\ValueType;
 use App\MaritalStatus;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +20,7 @@ class ValueTypeSeeder extends Seeder
         ];
 
         foreach ($types as $key => $value) {
-            factory(MaritalStatus::class)->create([
+            factory(ValueType::class)->create([
                 'code' => $key,
                 'name' => $value,
             ]);
