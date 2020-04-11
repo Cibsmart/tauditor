@@ -17,6 +17,8 @@ class CreateDeductiblesTable extends Migration
             $table->id();
             $table->morphs('deductible');
             $table->unsignedBigInteger('deduction_id');
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

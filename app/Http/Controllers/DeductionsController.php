@@ -27,9 +27,10 @@ class DeductionsController extends Controller
     {
         $filters = request()->all('search');
         $deductions =  Auth::user()
-                           ->deductions()
-                           ->paginate()
-                           ->transform(fn(Deduction $deductions) => [
+                            ->deductions()
+                            ->filters(request()->only('search'))
+                            ->paginate()
+                            ->transform(fn(Deduction $deductions) => [
                                 'id' => $deductions->id,
                                 'name' => $deductions->name(),
                                 'amount' => $deductions->amount(),
@@ -51,21 +52,12 @@ class DeductionsController extends Controller
     public function create()
     {
         $deductiontypes =  Auth::user()
-            ->deductionstype()
-            ->paginate()
-            ->transform(fn(DeductionType $deductiontypes) => [
-                'deduction_type_id' => $deductiontypes->id,
-                'deduction_type' => $deductiontypes->name,
-                ]);
+        ->deductionstype()
+        ->get();
 
         $deductionnames =  Auth::user()
             ->deductionsname()
-            ->paginate()
-            ->transform(fn(DeductionName $deductionnames) => [
-                'deduction_type_id' => $deductionnames->deduction_type_id,
-                'deduction_name_id' => $deductionnames->id,
-                'deduction_name' => $deductionnames->name,
-                ]);
+            ->get();
 
         return Inertia::render('Deductions/create',
             ['deductiontypes' => $deductiontypes,

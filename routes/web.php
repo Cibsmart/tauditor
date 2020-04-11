@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AllowancesController;
 use App\Http\Controllers\DeductionsController;
+use App\Http\Controllers\DeductiblesController;
 use App\Http\Controllers\RunPayrollController;
 use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
@@ -71,6 +72,19 @@ Route::middleware('auth')->group(function () {
         Route::get('deductions', [DeductionsController::class, 'index'])->name('index');
         Route::get('deductions/create', [DeductionsController::class, 'create'])->name('create');
         Route::post('deductions/store', [DeductionsController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Deductibles Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('deductibles.')->group(function () {
+        Route::get('deductibles/create/{deduction_id}', [DeductiblesController::class, 'create'])->name('c_deductibles');
+        Route::post('deductibles/store', [DeductiblesController::class, 'store'])->name('store');
     });
 });
 

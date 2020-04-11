@@ -19,10 +19,10 @@
           <select-input @input="nameChange" v-model="form.deductiontype">
             <option disabled value="">Select Deduction Type</option>
             <option
-              v-for="(deductiontype, index) in deductiontypes.data" 
-              :key="deductiontype.deduction_type_id"
-              :value="deductiontype.deduction_type_id">
-                {{ deductiontype.deduction_type }}
+              v-for="(deductiontype, index) in deductiontypes" 
+              :key="deductiontype.id"
+              :value="deductiontype.id">
+                {{ deductiontype.name }}
             </option>
           </select-input>
           <div class="text-red-600" v-if="$page.errors.deductiontype">{{ $page.errors.deductiontype[0] }}</div>
@@ -38,10 +38,10 @@
               style = "position:absolute; top:0px; left:0px; width:100%;"
             >
               <option v-for="(deductionname, index) in deductionnamesData" 
-                  :key="deductionname.deduction_name_id"
-                  :value="deductionname.deduction_name_id"
+                  :key="deductionname.id"
+                  :value="deductionname.id"
               >
-                  {{ deductionname.deduction_name }}
+                  {{ deductionname.name }}
               </option>
           </select-input>
           <input type="text" v-model="form.deductionname"
@@ -113,8 +113,8 @@ export default {
   layout: Layout,
 
   props: {
-    deductiontypes: Object,
-    deductionnames: Object,
+    deductiontypes: Array,
+    deductionnames: Array,
   },
 
   components: {
@@ -140,8 +140,8 @@ export default {
 
   methods: {
     nameChange(value) {
-      this.deductionnamesData = this.deductionnames.data.filter(item => {
-        return item.deduction_name_id == value;
+      this.deductionnamesData = this.deductionnames.filter(item => {
+        return item.deduction_type_id == value;
       })
     },
     submit() {

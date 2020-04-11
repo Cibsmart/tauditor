@@ -27,6 +27,7 @@
                     Amount
                   </th>
                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
+                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
               </tr>
             </thead>
             <tbody class="bg-white">
@@ -41,10 +42,6 @@
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">{{ deduction.value_type }}</div>
-                  <!-- <div class="text-sm leading-5 text-gray-600">
-                      {{ beneficiary.sub_mda }}
-                      {{ beneficiary.sub_sub_mda }}
-                  </div> -->
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">
@@ -52,10 +49,15 @@
                       {{ deduction.amount }}
                       <span v-if="deduction.value_type === 'PERCENTAGE'">%</span>
                   </div>
-                  <!-- <div class="text-sm leading-5 text-gray-600">
-                      {{ beneficiary.grade_level }}
-                      {{ beneficiary.step }}
-                  </div> -->
+                </td>
+
+                <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                 <inertia-link 
+                  :href="'deductibles/create/'+deduction.id"
+                  class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline"
+                 >
+                 Assign
+                 </inertia-link>
                 </td>
 
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
@@ -107,7 +109,6 @@ export default {
       },
     }
   },
-
   watch: {
     form: {
       handler: throttle(function() {
