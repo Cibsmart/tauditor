@@ -33,7 +33,7 @@ class DeductiblesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create($deduction_id)
     {
@@ -50,7 +50,7 @@ class DeductiblesController extends Controller
 
         $cadre_steps = CadreStep::all();
 
-        return Inertia::render('Deductibles/create',
+        return Inertia::render('Deductibles/Create',
                     ['beneficiary_types' => $beneficiary_types,
                     'salary_structures' => $salary_structures,
                     'cadres' => $cadres,
@@ -76,7 +76,7 @@ class DeductiblesController extends Controller
             'deductionId'=>['required'],
         ]);
 
-        
+
         $deduction_id = $data['deductionId'];
 
         if($data['deductibleType'] == "all" ){
@@ -132,19 +132,19 @@ class DeductiblesController extends Controller
                     ->where('structure_id', $data['salaryStructure'])
                     ->limit(1)
                     ->get();
-                    
+
             if($mda_structure->isEmpty()){
                 $new_mda_structure = MdaStructure::create([
                         'mda_id'=>$data['Mda'],
                         'structure_id'=>$data['salaryStructure'],
-                        ]); 
+                        ]);
                 $deductible_id = $new_mda_structure->id;
 
             }
             else{
                 $deductible_id = $mda_structure[0]->id;
             }
-            
+
         }
 
         Deductible::create([
