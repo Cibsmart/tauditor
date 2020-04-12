@@ -41,6 +41,9 @@ class CreatePaySchedulesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('payroll_id')->references('id')->on('payrolls');
+            $table->foreign('beneficiary_id')->references('id')->on('beneficiaries');
         });
     }
 
