@@ -4,9 +4,9 @@
         {{ label }}:
       </label>
 
-      <select v-model="selected" v-bind="$attrs" :id="id" ref="input" 
+      <select v-model="selected" v-bind="$attrs" :id="id" ref="input"
           :class="{ error: errors.length }"
-          class="p-2 leading-normal block w-full border text-gray-800 bg-white rounded text-left appearance-none relative focus:outline-none focus:border-indigo-500 focus:shadow chevron">
+          class="form-input leading-normal block w-full border text-gray-800 chevron focus:outline-none focus:border-indigo-500 focus:shadow">
         <slot />
       </select>
 
@@ -19,12 +19,11 @@
 <script>
 
 export default{
+
   inheritAttrs: false,
 
-  components: {
+  components: {},
 
-  },
-  
   props: {
     value: [String, Number, Boolean],
     label: String,
