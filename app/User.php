@@ -60,14 +60,14 @@ class User extends Authenticatable
         return $this->domain->deductions();
     }
 
-    public function deductionstype()
+    public function deductionTypes()
     {
-        return $this->domain->deductionstype();
+        return $this->domain->deductionTypes();
     }
 
-    public function deductionsname()
+    public function deductionNames()
     {
-        return $this->domain->deductionsname();
+        return $this->domain->deductionNames();
     }
 
     public function payrolls()

@@ -54,7 +54,7 @@ class AllowanceSeeder extends Seeder
                             $allowance = $amount->allowance()->save(factory(Allowance::class)
                                 ->make(['allowance_name_id' => $allowance_name_id, 'domain_id' => $i]));
 
-                            $allowance->cadreAllowance()->save(['cadre_step_id' => $cadre_step_id]);
+                            $allowance->cadreAllowance()->create(['cadre_step_id' => $cadre_step_id]);
                             continue;
                         }
 

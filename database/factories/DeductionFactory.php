@@ -6,6 +6,7 @@ use App\Domain;
 use App\Deduction;
 use App\FixedValue;
 use App\DeductionName;
+use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 
 $factory->define(Deduction::class, function (Faker $faker) {

@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Deduction;
-use App\DeductionType;
-use App\DeductionName;
+use App\ValueType;
 use App\FixedValue;
-use App\PercentageValue;
-use App\ComputedValue;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+use App\ComputedValue;
+use App\PercentageValue;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Validator;
+use App\Http\Requests\DeductionRequest;
 
 class DeductionsController extends Controller
 {
@@ -18,6 +19,8 @@ class DeductionsController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -51,18 +54,15 @@ class DeductionsController extends Controller
      */
     public function create()
     {
-        $deductiontypes =  Auth::user()
-        ->deductionstype()
-        ->get();
+        $value_types = ValueType::all();
+        $deduction_types =  Auth::user()->deductionTypes()->get();
+        $deduction_names =  Auth::user()->deductionNames()->get();
 
-        $deductionnames =  Auth::user()
-            ->deductionsname()
-            ->get();
-
-        return Inertia::render('Deductions/create',
-            ['deductiontypes' => $deductiontypes,
-            'deductionnames' => $deductionnames,
-            ]);
+        return Inertia::render('Deductions/Create', [
+            'value_types' => $value_types,
+            'deduction_types' => $deduction_types,
+            'deduction_names' => $deduction_names,
+        ]);
     }
 
     /**
@@ -71,69 +71,18 @@ class DeductionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DeductionRequest $request)
     {
-        $request->validate([
-            'deductiontype' => ['required'],
-            'deductionname' => ['required'],
-            'value_type' => ['required'],
-            'fixed_value' => ['nullable', 'integer', 'min:100', 'max:1000000'],
-            'percentage_value' => ['nullable', 'integer', 'min:1', 'max: 50'],
+        $deduction_name = $this->deductionName($request->deduction_type, $request->deduction_name, $request->new_deduction);
+
+        $valuable = $this->valueType($request->value_type, $request->value, $deduction_name->name);
+
+        $valuable->deduction()->create([
+            'deduction_name_id' => $deduction_name->id,
+            'domain_id' => Auth::user()->domain->id,
         ]);
 
-        $data = $request->all();
-
-        if($data['value_type'] == "fixed_value" ){
-            $valuable_f = FixedValue::create([
-                'amount'=>$data['fixed_value'],
-                ]);
-
-                $valuable_id = $valuable_f->id;
-        }
-        elseif($data['value_type'] == "percentage_value" ){
-            $valuable_p = PercentageValue::create([
-                'percentage'=>$data['percentage_value'],
-                ]);
-
-            $valuable_id = $valuable_p->id;
-        }
-        elseif($data['value_type'] == "computed_value" ){
-            $valuable_p = ComputedValue::create([
-                'computer'=>'compute_'.$data['deductionname'],
-                ]);
-
-            $valuable_id = $valuable_p->id;
-        }
-
-        if(!(is_int($data['deductionname']))){
-            $NewDeductionName = DeductionName::create([
-                'deduction_type_id'=>$data['deductiontype'],
-                'code'=>$data['deductionname'],
-                'name'=>$data['deductionname'],
-                'domain_id'=>Auth::user()->domain_id,
-            ]);
-
-            $NewDeductionName_id = $NewDeductionName->id;
-
-            Deduction::create([
-                'deduction_name_id'=>$NewDeductionName_id,
-                'valuable_type'=>$data['value_type'],
-                'valuable_id'=>$valuable_id,
-                'domain_id'=>Auth::user()->domain_id,
-            ]);
-
-        }else{
-            Deduction::create([
-                'deduction_name_id'=>$data['deductionname'],
-                'valuable_type'=>$data['value_type'],
-                'valuable_id'=>$valuable_id,
-                'domain_id'=>Auth::user()->domain_id,
-            ]);
-        }
-
-
-        return redirect()->back()->withSuccess('Submitted Successfuly');
-
+        return redirect()->back()->withSuccess('Deduction Created Successfully');
     }
 
     /**
@@ -181,7 +130,7 @@ class DeductionsController extends Controller
         //
     }
 
-    public function relationships()
+    private function relationships()
     {
         // Relationships Eager Loaded with Beneficiaries
         // to avoid multiple Database Round Trip
@@ -189,5 +138,48 @@ class DeductionsController extends Controller
             'deductionDetails.deduction',
             'deductionName.deductionType',
         ];
+    }
+
+    /**
+     * @param $value_type_id
+     * @param $amount
+     * @param $deduction_name
+     * @return mixed
+     */
+    private function valueType($value_type_id, $amount, $deduction_name)
+    {
+        $value_code = ValueType::find($value_type_id)->code;
+
+        if ($value_code == 'fixed') {
+            return FixedValue::create(['amount' => $amount]);
+        }
+
+        if ($value_code == 'percentage') {
+            return PercentageValue::create(['percentage' => $amount]);
+        }
+
+        if ($value_code == 'computed') {
+            $computer = 'compute_'.$deduction_name;
+            return ComputedValue::create(['computer' => $computer]);
+        }
+    }
+
+    /**
+     * @param $deduction_type_id
+     * @param $deduction_name_id
+     * @param $deduction_name
+     * @return mixed
+     */
+    private function deductionName($deduction_type_id, $deduction_name_id, $deduction_name = null)
+    {
+        if($deduction_name_id > 0){
+            return Auth::user()->domain->deductionNames()->find($deduction_name_id);
+        }
+
+        return Auth::user()->domain->deductionNames()->create([
+            'deduction_type_id' => $deduction_type_id,
+            'code' => $deduction_name,
+            'name' => $deduction_name,
+        ]);
     }
 }

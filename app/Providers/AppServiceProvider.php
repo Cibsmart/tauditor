@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -63,6 +64,10 @@ class AppServiceProvider extends ServiceProvider
             'percentage_value' => PercentageValue::class,
             'beneficiary_type' => BeneficiaryType::class,
         ];
+
+        Validator::extend('positive', function ($attribute, $value, $parameters, $validator) {
+            return $value > 0;
+        });
     }
 
     public function registerBindings()
