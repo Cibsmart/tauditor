@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Deduction;
+use App\ValueType;
 use App\FixedValue;
 use Inertia\Inertia;
 use App\ComputedValue;
-use App\DeductionType;
-use App\DeductionName;
 use App\PercentageValue;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Validator;
+use App\Http\Requests\DeductionRequest;
 
 class DeductionsController extends Controller
 {
@@ -53,10 +53,12 @@ class DeductionsController extends Controller
      */
     public function create()
     {
+        $value_types = ValueType::all();
         $deduction_types =  Auth::user()->deductionTypes()->get();
         $deduction_names =  Auth::user()->deductionNames()->get();
 
         return Inertia::render('Deductions/Create', [
+            'value_types' => $value_types,
             'deduction_types' => $deduction_types,
             'deduction_names' => $deduction_names,
         ]);
@@ -68,28 +70,15 @@ class DeductionsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DeductionRequest $request)
     {
-        $request->validate([
-            'deduction_type' => ['required', 'integer'],
-            'deduction_name' => ['required', 'string'],
-            'value_type' => ['required', 'string'],
-            'amount' => ['nullable', 'numeric', 'positive'],
-        ]);
+        $deduction_name = $this->deductionName($request->deduction_type, $request->deduction_name, $request->new_deduction);
 
-        $deduction_type_id = $request->deduction_type;
-        $deduction_name = $request->deduction_name;
-        $value_code = $request->value_type;
-        $amount = $request->amount;
-
-        $deduction_name = $this->deductionName($deduction_name, $deduction_type_id);
-
-        $valuable = $this->valueType($value_code, $amount, $deduction_name);
+        $valuable = $this->valueType($request->value_type, $request->value, $deduction_name->name);
 
         $valuable->deduction()->create([
             'deduction_name_id' => $deduction_name->id,
             'domain_id' => Auth::user()->domain->id,
-            'valuable_type' => $valuable
         ]);
 
         return redirect()->back()->withSuccess('Deduction Created Successfully');
@@ -151,13 +140,15 @@ class DeductionsController extends Controller
     }
 
     /**
-     * @param $value_code
+     * @param $value_type_id
      * @param $amount
      * @param $deduction_name
      * @return mixed
      */
-    private function valueType($value_code, $amount, $deduction_name)
+    private function valueType($value_type_id, $amount, $deduction_name)
     {
+        $value_code = ValueType::find($value_type_id)->code;
+
         if ($value_code == 'fixed') {
             return FixedValue::create(['amount' => $amount]);
         }
@@ -173,21 +164,21 @@ class DeductionsController extends Controller
     }
 
     /**
-     * @param $deduction_name
      * @param $deduction_type_id
+     * @param $deduction_name_id
+     * @param $deduction_name
      * @return mixed
      */
-    private function deductionName($deduction_name, $deduction_type_id)
+    private function deductionName($deduction_type_id, $deduction_name_id, $deduction_name = null)
     {
-        $deduction_name = Auth::user()->domain->deductionNames()
-                                              ->where('name', $deduction_name)
-                                              ->first()
-            ?? Auth::user()->domain->deductionNames()
-                                   ->create([
-                                       'deduction_type_id' => $deduction_type_id,
-                                       'code' => $deduction_name,
-                                       'name' => $deduction_name,
-                                   ]);
-        return $deduction_name;
+        if($deduction_name_id > 0){
+            return Auth::user()->domain->deductionNames()->find($deduction_name_id);
+        }
+
+        return Auth::user()->domain->deductionNames()->create([
+            'deduction_type_id' => $deduction_type_id,
+            'code' => $deduction_name,
+            'name' => $deduction_name,
+        ]);
     }
 }
