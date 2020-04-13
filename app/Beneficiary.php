@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function is_null;
 use function in_array;
+use function contains;
 use function array_merge;
 use function number_format;
 use const PHP_ROUND_HALF_UP;
@@ -350,7 +351,9 @@ class Beneficiary extends Model
                       ->orWhere('first_name', 'like', '%' . $search . '%')
                       ->orWhere('middle_name', 'like', '%' . $search . '%')
                       ->orWhere('verification_number', 'like', '%' . $search . '%')
-                      ->orWhereHas('mdaDetail', function($query) use ($search){
+                      ->orWhereHas('status', function ($query) use ($search){
+                          $query->where('active', Str::startsWith($search, ['act', 'acti', 'activ', 'active']));
+                      })->orWhereHas('mdaDetail', function($query) use ($search){
                           $query->whereHas('mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
                           $query->orWhereHas('subMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
                           $query->orWhereHas('subSubMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
