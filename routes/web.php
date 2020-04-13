@@ -10,6 +10,7 @@ use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayScheduleController;
+use App\Http\Controllers\MdaSchedulesController;
 use App\Http\Controllers\Auth\RegisterController;
 
 /*
@@ -106,12 +107,24 @@ Route::middleware('auth')->group(function () {
 
 /*
 |-------------------------------------------------------------------------------
+| MDA Pay Schedules Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('mda_schedules.')->group(function () {
+        Route::get('payroll_mda_schedule/{payroll}/index', [MdaSchedulesController::class, 'index'])->name('index');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
 | Pay Schedule Routes
 |-------------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
     Route::name('pay_schedule.')->group(function () {
-//        Route::get('pay_schedule', [PayScheduleController::class, 'index'])->name('index');
+        Route::get('payroll_pay_schedule/{payroll}/mda/{mda}/index', [PayScheduleController::class, 'index'])->name('index');
         Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
     });
 });
