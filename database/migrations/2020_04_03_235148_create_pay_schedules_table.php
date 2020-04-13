@@ -38,6 +38,7 @@ class CreatePaySchedulesTable extends Migration
             $table->unsignedBigInteger('mda_id');
             $table->unsignedBigInteger('sub_mda_id')->nullable();
             $table->unsignedBigInteger('sub_sub_mda_id')->nullable();
+            $table->boolean('pensioner');
 
             $table->timestamps();
             $table->softDeletes();

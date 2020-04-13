@@ -13,9 +13,29 @@ class PaySchedule extends Model
 
     protected $casts = [
         'allowances' => 'array',
-        'deductions' => 'array'
+        'deductions' => 'array',
+        'pensioner' => 'boolean',
     ];
 
+    public function mda()
+    {
+        return $this->belongsTo(Mda::class);
+    }
+
+    public function payroll()
+    {
+        return $this->belongsTo(Payroll::class);
+    }
+
+    public function scopePensioner($query)
+    {
+        return $query->where('pensioner', 1);
+    }
+
+    public function scopeStaff($query)
+    {
+        return $query->where('pensioner', 0);
+    }
 
     public function setNetPayAttribute(float $value) : int
     {
@@ -49,7 +69,6 @@ class PaySchedule extends Model
         return $value / 100;
     }
 
-
     public function setTotalAllowanceAttribute(float $value) : int
     {
         return $this->attributes['total_allowance'] = $value * 100;
@@ -60,13 +79,17 @@ class PaySchedule extends Model
         return $value / 100;
     }
 
-
     public function setTotalDeductionAttribute(float $value) : int
     {
         return $this->attributes['total_deduction'] = $value * 100;
     }
 
     public function getTotalDeductionAttribute(int $value) : float
+    {
+        return $value / 100;
+    }
+
+    public function getTotalAmountAttribute(int $value) : float
     {
         return $value / 100;
     }

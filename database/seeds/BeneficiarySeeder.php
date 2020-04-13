@@ -73,12 +73,6 @@ class BeneficiarySeeder extends Seeder
 
                 $payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
-                if($payable instanceof StructuredSalary)
-                {
-//                    $beneficiary->syncAllowances();
-//                    $payable->syncDeductions($beneficiary);
-                }
-
                 $beneficiary->nextOfKin()
                             ->save(factory(NextOfKin::class)
                                 ->make(['relationship_id' => fn() => $relationships->random()->id]));

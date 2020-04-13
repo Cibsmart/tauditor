@@ -57,6 +57,7 @@ class RunPayrollAction
                 'mda_id' => $mda->mda_id,
                 'sub_mda_id' => $mda->sub_mda_id,
                 'sub_sub_mda_id' => $mda->sub_sub_mda_id,
+                'pensioner' => $beneficiary->pensioner,
             ];
 
             $payroll->schedules()->create($pay_schedule);
