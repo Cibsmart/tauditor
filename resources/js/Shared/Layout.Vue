@@ -53,7 +53,7 @@
           <main-menu :url="url()" class="bg-white flex-shrink-0 w-64 hidden md:block overflow-y-auto" />
 
           <!-- Display Screen on the Right of the Main Menu becomes Full screen on sm -->
-          <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto" scroll-region>
+          <div class="w-full overflow-hidden overflow-y-auto" scroll-region>
             <flash-messages />
             <slot />
           </div>
