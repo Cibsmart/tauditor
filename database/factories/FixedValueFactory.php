@@ -7,6 +7,6 @@ use Faker\Generator as Faker;
 
 $factory->define(FixedValue::class, function (Faker $faker) {
     return [
-        'amount' => $faker->numberBetween(10000, 1000000),
+        'amount' => $faker->randomFloat(2, 100, 5000),
     ];
 });
