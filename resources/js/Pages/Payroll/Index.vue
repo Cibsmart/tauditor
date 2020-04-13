@@ -71,7 +71,7 @@
                                 </inertia-link>
                                 <span v-if="payroll.generated && ! payroll.archived"> | </span>
 
-                                <inertia-link v-if="payroll.generated" href="#" class="px-5 py-3">
+                                <inertia-link v-if="payroll.generated" :href="route('mda_schedules.index', {payroll: payroll.id})" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 
