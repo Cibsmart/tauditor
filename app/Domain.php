@@ -62,6 +62,11 @@ class Domain extends Model
         return $this->hasMany(Payroll::class);
     }
 
+    public function auditPayrolls()
+    {
+        return $this->hasMany(AuditPayroll::class);
+    }
+
     /**
      * Synchronize all Domain Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary

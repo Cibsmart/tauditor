@@ -74,4 +74,9 @@ class User extends Authenticatable
     {
         return $this->domain->payrolls();
     }
+
+    public function auditPayrolls()
+    {
+        return $this->domain->auditPayrolls();
+    }
 }
