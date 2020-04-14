@@ -123,7 +123,7 @@ Route::middleware('auth')->group(function () {
 |-------------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::name('pay_schedule.')->group(function () {
+    Route::name('pay_schedules.')->group(function () {
         Route::get('payroll_pay_schedule/{payroll}/mda/{mda}/index', [PayScheduleController::class, 'index'])->name('index');
         Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
     });
