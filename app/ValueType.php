@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ValueType extends Model
 {
-    //
+    public $incrementing = false;
+
+    protected $keyType = 'string';
 }

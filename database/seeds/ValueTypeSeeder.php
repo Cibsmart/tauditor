@@ -21,7 +21,7 @@ class ValueTypeSeeder extends Seeder
 
         foreach ($types as $key => $value) {
             factory(ValueType::class)->create([
-                'code' => $key,
+                'id' => $key,
                 'name' => $value,
             ]);
         }

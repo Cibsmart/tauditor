@@ -26,7 +26,7 @@ class DeductionRequest extends FormRequest
         return [
             'deduction_type' => ['required', 'integer'],
             'deduction_name' => ['required', 'integer'],
-            'value_type' => ['required', 'integer'],
+            'value_type' => ['required', 'string'],
             'value' => 'exclude_if:value_type,1|numeric|positive',
             'new_deduction' => 'exclude_unless:deduction_name,-1|required|string|min:3',
         ];

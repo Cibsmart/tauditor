@@ -7,7 +7,7 @@ use Faker\Generator as Faker;
 
 $factory->define(ValueType::class, function (Faker $faker) {
     return [
-        'code' => $faker->countryCode,
+        'id' => $faker->unique()->countryCode,
         'name' => $faker->country,
     ];
 });

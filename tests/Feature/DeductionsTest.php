@@ -27,7 +27,7 @@ class DeductionsTest extends TestCase
         $user = $this->signIn();
 
         $deduction_name = factory(DeductionName::class)->create(['name' => 'SH', 'code' => 'SH', 'domain_id' => $user->domain_id]);
-        $value_type = factory(ValueType::class)->create(['code' => 'fixed']);
+        $value_type = factory(ValueType::class)->create(['id' => 'fixed']);
         $amount = random_int(100, 100000);
 
         $attributes = [
@@ -51,7 +51,7 @@ class DeductionsTest extends TestCase
         $user = $this->signIn();
 
         $deduction_type = factory(DeductionType::class)->create(['domain_id' => $user->id]);
-        $value_type = factory(ValueType::class)->create(['code' => 'fixed']);
+        $value_type = factory(ValueType::class)->create(['id' => 'fixed']);
         $amount = random_int(100, 100000);
 
         $attributes = [

@@ -141,24 +141,24 @@ class DeductionsController extends Controller
     }
 
     /**
-     * @param $value_type_id
+     * @param $value_type
      * @param $amount
      * @param $deduction_name
      * @return mixed
      */
-    private function valueType($value_type_id, $amount, $deduction_name)
+    private function valueType($value_type, $amount, $deduction_name)
     {
-        $value_code = ValueType::find($value_type_id)->code;
+        $value_type = ValueType::find($value_type)->id;
 
-        if ($value_code == 'fixed') {
+        if ($value_type == 'fixed') {
             return FixedValue::create(['amount' => $amount]);
         }
 
-        if ($value_code == 'percentage') {
+        if ($value_type == 'percentage') {
             return PercentageValue::create(['percentage' => $amount]);
         }
 
-        if ($value_code == 'computed') {
+        if ($value_type == 'computed') {
             $computer = 'compute_'.$deduction_name;
             return ComputedValue::create(['computer' => $computer]);
         }
