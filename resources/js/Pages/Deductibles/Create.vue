@@ -1,6 +1,6 @@
 <template>
   <div class="container p-8 bg-white">
-    
+
     <div class="mb-6 flex justify-between items-center">
       <h1 class="mb-8 font-bold text-3xl">Deductions</h1>
       <inertia-link href="#" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
@@ -49,7 +49,7 @@
           <select-input v-model="form.beneficiaryType">
             <option disabled value="">Select Beneficiary Type</option>
             <option
-              v-for="(beneficiary_type, index) in beneficiary_types" 
+              v-for="(beneficiary_type, index) in beneficiary_types"
               :key="beneficiary_type.id"
               :value="beneficiary_type.id">
                 {{ beneficiary_type.name }}
@@ -65,7 +65,7 @@
           <select-input v-model="form.salaryStructure">
             <option disabled value="">Select Salary Structure</option>
             <option
-              v-for="(salary_structure, index) in salary_structures" 
+              v-for="(salary_structure, index) in salary_structures"
               :key="salary_structure.id"
               :value="salary_structure.id">
                 {{ salary_structure.name }}
@@ -80,7 +80,7 @@
           <select-input v-model="form.Mda">
             <option disabled value="">Select Mda</option>
             <option
-              v-for="(mda, index) in mdas" 
+              v-for="(mda, index) in mdas"
               :key="mda.id"
               :value="mda.id">
                 {{ mda.name }}
@@ -96,7 +96,7 @@
           <select-input @input="cadreChange" v-model="form.Cadre">
             <option disabled value="">Select Cadre</option>
             <option
-              v-for="(cadre, index) in cadres" 
+              v-for="(cadre, index) in cadres"
               :key="cadre.id"
               :value="cadre.id">
                 {{'Grade Level '+ cadre.grade_level_id}}
@@ -112,7 +112,7 @@
           <select-input v-model="form.cadreStep">
             <option disabled value="">Select Cadre Step</option>
             <option
-              v-for="(cadre_step, index) in cadreStepsData" 
+              v-for="(cadre_step, index) in cadreStepsData"
               :key="cadre_step.id"
               :value="cadre_step.id">
                 {{'Sept '+ cadre_step.step_id }}
@@ -122,8 +122,7 @@
         </div>
 
         <div class="col-start-1">
-          <text-input  type="hidden" v-model="form.deductionId" :value="deduction_id"></text-input>
-          <button 
+          <button
           class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap"
           type="submit">
             Save
@@ -148,16 +147,16 @@ import pickBY from 'lodash/pickBY'
 import throttle from 'lodash/throttle'
 
 export default {
-  metaInfo: { title: 'deductions' },
+  metaInfo: { title: 'Deductions' },
   layout: Layout,
 
   props: {
-    beneficiary_types:Array,
-    salary_structures:Array,
-    mdas:Array,
-    cadres:Array,
-    cadre_steps:Array,
-    deduction_id:String,
+    beneficiary_types: Array,
+    salary_structures: Array,
+    mdas: Array,
+    cadres: Array,
+    cadre_steps: Array,
+    deduction_id: Number,
   },
 
   components: {

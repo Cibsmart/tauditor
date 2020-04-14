@@ -33,13 +33,11 @@ class DeductiblesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
+     * @param  Deduction  $deduction
      * @return \Inertia\Response
      */
-    public function create($deduction_id)
+    public function create(Deduction $deduction)
     {
-        $check_deduction_id = Deduction::find($deduction_id)
-                        ->first();
-
         $beneficiary_types = BeneficiaryType::all();
 
         $salary_structures = Structure::all();
@@ -50,14 +48,14 @@ class DeductiblesController extends Controller
 
         $cadre_steps = CadreStep::all();
 
-        return Inertia::render('Deductibles/Create',
-                    ['beneficiary_types' => $beneficiary_types,
-                    'salary_structures' => $salary_structures,
-                    'cadres' => $cadres,
-                    'cadre_steps' => $cadre_steps,
-                    'mdas' => $mdas,
-                    'deduction_id' => $deduction_id,
-                    ]);
+        return Inertia::render('Deductibles/Create', [
+            'mdas' => $mdas,
+            'cadres' => $cadres,
+            'cadre_steps' => $cadre_steps,
+            'deduction_id' => $deduction->id,
+            'beneficiary_types' => $beneficiary_types,
+            'salary_structures' => $salary_structures,
+        ]);
 
     }
 

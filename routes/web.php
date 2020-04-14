@@ -84,7 +84,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('deductibles.')->group(function () {
-        Route::get('deductibles/create/{deduction_id}', [DeductiblesController::class, 'create'])->name('c_deductibles');
+        Route::get('deductibles/{deduction}/create/', [DeductiblesController::class, 'create'])->name('create');
         Route::post('deductibles/store', [DeductiblesController::class, 'store'])->name('store');
     });
 });
