@@ -11,7 +11,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayScheduleController;
 use App\Http\Controllers\MdaSchedulesController;
+use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AuditPayScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +130,22 @@ Route::middleware('auth')->group(function () {
         Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
     });
 });
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Pay Runs Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_payroll.')->group(function () {
+        Route::get('audit_payroll', [AuditPayrollController::class, 'index'])->name('index');
+        Route::get('audit_payroll/create', [AuditPayrollController::class, 'create'])->name('create');
+        Route::post('audit_payroll/store', [AuditPayrollController::class, 'store'])->name('store');
+    });
+});
+
+
 
 
 /*
