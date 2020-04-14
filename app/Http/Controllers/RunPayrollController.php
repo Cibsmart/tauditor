@@ -17,7 +17,7 @@ class RunPayrollController
 
         $run_payroll_action->execute($payroll);
 
-        $payroll->payrollGenerated(Auth::user());
+        $payroll->payrollGeneratedBy($user = Auth::user());
 
         return redirect()->route('payroll.index')
                          ->with('success', "Successful Payroll Run for $payroll->month_name $payroll->year");

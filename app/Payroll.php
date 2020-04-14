@@ -55,7 +55,7 @@ class Payroll extends Model
             : $this->generated;
     }
 
-    public function payrollGenerated(User $user)
+    public function payrollGeneratedBy(User $user)
     {
         $this->user_id = $user->id;
         $this->generated = Carbon::now();
