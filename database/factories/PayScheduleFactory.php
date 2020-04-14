@@ -38,7 +38,12 @@ $factory->define(PaySchedule::class, function (Faker $faker) {
         'beneficiary_type_id' => $b->beneficiary_type_id,
         'bankable_type' => $b->bankDetail->bankable_type,
         'bankable_id' => $b->bankDetail->bankable_id,
+        'payable_type' => $b->salaryDetail->payable_type,
+        'payable_id' => $b->salaryDetail->payable_id,
         'mda_id' => $b->mdaDetail->mda_id,
+        'mda_name' => $b->mdaDetail->mda->name,
+        'sub_mda_name' => $b->mdaDetail->subMda->name,
+        'sub_sub_mda_name' => $b->mdaDetail->subSubMda->name,
         'pensioner' => 0,
     ];
 });

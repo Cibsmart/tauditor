@@ -28,6 +28,10 @@ class CreatePaySchedulesTable extends Migration
             $table->text('allowances');
             $table->text('deductions');
 
+            $table->string('mda_name');
+            $table->string('sub_mda_name')->nullable();
+            $table->string('sub_sub_mda_name')->nullable();
+
             $table->unsignedBigInteger('payroll_id');
             $table->unsignedBigInteger('beneficiary_id');
 
@@ -35,6 +39,9 @@ class CreatePaySchedulesTable extends Migration
             $table->unsignedBigInteger('beneficiary_type_id');
             $table->string('bankable_type');
             $table->unsignedBigInteger('bankable_id');
+            $table->string('payable_type');
+            $table->unsignedBigInteger('payable_id');
+
             $table->unsignedBigInteger('mda_id');
             $table->unsignedBigInteger('sub_mda_id')->nullable();
             $table->unsignedBigInteger('sub_sub_mda_id')->nullable();
