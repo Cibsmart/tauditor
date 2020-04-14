@@ -104,11 +104,11 @@ class Beneficiary extends Model
     {
         return $this->belongsTo(BeneficiaryType::class)->withDefault();
     }
-
-    public function salaryStructure() : BelongsTo
-    {
-        return $this->belongsTo(Structure::class);
-    }
+//
+//    public function salaryStructure() : BelongsTo
+//    {
+//        return $this->belongsTo(Structure::class);
+//    }
 
     public function qualifications() : HasMany
     {

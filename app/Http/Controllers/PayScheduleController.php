@@ -2,21 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Mda;
 use App\Payroll;
 use App\PaySchedule;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use function back;
 use function redirect;
+use function number_format;
 
 class PayScheduleController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param  Payroll  $payroll
+     * @param  Mda  $mda
+     * @return \Inertia\Response
      */
-    public function index()
+    public function index(Payroll $payroll, Mda $mda)
     {
-        //
+        if(! $payroll->generated){
+            return back()->withError('Yet to Run Payroll for $date->monthName $date->year"');
+        }
+
+        $schedules = $payroll->schedules()
+                             ->paginate()
+                             ->transform(fn(PaySchedule $schedule) => [
+                                 'id' => $schedule->id,
+                                 'beneficiary_name' => $schedule->beneficiary_name,
+                                 'beneficiary_code' => $schedule->beneficiary_code,
+                                 'mda' => $schedule->mda_name,
+                                 'sub_mda' => $schedule->sub_mda_name,
+                                 'sub_sub_mda' => $schedule->sub_sub_mda_name,
+                                 'account_number' => $schedule->account_number,
+                                 'bank_name' => $schedule->bank_name,
+                                 'net_pay' => number_format($schedule->net_pay, 2),
+                             ]);
+
+//        dd($schedules);
+
+        return Inertia::render('PaySchedules/Index', [
+            'schedules' => $schedules,
+        ]);
     }
 
     /**

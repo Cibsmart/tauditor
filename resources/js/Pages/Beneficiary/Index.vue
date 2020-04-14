@@ -38,12 +38,8 @@
             <tbody class="bg-white">
               <tr v-for="(beneficiary, index) in beneficiaries.data" :key="beneficiary.id">
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <div class="flex items-center">
-                    <div class="ml-4">
-                      <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ beneficiary.name }}</div>
-                      <div class="text-sm leading-5 text-gray-600">{{ beneficiary.verification_number }}</div>
-                    </div>
-                  </div>
+                  <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ beneficiary.name }}</div>
+                  <div class="text-sm leading-5 text-gray-600">{{ beneficiary.verification_number }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div class="text-sm leading-5 text-gray-900">{{ beneficiary.mda }}</div>
@@ -113,7 +109,7 @@ export default {
 
   components: {
     Icon,
-    Pagination,   
+    Pagination,
     SearchFilter,
   },
 

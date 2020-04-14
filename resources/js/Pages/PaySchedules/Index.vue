@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-8 font-bold text-3xl">MDA Schedules</h1>
+        <h1 class="mb-8 font-bold text-3xl">Pay Schedules</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
@@ -14,72 +14,55 @@
                         <thead>
                         <tr>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                Name
+                            </th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                Bank Details
+                            </th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 MDA
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Month
+                                Net Pay
                             </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Total Amount
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Actions
-                            </th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
                         </tr>
                         </thead>
                         <tbody class="bg-white">
                         <tr v-for="schedule in schedules.data" :key="schedule.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="flex items-center">
-                                    <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">{{ schedule.mda_name }}</div>
-                                        <div class="text-sm leading-5 text-gray-600">{{ schedule.domain }}</div>
-                                    </div>
-                                </div>
+                                <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ schedule.beneficiary_name }}</div>
+                                <div class="text-sm leading-5 text-gray-600">{{ schedule.beneficiary_code }}</div>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 text-gray-900">
-                                    {{ schedule.month }}
+                                    {{ schedule.account_number }}
                                 </div>
                                 <div class="text-sm leading-5 text-gray-600">
-                                    {{ schedule.year }}
+                                    {{ schedule.bank_name }}
                                 </div>
                             </td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                <div class="text-sm leading-5 text-gray-900">{{ schedule.mda }}</div>
+                                <div class="text-sm leading-5 text-gray-600">
+                                    {{ schedule.sub_mda }}
+                                    {{ schedule.sub_sub_mda }}
+                                </div>
+                            </td>
+
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 text-gray-900">
                                     <span class="line-through">N</span>
-                                    {{ schedule.total_amount }}
-                                </div>
-                                <div class="text-sm leading-5 text-gray-600">
-                                    <span>Head Count: </span>
-                                    {{ schedule.head_count }}
+                                    {{ schedule.net_pay }}
                                 </div>
                             </td>
-
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                    :class="schedule.pensioner
-                                    ? 'bg-red-100 text-red-800'
-                                    : 'bg-green-100 text-green-800'">
-                                {{ schedule.pensioner ? 'PENSIONER' : 'STAFF' }}
-                              </span>
-                            </td>
-
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-
-                                <inertia-link :href="route('pay_schedules.index', { payroll: schedule.payroll_id, mda: schedule.mda_id })" class="px-5 py-3">
-                                    View Details
-                                </inertia-link>
+                                <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">View</a>
                             </td>
                         </tr>
 
                         <tr v-if="schedules.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                No Pay Schedule
-                            </td>
+                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Pay Schedule</td>
                         </tr>
                         </tbody>
                     </table>
@@ -102,7 +85,7 @@
     import throttle from 'lodash/throttle'
 
     export default {
-        metaInfo: { title: 'MDA Schedules' },
+        metaInfo: { title: 'Pay Schedules' },
         layout: Layout,
 
         props: {
@@ -123,15 +106,6 @@
                 // },
             }
         },
-
-        methods: {
-            generate(payroll){
-                let url = `/payroll_pay_schedule/${payroll}/store`;
-                axios.post(url)
-                    .then((response) => {
-                        console.log(response)
-                    })
-            },
-        }
     }
 </script>
+
