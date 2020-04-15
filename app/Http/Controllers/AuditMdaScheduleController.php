@@ -29,7 +29,7 @@ class AuditMdaScheduleController extends Controller
                                  'payroll_id' => $audit_payroll->id,
                                  'mda_id' => $schedule->mda_id,
                                  'mda_name' => $schedule->mda->name,
-                                 'total_amount' => number_format($schedule->total_net_amount, 2), // 12,000.00
+                                 'total_amount' => number_format($schedule->total_net_pay, 2), // 12,000.00
                                  'head_count' => number_format($schedule->head_count), //1,200
                                  'month' => $audit_payroll->month_name,
                                  'year' => $audit_payroll->year,
