@@ -1,6 +1,12 @@
 <template>
     <div>
-        <h1 class="mb-8 font-bold text-3xl">Audit MDA Schedules</h1>
+        <h1 class="mb-4 font-bold text-3xl">
+            <inertia-link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
+                Audit Payroll
+            </inertia-link>
+            <span class="text-indigo-500 font-medium">/</span> MDA Schedules
+        </h1>
+
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
@@ -74,7 +80,7 @@
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else href="#" class="px-5 py-3">
+                                <inertia-link v-else :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
                                     Upload
                                 </inertia-link>
 
