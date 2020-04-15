@@ -8,8 +8,11 @@ use App\AuditSubMdaSchedule;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
+use App\Exceptions\WrongScheduleException;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use function dd;
 use function collect;
+use function throw_if;
 
 class PayScheduleImport implements OnEachRow
 {
@@ -42,9 +45,8 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 2) {
-            $mda_department = Str::of($columns[0])->after('Department: ')->upper()->explode(', ');
-
-            $this->department = $mda_department->count() > 1 ? $mda_department[1] : $mda_department[0];
+//            $mda_department = Str::of($columns[0])->after('Department: ')->upper()->explode(', ');
+//            $this->department = $mda_department->count() > 1 ? $mda_department[1] : $mda_department[0];
             return null;
         }
 
@@ -52,6 +54,8 @@ class PayScheduleImport implements OnEachRow
             $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
+
+        throw_if($this->notMatching(), WrongScheduleException::class);
 
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
@@ -69,11 +73,22 @@ class PayScheduleImport implements OnEachRow
      */
     private function processRowOne(string $row_one)
     {
-        $mda_month_year = Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ');
+        $mda_dept_month_year = Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ');
 
-        $this->mda = $mda_month_year[0];
+        if($mda_dept_month_year->count() === 3){
+            $this->mda = $mda_dept_month_year[0];
+            $this->department = $mda_dept_month_year[0];
 
-        $month_year = Str::of($mda_month_year[1])->explode(' ');
+            $month_year = Str::of($mda_dept_month_year[1])->explode(' ');
+
+            $this->month = $month_year[0];
+            $this->year = $month_year[1];
+        }
+
+        $this->mda = $mda_dept_month_year[0];
+        $this->department = $mda_dept_month_year[1];
+
+        $month_year = Str::of($mda_dept_month_year[2])->explode(' ');
 
         $this->month = $month_year[0];
         $this->year = $month_year[1];
@@ -121,5 +136,12 @@ class PayScheduleImport implements OnEachRow
         ];
 
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
+    }
+
+    private function notMatching() : bool
+    {
+        return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
+            || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year())
+            || Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
     }
 }

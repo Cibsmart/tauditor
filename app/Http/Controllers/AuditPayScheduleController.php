@@ -8,6 +8,7 @@ use App\AuditSubMdaSchedule;
 use App\Imports\PayScheduleImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Exceptions\WrongScheduleException;
 use function back;
 
 class AuditPayScheduleController extends Controller
@@ -33,13 +34,7 @@ class AuditPayScheduleController extends Controller
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);
 
-        try {
-            $this->processPaySchedule($audit_sub_mda, $file_path);
-        } catch (\ErrorException $e) {
-            return back()->with('error', 'Attached File is not a valid Pay Schedule');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator');
-        }
+        $this->processPaySchedule($audit_sub_mda, $file_path);
 
         $this->auditPayScheduleUploaded($audit_sub_mda, $file_path);
 
@@ -48,7 +43,15 @@ class AuditPayScheduleController extends Controller
 
     private function processPaySchedule(AuditSubMdaSchedule $audit_sub_mda, $file_path)
     {
-        (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+        try {
+            (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+        } catch (WrongScheduleException $e) {
+            return back()->with('error', 'Check the Pay Schedule File, If it is for this Month and for the MDA');
+        } catch (\ErrorException $e) {
+            return back()->with('error', 'Attached File is not a valid Pay Schedule');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator');
+        }
     }
 
     public function auditPayScheduleUploaded(AuditSubMdaSchedule $schedule, $file_path)

@@ -32,6 +32,16 @@ class AuditSubMdaSchedule extends Model
         return $this->auditPaySchedules()->count();
     }
 
+    public function month()
+    {
+        return $this->auditMdaSchedule->auditPayroll->month_name;
+    }
+
+    public function year()
+    {
+        return $this->auditMdaSchedule->auditPayroll->year;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
