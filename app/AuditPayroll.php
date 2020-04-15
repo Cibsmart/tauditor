@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuditPayroll extends Model
 {
+    use SoftDeletes;
+
     protected $guarded = [];
 
     public function user()
@@ -19,10 +22,12 @@ class AuditPayroll extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function schedules()
+    public function auditMdaSchedules()
     {
-        return $this->hasMany(AuditPaySchedule::class);
+        return $this->hasMany(AuditMdaSchedule::class);
     }
+
+
 
     public function createdBy()
     {
