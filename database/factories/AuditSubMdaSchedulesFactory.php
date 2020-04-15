@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\AuditSubMdaSchedules;
+use App\AuditSubMdaSchedule;
 use Faker\Generator as Faker;
 
-$factory->define(AuditSubMdaSchedules::class, function (Faker $faker) {
+$factory->define(AuditSubMdaSchedule::class, function (Faker $faker) {
     return [
         //
     ];
