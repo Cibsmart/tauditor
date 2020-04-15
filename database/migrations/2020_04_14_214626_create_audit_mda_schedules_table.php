@@ -18,10 +18,10 @@ class CreateAuditMdaSchedulesTable extends Migration
             $table->unsignedBigInteger('audit_payroll_id');
             $table->unsignedBigInteger('mda_id');
             $table->string('mda_name');
-            $table->unsignedBigInteger('total_amount')->nullable();
+            $table->unsignedBigInteger('total_net_pay')->nullable();
             $table->unsignedInteger('head_count')->nullable();
             $table->boolean('uploaded')->default(0);
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->boolean('pension')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

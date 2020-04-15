@@ -56,7 +56,7 @@
                                     View Report
                                 </inertia-link>
 
-                                <inertia-link href="#" class="px-5 py-3">
+                                <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
                                     View Mdas
                                 </inertia-link>
                             </td>

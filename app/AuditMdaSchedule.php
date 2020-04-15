@@ -26,4 +26,9 @@ class AuditMdaSchedule extends Model
     {
         return $this->belongsTo(AuditPayroll::class);
     }
+
+    public function auditSubMdaSchedules()
+    {
+        return $this->hasMany(AuditSubMdaSchedules::class);
+    }
 }
