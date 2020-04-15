@@ -29,7 +29,7 @@ class MdaSeeder extends Seeder
                 $attributes = ['code' => $code, 'name' => $mda[$code], 'beneficiary_type_id' => $type_id];
 
                 //LGEA, LGSC, EXCO and SEC have Sub_MDAs, so we set the flag for those
-                $attributes = in_array($beneficiary_type_code, ['LGEA', 'LGSC']) || in_array($code, ['EXCO', 'SEC'])
+                $attributes = in_array($beneficiary_type_code, ['LGEA', 'LGSC']) || in_array($code, ['SEC'])
                     ? array_merge($attributes, ['has_sub' => 1])
                     : $attributes;
 
