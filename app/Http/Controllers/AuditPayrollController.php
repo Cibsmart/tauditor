@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mda;
 use App\User;
 use App\Payroll;
 use App\AuditPayroll;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use App\AuditMdaSchedule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 class AuditPayrollController extends Controller
 {
@@ -54,9 +57,11 @@ class AuditPayrollController extends Controller
 
         $attributes = array_merge($attributes, ['user_id' => $user->id]);
 
-        $payroll = $user->auditPayrolls()->create($attributes);
+        DB::transaction(function() use ($user, $attributes){
+            $payroll = $user->auditPayrolls()->create($attributes);
 
-        $this->createAuditMdaSchedules($payroll, $user);
+            $this->createAuditMdaSchedules($payroll, $user);
+        });
 
         return redirect()->route('audit_payroll.index')
                          ->with('success', "Payroll for $date->monthName $date->year Created Successfully");
@@ -67,14 +72,37 @@ class AuditPayrollController extends Controller
     {
         $beneficiary_types = $user->domain->beneficiaryTypes;
 
-        $beneficiary_types->each(function($beneficiary_type) use ($payroll){
+        foreach ($beneficiary_types as $beneficiary_type) {
             $mdas = $beneficiary_type->mdas;
-            $mdas->each(function($mda) use ($payroll){
-                $payroll->auditMdaSchedules()->create([
+            $pensioners = $beneficiary_type->pensioners;
+
+            foreach ($mdas as $mda) {
+                $attributes = [
                     'mda_id' => $mda->id,
                     'mda_name' => $mda->name,
-                ]);
-            });
-        });
+                    'pension' => $pensioners,
+                ];
+
+                $audit_mda_schedule = $payroll->auditMdaSchedules()->create($attributes);
+
+                $this->createAuditSubMdaSchedules($mda, $audit_mda_schedule);
+            }
+        }
+    }
+
+    public function createAuditSubMdaSchedules(Mda $mda, AuditMdaSchedule $audit_mda_schedule)
+    {
+        if(! $mda->has_sub){
+            $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
+            return;
+        }
+
+        $sub_mdas = $mda->subs;
+
+        foreach ($sub_mdas as $sub_mda) {
+            $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $sub_mda->name,]);
+        }
+
+        return;
     }
 }
