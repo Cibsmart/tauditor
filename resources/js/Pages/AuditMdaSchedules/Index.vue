@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-8 font-bold text-3xl">MDA Schedules</h1>
+        <h1 class="mb-8 font-bold text-3xl">Audit MDA Schedules</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
@@ -23,10 +23,10 @@
                                 Total Amount
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-
+                                Uploaded
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Actions
+
                             </th>
                         </tr>
                         </thead>
@@ -61,18 +61,23 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                               <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                    :class="schedule.pensioner
-                                    ? 'bg-red-100 text-red-800'
-                                    : 'bg-green-100 text-green-800'">
-                                {{ schedule.pensioner ? 'PENSIONER' : 'STAFF' }}
+                                    :class="schedule.uploaded
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'">
+                                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
                               </span>
                             </td>
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <inertia-link :href="route('pay_schedules.index', { payroll: schedule.payroll_id, mda: schedule.mda_id })" class="px-5 py-3">
+                                <inertia-link v-if="schedule.uploaded" href="#" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
+
+                                <inertia-link v-else href="#" class="px-5 py-3">
+                                    Upload
+                                </inertia-link>
+
                             </td>
                         </tr>
 
@@ -102,7 +107,7 @@
     import throttle from 'lodash/throttle'
 
     export default {
-        metaInfo: { title: 'MDA Schedules' },
+        metaInfo: { title: 'Audit MDA Schedules' },
         layout: Layout,
 
         props: {
