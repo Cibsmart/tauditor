@@ -1,5 +1,6 @@
 <?php
 
+use App\AuditMdaSchedule;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AllowancesController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\MdaSchedulesController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuditPayScheduleController;
+use App\Http\Controllers\AuditMdaScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -134,14 +136,25 @@ Route::middleware('auth')->group(function () {
 
 /*
 |-------------------------------------------------------------------------------
-| Audit Pay Runs Routes
+| Audit Payroll Routes
 |-------------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_payroll.')->group(function () {
         Route::get('audit_payroll', [AuditPayrollController::class, 'index'])->name('index');
-        Route::get('audit_payroll/create', [AuditPayrollController::class, 'create'])->name('create');
         Route::post('audit_payroll/store', [AuditPayrollController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit MDA Schedules Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_mda_schedules.')->group(function () {
+        Route::get('audit_mda_schedules/{audit_payroll}/index', [AuditMdaScheduleController::class, 'index'])->name('index');
     });
 });
 
