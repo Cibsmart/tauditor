@@ -29,6 +29,30 @@ class AuditMdaSchedule extends Model
 
     public function auditSubMdaSchedules()
     {
-        return $this->hasMany(AuditSubMdaSchedules::class);
+        return $this->hasMany(AuditSubMdaSchedule::class);
+    }
+
+    public function setTotalNetPayAttribute(float $value) : int
+    {
+        return $this->attributes['total_net_pay'] = $value * 100;
+    }
+
+    public function getTotalNetPayAttribute(?int $value = 0) : float
+    {
+        return $value / 100;
+    }
+
+    public function uploadeComplete()
+    {
+        return $this->auditSubMdaSchedules()->where('uploaded', 0)->doesntExist();
+    }
+
+    public function auditSubMdaScheduleWasUpdated()
+    {
+        $this->total_net_pay = $this->auditSubMdaSchedules()->sum('total_net_pay') / 100;
+        $this->head_count = $this->auditSubMdaSchedules()->sum('head_count');
+        $this->uploaded = $this->uploadeComplete();
+
+        $this->save();
     }
 }
