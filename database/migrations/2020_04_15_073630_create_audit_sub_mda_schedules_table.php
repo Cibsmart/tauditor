@@ -21,6 +21,7 @@ class CreateAuditSubMdaSchedulesTable extends Migration
             $table->unsignedBigInteger('total_net_pay')->nullable();
             $table->unsignedInteger('head_count')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('file_path')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
