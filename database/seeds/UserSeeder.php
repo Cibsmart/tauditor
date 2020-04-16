@@ -27,5 +27,17 @@ class UserSeeder extends Seeder
         ]);
 
         $user->assignRole('super_admin');
+
+        $user = factory(User::class)->create([
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'email' => 'jane@payroll.com',
+            'email_verified_at' => now(),
+            'password' => 'password',
+            'domain_id' => 2,
+            'remember_token' => Str::random(10),
+        ]);
+
+        $user->assignRole('super_admin');
     }
 }
