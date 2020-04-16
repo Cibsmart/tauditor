@@ -73,7 +73,9 @@ class PayScheduleImport implements OnEachRow
      */
     private function processRowOne(string $row_one)
     {
-        $mda_dept_month_year = Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ');
+        $mda_dept_month_year = Str::of($row_one)->contains('MDA/PARASTATAL')
+            ? Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ')
+            : Str::of($row_one)->after('LGA/PARASTATAL: ')->upper()->explode(', ');
 
         if($mda_dept_month_year->count() === 3){
             $this->mda = $mda_dept_month_year[0];
@@ -83,6 +85,8 @@ class PayScheduleImport implements OnEachRow
 
             $this->month = $month_year[0];
             $this->year = $month_year[1];
+
+            return;
         }
 
         $this->mda = $mda_dept_month_year[0];
