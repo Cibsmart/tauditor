@@ -22,6 +22,7 @@ class CreateAuditMdaSchedulesTable extends Migration
             $table->unsignedInteger('head_count')->nullable();
             $table->boolean('uploaded')->default(0);
             $table->boolean('pension')->default(0);
+            $table->boolean('has_sub')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

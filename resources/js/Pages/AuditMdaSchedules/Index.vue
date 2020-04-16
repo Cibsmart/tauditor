@@ -86,9 +86,17 @@
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
+                                <inertia-link v-else-if="schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
                                     Upload
                                 </inertia-link>
+
+                                <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
+                                    <div class="flex items-center">
+                                        <file-input v-model="schedule_form.schedule_file[schedule.id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
+                                        <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
+                                    </div>
+                                </form>
+
 
                             </td>
                         </tr>
@@ -110,6 +118,7 @@
 <script>
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
+    import FileInput from "@/Shared/FileInput";
     import Pagination from '@/Shared/Pagination'
     import SearchFilter from '@/Shared/SearchFilter'
 
@@ -129,6 +138,7 @@
 
         components: {
             Icon,
+            FileInput,
             Pagination,
             // SearchFilter,
         },
@@ -138,6 +148,10 @@
                 // form: {
                 //     search: this.filters.search,
                 // },
+
+                schedule_form: {
+                    schedule_file: [],
+                }
             }
         },
     }

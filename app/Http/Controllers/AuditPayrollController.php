@@ -100,6 +100,9 @@ class AuditPayrollController extends Controller
 
         $sub_mdas = $mda->subs;
 
+        $audit_mda_schedule->has_sub = 1;
+        $audit_mda_schedule->save();
+
         foreach ($sub_mdas as $sub_mda) {
             $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $sub_mda->name,]);
         }

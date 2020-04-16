@@ -15,6 +15,7 @@ class AuditMdaSchedule extends Model
 
     protected $casts = [
         'uploaded' => 'boolean',
+        'has_sub' => 'boolean',
     ];
 
     public function mda()
