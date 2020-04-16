@@ -9,7 +9,7 @@ class AuditMdaSchedule extends Model
 {
     use SoftDeletes;
 
-    protected $perPage = 30;
+    protected $perPage = 35;
 
     protected $guarded = [];
 
