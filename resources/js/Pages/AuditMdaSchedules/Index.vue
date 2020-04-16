@@ -41,7 +41,13 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">{{ schedule.mda_name }}</div>
+                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                            {{ schedule.mda_name }}
+                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full"
+                                                  :class="schedule.pension ? 'bg-pink-100 text-pink-800' : ''">
+                                            {{ schedule.pension ? 'Pension' : '' }}
+                                          </span>
+                                        </div>
                                         <div class="text-sm leading-5 text-gray-600">{{ schedule.domain }}</div>
                                     </div>
                                 </div>

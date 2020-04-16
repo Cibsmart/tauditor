@@ -34,6 +34,7 @@ class AuditMdaScheduleController extends Controller
                                  'month' => $audit_payroll->month_name,
                                  'year' => $audit_payroll->year,
                                  'uploaded' => $schedule->uploaded,
+                                 'pension' => $schedule->pension,
                                  'domain' => $schedule->auditPayroll->domain->name,
                              ]);
 
