@@ -1,7 +1,7 @@
 <template>
     <div>
         <label v-if="label" class="mb-2 block select-none text-gray-800">{{ label }}:</label>
-        <div class="p-0 leading-normal block w-full border text-gray-800 bg-white rounded text-left appearance-none relative focus:outline-none focus:border-indigo-500 focus:shadow" :class="{ error: errors.length }">
+        <div class="p-0 leading-normal block w-full border text-gray-800 bg-white rounded text-left appearance-none relative focus:outline-none focus:border-indigo-500 focus:shadow" :class="{ error: errors.length && value }">
             <input ref="file" type="file" :accept="accept" class="hidden" @change="change">
             <div v-if="!value" class="p-2">
                 <button type="button" class="px-4 py-1 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none" @click="browse">
@@ -19,7 +19,7 @@
                 </button>
             </div>
         </div>
-        <div v-if="errors.length" class="text-red-800 mt-2 text-sm">{{ errors[0]}} </div>
+        <div v-if="errors.length && value" class="text-red-800 mt-2 text-sm">{{ errors[0]}} </div>
     </div>
 </template>
 
