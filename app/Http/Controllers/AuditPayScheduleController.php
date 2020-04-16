@@ -65,15 +65,6 @@ class AuditPayScheduleController extends Controller
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);
 
-        $this->processPaySchedule($audit_sub_mda, $file_path);
-
-        $this->auditPayScheduleUploaded($audit_sub_mda, $file_path);
-
-        return redirect()->back()->with('success', 'Payment Schedule Successfully Uploaded');
-    }
-
-    private function processPaySchedule(AuditSubMdaSchedule $audit_sub_mda, $file_path)
-    {
         try {
             (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
         } catch (WrongScheduleException $e) {
@@ -83,6 +74,10 @@ class AuditPayScheduleController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Something Went Wrong! Please Contact Administrator');
         }
+
+        $this->auditPayScheduleUploaded($audit_sub_mda, $file_path);
+
+        return redirect()->back()->with('success', 'Payment Schedule Successfully Uploaded');
     }
 
     public function auditPayScheduleUploaded(AuditSubMdaSchedule $schedule, $file_path)
