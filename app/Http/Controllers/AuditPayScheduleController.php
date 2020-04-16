@@ -10,6 +10,7 @@ use App\AuditSubMdaSchedule;
 use App\Imports\PayScheduleImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
 use function back;
 use function number_format;
@@ -65,8 +66,14 @@ class AuditPayScheduleController extends Controller
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);
 
+        $pension = $audit_sub_mda->auditMdaSchedule->pension;
+
         try {
-            (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+            if($pension){
+                (new PensionPayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+            }else{
+                (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+            }
         } catch (WrongScheduleException $e) {
             return back()->with('error', 'Check the Pay Schedule File, If it is for this Month and for the MDA');
         } catch (\ErrorException $e) {

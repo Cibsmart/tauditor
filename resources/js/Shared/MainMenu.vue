@@ -78,9 +78,11 @@ export default{
           },
           setup: { id: 6, name: 'setup',  label: 'Setup', icon: 'store-front', active: false },
           reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false },
-          audit: { id: 8, name: 'audit',  label: 'Audit System', icon: 'brief-case', active: false,
+          audit: { id: 8, name: 'audit',  label: 'Audit', icon: 'brief-case', active: false,
               subs: {
-                  index: { id: 1, label: 'Audit Payroll', uri: this.uri('audit_payroll.index'), },
+                  payroll: { id: 1, label: 'Upload Schedule', uri: this.uri('audit_payroll.index'), },
+                  analysis: { id: 2, label: 'Analysis', uri: this.uri('audit_analysis.index'), },
+                  autopay: { id: 3, label: 'Autopay', uri: this.uri('audit_autopay.index'), },
               }
           },
       },

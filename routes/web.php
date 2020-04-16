@@ -184,6 +184,30 @@ Route::middleware('auth')->group(function () {
 });
 
 
+/*
+|-------------------------------------------------------------------------------
+| Audit Autopay Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_autopay.')->group(function () {
+        Route::get('audit_autopay', [AuditPayrollController::class, 'index'])->name('index');
+        Route::post('audit_autopay/store', [AuditPayrollController::class, 'store'])->name('store');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Analysis Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_analysis.')->group(function () {
+        Route::get('audit_analysis', [AuditPayrollController::class, 'index'])->name('index');
+        Route::post('audit_analysis/store', [AuditPayrollController::class, 'store'])->name('store');
+    });
+});
+
 
 
 /*

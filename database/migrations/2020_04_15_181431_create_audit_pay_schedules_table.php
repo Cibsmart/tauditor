@@ -18,11 +18,11 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->unsignedBigInteger('audit_sub_mda_schedule_id');
             $table->string('verification_number');
             $table->string('beneficiary_name');
-            $table->string('beneficiary_cadre');
+            $table->string('beneficiary_cadre')->nullable();
             $table->string('designation');
             $table->unsignedBigInteger('basic_pay');
             $table->string('bank_name');
-            $table->string('account_number');
+            $table->string('account_number')->nullable();
             $table->string('bank_code');
             $table->unsignedBigInteger('total_allowance');
             $table->unsignedBigInteger('total_deduction');
@@ -34,6 +34,7 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->string('department_name');
             $table->string('month');
             $table->string('year');
+            $table->string('pension')->default(0);
             $table->string('reference_number')->nullable();
             $table->timestamp('autopay_upload')->nullable();
             $table->boolean('paid')->default(0);

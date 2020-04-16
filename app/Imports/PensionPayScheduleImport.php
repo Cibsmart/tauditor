@@ -10,11 +10,11 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
 use Maatwebsite\Excel\Concerns\ToCollection;
-use function dd;
 use function collect;
 use function throw_if;
+use function array_combine;
 
-class PayScheduleImport implements OnEachRow
+class PensionPayScheduleImport implements OnEachRow
 {
     use Importable;
 
@@ -71,11 +71,8 @@ class PayScheduleImport implements OnEachRow
      */
     private function processRowOne(string $row_one)
     {
-        $mda_dept_month_year = Str::of($row_one)->contains('MDA/PARASTATAL')
-            ? Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ')
-            : Str::of($row_one)->after('LGA/PARASTATAL: ')->upper()->explode(', ');
+        $mda_dept_month_year = Str::of($row_one)->after('ZONE: ')->upper()->replace(' PENSION', '')->explode(', ');
 
-        if($mda_dept_month_year->count() === 3){
             $this->mda = $mda_dept_month_year[0];
             $this->department = $mda_dept_month_year[0];
 
@@ -85,17 +82,6 @@ class PayScheduleImport implements OnEachRow
             $this->year = $month_year[1];
 
             return;
-        }
-
-        $this->mda = $mda_dept_month_year[0];
-        $this->department = $mda_dept_month_year[1];
-
-        $month_year = Str::of($mda_dept_month_year[2])->explode(' ');
-
-        $this->month = $month_year[0];
-        $this->year = $month_year[1];
-
-        return;
     }
 
 
@@ -106,35 +92,25 @@ class PayScheduleImport implements OnEachRow
      */
     private function createAuditPaySchedule($beneficiary)
     {
-        $all = collect($beneficiary);
-        $part_a = $all->until(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
-
-        $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->until(fn ($item, $key) => $key == 'total_allowance')->filter();
-
-        $deductions = $other_part->diffKeys($allowances)
-                                 ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
-                                 ->filter();
-
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name' => $beneficiary['employee_name'],
-            'beneficiary_cadre' => $beneficiary['employee_grade'],
-            'designation' => $beneficiary['designation'],
-            'basic_pay' => $beneficiary['basic_salary'],
+            'designation' => 'PENSIONER',
+            'basic_pay' => $beneficiary['basic_pay'],
             'bank_name' => $beneficiary['bank_name'],
-            'account_number' => $beneficiary['account_no'],
+            'account_number' => $beneficiary['account_number'],
             'bank_code' => $beneficiary['bank_code'],
-            'total_allowance' => $beneficiary['total_allowance'],
-            'gross_pay' => $beneficiary['grosspay'],
-            'total_deduction' => $beneficiary['total_deduction'] + $beneficiary['total_dues'],
+            'total_allowance' => 0,
+            'gross_pay' => $beneficiary['basic_pay'],
+            'total_deduction' => $beneficiary['total_deduction'],
             'net_pay' => $beneficiary['net_pay'],
-            'allowances' => $allowances,
-            'deductions' => $deductions,
+            'allowances' => [],
+            'deductions' => [],
             'mda_name' => $this->mda,
             'department_name' => $this->department,
             'month' => $this->month,
             'year' => $this->year,
+            'pension' => 1
         ];
 
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
