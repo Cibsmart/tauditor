@@ -81,7 +81,7 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <inertia-link v-if="schedule.uploaded" href="#" class="px-5 py-3">
+                                <inertia-link v-if="schedule.uploaded" :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 

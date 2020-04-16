@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use Inertia\Inertia;
+use App\AuditPaySchedule;
 use Illuminate\Http\Request;
 use App\AuditSubMdaSchedule;
 use App\Imports\PayScheduleImport;
@@ -10,12 +12,41 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Exceptions\WrongScheduleException;
 use function back;
+use function number_format;
 
 class AuditPayScheduleController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    public function index(AuditSubMdaSchedule $audit_sub_mda_schedule)
+    {
+        $audit_mda_schedule = $audit_sub_mda_schedule->auditMdaSchedule;
+        $schedules = $audit_sub_mda_schedule->auditPaySchedules()
+                                        ->paginate()
+                                        ->transform(fn(AuditPaySchedule $schedule) => [
+                                            'id' => $schedule->id,
+                                            'verification_number' => $schedule->verification_number,
+                                            'beneficiary_name' => $schedule->beneficiary_name,
+                                            'bank_name' => $schedule->bank_name,
+                                            'account_number' => $schedule->account_number,
+                                            'cadre' => $schedule->beneficiary_cadre,
+                                            'designation' => $schedule->designation,
+                                            'net_pay' => number_format($schedule->net_pay, 2), // 12,000.00
+                                            'paid' => $schedule->paid,
+                                            'month' => $schedule->month,
+                                            'year' => $schedule->year,
+                                            'mda_name' => $schedule->mda_name,
+                                            'department_name' => $schedule->department_name,
+                                        ]);
+
+        return Inertia::render('AuditPaySchedules/Index', [
+            'schedules' => $schedules,
+            'audit_mda_schedule' => $audit_mda_schedule->id,
+            'audit_payroll' => $audit_mda_schedule->auditPayroll->id,
+        ]);
     }
 
     public function store(Request $request)
