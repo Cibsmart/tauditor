@@ -85,7 +85,6 @@
                                     View Details
                                 </inertia-link>
 
-
                                 <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
                                     <div class="flex items-center">
                                         <file-input v-model="schedule_form.schedule_file[schedule.id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />

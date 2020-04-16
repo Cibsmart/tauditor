@@ -82,7 +82,12 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <inertia-link v-if="schedule.uploaded" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
+<!--                                View Sub MDA Details for MDA with Sub MDAs-->
+                                <inertia-link v-if="schedule.uploaded && schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
+                                    View Details
+                                </inertia-link>
+
+                                <inertia-link v-else-if="schedule.uploaded" :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.sub_mda_id})" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 
@@ -90,9 +95,9 @@
                                     Upload
                                 </inertia-link>
 
-                                <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
+                                <form v-else @submit.prevent="upload(schedule.sub_mda_id)" :key="schedule.id">
                                     <div class="flex items-center">
-                                        <file-input v-model="schedule_form.schedule_file[schedule.id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
+                                        <file-input v-model="schedule_form.schedule_file[schedule.sub_mda_id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
                                         <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
                                     </div>
                                 </form>
@@ -154,5 +159,16 @@
                 }
             }
         },
+
+        methods: {
+            upload(audit_sub_mda){
+
+                var data = new FormData()
+                data.append('audit_sub_mda', audit_sub_mda || '')
+                data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '')
+
+                this.$inertia.post(this.route('audit_pay_schedules.store'), data)
+            },
+        }
     }
 </script>

@@ -26,6 +26,7 @@ class AuditMdaScheduleController extends Controller
                              ->paginate()
                              ->transform(fn(AuditMdaSchedule $schedule) => [
                                  'id' => $schedule->id,
+                                 'sub_mda_id' => $schedule->auditSubMdaSchedules()->first()->id,
                                  'payroll_id' => $audit_payroll->id,
                                  'mda_id' => $schedule->mda_id,
                                  'mda_name' => $schedule->mda->name,
