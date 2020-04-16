@@ -92,7 +92,8 @@ class AuditPayrollController extends Controller
 
     public function createAuditSubMdaSchedules(Mda $mda, AuditMdaSchedule $audit_mda_schedule)
     {
-        if(! $mda->has_sub){
+        //Only State Education Commission should have add subs
+        if($mda->code !== 'SEC'){
             $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
             return;
         }
