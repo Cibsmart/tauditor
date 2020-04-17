@@ -72,6 +72,11 @@ class Domain extends Model
         return $this->hasMany(MicroFinanceBank::class);
     }
 
+    public function payComms()
+    {
+        return $this->hasMany(PayComm::class);
+    }
+
     /**
      * Synchronize all Domain Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary

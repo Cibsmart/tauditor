@@ -16,14 +16,18 @@ class GenerateAutoPayScheduleAction
     protected $payment;
     protected $narration;
     protected $reference;
-    protected $paycomm_i;
-    protected $paycomm_ii;
     protected $reference_id = 1;
 
+    protected $pay_comm_i;
+    protected $pay_comm_ii;
 
-    protected const PAYCOMM_I = 120;
-    protected const PAYCOMM_II = 240;
-    protected  const INTERSWITCH_CHARGE = 20;
+    protected $pay_comm_i_ammount;
+    protected $pay_comm_ii_amount;
+
+    protected $pay_comm_i_charge;
+    protected $pay_comm_ii_charge;
+
+    protected const INTERSWITCH_CHARGE = 20;
 
     protected AuditSubMdaSchedule $sub_mda;
 
@@ -31,7 +35,7 @@ class GenerateAutoPayScheduleAction
     {
         $this->sub_mda = $sub_mda;
 
-        $this->domain = $this->sub_mda->auditMdaSchedule->auditPayroll->domain;
+        $this->initializePayComms();
 
         $this->generateAutoPayScheduleFor();
     }
@@ -55,12 +59,12 @@ class GenerateAutoPayScheduleAction
          */
         $commercial_users = $commercial_schedules->count();
 
-        $this->paycomm_ii = self::PAYCOMM_II * $commercial_users;
-        $this->paycomm_i = self::PAYCOMM_I * $commercial_users;
+        $this->pay_comm_i_ammount = $this->pay_comm_ii_charge * $commercial_users;
+        $this->pay_comm_ii_amount = $this->pay_comm_ii_charge * $commercial_users;
 
         foreach ($commercial_schedules as $schedule) {
 
-            $amount = $schedule->net_pay - self::PAYCOMM_II - self::PAYCOMM_I;
+            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
@@ -104,10 +108,10 @@ class GenerateAutoPayScheduleAction
             $mfb_users = $mfb->count();
             $sum_net_pay = $mfb->sum('net_pay');
 
-            $paycomm_ii = (self::PAYCOMM_II + self::INTERSWITCH_CHARGE) * $mfb_users - self::INTERSWITCH_CHARGE;
-            $paycomm_i = self::PAYCOMM_I * $mfb_users;
+            $paycomm_i = $this->pay_comm_i_charge * $mfb_users;
+            $paycomm_ii = ($this->pay_comm_ii_charge + self::INTERSWITCH_CHARGE) * $mfb_users - self::INTERSWITCH_CHARGE;
 
-            $amount = $sum_net_pay - $paycomm_ii - $paycomm_i;
+            $amount = $sum_net_pay - $paycomm_i - $paycomm_ii;
 
             $bank = $schedule->bankable;
 
@@ -129,8 +133,8 @@ class GenerateAutoPayScheduleAction
                 'currency' => 'NGN',
             ];
 
-            $this->paycomm_i = $this->paycomm_i + $paycomm_i;
-            $this->paycomm_ii = $this->paycomm_ii + $paycomm_ii;
+            $this->pay_comm_i_ammount = $this->pay_comm_i_ammount + $paycomm_i;
+            $this->pay_comm_ii_ammount = $this->pay_comm_ii_ammount + $paycomm_ii;
 
             $autopay_schedule = $this->sub_mda->autopaySchedules()->create($attributes);
 
@@ -148,14 +152,14 @@ class GenerateAutoPayScheduleAction
 
             $paycom_i = [
                 'payment_reference' => $this->getReferenceFor($this->reference_id),
-                'beneficiary_code' => '5030101784',
-                'beneficiary_name' => 'Paycomm I',
-                'account_number' => '5030101784',
+                'beneficiary_code' => $this->pay_comm_i->account_number,
+                'beneficiary_name' => $this->pay_comm_i->code,
+                'account_number' => $this->pay_comm_i->account_number,
                 'account_type' => 10,
-                'cbn_code' => '070',
+                'cbn_code' => $this->pay_comm_i->bankable->bankCode(),
                 'is_cash_card' => '0',
                 'narration' => $this->narration,
-                'amount' => $this->paycomm_i,
+                'amount' => $this->pay_comm_i_ammount,
                 'email' => ' ',
                 'currency' => 'NGN',
             ];
@@ -171,14 +175,14 @@ class GenerateAutoPayScheduleAction
 
             $paycom_ii = [
                 'payment_reference' => $this->getReferenceFor($this->reference_id),
-                'beneficiary_code' => '4010478742',
-                'beneficiary_name' => 'Paycomm II',
-                'account_number' => '4010478742',
+                'beneficiary_code' => $this->pay_comm_ii->account_number,
+                'beneficiary_name' => $this->pay_comm_ii->code,
+                'account_number' => $this->pay_comm_ii->account_number,
                 'account_type' => 10,
-                'cbn_code' => '070',
+                'cbn_code' => $this->pay_comm_ii->bankable->bankCode(),
                 'is_cash_card' => '0',
                 'narration' => $this->narration,
-                'amount' => $this->paycomm_ii,
+                'amount' => $this->pay_comm_ii_ammount,
                 'email' => ' ',
                 'currency' => 'NGN',
             ];
@@ -221,5 +225,18 @@ class GenerateAutoPayScheduleAction
     protected static function pad($string, $padding)
     {
         return is_int($string) ? str_pad($string, $padding, '0', STR_PAD_LEFT) : $string;
+    }
+
+    private function initializePayComms() : void
+    {
+        $this->domain = $this->sub_mda->auditMdaSchedule->auditPayroll->domain;
+
+        $pay_comms = $this->domain->payComms;
+
+        $this->pay_comm_i = $pay_comms->where('code', 'PayComm I')->first();
+        $this->pay_comm_ii = $pay_comms->where('code', 'PayComm II')->first();
+
+        $this->pay_comm_i_charge = $this->pay_comm_i->commission;
+        $this->pay_comm_ii_charge = $this->pay_comm_ii->commission;
     }
 }
