@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Mda;
 use App\User;
-use App\Payroll;
 use App\AuditPayroll;
 use Carbon\Carbon;
 use Inertia\Inertia;

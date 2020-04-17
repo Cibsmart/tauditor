@@ -9,14 +9,13 @@ use Faker\Generator as Faker;
 
 
 $factory->define(PayComm::class, function (Faker $faker) {
-    $bank = factory(Bank::class)->create();
     return [
         'code' => $faker->countryCode,
         'name' => $faker->country,
         'account_number' => $faker->bankAccountNumber,
         'commission' => $faker->numberBetween(50,200),
-        'bankable_type' => $bank->bankableType(),
-        'bankable_id' => $bank->id,
+        'bankable_type' => $faker->randomElement(['commercial', 'micro_finance']),
+        'bankable_id' => $faker->numberBetween(1,15),
         'domain_id' => factory(Domain::class),
     ];
 });

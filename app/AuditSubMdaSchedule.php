@@ -33,6 +33,11 @@ class AuditSubMdaSchedule extends Model
         return $this->hasMany(AutopaySchedule::class);
     }
 
+    public function microfinanceSchedules()
+    {
+        return $this->hasMany(MicrofinanceBankSchedule::class);
+    }
+
     public function totalNetPay()
     {
         return $this->auditPaySchedules()->sum('net_pay') / 100;

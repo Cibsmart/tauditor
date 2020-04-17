@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\PaySchedule;
 use Inertia\Inertia;
 use App\AuditPayroll;
 use App\AuditMdaSchedule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use function number_format;
 
 class AuditMdaScheduleController extends Controller

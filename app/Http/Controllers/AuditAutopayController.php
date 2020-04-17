@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditPayroll;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\GenerateAutoPayScheduleAction;
 
@@ -41,7 +42,11 @@ class AuditAutopayController extends Controller
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->autopayNotGenerated()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-                (new GenerateAutoPayScheduleAction())->execute($sub_mda);
+
+                DB::transaction(function () use ($sub_mda){
+                    (new GenerateAutoPayScheduleAction())->execute($sub_mda);
+                });
+
             }
         }
     }

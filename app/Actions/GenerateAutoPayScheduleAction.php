@@ -21,7 +21,7 @@ class GenerateAutoPayScheduleAction
     protected $pay_comm_i;
     protected $pay_comm_ii;
 
-    protected $pay_comm_i_ammount;
+    protected $pay_comm_i_amount;
     protected $pay_comm_ii_amount;
 
     protected $pay_comm_i_charge;
@@ -59,7 +59,7 @@ class GenerateAutoPayScheduleAction
          */
         $commercial_users = $commercial_schedules->count();
 
-        $this->pay_comm_i_ammount = $this->pay_comm_ii_charge * $commercial_users;
+        $this->pay_comm_i_amount = $this->pay_comm_i_charge * $commercial_users;
         $this->pay_comm_ii_amount = $this->pay_comm_ii_charge * $commercial_users;
 
         foreach ($commercial_schedules as $schedule) {
@@ -97,7 +97,36 @@ class GenerateAutoPayScheduleAction
          * Microfinance Bank Users
          * ___________________________________________________
          */
-        $total_microfinance_users = $microfinance_schedules->count();
+        foreach ($microfinance_schedules as $schedule) {
+
+            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
+
+            $this->reference = $this->getReferenceFor($schedule->id);
+
+            if(! $this->narration){
+                $this->narration = $this->createNarration($schedule->department_name);
+            }
+
+            $attributes = [
+                'micro_finance_bank_id' => $schedule->bankable_id,
+                'payment_reference' => $this->reference,
+                'beneficiary_code' => $schedule->account_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'account_number' => $schedule->account_number,
+                'account_type' => 10,
+                'cbn_code' => $schedule->bankable->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
+            ];
+
+            $autopay_schedule = $this->sub_mda->microfinanceSchedules()->create($attributes);
+            $schedule->autopay_schedule_id = $autopay_schedule->id;
+            $schedule->save();
+        }
+
 
         $mfbs = $microfinance_schedules->groupBy('bankable_id');
 
@@ -133,15 +162,10 @@ class GenerateAutoPayScheduleAction
                 'currency' => 'NGN',
             ];
 
-            $this->pay_comm_i_ammount = $this->pay_comm_i_ammount + $paycomm_i;
-            $this->pay_comm_ii_ammount = $this->pay_comm_ii_ammount + $paycomm_ii;
+            $this->pay_comm_i_amount = $this->pay_comm_i_amount + $paycomm_i;
+            $this->pay_comm_ii_amount = $this->pay_comm_ii_amount + $paycomm_ii;
 
-            $autopay_schedule = $this->sub_mda->autopaySchedules()->create($attributes);
-
-            foreach ($mfb as $schedule) {
-                $schedule->autopay_schedule_id = $autopay_schedule->id;
-                $schedule->save();
-            }
+            $this->sub_mda->autopaySchedules()->create($attributes);
         }
 
             /**
@@ -159,12 +183,12 @@ class GenerateAutoPayScheduleAction
                 'cbn_code' => $this->pay_comm_i->bankable->bankCode(),
                 'is_cash_card' => '0',
                 'narration' => $this->narration,
-                'amount' => $this->pay_comm_i_ammount,
+                'amount' => $this->pay_comm_i_amount,
                 'email' => ' ',
                 'currency' => 'NGN',
             ];
 
-            $autopay_schedule = $this->sub_mda->autopaySchedules()->create($paycom_i);
+            $this->sub_mda->autopaySchedules()->create($paycom_i);
 
 
             /**
@@ -182,11 +206,12 @@ class GenerateAutoPayScheduleAction
                 'cbn_code' => $this->pay_comm_ii->bankable->bankCode(),
                 'is_cash_card' => '0',
                 'narration' => $this->narration,
-                'amount' => $this->pay_comm_ii_ammount,
+                'amount' => $this->pay_comm_ii_amount,
                 'email' => ' ',
                 'currency' => 'NGN',
             ];
-            $autopay_schedule = $this->sub_mda->autopaySchedules()->create($paycom_ii);
+
+            $this->sub_mda->autopaySchedules()->create($paycom_ii);
 
         $this->sub_mda->autopay_generated = Carbon::now();
         $this->sub_mda->save();
@@ -202,7 +227,7 @@ class GenerateAutoPayScheduleAction
 
         $schedule_id = $this->pad($id, 8);
 
-        $random_numbers = $this->pad(random_int(1, 9999), 3);
+        $random_numbers = $this->pad(random_int(1, 999), 3);
 
         return $month->append('_')
                      ->append($year)
