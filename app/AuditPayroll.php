@@ -12,6 +12,11 @@ class AuditPayroll extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'analysed' => 'boolean',
+        'autopay_generated' => 'boolean',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -26,8 +31,6 @@ class AuditPayroll extends Model
     {
         return $this->hasMany(AuditMdaSchedule::class);
     }
-
-
 
     public function createdBy()
     {

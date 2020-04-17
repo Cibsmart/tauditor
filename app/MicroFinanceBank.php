@@ -22,4 +22,14 @@ class MicroFinanceBank extends Model
     {
         return $this->belongsTo(Bank::class);
     }
+
+    public function bankableType()
+    {
+        return 'micro_finance';
+    }
+
+    public function bankCode()
+    {
+        return $this->bank->code;
+    }
 }

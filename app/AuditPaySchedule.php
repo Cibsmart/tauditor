@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class AuditPaySchedule extends Model
 {
@@ -17,6 +18,12 @@ class AuditPaySchedule extends Model
         'allowances' => 'array',
         'deductions' => 'array',
     ];
+
+    //A polymorphic relationship to either Bank or Microfinance
+    public function bankable() : MorphTo
+    {
+        return $this->morphTo();
+    }
 
     public function auditSubMdaSchedule()
     {
@@ -82,7 +89,6 @@ class AuditPaySchedule extends Model
     {
         return $value / 100;
     }
-
 
     protected static function pad($string, $padding)
     {

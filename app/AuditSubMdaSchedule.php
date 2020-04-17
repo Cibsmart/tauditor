@@ -10,6 +10,12 @@ class AuditSubMdaSchedule extends Model
 
     protected $casts = [
         'uploaded' => 'boolean',
+
+    ];
+
+    protected $dates = [
+        'analysed',
+        'autopay_generated',
     ];
 
     public function auditMdaSchedule()
@@ -20,6 +26,11 @@ class AuditSubMdaSchedule extends Model
     public function auditPaySchedules()
     {
         return $this->hasMany(AuditPaySchedule::class);
+    }
+
+    public function autopaySchedules()
+    {
+        return $this->hasMany(AutopaySchedule::class);
     }
 
     public function totalNetPay()
@@ -50,5 +61,15 @@ class AuditSubMdaSchedule extends Model
     public function getTotalNetPayAttribute(?int $value = 0) : float
     {
         return $value / 100;
+    }
+
+    public function scopeUploaded($query)
+    {
+        return $query->where('uploaded', 1);
+    }
+
+    public function scopeAutopayNotGenerated($query)
+    {
+        return $query->where('autopay_generated', null);
     }
 }

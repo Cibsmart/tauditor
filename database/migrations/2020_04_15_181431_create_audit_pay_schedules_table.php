@@ -35,8 +35,9 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->string('month');
             $table->string('year');
             $table->string('pension')->default(0);
-            $table->string('reference_number')->nullable();
-            $table->timestamp('autopay_upload')->nullable();
+            $table->string('bankable_type')->nullable();
+            $table->unsignedBigInteger('bankable_id')->nullable();
+            $table->unsignedBigInteger('autopay_schedule_id')->nullable();
             $table->boolean('paid')->default(0);
             $table->timestamps();
             $table->softDeletes();

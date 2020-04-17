@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Bank;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
 use App\AuditSubMdaSchedule;
@@ -21,6 +22,7 @@ class PensionPayScheduleImport implements OnEachRow
     protected $mda;
     protected $month;
     protected $year;
+    protected $domain;
     protected $heading;
     protected $department;
 
@@ -92,6 +94,8 @@ class PensionPayScheduleImport implements OnEachRow
      */
     private function createAuditPaySchedule($beneficiary)
     {
+        $bankable = $this->getBankableType($beneficiary['bank_name']);
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name' => $beneficiary['employee_name'],
@@ -110,6 +114,8 @@ class PensionPayScheduleImport implements OnEachRow
             'department_name' => $this->department,
             'month' => $this->month,
             'year' => $this->year,
+            'bankable_type' => $bankable->bankableType(),
+            'bankable_id' => $bankable->id,
             'pension' => 1
         ];
 
@@ -121,5 +127,18 @@ class PensionPayScheduleImport implements OnEachRow
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
             || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year())
             || Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+    }
+
+    private function getBankableType($bank_name)
+    {
+        Str::of($bank_name)->upper()->trim();
+
+        $commercial = Bank::where('name', $bank_name)->first();
+
+        if($commercial){
+            return $commercial;
+        }
+
+        return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
     }
 }

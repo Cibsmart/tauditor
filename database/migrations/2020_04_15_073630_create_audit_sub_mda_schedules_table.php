@@ -18,6 +18,8 @@ class CreateAuditSubMdaSchedulesTable extends Migration
             $table->unsignedBigInteger('audit_mda_schedule_id');
             $table->string('sub_mda_name');
             $table->boolean('uploaded')->default(0);
+            $table->timestamp('analysed')->nullable();
+            $table->timestamp('autopay_generated')->nullable();
             $table->unsignedBigInteger('total_net_pay')->nullable();
             $table->unsignedInteger('head_count')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();

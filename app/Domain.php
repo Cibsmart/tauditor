@@ -67,6 +67,11 @@ class Domain extends Model
         return $this->hasMany(AuditPayroll::class);
     }
 
+    public function microFinanceBanks()
+    {
+        return $this->hasMany(MicroFinanceBank::class);
+    }
+
     /**
      * Synchronize all Domain Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary

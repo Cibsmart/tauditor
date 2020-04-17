@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Bank;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
 use App\AuditSubMdaSchedule;
@@ -13,6 +14,7 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use function dd;
 use function collect;
 use function throw_if;
+use function get_class;
 
 class PayScheduleImport implements OnEachRow
 {
@@ -21,6 +23,7 @@ class PayScheduleImport implements OnEachRow
     protected $mda;
     protected $month;
     protected $year;
+    protected $domain;
     protected $heading;
     protected $department;
 
@@ -40,11 +43,16 @@ class PayScheduleImport implements OnEachRow
         $columns = $row->toArray();
 
         if ($row_number === 1) {
+
             $this->processRowOne($columns[0]);
             return null;
         }
 
+        throw_if($this->notMatching(), WrongScheduleException::class);
+
         if ($row_number === 2) {
+            //set domain
+            $this->domain = $this->audit_sub_mda_schedule->auditMdaSchedule->auditPayroll->domain;
             return null;
         }
 
@@ -53,7 +61,6 @@ class PayScheduleImport implements OnEachRow
             return null;
         }
 
-        throw_if($this->notMatching(), WrongScheduleException::class);
 
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
@@ -116,6 +123,8 @@ class PayScheduleImport implements OnEachRow
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
                                  ->filter();
 
+        $bankable = $this->getBankableType($beneficiary['bank_name']);
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name' => $beneficiary['employee_name'],
@@ -135,6 +144,8 @@ class PayScheduleImport implements OnEachRow
             'department_name' => $this->department,
             'month' => $this->month,
             'year' => $this->year,
+            'bankable_type' => $bankable->bankableType(),
+            'bankable_id' => $bankable->id,
         ];
 
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
@@ -145,5 +156,18 @@ class PayScheduleImport implements OnEachRow
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
             || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year())
             || Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+    }
+
+    private function getBankableType($bank_name)
+    {
+        Str::of($bank_name)->upper()->trim();
+
+        $commercial = Bank::where('name', $bank_name)->first();
+
+        if($commercial){
+            return $commercial;
+        }
+
+        return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
     }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayScheduleController;
 use App\Http\Controllers\MdaSchedulesController;
 use App\Http\Controllers\AuditPayrollController;
+use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
@@ -89,7 +90,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('deductibles.')->group(function () {
-        Route::get('deductibles/{deduction}/create/', [DeductiblesController::class, 'create'])->name('create');
+        Route::get('deductibles/{deduction}/create', [DeductiblesController::class, 'create'])->name('create');
         Route::post('deductibles/store', [DeductiblesController::class, 'store'])->name('store');
     });
 });
@@ -191,8 +192,8 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
-        Route::get('audit_autopay', [AuditPayrollController::class, 'index'])->name('index');
-        Route::post('audit_autopay/store', [AuditPayrollController::class, 'store'])->name('store');
+        Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
+        Route::post('audit_autopay/{audit_payroll}/generated', [AuditAutopayController::class, 'generate'])->name('generate');
     });
 });
 

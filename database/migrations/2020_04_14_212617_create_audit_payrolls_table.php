@@ -18,7 +18,8 @@ class CreateAuditPayrollsTable extends Migration
             $table->unsignedSmallInteger('month');
             $table->string('month_name', 20);
             $table->unsignedBigInteger('year');
-            $table->boolean('analyzed')->default(0);
+            $table->boolean('analysed')->default(0);
+            $table->boolean('autopay_generated')->default(0);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('domain_id');
             $table->timestamps();
