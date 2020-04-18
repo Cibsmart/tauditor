@@ -194,7 +194,7 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
         Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
         Route::post('audit_autopay/{audit_payroll}/generate', [AuditAutopayController::class, 'generate'])->name('generate');
-        Route::post('audit_autopay/{audit_payroll}/download', [AuditAutopayController::class, 'download'])->name('download');
+        Route::get('audit_autopay/{audit_payroll}/download', [AuditAutopayController::class, 'download'])->name('download');
     });
 });
 
