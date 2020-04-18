@@ -61,15 +61,19 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <inertia-link v-if="payroll.autopay_generated" href="#" class="px-5 py-3">
+                                <inertia-link href="#" class="px-5 py-3">
                                     Download
                                 </inertia-link>
 
-                                <inertia-link v-if="payroll.autopay_generated" :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
+                                <span> | </span>
+
+                                <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
                                     View Mdas
                                 </inertia-link>
 
-                                <inertia-link v-else :href="route('audit_autopay.generate', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
+                                <span> | </span>
+
+                                <inertia-link :href="route('audit_autopay.generate', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
                                     Generate
                                 </inertia-link>
                             </td>

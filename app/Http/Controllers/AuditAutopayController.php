@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\GenerateAutoPayScheduleAction;
+use function back;
 
 class AuditAutopayController extends Controller
 {
@@ -37,17 +38,22 @@ class AuditAutopayController extends Controller
     public function generate(AuditPayroll $audit_payroll)
     {
         $mdas = $audit_payroll->auditMdaSchedules;
+        $message = 'Autopay Schedules Generated for ';
+        $count = 0;
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->autopayNotGenerated()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-
                 DB::transaction(function () use ($sub_mda){
                     (new GenerateAutoPayScheduleAction())->execute($sub_mda);
                 });
-
+                $count++;
             }
         }
+
+        $message = "$message $count MDAs, View MDAs for Details";
+
+        return back()->with('success', $message);
     }
 }
