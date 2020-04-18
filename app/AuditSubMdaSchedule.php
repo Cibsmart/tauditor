@@ -77,4 +77,9 @@ class AuditSubMdaSchedule extends Model
     {
         return $query->where('autopay_generated', null);
     }
+
+    public function scopeAutopayGenerated($query)
+    {
+        return $query->whereNotNull('autopay_generated');
+    }
 }
