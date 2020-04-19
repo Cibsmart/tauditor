@@ -101,6 +101,12 @@ class AuditAutopayController extends Controller
 
                 $path = "$directory/$file_name";
 
+                $autopay_file_exists = Storage::disk('local')->exists($path);
+
+                if($autopay_file_exists){
+                    continue;
+                }
+
                 (new AutoPayScheduleExport)->forSubMda($sub_mda)->store($path);
             }
         }

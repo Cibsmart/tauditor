@@ -48,6 +48,9 @@ class PayScheduleImport implements OnEachRow
             return null;
         }
 
+//        dd(Str::upper($this->month), Str::upper($this->audit_sub_mda_schedule->month()),
+//         Str::upper($this->year),  Str::upper($this->audit_sub_mda_schedule->year()),
+//         Str::upper($this->department), Str::upper($this->audit_sub_mda_schedule->sub_mda_name));
         throw_if($this->notMatching(), WrongScheduleException::class);
 
         if ($row_number === 2) {

@@ -25,8 +25,8 @@ class CreatePaySchedulesTable extends Migration
             $table->unsignedBigInteger('gross_pay');
             $table->unsignedBigInteger('total_allowance')->default(0);
             $table->unsignedBigInteger('total_deduction');
-            $table->text('allowances');
-            $table->text('deductions');
+            $table->json('allowances');
+            $table->json('deductions');
 
             $table->string('mda_name');
             $table->string('sub_mda_name')->nullable();

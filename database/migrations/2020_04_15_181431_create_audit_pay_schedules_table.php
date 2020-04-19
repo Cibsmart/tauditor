@@ -26,10 +26,10 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->string('bank_code');
             $table->unsignedBigInteger('total_allowance');
             $table->unsignedBigInteger('total_deduction');
-            $table->string('gross_pay');
-            $table->string('net_pay');
-            $table->string('allowances');
-            $table->string('deductions');
+            $table->unsignedBigInteger('gross_pay');
+            $table->unsignedBigInteger('net_pay');
+            $table->json('allowances');
+            $table->json('deductions');
             $table->string('mda_name');
             $table->string('department_name');
             $table->string('month');

@@ -27,6 +27,9 @@
                                 Autopay Status
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                Download Schedules
+                            </th>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 Actions
                             </th>
                         </tr>
@@ -58,23 +61,29 @@
                                 {{ payroll.autopay_generated ? 'Generated' : 'Pending' }}
                               </span>
                             </td>
-
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
                                 <a :href="route('audit_autopay.download', { audit_payroll: payroll.id })" class="px-5 py-3">
-                                    Download
+                                    Autopay
                                 </a>
+
+                                <span> | </span>
+
+                                <a :href="route('audit_autopay.download', { audit_payroll: payroll.id })" class="px-5 py-3">
+                                    MFB
+                                </a>
+                            </td>
+
+                            <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+
+                                <inertia-link :href="route('audit_autopay.generate', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
+                                    Generate Schedules
+                                </inertia-link>
 
                                 <span> | </span>
 
                                 <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
                                     View Mdas
-                                </inertia-link>
-
-                                <span> | </span>
-
-                                <inertia-link :href="route('audit_autopay.generate', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
-                                    Generate
                                 </inertia-link>
                             </td>
                         </tr>
