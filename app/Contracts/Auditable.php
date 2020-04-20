@@ -9,6 +9,4 @@ use App\AuditPaySchedule;
 interface Auditable
 {
     public function check(AuditPaySchedule $schedule);
-
-    public function report();
 }
