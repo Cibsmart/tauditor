@@ -19,6 +19,10 @@ class AuditPaySchedule extends Model
         'deductions' => 'array',
     ];
 
+    protected $dates = [
+        'month',
+    ];
+
     //A polymorphic relationship to either Bank or Microfinance
     public function bankable() : MorphTo
     {
@@ -28,6 +32,11 @@ class AuditPaySchedule extends Model
     public function auditSubMdaSchedule()
     {
         return $this->belongsTo(AuditSubMdaSchedule::class);
+    }
+
+    public function domain()
+    {
+        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayroll->domain;
     }
 
     public function setAccountNumberAttribute($value)

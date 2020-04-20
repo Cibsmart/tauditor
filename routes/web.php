@@ -15,6 +15,7 @@ use App\Http\Controllers\MdaSchedulesController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AuditAnalysisController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
@@ -205,8 +206,8 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
-        Route::get('audit_analysis', [AuditPayrollController::class, 'index'])->name('index');
-        Route::post('audit_analysis/store', [AuditPayrollController::class, 'store'])->name('store');
+        Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
+        Route::post('audit_analysis/{audit_payroll}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
     });
 });
 

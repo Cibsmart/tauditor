@@ -58,6 +58,11 @@ class AuditSubMdaSchedule extends Model
         return $this->auditMdaSchedule->auditPayroll->year;
     }
 
+    public function domain()
+    {
+        return $this->auditMdaSchedule->auditPayroll->domain;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
@@ -81,5 +86,15 @@ class AuditSubMdaSchedule extends Model
     public function scopeAutopayGenerated($query)
     {
         return $query->whereNotNull('autopay_generated');
+    }
+
+    public function scopeNotAnalysed($query)
+    {
+        return $query->where('analysed', null);
+    }
+
+    public function scopeAnalysed($query)
+    {
+        return $query->whereNotNull('analysed');
     }
 }

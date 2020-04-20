@@ -30,10 +30,7 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->unsignedBigInteger('net_pay');
             $table->json('allowances');
             $table->json('deductions');
-            $table->string('mda_name');
-            $table->string('department_name');
-            $table->string('month');
-            $table->string('year');
+            $table->dateTime('month');
             $table->string('pension')->default(0);
             $table->string('bankable_type')->nullable();
             $table->unsignedBigInteger('bankable_id')->nullable();

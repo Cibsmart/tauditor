@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Bank;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
@@ -50,7 +51,7 @@ class PayScheduleImport implements OnEachRow
 
         if ($row_number === 2) {
             //set domain
-            $this->domain = $this->audit_sub_mda_schedule->auditMdaSchedule->auditPayroll->domain;
+            $this->domain = $this->audit_sub_mda_schedule->domain();
             return null;
         }
 
@@ -122,6 +123,8 @@ class PayScheduleImport implements OnEachRow
 
         $bankable = $this->getBankableType($beneficiary['bank_name']);
 
+        $month = Carbon::parse("25 $this->month $this->year");
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name' => $beneficiary['employee_name'],
@@ -137,10 +140,7 @@ class PayScheduleImport implements OnEachRow
             'net_pay' => $beneficiary['net_pay'],
             'allowances' => $allowances,
             'deductions' => $deductions,
-            'mda_name' => $this->mda,
-            'department_name' => $this->department,
-            'month' => $this->month,
-            'year' => $this->year,
+            'month' => $month,
             'bankable_type' => $bankable->bankableType(),
             'bankable_id' => $bankable->id,
         ];

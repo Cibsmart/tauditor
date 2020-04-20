@@ -47,17 +47,6 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-
-                                <inertia-link href="#" class="px-5 py-3">
-                                    Analyze
-                                </inertia-link>
-                                <span v-if="payroll.generated && ! payroll.archived"> | </span>
-
-                                <inertia-link href="#" class="px-5 py-3">
-                                    View Report
-                                </inertia-link>
-                                <span v-if="payroll.generated && ! payroll.archived"> | </span>
-
                                 <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
                                     View Mdas
                                 </inertia-link>

@@ -3,8 +3,10 @@
 namespace App\Imports;
 
 use App\Bank;
+use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\AuditSubMdaSchedule;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -47,6 +49,7 @@ class PensionPayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 2) {
+            $this->domain = $this->audit_sub_mda_schedule->domain();
             return null;
         }
 
@@ -96,6 +99,8 @@ class PensionPayScheduleImport implements OnEachRow
     {
         $bankable = $this->getBankableType($beneficiary['bank_name']);
 
+        $month = Carbon::parse("25 $this->month $this->year");
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name' => $beneficiary['employee_name'],
@@ -110,10 +115,7 @@ class PensionPayScheduleImport implements OnEachRow
             'net_pay' => $beneficiary['net_pay'],
             'allowances' => [],
             'deductions' => [],
-            'mda_name' => $this->mda,
-            'department_name' => $this->department,
-            'month' => $this->month,
-            'year' => $this->year,
+            'month' => $month,
             'bankable_type' => $bankable->bankableType(),
             'bankable_id' => $bankable->id,
             'pension' => 1
@@ -135,10 +137,25 @@ class PensionPayScheduleImport implements OnEachRow
 
         $commercial = Bank::where('name', $bank_name)->first();
 
-        if($commercial){
+        if ($commercial) {
             return $commercial;
         }
 
+        $bank_name = $this->checkMfbExists($bank_name);
+
         return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
+    }
+
+    private function checkMfbExists($bank_name)
+    {
+        $exceptions = [
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
+        ];
+
+        $exists = Arr::exists($exceptions, $bank_name);
+
+        return $exists ? $exceptions[$bank_name] : $bank_name;
     }
 }
