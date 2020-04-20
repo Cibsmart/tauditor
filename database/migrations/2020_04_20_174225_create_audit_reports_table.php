@@ -15,6 +15,10 @@ class CreateAuditReportsTable extends Migration
     {
         Schema::create('audit_reports', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('audit_payroll_id');
+            $table->morphs('reportable');
+            $table->string('category');
+            $table->text('content');
             $table->timestamps();
         });
     }
