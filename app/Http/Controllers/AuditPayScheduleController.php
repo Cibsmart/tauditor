@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
-use function back;
-use function number_format;
 
 class AuditPayScheduleController extends Controller
 {

@@ -5,16 +5,11 @@ namespace App\Imports;
 use App\Bank;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use App\AuditSubMdaSchedule;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use Maatwebsite\Excel\Concerns\ToCollection;
-use function dd;
-use function collect;
-use function throw_if;
-use function get_class;
 
 class PayScheduleImport implements OnEachRow
 {
@@ -60,7 +55,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -85,7 +80,7 @@ class PayScheduleImport implements OnEachRow
             ? Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ')
             : Str::of($row_one)->after('LGA/PARASTATAL: ')->upper()->explode(', ');
 
-        if($mda_dept_month_year->count() === 3){
+        if ($mda_dept_month_year->count() === 3) {
             $this->mda = $mda_dept_month_year[0];
             $this->department = $mda_dept_month_year[0];
 
@@ -108,7 +103,6 @@ class PayScheduleImport implements OnEachRow
         return;
     }
 
-
     /**
      * Extract Beneficiary's Info, Allowances, Deductions and Save in Audit Pay Schedule Table
      * @param $beneficiary
@@ -117,10 +111,10 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->until(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->until(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->until(fn ($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->until(fn($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
@@ -167,10 +161,25 @@ class PayScheduleImport implements OnEachRow
 
         $commercial = Bank::where('name', $bank_name)->first();
 
-        if($commercial){
+        if ($commercial) {
             return $commercial;
         }
 
+        $bank_name = $this->checkMfbExists($bank_name);
+
         return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
+    }
+
+    private function checkMfbExists($bank_name)
+    {
+        $exceptions = [
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
+        ];
+
+        $exists = Arr::exists($exceptions, $bank_name);
+
+        return $exists ? $exceptions[$bank_name] : $bank_name;
     }
 }

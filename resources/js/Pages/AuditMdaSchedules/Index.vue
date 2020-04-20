@@ -91,7 +91,7 @@
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else-if="schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
+                                <inertia-link v-else-if="schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3" >
                                     Upload
                                 </inertia-link>
 
@@ -167,7 +167,9 @@
                 data.append('audit_sub_mda', audit_sub_mda || '')
                 data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '')
 
-                this.$inertia.post(this.route('audit_pay_schedules.store'), data)
+                this.$inertia.post(this.route('audit_pay_schedules.store'), data, {
+                    preserveScroll: true,
+                })
             },
         }
     }

@@ -34,6 +34,7 @@ class BankSeeder extends Seeder
             '215' => 'UNITY BANK PLC',
             '035' => 'WEMA BANK PLC',
             '057' => 'ZENITH BANK PLC',
+            '319' => 'MAYFRESH SAVINGS AND LOAN'
         ];
 
         foreach ($banks as $key => $value) {

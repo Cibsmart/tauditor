@@ -9,16 +9,9 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Facades\Excel;
-use Illuminate\Support\Facades\File;
 use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
-use function back;
-use function response;
-use function array_push;
-use function public_path;
-use function storage_path;
 
 class AuditAutopayController extends Controller
 {
