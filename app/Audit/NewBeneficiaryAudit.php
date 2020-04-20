@@ -4,40 +4,76 @@
 namespace App\Audit;
 
 
-use Carbon\Carbon;
 use App\AuditPaySchedule;
+use App\Classes\AuditCheckable;
+use Illuminate\Support\Str;
 use App\Contracts\Auditable;
 
-class NewBeneficiaryAudit implements Auditable
+class NewBeneficiaryAudit extends AuditCheckable implements Auditable
 {
-
-    protected $month;
-    protected $domain;
+    private $schedule;
+    private $previous_schedules;
 
     public function check(AuditPaySchedule $schedule)
     {
-        $this->month = $schedule->month;
+        $this->schedule = $schedule;
 
-        $this->domain = $schedule->domain();
+        $this->month = $this->schedule->month;
 
-        $previous_schedule = $this->hasPreviousSchedule($schedule);
+        $this->payroll = $this->schedule->auditPayroll();
 
-        if($previous_schedule->isEmpty()){
-            $this->report();
+        if($this->hasNoPreviousSchedule()){
+            $this->report(self::NEW_BENEFICIARY, 'NEW BENEFICIARY');
+            return;
         }
 
-        dd($previous_schedule);
+        if($this->wasPaidLastMonth()){
+            return;
+        }
+
+        $content = $this->getRestoredContent();
+
+        $this->report(self::RESTORED_BENEFICIARY, $content);
+
+        return;
     }
 
-    public function report()
+    private function hasNoPreviousSchedule()
     {
-
+        $this->previous_schedules = AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
+                                                    ->where('month', '<', $this->month)
+                                                    ->get();
+        return $this->previous_schedules->isEmpty();
     }
 
-    private function hasPreviousSchedule(AuditPaySchedule $schedule)
+    private function wasPaidLastMonth()
     {
-        return AuditPaySchedule::where('verification_number', $schedule->verification_number)
-                               ->where('month', '<', $this->month)
-                               ->get();
+        $last_month_schedule = AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
+                                               ->where('month', '=', $this->month->subMonth())
+                                                ->get();
+        return $last_month_schedule->isNotEmpty();
+    }
+
+    private function report($category, $content)
+    {
+        $this->item($this->schedule)
+             ->isInCategory($category)
+             ->setContent($content)
+             ->thenReport();
+    }
+
+    private function getRestoredContent()
+    {
+        $last_schedule = $this->previous_schedules->sortByDesc('month')->first();
+
+        $this_month_timestamp = $this->schedule->month;
+        $last_month_timestamp = $this->schedule->month->subMonth();
+        $last_payment_timestamp = $last_schedule->month;
+
+        $last_month = "$last_month_timestamp->monthName $last_month_timestamp->year";
+        $this_month = "$this_month_timestamp->monthName $this_month_timestamp->year";
+        $last_payment = "$last_payment_timestamp->monthName $last_payment_timestamp->year";
+
+        return Str::upper("NOT PAID IN $last_month and LAST PAYMENT WAS IN $last_payment. THEN APPEARED IN $this_month PAYMENT SCHEDULE");
     }
 }
