@@ -2,13 +2,14 @@
 
 namespace App;
 
+use App\Traits\CanBeReported;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class AuditPaySchedule extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CanBeReported;
 
     protected $guarded = [];
 
@@ -32,6 +33,11 @@ class AuditPaySchedule extends Model
     public function auditSubMdaSchedule()
     {
         return $this->belongsTo(AuditSubMdaSchedule::class);
+    }
+
+    public function auditPayroll()
+    {
+        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayroll;
     }
 
     public function domain()

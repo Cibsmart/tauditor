@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Traits\CanBeReported;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditSubMdaSchedule extends Model
 {
+    use CanBeReported;
+
     protected $guarded = [];
 
     protected $casts = [
