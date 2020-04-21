@@ -17,13 +17,18 @@ abstract class AuditCheckable
     protected string $category = '';
     protected string $content = '';
 
+    protected $this_month;
+    protected $last_payment;
+
     protected $schedule;
+    protected $last_schedule;
     protected $previous_schedules;
 
-    protected const NEW_BENEFICIARY = 'new';
-    protected const RESTORED_BENEFICIARY = 'restored';
-    protected const ACCOUNT_NUMBER_CHANGED = 'account_number_changed';
-    protected const BANK_CHANGED = 'bank_changed';
+    protected const NEW_BENEFICIARY = 'new_beneficiary';
+    protected const BANK_CHANGED = 'changed_bank';
+    protected const RESTORED_BENEFICIARY = 'restored_beneficiary';
+    protected const BASIC_PAY_CHANGED = 'changed_basic_pay';
+    protected const ACCOUNT_NUMBER_CHANGED = 'changed_account_number';
 
     protected function initialize(AuditPaySchedule $schedule)
     {
@@ -34,6 +39,14 @@ abstract class AuditCheckable
         $this->payroll = $this->schedule->auditPayroll();
 
         $this->previous_schedules = $this->previousSchedules();
+
+        $this->last_schedule = $this->previous_schedules->first();
+
+        $this->this_month = $this->getMonthYear($this->schedule->month);
+
+        if($this->last_schedule) {
+            $this->last_payment = $this->getMonthYear($this->last_schedule->month);
+        }
     }
 
     protected function report($category, $content)

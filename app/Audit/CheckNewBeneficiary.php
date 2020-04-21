@@ -25,13 +25,12 @@ class CheckNewBeneficiary extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = $this->getRestoredContent();
+        $content = $this->getContentForRestoredBeneficiary();
 
         $this->report(self::RESTORED_BENEFICIARY, $content);
 
         return;
     }
-
 
     private function wasPaidLastMonth()
     {
@@ -40,14 +39,10 @@ class CheckNewBeneficiary extends AuditCheckable implements Auditable
         return ! is_null($last_month_schedule);
     }
 
-    private function getRestoredContent()
+    private function getContentForRestoredBeneficiary()
     {
-        $last_schedule = $this->previous_schedules->first();
-
-        $this_month = $this->getMonthYear($this->schedule->month);
         $last_month = $this->getMonthYear($this->schedule->month->subMonth());
-        $last_payment = $this->getMonthYear($last_schedule->month);
 
-        return "NOT PAID IN $last_month and LAST PAYMENT WAS IN $last_payment. THEN APPEARED IN $this_month PAYMENT SCHEDULE";
+        return "NOT PAID IN $last_month and LAST PAYMENT WAS IN $this->last_payment. THEN APPEARED IN $this->this_month PAYMENT SCHEDULE";
     }
 }

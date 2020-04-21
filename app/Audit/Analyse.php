@@ -12,6 +12,7 @@ class Analyse
     protected $checks = [
         CheckNewBeneficiary::class,
         CheckAccountNumber::class,
+        CheckBankName::class,
     ];
 
     public function check(AuditPaySchedule $schedule)
