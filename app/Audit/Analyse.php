@@ -16,6 +16,8 @@ class Analyse
         CheckBasicPay::class,
         CheckGrossPay::class,
         CheckNetPay::class,
+        CheckTotalAllowance::class,
+        CheckTotalDeduction::class,
     ];
 
     public function check(AuditPaySchedule $schedule)

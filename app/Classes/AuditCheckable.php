@@ -31,6 +31,8 @@ abstract class AuditCheckable
     protected const GROSS_PAY_CHANGED = 'changed_gross_pay';
     protected const RESTORED_BENEFICIARY = 'restored_beneficiary';
     protected const ACCOUNT_NUMBER_CHANGED = 'changed_account_number';
+    protected const TOTAL_ALLOWANCE_CHANGED = 'changed_total_allowance';
+    protected const TOTAL_DEDUCTION_CHANGED = 'changed_total_deduction';
 
     protected function initialize(AuditPaySchedule $schedule)
     {
