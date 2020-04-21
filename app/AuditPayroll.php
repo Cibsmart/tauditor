@@ -46,4 +46,11 @@ class AuditPayroll extends Model
     {
         return $this->created_at->timezone('Africa/Lagos')->diffForHumans();
     }
+
+    public function noAutopaySchedule()
+    {
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function($query){
+            return $query->whereNotNull('autopay_generated');
+        })->doesntExist();
+    }
 }

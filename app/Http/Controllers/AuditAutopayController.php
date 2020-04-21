@@ -51,6 +51,8 @@ class AuditAutopayController extends Controller
                 DB::transaction(function () use ($sub_mda){
                     (new GenerateAutoPayScheduleAction())->execute($sub_mda);
                 });
+
+                $sub_mda->autopayGenerated();
                 $count++;
             }
         }
@@ -62,13 +64,18 @@ class AuditAutopayController extends Controller
 
     public function download(AuditPayroll $audit_payroll)
     {
+        $year = $audit_payroll->year;
+        $month = $audit_payroll->month_name;
+
+        if($audit_payroll->noAutopaySchedule()){
+            return back()->with('error', "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below");
+        }
+
         $directory = $this->createFiles($audit_payroll);
 
         $zipped_file = $this->prepareDownload($directory);
 
         return response()->download(public_path($zipped_file))->deleteFileAfterSend();
-
-//        return back()->with('success', 'Download Started');
     }
 
     public function createFiles(AuditPayroll $audit_payroll)

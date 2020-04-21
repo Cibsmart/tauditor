@@ -107,4 +107,10 @@ class AuditSubMdaSchedule extends Model
         $this->analysed = Carbon::now();
         $this->save();
     }
+
+    public function autopayGenerated()
+    {
+        $this->autopay_generated = Carbon::now();
+        $this->save();
+    }
 }
