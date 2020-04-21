@@ -8,12 +8,14 @@ use App\AuditReport;
 
 trait CanBeReported
 {
-    public function report($payroll_id, string $category, string $content)
+    public function report($payroll_id, string $category, string $message, $current = null, $previous = null)
     {
         $this->reportable()->firstOrCreate([
-            'category' => $category,
-            'content' => $content,
             'audit_payroll_id' => $payroll_id,
+            'category' => $category,
+            'message' => $message,
+            'current_value' => $current,
+            'previous_value' => $previous,
         ]);
     }
 

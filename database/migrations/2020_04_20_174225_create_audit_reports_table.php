@@ -18,7 +18,9 @@ class CreateAuditReportsTable extends Migration
             $table->unsignedBigInteger('audit_payroll_id');
             $table->morphs('reportable');
             $table->string('category');
-            $table->text('content');
+            $table->text('message');
+            $table->text('current_value')->nullable();
+            $table->text('previous_value')->nullable();
             $table->timestamps();
         });
     }
