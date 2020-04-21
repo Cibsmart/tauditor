@@ -24,10 +24,12 @@ abstract class AuditCheckable
     protected $last_schedule;
     protected $previous_schedules;
 
-    protected const NEW_BENEFICIARY = 'new_beneficiary';
     protected const BANK_CHANGED = 'changed_bank';
-    protected const RESTORED_BENEFICIARY = 'restored_beneficiary';
+    protected const NET_PAY_CHANGED = 'changed_net_pay';
+    protected const NEW_BENEFICIARY = 'new_beneficiary';
     protected const BASIC_PAY_CHANGED = 'changed_basic_pay';
+    protected const GROSS_PAY_CHANGED = 'changed_gross_pay';
+    protected const RESTORED_BENEFICIARY = 'restored_beneficiary';
     protected const ACCOUNT_NUMBER_CHANGED = 'changed_account_number';
 
     protected function initialize(AuditPaySchedule $schedule)

@@ -13,6 +13,9 @@ class Analyse
         CheckNewBeneficiary::class,
         CheckAccountNumber::class,
         CheckBankName::class,
+        CheckBasicPay::class,
+        CheckGrossPay::class,
+        CheckNetPay::class,
     ];
 
     public function check(AuditPaySchedule $schedule)
