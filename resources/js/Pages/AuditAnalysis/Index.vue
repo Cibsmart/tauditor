@@ -51,11 +51,11 @@
                                 <inertia-link :href="route('audit_analysis.analyse', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
                                     Analyse
                                 </inertia-link>
-<!--                                <span> | </span>-->
+                                <span> | </span>
 
-<!--                                <inertia-link href="#" class="px-5 py-3">-->
-<!--                                    View Reports-->
-<!--                                </inertia-link>-->
+                                <inertia-link :href="route('audit_analysis.show', { audit_payroll: payroll.id })" class="px-5 py-3">
+                                    View Reports
+                                </inertia-link>
                             </td>
                         </tr>
 
