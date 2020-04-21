@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Traits\CanBeReported;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class AuditSubMdaSchedule extends Model
@@ -99,5 +100,11 @@ class AuditSubMdaSchedule extends Model
     public function scopeAnalysed($query)
     {
         return $query->whereNotNull('analysed');
+    }
+
+    public function analysisCompleted()
+    {
+        $this->analysed = Carbon::now();
+        $this->save();
     }
 }

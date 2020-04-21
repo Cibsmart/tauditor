@@ -18,5 +18,7 @@ class AuditPayScheduleAction
         {
             (new Analyse)->check($schedule);
         }
+
+        $sub_mda_schedule->analysisCompleted();
     }
 }
