@@ -27,9 +27,9 @@ class CheckGrossPay extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "GROSS PAY AMOUNT CHANGED FROM '$previous_gross_pay' IN $this->last_payment TO '$current_gross_pay' IN $this->this_month";
+        $message = "GROSS PAY AMOUNT CHANGED FROM '$previous_gross_pay' IN $this->last_payment TO '$current_gross_pay' IN $this->this_month";
 
-        $this->report(self::GROSS_PAY_CHANGED, $content);
+        $this->report(self::GROSS_PAY_CHANGED, $message, $current_gross_pay, $previous_gross_pay);
 
         return;
     }

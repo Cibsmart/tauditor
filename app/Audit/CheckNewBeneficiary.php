@@ -25,9 +25,9 @@ class CheckNewBeneficiary extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = $this->getContentForRestoredBeneficiary();
+        $message = $this->getContentForRestoredBeneficiary();
 
-        $this->report(self::RESTORED_BENEFICIARY, $content);
+        $this->report(self::RESTORED_BENEFICIARY, $message);
 
         return;
     }

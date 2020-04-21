@@ -27,9 +27,9 @@ class CheckBankName extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "BANK CHANGED FROM '$previous_bank_name' IN $this->last_payment TO '$current_bank_name' IN $this->this_month";
+        $message = "BANK CHANGED FROM '$previous_bank_name' IN $this->last_payment TO '$current_bank_name' IN $this->this_month";
 
-        $this->report(self::BANK_CHANGED, $content);
+        $this->report(self::BANK_CHANGED, $message, $current_bank_name, $previous_bank_name);
 
         return;
     }

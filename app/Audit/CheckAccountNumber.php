@@ -27,9 +27,9 @@ class CheckAccountNumber extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "ACCOUNT NUMBER CHANGED FROM '$previous_account_number' IN $this->last_payment TO '$current_account_number' IN $this->this_month";
+        $message = "ACCOUNT NUMBER CHANGED FROM '$previous_account_number' IN $this->last_payment TO '$current_account_number' IN $this->this_month";
 
-        $this->report(self::ACCOUNT_NUMBER_CHANGED, $content);
+        $this->report(self::ACCOUNT_NUMBER_CHANGED, $message, $current_account_number, $previous_account_number);
 
         return;
     }

@@ -9,8 +9,8 @@ class AuditReport extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'current_values' => 'array',
-        'previous_values' => 'array',
+        'current_value' => 'array',
+        'previous_value' => 'array',
     ];
 
     public function reportable()

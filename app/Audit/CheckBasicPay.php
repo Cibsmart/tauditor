@@ -27,9 +27,9 @@ class CheckBasicPay extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "BASIC PAY AMOUNT CHANGED FROM '$previous_basic_pay' IN $this->last_payment TO '$current_basic_pay' IN $this->this_month";
+        $message = "BASIC PAY AMOUNT CHANGED FROM '$previous_basic_pay' IN $this->last_payment TO '$current_basic_pay' IN $this->this_month";
 
-        $this->report(self::BASIC_PAY_CHANGED, $content);
+        $this->report(self::BASIC_PAY_CHANGED, $message, $current_basic_pay, $previous_basic_pay);
 
         return;
     }

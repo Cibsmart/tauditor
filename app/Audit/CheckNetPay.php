@@ -27,9 +27,9 @@ class CheckNetPay extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "NET PAY AMOUNT CHANGED FROM '$previous_net_pay' IN $this->last_payment TO '$current_net_pay' IN $this->this_month";
+        $message = "NET PAY AMOUNT CHANGED FROM '$previous_net_pay' IN $this->last_payment TO '$current_net_pay' IN $this->this_month";
 
-        $this->report(self::NET_PAY_CHANGED, $content);
+        $this->report(self::NET_PAY_CHANGED, $message, $current_net_pay, $previous_net_pay);
 
         return;
     }

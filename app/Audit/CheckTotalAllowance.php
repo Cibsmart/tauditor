@@ -26,9 +26,9 @@ class CheckTotalAllowance extends AuditCheckable implements Auditable
             return;
         }
 
-        $content = "TOTAL ALLOWANCE AMOUNT CHANGED FROM '$previous_total_allowance' IN $this->last_payment TO '$current_total_allowance' IN $this->this_month";
+        $message = "TOTAL ALLOWANCE AMOUNT CHANGED FROM '$previous_total_allowance' IN $this->last_payment TO '$current_total_allowance' IN $this->this_month";
 
-        $this->report(self::TOTAL_ALLOWANCE_CHANGED, $content);
+        $this->report(self::TOTAL_ALLOWANCE_CHANGED, $message, $current_total_allowance, $previous_total_allowance);
 
         return;
     }
