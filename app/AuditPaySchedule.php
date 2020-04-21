@@ -30,6 +30,11 @@ class AuditPaySchedule extends Model
         return $this->morphTo();
     }
 
+    public function auditReports()
+    {
+        return $this->morphMany(AuditReport::class, 'reportable');
+    }
+
     public function auditSubMdaSchedule()
     {
         return $this->belongsTo(AuditSubMdaSchedule::class);

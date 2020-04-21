@@ -58,7 +58,7 @@ class CheckDeductions extends AuditCheckable implements Auditable
 
         $added_deductions = $diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING ALLOWANCE(S) WERE ADDED '$added_deductions'";
+        $message = "ALLOWANCE(S) ADDED";
 
         $this->report(self::DEDUCTION_ADDED, $message, $current_diffs, null);
     }
@@ -80,7 +80,7 @@ class CheckDeductions extends AuditCheckable implements Auditable
 
         $removed_deductions = $diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING ALLOWANCE(S) WERE REMOVED '$removed_deductions'";
+        $message = "ALLOWANCE(S) REMOVED";
 
         $this->report(self::DEDUCTION_REMOVED, $message, null, $previous_diffs);
     }
@@ -115,7 +115,7 @@ class CheckDeductions extends AuditCheckable implements Auditable
         $original_deductions = $prev_diffs->join(', ', ', and ');
         $changed_deductions = $curr_diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING DEDUCTIONS(S) CHANGED IN VALUE FROM '$original_deductions' TO '$changed_deductions'";
+        $message = "DEDUCTIONS(S) CHANGED IN VALUE";
 
         $this->report(self::DEDUCTION_CHANGED, $message, $current_diffs, $previous_diffs);
     }

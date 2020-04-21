@@ -58,7 +58,7 @@ class CheckAllowances extends AuditCheckable implements Auditable
 
         $added_allowances = $diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING ALLOWANCE(S) WERE ADDED '$added_allowances'";
+        $message = "ALLOWANCE(S) ADDED";
 
         $this->report(self::ALLOWANCES_ADDED, $message, $current_diffs, null);
     }
@@ -80,7 +80,7 @@ class CheckAllowances extends AuditCheckable implements Auditable
 
         $removed_allowances = $diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING ALLOWANCE(S) WERE REMOVED '$removed_allowances'";
+        $message = "ALLOWANCE(S) REMOVED";
 
         $this->report(self::ALLOWANCES_REMOVED, $message, null, $previous_diffs);
     }
@@ -115,7 +115,7 @@ class CheckAllowances extends AuditCheckable implements Auditable
         $original_allowances = $prev_diffs->join(', ', ', and ');
         $changed_allowances = $curr_diffs->join(', ', ', and ');
 
-        $message = "THE FOLLOWING ALLOWANCE(S) CHANGED IN VALUE FROM '$original_allowances' TO '$changed_allowances'";
+        $message = "ALLOWANCE(S) CHANGED IN VALUE FROM";
 
         $this->report(self::ALLOWANCES_CHANGED, $message, $current_diffs, $previous_diffs);
     }
