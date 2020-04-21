@@ -15,7 +15,9 @@ abstract class AuditCheckable
     protected $payroll;
 
     protected string $category = '';
-    protected string $content = '';
+    protected string $message = '';
+    protected $current_value = null;
+    protected $previous_value = null;
 
     protected $this_month;
     protected $last_payment;
@@ -33,6 +35,12 @@ abstract class AuditCheckable
     protected const ACCOUNT_NUMBER_CHANGED = 'changed_account_number';
     protected const TOTAL_ALLOWANCE_CHANGED = 'changed_total_allowance';
     protected const TOTAL_DEDUCTION_CHANGED = 'changed_total_deduction';
+    protected const ALLOWANCES_ADDED = 'added_allowances';
+    protected const DEDUCTION_ADDED = 'added_deductions';
+    protected const ALLOWANCES_REMOVED = 'removed_allowances';
+    protected const DEDUCTION_REMOVED = 'removed_deductions';
+    protected const ALLOWANCES_CHANGED = 'changed_allowances';
+    protected const DEDUCTION_CHANGED = 'changed_deductions';
 
     protected function initialize(AuditPaySchedule $schedule)
     {
@@ -53,33 +61,49 @@ abstract class AuditCheckable
         }
     }
 
-    protected function report($category, $content)
+    protected function report($category, $message, $current = null, $previous = null)
     {
         $this->setCategory($category)
-             ->setContent($content)
+             ->setMessage($message)
+             ->setCurrent($current)
+             ->setPrevious($previous)
              ->thenReport();
     }
 
-    protected function thenReport()
+    private function thenReport()
     {
-        $this->schedule->report($this->payroll->id, $this->category, $this->content);
+        $this->schedule->report($this->payroll->id, $this->category, $this->message, $this->current_value, $this->previous_value);
     }
 
-    protected function setCategory($category)
+    private function setCategory($category)
     {
         $this->category = $category;
 
         return $this;
     }
 
-    protected function setContent($content)
+    private function setMessage($message)
     {
-        $this->content = Str::upper($content);
+        $this->message = Str::upper($message);
 
         return $this;
     }
 
-    protected function previousSchedules()
+    private function setPrevious($previous_value = null)
+    {
+        $this->previous_value = $previous_value;
+
+        return $this;
+    }
+
+    private function setCurrent($current_value = null)
+    {
+        $this->current_value = $current_value;
+
+        return $this;
+    }
+
+    private function previousSchedules()
     {
         return AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
                                 ->where('month', '<', $this->month)
@@ -87,7 +111,6 @@ abstract class AuditCheckable
                                 ->take(12)
                                 ->get();
     }
-
 
     protected function hasNoPreviousSchedule()
     {
