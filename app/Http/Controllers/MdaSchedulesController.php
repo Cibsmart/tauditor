@@ -20,7 +20,7 @@ class MdaSchedulesController extends Controller
     public function index(Payroll $payroll)
     {
         if(! $payroll->generated){
-            return back()->withError('Yet to Run Payroll for $date->monthName $date->year"');
+            return back()->with('error', 'Yet to Run Payroll for $date->monthName $date->year"');
         }
 
         $schedules = $payroll->schedules()
