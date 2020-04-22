@@ -12,10 +12,10 @@ class RunPayrollAction
 {
     public function execute(Payroll $payroll)
     {
-        $this->runPayroll($payroll);
+        $this->runPayrollFor($payroll);
     }
 
-    private function runPayroll(Payroll $payroll)
+    private function runPayrollFor(Payroll $payroll)
     {
         //Get a list of all active beneficiary
         $active_beneficiaries = $payroll->domain->beneficiaries()

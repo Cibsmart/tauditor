@@ -123,15 +123,5 @@
                 // },
             }
         },
-
-        methods: {
-            generate(payroll){
-                let url = `/payroll_pay_schedule/${payroll}/store`;
-                axios.post(url)
-                    .then((response) => {
-                        console.log(response)
-                    })
-            },
-        }
     }
 </script>

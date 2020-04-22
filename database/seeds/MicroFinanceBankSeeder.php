@@ -3,6 +3,7 @@
 use App\Bank;
 use App\Domain;
 use App\MicroFinanceBank;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class MicroFinanceBankSeeder extends Seeder
@@ -26,8 +27,8 @@ class MicroFinanceBankSeeder extends Seeder
             foreach ($mfbs as $mfb){
                 $bank_id = $banks->firstWhere('code', $mfb['code'])->id;
                 factory(MicroFinanceBank::class)->create([
-                    'name' => $mfb['name'],
-                    'account_number' => $mfb['account_number'],
+                    'name' => Str::of($mfb['name'])->trim(),
+                    'account_number' => Str::of($mfb['account_number'])->trim(),
                     'bank_id' => $bank_id,
                     'domain_id' => $domain_id,
                 ]);

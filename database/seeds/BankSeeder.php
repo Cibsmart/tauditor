@@ -21,8 +21,8 @@ class BankSeeder extends Seeder
             '070' => 'FIDELITY BANK PLC',
             '011' => 'FIRST BANK OF NIGERIA PLC',
             '214' => 'FIRST CITY MONUMENT BANK PLC',
-            '058' => 'GUARANTEE TRUST BANK PLC',
-            '030' => 'HERITAGE BANK PLC',
+            '058' => 'GUARANTY TRUST BANK PLC',
+            '030' => 'HERITAGE BANK LIMITED',
             '301' => 'JAIZ BANK PLC',
             '082' => 'KEYSTONE BANK PLC',
             '014' => 'MAINSTREET BANK PLC',
@@ -34,6 +34,7 @@ class BankSeeder extends Seeder
             '215' => 'UNITY BANK PLC',
             '035' => 'WEMA BANK PLC',
             '057' => 'ZENITH BANK PLC',
+            '319' => 'MAYFRESH SAVINGS AND LOAN'
         ];
 
         foreach ($banks as $key => $value) {

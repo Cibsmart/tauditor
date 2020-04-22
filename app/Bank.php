@@ -18,4 +18,14 @@ class Bank extends Model
     {
         return $this->morphMany(BankDetail::class, 'bankable');
     }
+
+    public function bankableType()
+    {
+        return 'commercial';
+    }
+
+    public function bankCode()
+    {
+        return $this->code;
+    }
 }

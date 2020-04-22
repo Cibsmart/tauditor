@@ -18,6 +18,7 @@ class CreateBeneficiaryTypesTable extends Migration
             $table->string('code', 20);
             $table->string('name');
             $table->unsignedBigInteger('domain_id');
+            $table->boolean('pensioners')->default(0);
             $table->timestamps();
 
             $table->unique(['code', 'name', 'domain_id'], 'unique_beneficiary_type');

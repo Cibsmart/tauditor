@@ -26,13 +26,21 @@ class BeneficiaryTypeSeeder extends Seeder
         ];
 
         foreach($staff_types_state as $code => $name){
+            $attributes = [ 'code' => $code, 'name' => $name, 'domain_id' => 1 ];
+
+            $attributes = $code == 'ANPEN' ? array_merge($attributes, ['pensioners' => 1]) : $attributes;
+
             factory(BeneficiaryType::class)
-                ->create([ 'code' => $code, 'name' => $name, 'domain_id' => 1 ]);
+                ->create($attributes);
         }
 
         foreach($staff_types_jaac as $code => $name){
+            $attributes = [ 'code' => $code, 'name' => $name, 'domain_id' => 2 ];
+
+            $attributes = $code == 'LGPEN' ? array_merge($attributes, ['pensioners' => 1]) : $attributes;
+
             factory(BeneficiaryType::class)
-                ->create([ 'code' => $code, 'name' => $name, 'domain_id' => 2 ]);
+                ->create($attributes);
         }
     }
 }

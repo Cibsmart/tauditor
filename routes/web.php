@@ -1,5 +1,6 @@
 <?php
 
+use App\AuditMdaSchedule;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\AllowancesController;
@@ -11,7 +12,13 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayScheduleController;
 use App\Http\Controllers\MdaSchedulesController;
+use App\Http\Controllers\AuditPayrollController;
+use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\AuditAnalysisController;
+use App\Http\Controllers\AuditPayScheduleController;
+use App\Http\Controllers\AuditMdaScheduleController;
+use App\Http\Controllers\AuditSubMdaSchedulesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +91,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('deductibles.')->group(function () {
-        Route::get('deductibles/{deduction}/create/', [DeductiblesController::class, 'create'])->name('create');
+        Route::get('deductibles/{deduction}/create', [DeductiblesController::class, 'create'])->name('create');
         Route::post('deductibles/store', [DeductiblesController::class, 'store'])->name('store');
     });
 });
@@ -128,6 +135,84 @@ Route::middleware('auth')->group(function () {
         Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
     });
 });
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Payroll Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_payroll.')->group(function () {
+        Route::get('audit_payroll', [AuditPayrollController::class, 'index'])->name('index');
+        Route::post('audit_payroll/store', [AuditPayrollController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit MDA Schedules Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_mda_schedules.')->group(function () {
+        Route::get('audit_mda_schedules/{audit_payroll}/index', [AuditMdaScheduleController::class, 'index'])->name('index');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Sub MDA Schedules Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_sub_mda_schedules.')->group(function () {
+        Route::get('audit_sub_mda_schedules/{audit_mda_schedule}/index', [AuditSubMdaSchedulesController::class, 'index'])->name('index');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Pay Schedules Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_pay_schedules.')->group(function () {
+        Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
+        Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Autopay Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_autopay.')->group(function () {
+        Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
+        Route::post('audit_autopay/{audit_payroll}/generate', [AuditAutopayController::class, 'generate'])->name('generate');
+        Route::get('audit_autopay/{audit_payroll}/download', [AuditAutopayController::class, 'download'])->name('download');
+        Route::get('audit_autopay/{audit_payroll}/downloadMfb', [AuditAutopayController::class, 'downloadMfb'])->name('downloadMfb');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| Audit Analysis Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('audit_analysis.')->group(function () {
+        Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
+        Route::get('audit_analysis/{audit_payroll}/show', [AuditAnalysisController::class, 'show'])->name('show');
+        Route::post('audit_analysis/{audit_payroll}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
+    });
+});
+
 
 
 /*

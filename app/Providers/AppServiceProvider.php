@@ -11,13 +11,17 @@ use App\FixedValue;
 use Inertia\Inertia;
 use App\Compute\Tax;
 use App\MdaStructure;
+use App\AuditPayroll;
 use App\ComputedValue;
 use App\PercentageValue;
 use App\BeneficiaryType;
 use App\Compute\Prorate;
 use App\MicroFinanceBank;
 use App\StructuredSalary;
+use App\AuditPaySchedule;
+use App\AuditMdaSchedule;
 use App\PersonalizedSalary;
+use App\AuditSubMdaSchedule;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
@@ -57,12 +61,16 @@ class AppServiceProvider extends ServiceProvider
             'fixed_value' => FixedValue::class,
             'mda_structure' => MdaStructure::class,
             'salary_structure' => Structure::class,
+            'audit_payroll' => AuditPayroll::class,
             'structured' => StructuredSalary::class,
             'computed_value' => ComputedValue::class,
             'micro_finance' => MicroFinanceBank::class,
             'personalized' => PersonalizedSalary::class,
             'percentage_value' => PercentageValue::class,
             'beneficiary_type' => BeneficiaryType::class,
+            'audit_pay_schedule' => AuditPaySchedule::class,
+            'audit_mda_schedule' => AuditMdaSchedule::class,
+            'audit_sub_mda_schedule' => AuditSubMdaSchedule::class,
         ];
 
         Validator::extend('positive', function ($attribute, $value, $parameters, $validator) {

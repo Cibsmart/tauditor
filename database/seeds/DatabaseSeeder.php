@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             StateSeeder::class,
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
+            PayCommSeeder::class,
             MdaSeeder::class,
             SubMdaSeeder::class,
             SubSubMdaSeeder::class,

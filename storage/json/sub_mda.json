@@ -1,15 +1,12 @@
 {
-    "SCO" : {
-        "EXCO": [
-            "GOVERNOR",
-            "DEPUTY GOVERNOR"
-        ]
-    },
-
     "CV" : {
         "SEC" : [
-            "ABAGANA SEC ZONE" ,
-            "ACHALLA SEC ZONE"
+            "AGUATA ZONE" ,
+            "AWKA ZONE",
+            "NNEWI ZONE",
+            "OGIDI ZONE",
+            "ONITSHA ZONE",
+            "OTUOCHA ZONE"
         ]
     },
 
