@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use ZipArchive;
 use Inertia\Inertia;
 use App\AuditPayroll;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Classes\ZipDirectory;
 use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
-use function dd;
-use function back;
-use function response;
-use function public_path;
-use function storage_path;
 
 class AuditAutopayController extends Controller
 {
@@ -94,7 +89,7 @@ class AuditAutopayController extends Controller
 
         $year = $audit_payroll->year;
 
-        $directory = "$domain AUTOPAY SCHEDULE - $month $year";
+        $directory = "autopay/$domain AUTOPAY SCHEDULE - $month $year";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->get();
@@ -122,32 +117,14 @@ class AuditAutopayController extends Controller
 
     public function prepareDownload($directory)
     {
-        $zip_file = "$directory.zip";
+        $path = Storage::disk('local')->path($directory);
 
-        $zip = new ZipArchive();
+        $zipped_file = Str::of($path)->basename()->append('.zip');
 
-        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        ZipDirectory::zipDir($path, $zipped_file);
 
-        $files = Storage::disk('local')->files($directory);
-
-        $path = storage_path($directory);
-
-        foreach ($files as $file)
-        {
-            $file_name = Str::of($file)->basename();
-
-            $path = Storage::disk('local')->path($file);
-
-            $zip->addFile($path, $file_name);
-        }
-
-        $zip->close();
-
-        return $zip_file;
+        return $zipped_file;
     }
-
-
-
 
 
 
@@ -166,11 +143,9 @@ class AuditAutopayController extends Controller
 
         $directory = $this->createMfbFiles($audit_payroll);
 
-        $zipped_file = $this->prepareMfbDownload($directory);
+        $zipped_file = $this->prepareDownload($directory);
 
-//        dd($zipped_file);
-
-        return response()->download(public_path($zipped_file)); //->deleteFileAfterSend();
+        return response()->download(public_path($zipped_file))->deleteFileAfterSend();
     }
 
     public function createMfbFiles(AuditPayroll $audit_payroll)
@@ -183,7 +158,7 @@ class AuditAutopayController extends Controller
 
         $year = $audit_payroll->year;
 
-        $directory = "$domain MFB SCHEDULE - $month $year";
+        $directory = "microfinance/$domain MFB SCHEDULE - $month $year";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
@@ -209,49 +184,17 @@ class AuditAutopayController extends Controller
 
                     $path = "$directory/$mfb_name/$file_name";
 
-//                    $mfb_file_exists = Storage::disk('local')->exists($path);
+                    $mfb_file_exists = Storage::disk('local')->exists($path);
 
-//                    if($mfb_file_exists){
-//                        continue;
-//                    }
+                    if($mfb_file_exists){
+                        continue;
+                    }
 
                     (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->store($path);
                 }
-
             }
         }
 
         return $directory;
     }
-
-    public function prepareMfbDownload($directory)
-    {
-        $zip_file = "$directory.zip";
-
-        $zip = new ZipArchive();
-
-        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
-
-        $directories = Storage::disk('local')->directories($directory);
-
-        foreach ($directories as $inner_directory) {
-
-            $files = Storage::disk('local')->files($inner_directory);
-
-            foreach ($files as $file) {
-                $file_name = Str::of($file)->basename();
-
-                $path = Storage::disk('local')->path($file);
-
-                $zip->addFile($path, $file_name);
-
-                dd($zip);
-            }
-        }
-
-        $zip->close();
-
-        return $zip_file;
-    }
-
 }
