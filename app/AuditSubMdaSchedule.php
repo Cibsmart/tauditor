@@ -102,6 +102,11 @@ class AuditSubMdaSchedule extends Model
         return $query->whereNotNull('analysed');
     }
 
+    public function scopeHasMicrofinance($query)
+    {
+        return $query->whereHas('microfinanceSchedules' );
+    }
+
     public function analysisCompleted()
     {
         $this->analysed = Carbon::now();

@@ -69,7 +69,7 @@
 
                                 <span> | </span>
 
-                                <a :href="route('audit_autopay.download', { audit_payroll: payroll.id })" class="px-5 py-3">
+                                <a :href="route('audit_autopay.downloadMfb', { audit_payroll: payroll.id })" class="px-5 py-3">
                                     MFB
                                 </a>
                             </td>

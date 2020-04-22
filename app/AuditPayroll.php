@@ -53,4 +53,11 @@ class AuditPayroll extends Model
             return $query->whereNotNull('autopay_generated');
         })->doesntExist();
     }
+
+    public function noMfbSchedule()
+    {
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function($query){
+            return $query->whereHas('microfinanceSchedules');
+        })->doesntExist();
+    }
 }

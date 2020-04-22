@@ -8,10 +8,16 @@ use App\AuditPayroll;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\MfbScheduleExport;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
+use function dd;
+use function back;
+use function response;
+use function public_path;
+use function storage_path;
 
 class AuditAutopayController extends Controller
 {
@@ -140,5 +146,112 @@ class AuditAutopayController extends Controller
         return $zip_file;
     }
 
+
+
+
+
+
+    public function downloadMfb(AuditPayroll $audit_payroll)
+    {
+        $year = $audit_payroll->year;
+        $month = $audit_payroll->month_name;
+
+        if($audit_payroll->noAutopaySchedule()){
+            return back()->with('error', "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below");
+        }
+
+        if($audit_payroll->noMfbSchedule()){
+            return back()->with('error', "No Beneficiary Used Microfinance in $month $year Payment Schedule");
+        }
+
+        $directory = $this->createMfbFiles($audit_payroll);
+
+        $zipped_file = $this->prepareMfbDownload($directory);
+
+//        dd($zipped_file);
+
+        return response()->download(public_path($zipped_file)); //->deleteFileAfterSend();
+    }
+
+    public function createMfbFiles(AuditPayroll $audit_payroll)
+    {
+        $mdas = $audit_payroll->auditMdaSchedules;
+
+        $domain = $audit_payroll->domain->code;
+
+        $month = $audit_payroll->month_name;
+
+        $year = $audit_payroll->year;
+
+        $directory = "$domain MFB SCHEDULE - $month $year";
+
+        foreach ($mdas as $mda) {
+            $sub_mdas = $mda->auditSubMdaSchedules()
+                            ->autopayGenerated()
+                            ->hasMicrofinance()
+                            ->get();
+
+            foreach ($sub_mdas as $sub_mda) {
+
+                $mfbs = $sub_mda->microfinanceSchedules()->with('microfinanceBank')
+                                ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
+                                ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
+                                ->get();
+
+                $sub_mda_name = $sub_mda->sub_mda_name;
+
+                foreach ($mfbs as $mfb) {
+                    $mfb = $mfb->microfinanceBank;
+
+                    $mfb_name = $mfb->name;
+
+                    $file_name = "$sub_mda_name $month $year.xlsx";
+
+                    $path = "$directory/$mfb_name/$file_name";
+
+//                    $mfb_file_exists = Storage::disk('local')->exists($path);
+
+//                    if($mfb_file_exists){
+//                        continue;
+//                    }
+
+                    (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->store($path);
+                }
+
+            }
+        }
+
+        return $directory;
+    }
+
+    public function prepareMfbDownload($directory)
+    {
+        $zip_file = "$directory.zip";
+
+        $zip = new ZipArchive();
+
+        $zip->open($zip_file, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        $directories = Storage::disk('local')->directories($directory);
+
+        foreach ($directories as $inner_directory) {
+
+            $files = Storage::disk('local')->files($inner_directory);
+
+            foreach ($files as $file) {
+                $file_name = Str::of($file)->basename();
+
+                $path = Storage::disk('local')->path($file);
+
+                $zip->addFile($path, $file_name);
+
+                dd($zip);
+            }
+        }
+
+        $zip->close();
+
+        return $zip_file;
+    }
 
 }

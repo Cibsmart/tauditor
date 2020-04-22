@@ -23,6 +23,11 @@ class MicroFinanceBank extends Model
         return $this->belongsTo(Bank::class);
     }
 
+    public function mfbSchedules()
+    {
+        return $this->hasMany(MicrofinanceBankSchedule::class);
+    }
+
     public function bankableType()
     {
         return 'micro_finance';

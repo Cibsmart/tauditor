@@ -46,8 +46,8 @@ class GenerateAutoPayScheduleAction
 
         $schedule = $schedules->first();
 
-        $this->year = $schedule->year;
-        $this->month = $schedule->month;
+        $this->year = $schedule->month->year;
+        $this->month = $schedule->month->monthName;
         $this->payment = $schedule->pension ? '_PEN_' : '_SAL_';
 
         [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn($schedule) => $schedule->bankable_type == 'commercial');
@@ -69,7 +69,7 @@ class GenerateAutoPayScheduleAction
             $this->reference = $this->getReferenceFor($schedule->id);
 
             if(! $this->narration){
-                $this->narration = $this->createNarration($schedule->department_name);
+                $this->narration = $this->createNarration($schedule->auditSubMdaSchedule->sub_mda_name);
             }
 
             $attributes = [
@@ -104,7 +104,7 @@ class GenerateAutoPayScheduleAction
             $this->reference = $this->getReferenceFor($schedule->id);
 
             if(! $this->narration){
-                $this->narration = $this->createNarration($schedule->department_name);
+                $this->narration = $this->createNarration($schedule->auditSubMdaSchedule->sub_mda_name);
             }
 
             $attributes = [
@@ -145,7 +145,7 @@ class GenerateAutoPayScheduleAction
             $bank = $schedule->bankable;
 
             if(! $this->narration){
-                $this->narration = $this->createNarration($schedule->department_name);
+                $this->narration = $this->createNarration($schedule->auditSubMdaSchedule->sub_mda_name);
             }
 
             $attributes = [
