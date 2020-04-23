@@ -38,9 +38,9 @@
                   </option>
               </select-input>
 
-              <text-input v-if="form.value_type === 1" class="pr-6 pb-8 w-1/2" label="Computer" value="COMPUTED" disabled></text-input>
+              <text-input v-if="form.value_type === 'computed'" class="pr-6 pb-8 w-1/2" label="Computer" value="COMPUTED" disabled></text-input>
 
-              <text-input-trailing v-else-if="form.value_type === 3" v-model="form.value" type="number" placeholder="20" class="pr-6 pb-8 w-1/2" label="Percentage"
+              <text-input-trailing v-else-if="form.value_type === 'percentage'" v-model="form.value" type="number" placeholder="20" class="pr-6 pb-8 w-1/2" label="Percentage"
                                   :errors="$page.errors.value" trailing_character="%">
               </text-input-trailing>
 

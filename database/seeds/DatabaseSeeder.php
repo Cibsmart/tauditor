@@ -33,6 +33,7 @@ class DatabaseSeeder extends Seeder
             StepSeeder::class,
             StructureSeeder::class,
             ValueTypeSeeder::class,
+            SalaryTypeSeeder::class,
             AllowanceTypeSeeder::class,
             AllowanceNameSeeder::class,
             AllowanceSeeder::class,
@@ -40,7 +41,7 @@ class DatabaseSeeder extends Seeder
             DeductionNameSeeder::class,
             DeductionSeeder::class,
             StatusSeeder::class,
-            BeneficiarySeeder::class,
+//            BeneficiarySeeder::class,
         ]);
     }
 }
