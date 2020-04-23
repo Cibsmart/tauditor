@@ -17,6 +17,8 @@ class CreateWorkDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('beneficiary_id');
             $table->unsignedBigInteger('designation_id');
+            $table->unsignedBigInteger('grade_level_id');
+            $table->unsignedBigInteger('step_id');
             $table->date('date_of_appointment')->nullable();
             $table->string('place_of_appointment')->nullable();
             $table->date('confirmed')->nullable();
