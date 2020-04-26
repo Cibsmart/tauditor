@@ -154,8 +154,6 @@ class PensionPayScheduleImport implements OnEachRow
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
         ];
 
-        $exists = Arr::exists($exceptions, $bank_name);
-
-        return $exists ? $exceptions[$bank_name] : $bank_name;
+        return $exceptions[$bank_name] ?? $bank_name;
     }
 }

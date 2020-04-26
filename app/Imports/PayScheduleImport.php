@@ -112,10 +112,10 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->until(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->until(fn($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
@@ -178,8 +178,6 @@ class PayScheduleImport implements OnEachRow
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
         ];
 
-        $exists = Arr::exists($exceptions, $bank_name);
-
-        return $exists ? $exceptions[$bank_name] : $bank_name;
+        return $exceptions[$bank_name] ?? $bank_name;
     }
 }
