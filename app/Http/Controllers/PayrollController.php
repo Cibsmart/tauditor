@@ -30,7 +30,7 @@ class PayrollController extends Controller
 
         $payrolls = Auth::user()->payrolls()->latest()
                         ->paginate()
-                        ->transform(fn(Payroll $payroll) => [
+                        ->transform(fn (Payroll $payroll) => [
                             'id' => $payroll->id,
                             'month' => $payroll->month_name,
                             'year' => $payroll->year,
@@ -77,8 +77,7 @@ class PayrollController extends Controller
 
         $payroll = $user->payrolls()->where($attributes)->first();
 
-        if($payroll)
-        {
+        if ($payroll) {
             return back()->with('error', "You Cannot Regenerate Payroll for $date->monthName $date->year");
         }
 
