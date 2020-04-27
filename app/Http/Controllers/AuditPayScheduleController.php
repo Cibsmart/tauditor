@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Inertia\Inertia;
 use App\AuditPaySchedule;
 use Illuminate\Http\Request;
@@ -24,33 +23,33 @@ class AuditPayScheduleController extends Controller
     {
         $audit_mda_schedule = $audit_sub_mda_schedule->auditMdaSchedule;
         $schedules = $audit_sub_mda_schedule->auditPaySchedules()
-                                        ->paginate()
-                                        ->transform(fn(AuditPaySchedule $schedule) => [
-                                            'id' => $schedule->id,
-                                            'verification_number' => $schedule->verification_number,
-                                            'beneficiary_name' => $schedule->beneficiary_name,
-                                            'bank_name' => $schedule->bank_name,
-                                            'account_number' => $schedule->account_number,
-                                            'cadre' => $schedule->beneficiary_cadre,
-                                            'designation' => $schedule->designation,
-                                            'net_pay' => number_format($schedule->net_pay, 2), // 12,000.00
-                                            'paid' => $schedule->paid,
-                                            'month' => $schedule->month,
-                                            'year' => $schedule->year,
-                                            'mda_name' => $schedule->mda_name,
-                                            'department_name' => $schedule->department_name,
-                                        ]);
+                                            ->paginate()
+                                            ->transform(fn (AuditPaySchedule $schedule) => [
+                                                'id'                  => $schedule->id,
+                                                'verification_number' => $schedule->verification_number,
+                                                'beneficiary_name'    => $schedule->beneficiary_name,
+                                                'bank_name'           => $schedule->bank_name,
+                                                'account_number'      => $schedule->account_number,
+                                                'cadre'               => $schedule->beneficiary_cadre,
+                                                'designation'         => $schedule->designation,
+                                                'net_pay'             => number_format($schedule->net_pay, 2),
+                                                // 12,000.00
+                                                'paid'                => $schedule->paid,
+                                                'month'               => $schedule->month,
+                                                'year'                => $schedule->year,
+                                                'mda_name'            => $schedule->mda_name,
+                                                'department_name'     => $schedule->department_name,
+                                            ]);
 
         return Inertia::render('AuditPaySchedules/Index', [
-            'schedules' => $schedules,
+            'schedules'          => $schedules,
             'audit_mda_schedule' => $audit_mda_schedule->id,
-            'audit_payroll' => $audit_mda_schedule->auditPayroll->id,
+            'audit_payroll'      => $audit_mda_schedule->auditPayroll->id,
         ]);
     }
 
     public function store(Request $request)
     {
-
         $request->validate([
             'audit_sub_mda' => ['required', 'numeric', 'exists:audit_sub_mda_schedules,id'],
             'schedule_file' => ['required', 'mimes:xlsx,xls'],
@@ -58,8 +57,8 @@ class AuditPayScheduleController extends Controller
 
         $audit_sub_mda = AuditSubMdaSchedule::find($request->audit_sub_mda);
 
-        if($audit_sub_mda->uploaded){
-            return back()-with('error', 'Pay Schedule Already Uploaded for Sub Mda');
+        if ($audit_sub_mda->uploaded) {
+            return back() - with('error', 'Pay Schedule Already Uploaded for Sub Mda');
         }
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);
@@ -67,9 +66,9 @@ class AuditPayScheduleController extends Controller
         $pension = $audit_sub_mda->auditMdaSchedule->pension;
 
         try {
-            if($pension){
+            if ($pension) {
                 (new PensionPayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
-            }else{
+            } else {
                 (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
             }
         } catch (WrongScheduleException $e) {

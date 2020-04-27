@@ -24,8 +24,7 @@ class Analyse
 
     public function check(AuditPaySchedule $schedule)
     {
-        foreach ($this->checks as $check)
-        {
+        foreach ($this->checks as $check) {
             app($check)->check($schedule);
         }
     }

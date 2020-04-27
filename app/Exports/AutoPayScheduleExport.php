@@ -2,13 +2,9 @@
 
 namespace App\Exports;
 
-use App\AutopaySchedule;
-use Maatwebsite\Excel\Excel;
 use App\AuditSubMdaSchedule;
-use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
@@ -26,7 +22,7 @@ class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, Wit
      */
     public function query()
     {
-         return $this->sub_mda->autopaySchedules();
+        return $this->sub_mda->autopaySchedules();
     }
 
     public function forSubMda(AuditSubMdaSchedule $sub_mda)

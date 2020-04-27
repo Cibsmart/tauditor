@@ -53,11 +53,11 @@ class Tax implements Computable
 
     private function thenComputeTax()
     {
-        if($this->beneficiary->isPensioner()){
-            return  $this->formatTax($this->annual_basic * 1 / 100);
+        if ($this->beneficiary->isPensioner()) {
+            return $this->formatTax($this->annual_basic * 1 / 100);
         }
 
-        if($this->annual_gross < 400000){
+        if ($this->annual_gross < 400000) {
             return $this->formatTax($this->annual_gross * 1 / 100);
         }
 
@@ -85,13 +85,12 @@ class Tax implements Computable
         $tax = 0.0;
         $taxed_sum = 0.0;
 
-        for ($i = 0; $i < count($this->amounts); $i++)
-        {
-            if($adjusted_taxable - $taxed_sum <= $this->amounts[$i] or $i === 5){
+        for ($i = 0; $i < count($this->amounts); $i++) {
+            if ($adjusted_taxable - $taxed_sum <= $this->amounts[$i] or $i === 5) {
                 $taxed = $adjusted_taxable - $taxed_sum;
                 $tax = $tax + $taxed * $this->rates[$i] / 100;
                 break;
-            } else{
+            } else {
                 $taxed = $this->amounts[$i];
                 $taxed_sum = $taxed_sum + $taxed;
                 $tax = $tax + $taxed * $this->rates[$i] / 100;

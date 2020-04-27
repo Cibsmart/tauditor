@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Deductible;
-use App\Deduction;
-use App\BeneficiaryType;
-use App\Structure;
 use App\Mda;
 use App\Cadre;
+use App\Deduction;
+use App\Structure;
 use App\CadreStep;
-use App\MdaStructure;
+use App\Deductible;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Auth;
+use App\MdaStructure;
+use App\BeneficiaryType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DeductiblesController extends Controller
 {
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -49,14 +50,13 @@ class DeductiblesController extends Controller
         $cadre_steps = CadreStep::all();
 
         return Inertia::render('Deductibles/Create', [
-            'mdas' => $mdas,
-            'cadres' => $cadres,
-            'cadre_steps' => $cadre_steps,
-            'deduction_id' => $deduction->id,
+            'mdas'              => $mdas,
+            'cadres'            => $cadres,
+            'cadre_steps'       => $cadre_steps,
+            'deduction_id'      => $deduction->id,
             'beneficiary_types' => $beneficiary_types,
             'salary_structures' => $salary_structures,
         ]);
-
     }
 
     /**
@@ -71,90 +71,84 @@ class DeductiblesController extends Controller
 
         $request->validate([
             'deductibleType' => ['required'],
-            'deductionId'=>['required'],
+            'deductionId'    => ['required'],
         ]);
 
 
         $deduction_id = $data['deductionId'];
 
-        if($data['deductibleType'] == "all" ){
+        if ($data['deductibleType'] == "all") {
             $deductible_id = Auth::user()->domain_id;
-        }
-        elseif($data['deductibleType'] == "beneficiary_type" ){
+        } elseif ($data['deductibleType'] == "beneficiary_type") {
             $deductible_id = $data['beneficiaryType'];
             $request->validate([
-                'deductibleType' => ['required'],
+                'deductibleType'  => ['required'],
                 'beneficiaryType' => ['required', 'integer'],
-                'startDate' => ['nullable', 'date'],
-                'endDate' => ['nullable', 'date'],
+                'startDate'       => ['nullable', 'date'],
+                'endDate'         => ['nullable', 'date'],
             ]);
-        }
-        elseif($data['deductibleType'] == "salary_structure" ){
+        } elseif ($data['deductibleType'] == "salary_structure") {
             $deductible_id = $data['salaryStructure'];
             $request->validate([
-                'deductibleType' => ['required'],
+                'deductibleType'  => ['required'],
                 'salaryStructure' => ['required', 'integer'],
-                'startDate' => ['nullable', 'date'],
-                'endDate' => ['nullable', 'date'],
+                'startDate'       => ['nullable', 'date'],
+                'endDate'         => ['nullable', 'date'],
             ]);
-        }
-        elseif($data['deductibleType'] == "cadre" ){
+        } elseif ($data['deductibleType'] == "cadre") {
             $deductible_id = $data['Cadre'];
             $request->validate([
                 'deductibleType' => ['required'],
-                'Cadre' => ['required', 'integer'],
-                'startDate' => ['nullable', 'date'],
-                'endDate' => ['nullable', 'date'],
+                'Cadre'          => ['required', 'integer'],
+                'startDate'      => ['nullable', 'date'],
+                'endDate'        => ['nullable', 'date'],
             ]);
-        }
-        elseif($data['deductibleType'] == "cadre_step" ){
+        } elseif ($data['deductibleType'] == "cadre_step") {
             $deductible_id = $data['cadreStep'];
             $request->validate([
                 'deductibleType' => ['required'],
-                'Cadre' => ['required', 'integer'],
-                'cadreStep' => ['required', 'integer'],
-                'startDate' => ['nullable', 'date'],
-                'endDate' => ['nullable', 'date'],
+                'Cadre'          => ['required', 'integer'],
+                'cadreStep'      => ['required', 'integer'],
+                'startDate'      => ['nullable', 'date'],
+                'endDate'        => ['nullable', 'date'],
             ]);
-        }
-        elseif($data['deductibleType'] == "mda_structure" ){
+        } elseif ($data['deductibleType'] == "mda_structure") {
             $request->validate([
-                'deductibleType' => ['required'],
-                'Mda' => ['required', 'integer'],
+                'deductibleType'  => ['required'],
+                'Mda'             => ['required', 'integer'],
                 'salaryStructure' => ['required', 'integer'],
-                'startDate' => ['nullable', 'date'],
-                'endDate' => ['nullable', 'date'],
+                'startDate'       => ['nullable', 'date'],
+                'endDate'         => ['nullable', 'date'],
             ]);
 
             $mda_structure = MdaStructure::where('mda_id', $data['Mda'])
-                    ->where('structure_id', $data['salaryStructure'])
-                    ->limit(1)
-                    ->get();
+                                         ->where('structure_id', $data['salaryStructure'])
+                                         ->limit(1)
+                                         ->get();
 
-            if($mda_structure->isEmpty()){
+            if ($mda_structure->isEmpty()) {
                 $new_mda_structure = MdaStructure::create([
-                        'mda_id'=>$data['Mda'],
-                        'structure_id'=>$data['salaryStructure'],
-                        ]);
+                    'mda_id'       => $data['Mda'],
+                    'structure_id' => $data['salaryStructure'],
+                ]);
                 $deductible_id = $new_mda_structure->id;
 
-            }
-            else{
+            } else {
                 $deductible_id = $mda_structure[0]->id;
             }
 
         }
 
         Deductible::create([
-            'deductible_type'=>$data['deductibleType'],
-            'deductible_id'=>$deductible_id,
-            'deduction_id'=>$deduction_id,
-            'start_date'=>$data['startDate'],
-            'end_date'=>$data['endDate'],
-            ]);
+            'deductible_type' => $data['deductibleType'],
+            'deductible_id'   => $deductible_id,
+            'deduction_id'    => $deduction_id,
+            'start_date'      => $data['startDate'],
+            'end_date'        => $data['endDate'],
+        ]);
 
 
-            return redirect()->back()->withSuccess('Submitted Successfuly');
+        return redirect()->back()->withSuccess('Submitted Successfuly');
     }
 
     /**

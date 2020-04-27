@@ -3,11 +3,9 @@
 
 namespace App\Audit;
 
-
 use App\AuditPaySchedule;
-use App\Classes\AuditCheckable;
-use Illuminate\Support\Str;
 use App\Contracts\Auditable;
+use App\Classes\AuditCheckable;
 use function is_null;
 
 class CheckNewBeneficiary extends AuditCheckable implements Auditable
@@ -16,12 +14,12 @@ class CheckNewBeneficiary extends AuditCheckable implements Auditable
     {
         $this->initialize($schedule);
 
-        if($this->hasNoPreviousSchedule()){
+        if ($this->hasNoPreviousSchedule()) {
             $this->report(self::NEW_BENEFICIARY, 'NEW BENEFICIARY');
             return;
         }
 
-        if($this->wasPaidLastMonth()){
+        if ($this->wasPaidLastMonth()) {
             return;
         }
 
@@ -43,6 +41,11 @@ class CheckNewBeneficiary extends AuditCheckable implements Auditable
     {
         $last_month = $this->getMonthYear($this->schedule->month->subMonth());
 
-        return "NOT PAID IN $last_month and LAST PAYMENT WAS IN $this->last_payment. THEN APPEARED IN $this->this_month PAYMENT SCHEDULE";
+        return sprintf(
+            "NOT PAID IN %s and LAST PAYMENT WAS IN %s. THEN APPEARED IN %s PAYMENT SCHEDULE",
+            $last_month,
+            $this->last_payment,
+            $this->this_month
+        );
     }
 }

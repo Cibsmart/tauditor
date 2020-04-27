@@ -6,13 +6,10 @@ use App\Bank;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use App\AuditSubMdaSchedule;
-use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use Maatwebsite\Excel\Concerns\ToCollection;
 use function collect;
 use function throw_if;
 use function array_combine;
@@ -78,15 +75,15 @@ class PensionPayScheduleImport implements OnEachRow
     {
         $mda_dept_month_year = Str::of($row_one)->after('ZONE: ')->upper()->replace(' PENSION', '')->explode(', ');
 
-            $this->mda = $mda_dept_month_year[0];
-            $this->department = $mda_dept_month_year[0];
+        $this->mda = $mda_dept_month_year[0];
+        $this->department = $mda_dept_month_year[0];
 
-            $month_year = Str::of($mda_dept_month_year[1])->explode(' ');
+        $month_year = Str::of($mda_dept_month_year[1])->explode(' ');
 
-            $this->month = $month_year[0];
-            $this->year = $month_year[1];
+        $this->month = $month_year[0];
+        $this->year = $month_year[1];
 
-            return;
+        return;
     }
 
 
@@ -103,22 +100,22 @@ class PensionPayScheduleImport implements OnEachRow
 
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
-            'beneficiary_name' => $beneficiary['employee_name'],
-            'designation' => 'PENSIONER',
-            'basic_pay' => $beneficiary['basic_pay'],
-            'bank_name' => $beneficiary['bank_name'],
-            'account_number' => $beneficiary['account_number'],
-            'bank_code' => $beneficiary['bank_code'],
-            'total_allowance' => 0,
-            'gross_pay' => $beneficiary['basic_pay'],
-            'total_deduction' => $beneficiary['total_deduction'],
-            'net_pay' => $beneficiary['net_pay'],
-            'allowances' => [],
-            'deductions' => [],
-            'month' => $month,
-            'bankable_type' => $bankable->bankableType(),
-            'bankable_id' => $bankable->id,
-            'pension' => 1
+            'beneficiary_name'    => $beneficiary['employee_name'],
+            'designation'         => 'PENSIONER',
+            'basic_pay'           => $beneficiary['basic_pay'],
+            'bank_name'           => $beneficiary['bank_name'],
+            'account_number'      => $beneficiary['account_number'],
+            'bank_code'           => $beneficiary['bank_code'],
+            'total_allowance'     => 0,
+            'gross_pay'           => $beneficiary['basic_pay'],
+            'total_deduction'     => $beneficiary['total_deduction'],
+            'net_pay'             => $beneficiary['net_pay'],
+            'allowances'          => [],
+            'deductions'          => [],
+            'month'               => $month,
+            'bankable_type'       => $bankable->bankableType(),
+            'bankable_id'         => $bankable->id,
+            'pension'             => 1,
         ];
 
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
@@ -149,9 +146,9 @@ class PensionPayScheduleImport implements OnEachRow
     private function checkMfbExists($bank_name)
     {
         $exceptions = [
-            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
+            'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

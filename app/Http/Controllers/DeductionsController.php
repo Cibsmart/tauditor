@@ -10,13 +10,12 @@ use App\ComputedValue;
 use App\PercentageValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Validator;
 use App\Http\Requests\DeductionRequest;
 
 class DeductionsController extends Controller
 {
-
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -29,20 +28,20 @@ class DeductionsController extends Controller
     public function index()
     {
         $filters = request()->all('search');
-        $deductions =  Auth::user()
-                            ->deductions()
-                            ->filters(request()->only('search'))
-                            ->paginate()
-                            ->transform(fn(Deduction $deductions) => [
-                                'id' => $deductions->id,
-                                'name' => $deductions->name(),
-                                'amount' => $deductions->amount(),
-                                'value_type' => $deductions->valueType(),
-                                'deduction_type' => $deductions->deductionType()->name,
-                            ]);
+        $deductions = Auth::user()
+                          ->deductions()
+                          ->filters(request()->only('search'))
+                          ->paginate()
+                          ->transform(fn (Deduction $deductions) => [
+                              'id'             => $deductions->id,
+                              'name'           => $deductions->name(),
+                              'amount'         => $deductions->amount(),
+                              'value_type'     => $deductions->valueType(),
+                              'deduction_type' => $deductions->deductionType()->name,
+                          ]);
 
         return Inertia::render('Deductions/Index', [
-            'filters' => $filters,
+            'filters'    => $filters,
             'deductions' => $deductions,
         ]);
     }
@@ -55,11 +54,11 @@ class DeductionsController extends Controller
     public function create()
     {
         $value_types = ValueType::all();
-        $deduction_types =  Auth::user()->deductionTypes()->get();
-        $deduction_names =  Auth::user()->deductionNames()->get();
+        $deduction_types = Auth::user()->deductionTypes()->get();
+        $deduction_names = Auth::user()->deductionNames()->get();
 
         return Inertia::render('Deductions/Create', [
-            'value_types' => $value_types,
+            'value_types'     => $value_types,
             'deduction_types' => $deduction_types,
             'deduction_names' => $deduction_names,
         ]);
@@ -73,13 +72,17 @@ class DeductionsController extends Controller
      */
     public function store(DeductionRequest $request)
     {
-        $deduction_name = $this->deductionName($request->deduction_type, $request->deduction_name, $request->new_deduction);
+        $deduction_name = $this->deductionName(
+            $request->deduction_type,
+            $request->deduction_name,
+            $request->new_deduction
+        );
 
         $valuable = $this->valueType($request->value_type, $request->value, $deduction_name->name);
 
         $valuable->deduction()->create([
             'deduction_name_id' => $deduction_name->id,
-            'domain_id' => Auth::user()->domain->id,
+            'domain_id'         => Auth::user()->domain->id,
         ]);
 
         return redirect()->back()->withSuccess('Deduction Created Successfully');
@@ -172,14 +175,14 @@ class DeductionsController extends Controller
      */
     private function deductionName($deduction_type_id, $deduction_name_id, $deduction_name = null)
     {
-        if($deduction_name_id > 0){
+        if ($deduction_name_id > 0) {
             return Auth::user()->domain->deductionNames()->find($deduction_name_id);
         }
 
         return Auth::user()->domain->deductionNames()->create([
             'deduction_type_id' => $deduction_type_id,
-            'code' => $deduction_name,
-            'name' => $deduction_name,
+            'code'              => $deduction_name,
+            'name'              => $deduction_name,
         ]);
     }
 }

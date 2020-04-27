@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use function number_format;
 
 /**
@@ -26,7 +25,7 @@ class PercentageValue extends Model
 
     public function amount(Beneficiary $beneficiary = null) : float
     {
-        if(! $beneficiary){
+        if (! $beneficiary) {
             return $this->percentage;
         }
 

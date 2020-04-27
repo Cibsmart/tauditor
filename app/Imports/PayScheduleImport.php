@@ -6,7 +6,6 @@ use App\Bank;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
-use Illuminate\Support\Arr;
 use App\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -39,7 +38,6 @@ class PayScheduleImport implements OnEachRow
         $columns = $row->toArray();
 
         if ($row_number === 1) {
-
             $this->processRowOne($columns[0]);
             return null;
         }
@@ -56,7 +54,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -112,10 +110,10 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
@@ -127,22 +125,22 @@ class PayScheduleImport implements OnEachRow
 
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
-            'beneficiary_name' => $beneficiary['employee_name'],
-            'beneficiary_cadre' => $beneficiary['employee_grade'],
-            'designation' => $beneficiary['designation'],
-            'basic_pay' => $beneficiary['basic_salary'],
-            'bank_name' => $beneficiary['bank_name'],
-            'account_number' => $beneficiary['account_no'],
-            'bank_code' => $beneficiary['bank_code'],
-            'total_allowance' => $beneficiary['total_allowance'],
-            'gross_pay' => $beneficiary['grosspay'],
-            'total_deduction' => $beneficiary['total_deduction'] + $beneficiary['total_dues'],
-            'net_pay' => $beneficiary['net_pay'],
-            'allowances' => $allowances,
-            'deductions' => $deductions,
-            'month' => $month,
-            'bankable_type' => $bankable->bankableType(),
-            'bankable_id' => $bankable->id,
+            'beneficiary_name'    => $beneficiary['employee_name'],
+            'beneficiary_cadre'   => $beneficiary['employee_grade'],
+            'designation'         => $beneficiary['designation'],
+            'basic_pay'           => $beneficiary['basic_salary'],
+            'bank_name'           => $beneficiary['bank_name'],
+            'account_number'      => $beneficiary['account_no'],
+            'bank_code'           => $beneficiary['bank_code'],
+            'total_allowance'     => $beneficiary['total_allowance'],
+            'gross_pay'           => $beneficiary['grosspay'],
+            'total_deduction'     => $beneficiary['total_deduction'] + $beneficiary['total_dues'],
+            'net_pay'             => $beneficiary['net_pay'],
+            'allowances'          => $allowances,
+            'deductions'          => $deductions,
+            'month'               => $month,
+            'bankable_type'       => $bankable->bankableType(),
+            'bankable_id'         => $bankable->id,
         ];
 
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
@@ -173,9 +171,9 @@ class PayScheduleImport implements OnEachRow
     private function checkMfbExists($bank_name)
     {
         $exceptions = [
-            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA'
+            'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

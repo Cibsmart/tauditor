@@ -3,9 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Float_;
-use phpDocumentor\Reflection\Types\Integer;
-use phpDocumentor\Reflection\Types\String_;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -93,7 +90,7 @@ class Allowance extends Model
     public function applyTo(Beneficiary $beneficiary, int $allowable_id = null) : Allowance
     {
         $attributes = [
-            'amount' => $this->amount($beneficiary->basic()),
+            'amount'         => $this->amount($beneficiary->basic()),
             'beneficiary_id' => $beneficiary->id,
         ];
 
@@ -110,10 +107,10 @@ class Allowance extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%')
-                      ->orWhere('amount', 'like', '%' . $search . '%')
-                      ->orWhere('type', 'like', '%' . $search . '%')
-                      ->orWhere('value_type', 'like', '%' . $search . '%');
+                $query->where('name', 'like', '%'.$search.'%')
+                      ->orWhere('amount', 'like', '%'.$search.'%')
+                      ->orWhere('type', 'like', '%'.$search.'%')
+                      ->orWhere('value_type', 'like', '%'.$search.'%');
             });
         });
     }

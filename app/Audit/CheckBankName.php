@@ -1,13 +1,10 @@
 <?php
 
-
 namespace App\Audit;
-
 
 use App\AuditPaySchedule;
 use App\Contracts\Auditable;
 use App\Classes\AuditCheckable;
-
 
 class CheckBankName extends AuditCheckable implements Auditable
 {
@@ -15,7 +12,7 @@ class CheckBankName extends AuditCheckable implements Auditable
     {
         $this->initialize($schedule);
 
-        if($this->hasNoPreviousSchedule()){
+        if ($this->hasNoPreviousSchedule()) {
             return;
         }
 
@@ -23,11 +20,17 @@ class CheckBankName extends AuditCheckable implements Auditable
 
         $previous_bank_name = $this->last_schedule->bank_name;
 
-        if($current_bank_name == $previous_bank_name){
+        if ($current_bank_name == $previous_bank_name) {
             return;
         }
 
-        $message = "BANK CHANGED FROM '$previous_bank_name' IN $this->last_payment TO '$current_bank_name' IN $this->this_month";
+        $message = sprintf(
+            "BANK CHANGED FROM '%s' IN %s TO '%s' IN %s",
+            $previous_bank_name,
+            $this->last_payment,
+            $current_bank_name,
+            $this->this_month
+        );
 
         $this->report(self::BANK_CHANGED, $message, $current_bank_name, $previous_bank_name);
 

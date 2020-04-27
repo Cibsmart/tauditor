@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditPayroll;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Classes\ZipDirectory;
 use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
@@ -25,12 +24,12 @@ class AuditAutopayController extends Controller
     {
         $payrolls = Auth::user()->auditPayrolls()->latest()
                         ->paginate()
-                        ->transform(fn(AuditPayroll $payroll) => [
-                            'id' => $payroll->id,
-                            'month' => $payroll->month_name,
-                            'year' => $payroll->year,
-                            'created_by' => $payroll->createdBy(),
-                            'date_created' => $payroll->dateCreated(),
+                        ->transform(fn (AuditPayroll $payroll) => [
+                            'id'                => $payroll->id,
+                            'month'             => $payroll->month_name,
+                            'year'              => $payroll->year,
+                            'created_by'        => $payroll->createdBy(),
+                            'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
                         ]);
 
@@ -49,7 +48,7 @@ class AuditAutopayController extends Controller
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->autopayNotGenerated()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-                DB::transaction(function () use ($sub_mda){
+                DB::transaction(function () use ($sub_mda) {
                     (new GenerateAutoPayScheduleAction())->execute($sub_mda);
                 });
 
@@ -68,8 +67,11 @@ class AuditAutopayController extends Controller
         $year = $audit_payroll->year;
         $month = $audit_payroll->month_name;
 
-        if($audit_payroll->noAutopaySchedule()){
-            return back()->with('error', "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below");
+        if ($audit_payroll->noAutopaySchedule()) {
+            return back()->with(
+                'error',
+                "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below"
+            );
         }
 
         $directory = $this->createFiles($audit_payroll);
@@ -95,7 +97,6 @@ class AuditAutopayController extends Controller
             $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-
                 $name = $sub_mda->sub_mda_name;
 
                 $file_name = "$name $month $year.xlsx";
@@ -104,7 +105,7 @@ class AuditAutopayController extends Controller
 
                 $autopay_file_exists = Storage::disk('local')->exists($path);
 
-                if($autopay_file_exists){
+                if ($autopay_file_exists) {
                     continue;
                 }
 
@@ -127,17 +128,19 @@ class AuditAutopayController extends Controller
     }
 
 
-
     public function downloadMfb(AuditPayroll $audit_payroll)
     {
         $year = $audit_payroll->year;
         $month = $audit_payroll->month_name;
 
-        if($audit_payroll->noAutopaySchedule()){
-            return back()->with('error', "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below");
+        if ($audit_payroll->noAutopaySchedule()) {
+            return back()->with(
+                'error',
+                "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below"
+            );
         }
 
-        if($audit_payroll->noMfbSchedule()){
+        if ($audit_payroll->noMfbSchedule()) {
             return back()->with('error', "No Beneficiary Used Microfinance in $month $year Payment Schedule");
         }
 
@@ -167,7 +170,6 @@ class AuditAutopayController extends Controller
                             ->get();
 
             foreach ($sub_mdas as $sub_mda) {
-
                 $mfbs = $sub_mda->microfinanceSchedules()->with('microfinanceBank')
                                 ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
                                 ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
@@ -186,7 +188,7 @@ class AuditAutopayController extends Controller
 
                     $mfb_file_exists = Storage::disk('local')->exists($path);
 
-                    if($mfb_file_exists){
+                    if ($mfb_file_exists) {
                         continue;
                     }
 

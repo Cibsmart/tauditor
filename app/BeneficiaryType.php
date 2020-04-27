@@ -14,7 +14,7 @@ class BeneficiaryType extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'pensioners' => 'boolean'
+        'pensioners' => 'boolean',
     ];
 
     public function designations() : HasMany

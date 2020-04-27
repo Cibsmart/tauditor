@@ -3,18 +3,18 @@
 
 namespace App\Classes;
 
-
 use ZipArchive;
 
 class ZipDirectory
 {
     /**
      * Add files and sub-directories in a folder to zip file.
-     * @param string $folder
-     * @param ZipArchive $zipFile
-     * @param int $exclusiveLength Number of text to be exclusived from the file path.
+     * @param  string  $folder
+     * @param  ZipArchive  $zipFile
+     * @param  int  $exclusiveLength  Number of text to be exclusived from the file path.
      */
-    private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
+    private static function folderToZip($folder, &$zipFile, $exclusiveLength)
+    {
 
         $handle = opendir($folder);
 
@@ -41,8 +41,8 @@ class ZipDirectory
      * Usage:
      *   HZip::zipDir('/path/to/sourceDir', '/path/to/out.zip');
      *
-     * @param string $sourcePath Path of directory to be zip.
-     * @param string $outZipPath Path of output zip file.
+     * @param  string  $sourcePath  Path of directory to be zip.
+     * @param  string  $outZipPath  Path of output zip file.
      */
     public static function zipDir($sourcePath, $outZipPath)
     {

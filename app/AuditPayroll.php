@@ -13,7 +13,7 @@ class AuditPayroll extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'analysed' => 'boolean',
+        'analysed'          => 'boolean',
         'autopay_generated' => 'boolean',
     ];
 
@@ -49,14 +49,14 @@ class AuditPayroll extends Model
 
     public function noAutopaySchedule()
     {
-        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function($query){
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query){
             return $query->whereNotNull('autopay_generated');
         })->doesntExist();
     }
 
     public function noMfbSchedule()
     {
-        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function($query){
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query){
             return $query->whereHas('microfinanceSchedules');
         })->doesntExist();
     }

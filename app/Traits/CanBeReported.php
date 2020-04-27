@@ -3,7 +3,6 @@
 
 namespace App\Traits;
 
-
 use App\AuditReport;
 
 trait CanBeReported
@@ -12,10 +11,10 @@ trait CanBeReported
     {
         $this->reportable()->firstOrCreate([
             'audit_payroll_id' => $payroll_id,
-            'category' => $category,
-            'message' => $message,
-            'current_value' => $current,
-            'previous_value' => $previous,
+            'category'         => $category,
+            'message'          => $message,
+            'current_value'    => $current,
+            'previous_value'   => $previous,
         ]);
     }
 

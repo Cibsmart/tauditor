@@ -3,7 +3,6 @@
 
 namespace App\Contracts;
 
-
 use App\AuditPaySchedule;
 
 interface Auditable

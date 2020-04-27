@@ -14,8 +14,8 @@ class AuditPaySchedule extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'paid' => 'boolean',
-        'pension' => 'boolean',
+        'paid'       => 'boolean',
+        'pension'    => 'boolean',
         'allowances' => 'array',
         'deductions' => 'array',
     ];

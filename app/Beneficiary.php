@@ -4,19 +4,11 @@ namespace App;
 
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use phpDocumentor\Reflection\Types\Float_;
-use phpDocumentor\Reflection\Types\Mixed_;
-use phpDocumentor\Reflection\Types\Integer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use function is_null;
-use function in_array;
-use function contains;
 use function array_merge;
-use function number_format;
-use const PHP_ROUND_HALF_UP;
 
 /**
  * @property int id
@@ -36,15 +28,13 @@ use const PHP_ROUND_HALF_UP;
  * @property mixed pensioner
  * @property mixed allowanceDetails
  */
-
 class Beneficiary extends Model
 {
-
     protected $guarded = [];
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'address' => AddressCast::class,
+        'address'       => AddressCast::class,
     ];
 
     protected $with = ['status'];
@@ -124,7 +114,6 @@ class Beneficiary extends Model
     {
         return $this->hasMany(PaySchedule::class);
     }
-
 
 
     /*
@@ -214,7 +203,7 @@ class Beneficiary extends Model
     {
         $payable = $type === 1
             ? new PersonalizedSalary(['monthly_basic' => $value])
-            : new StructuredSalary(['cadre_step_id' => $value]) ;
+            : new StructuredSalary(['cadre_step_id' => $value]);
 
         $salary = $this->salaryDetail->create();
 
@@ -232,7 +221,7 @@ class Beneficiary extends Model
     public function applyAllowance(Allowance $allowance, int $allowable_id = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $allowance->amount($this),
+            'amount'       => $allowance->amount($this),
             'allowance_id' => $allowance->id,
         ];
 
@@ -260,24 +249,24 @@ class Beneficiary extends Model
     public function allowances() : Collection
     {
         return $this->allowanceDetails()->get()
-                           ->load(['allowance.allowanceName'])
-                           ->transform(fn(AllowanceDetail $allowance) => [
-                               'id' => $allowance->id,
-                               'name' => $allowance->allowance->allowanceName->name,
-                               'amount' => $allowance->amount,
-                           ]);
+                    ->load(['allowance.allowanceName'])
+                    ->transform(fn (AllowanceDetail $allowance) => [
+                        'id'     => $allowance->id,
+                        'name'   => $allowance->allowance->allowanceName->name,
+                        'amount' => $allowance->amount,
+                    ]);
     }
 
     /**
      * @param  Deduction  $deduction
-     * @param  Deductible  $deductible
+     * @param  int  $deductible
      * @return Beneficiary
      */
     public function applyDeduction(Deduction $deduction, int $deductible = null) : Beneficiary
     {
         $attributes = [
-            'amount' => $deduction->amount($this),
-            'deduction_id' => $deduction->id
+            'amount'       => $deduction->amount($this),
+            'deduction_id' => $deduction->id,
         ];
 
         $attributes = $deductible
@@ -300,9 +289,9 @@ class Beneficiary extends Model
     {
         return $this->deductionDetails()->get()
                     ->load(['deduction.deductionName'])
-                    ->transform(fn(DeductionDetail $deduction) => [
-                        'id' => $deduction->id,
-                        'name' => $deduction->deduction->deductionName->name,
+                    ->transform(fn (DeductionDetail $deduction) => [
+                        'id'     => $deduction->id,
+                        'name'   => $deduction->deduction->deductionName->name,
                         'amount' => $deduction->amount,
                     ]);
     }
@@ -333,8 +322,8 @@ class Beneficiary extends Model
 
     public function scopeActive($query)
     {
-        return $query->where(function($query){
-            $query->whereHas('status', fn($query) => $query->where('active', 1));
+        return $query->where(function ($query) {
+            $query->whereHas('status', fn ($query) => $query->where('active', 1));
         });
     }
 
@@ -347,23 +336,31 @@ class Beneficiary extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('last_name', 'like', '%' . $search . '%')
-                      ->orWhere('first_name', 'like', '%' . $search . '%')
-                      ->orWhere('middle_name', 'like', '%' . $search . '%')
-                      ->orWhere('verification_number', 'like', '%' . $search . '%')
-                      ->orWhereHas('status', function ($query) use ($search){
+                $query->where('last_name', 'like', '%'.$search.'%')
+                      ->orWhere('first_name', 'like', '%'.$search.'%')
+                      ->orWhere('middle_name', 'like', '%'.$search.'%')
+                      ->orWhere('verification_number', 'like', '%'.$search.'%')
+                      ->orWhereHas('status', function ($query) use ($search) {
                           $query->where('active', Str::startsWith($search, ['act', 'acti', 'activ', 'active']));
-                      })->orWhereHas('mdaDetail', function($query) use ($search){
-                          $query->whereHas('mda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas('subMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas('subSubMda', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
-                      })->orWhereHas('workDetail', function($query) use ($search){
-                          $query->whereHas('designation', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+                      })->orWhereHas('mdaDetail', function ($query) use ($search) {
+                          $query->whereHas('mda', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
+                          $query->orWhereHas('subMda', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
+                          $query->orWhereHas(
+                              'subSubMda',
+                              fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                          );
+                      })->orWhereHas('workDetail', function ($query) use ($search) {
+                          $query->whereHas(
+                              'designation',
+                              fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                          );
                       })->orWhereHas('bankDetail', function ($query) use ($search) {
-                          $query->where('account_number', 'like', '%' . $search . '%')
-                               ->orWhereHasMorph('bankable',
-                                   [Bank::class, MicroFinanceBank::class],
-                                   fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
+                          $query->where('account_number', 'like', '%'.$search.'%')
+                              ->orWhereHasMorph(
+                                  'bankable',
+                                  [Bank::class, MicroFinanceBank::class],
+                                  fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                              );
 //                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
 //                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {
 //                                   $query->whereHas('gradeLevel', fn($query) => where('name', 'like', '%' . $search . '%'));

@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\PaySchedule;
 use App\AuditReport;
 use App\AuditPayroll;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\AuditPayScheduleAction;
-use App\Actions\GenerateAutoPayScheduleAction;
 use function back;
-use function number_format;
 
 class AuditAnalysisController extends Controller
 {
@@ -25,12 +21,12 @@ class AuditAnalysisController extends Controller
     {
         $payrolls = Auth::user()->auditPayrolls()->latest()
                         ->paginate()
-                        ->transform(fn(AuditPayroll $payroll) => [
-                            'id' => $payroll->id,
-                            'month' => $payroll->month_name,
-                            'year' => $payroll->year,
-                            'created_by' => $payroll->createdBy(),
-                            'date_created' => $payroll->dateCreated(),
+                        ->transform(fn (AuditPayroll $payroll) => [
+                            'id'                => $payroll->id,
+                            'month'             => $payroll->month_name,
+                            'year'              => $payroll->year,
+                            'created_by'        => $payroll->createdBy(),
+                            'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
                         ]);
 
@@ -49,14 +45,13 @@ class AuditAnalysisController extends Controller
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-
                 (new AuditPayScheduleAction)->execute($sub_mda);
 
                 $count++;
             }
         }
 
-        if($count === 0){
+        if ($count === 0) {
             $month = $audit_payroll->month_name;
             $year = $audit_payroll->year;
             $message = "Not Schedule Has Been Uploaded for $month $year";
@@ -75,9 +70,18 @@ class AuditAnalysisController extends Controller
                                  ->groupBy('reportable_type', 'reportable_id')
                                  ->where('reportable_type', 'audit_pay_schedule')
                                  ->paginate()
-                                 ->transform(fn(AuditReport $report) => [
-                                     'schedule' => $report->reportable->only('beneficiary_name', 'verification_number', 'pension'),
-                                     'reports' => $report->reportable->auditReports->map(fn($rep) => $rep->only('id', 'message', 'current_value', 'previous_value')),
+                                 ->transform(fn (AuditReport $report) => [
+                                     'schedule' => $report->reportable->only(
+                                         'beneficiary_name',
+                                         'verification_number',
+                                         'pension'
+                                     ),
+                                     'reports'  => $report->reportable->auditReports->map(fn ($rep) => $rep->only(
+                                         'id',
+                                         'message',
+                                         'current_value',
+                                         'previous_value'
+                                     )),
                                  ]);
 
         return Inertia::render('AuditAnalysis/Show', [

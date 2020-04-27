@@ -13,7 +13,7 @@ class Structure extends Model
 
     public function cadre() : HasMany
     {
-        return $this->hasMany(Cadre::class, );
+        return $this->hasMany(Cadre::class,);
     }
 
     public function steps() : HasManyThrough

@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Compute\Tax;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use function resolve;
@@ -27,7 +26,7 @@ class ComputedValue extends Model
 
     public function amount(Beneficiary $beneficiary = null)
     {
-        if(! $beneficiary){
+        if (! $beneficiary) {
             return Str::upper($this->computer);
         }
 

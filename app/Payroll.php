@@ -23,9 +23,9 @@ class Payroll extends Model
 
     protected $dates = ['generated'];
 
-    protected $casts =[
-      'approved' => 'boolean',
-      'archived' => 'boolean',
+    protected $casts = [
+        'approved' => 'boolean',
+        'archived' => 'boolean',
     ];
 
     public function user()

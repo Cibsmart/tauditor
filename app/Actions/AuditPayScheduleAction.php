@@ -3,7 +3,6 @@
 
 namespace App\Actions;
 
-
 use App\Audit\Analyse;
 use App\AuditSubMdaSchedule;
 
@@ -14,8 +13,7 @@ class AuditPayScheduleAction
     {
         $schedules = $sub_mda_schedule->auditPaySchedules;
 
-        foreach ($schedules as $schedule)
-        {
+        foreach ($schedules as $schedule) {
             (new Analyse)->check($schedule);
         }
 

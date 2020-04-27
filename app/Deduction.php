@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property mixed deduction
  * @property mixed amount
  */
-
 class Deduction extends Model
 {
     protected $guarded = [];
@@ -69,8 +68,8 @@ class Deduction extends Model
     public function applyTo(Beneficiary $beneficiary)
     {
         $this->deductionDetails()->create([
-            'amount' => $this->amount($beneficiary->basic()),
-            'beneficiary_id' => $beneficiary->id
+            'amount'         => $this->amount($beneficiary),
+            'beneficiary_id' => $beneficiary->id,
         ]);
 
         return $this;
@@ -84,11 +83,11 @@ class Deduction extends Model
     public function scopeFilters($query, array $filters) : void
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
-            $query->whereHas('deductionDetails', function($query) use ($search){
-                $query->where('amount', 'like', '%' . $search . '%');
-            })->orWhereHas('deductionName', function($query) use ($search){
-                $query->where('name', 'like', '%' . $search . '%')
-                ->orWhereHas('deductionType', fn($query) => $query->where('name', 'like', '%' . $search . '%'));
+            $query->whereHas('deductionDetails', function ($query) use ($search) {
+                $query->where('amount', 'like', '%'.$search.'%');
+            })->orWhereHas('deductionName', function ($query) use ($search) {
+                $query->where('name', 'like', '%'.$search.'%')
+                      ->orWhereHas('deductionType', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
             });
         });
     }

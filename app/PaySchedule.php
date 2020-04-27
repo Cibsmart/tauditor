@@ -17,7 +17,7 @@ class PaySchedule extends Model
     protected $casts = [
         'allowances' => 'array',
         'deductions' => 'array',
-        'pensioner' => 'boolean',
+        'pensioner'  => 'boolean',
     ];
 
     public function mda()

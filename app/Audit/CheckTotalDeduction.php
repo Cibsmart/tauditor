@@ -3,7 +3,6 @@
 
 namespace App\Audit;
 
-
 use App\AuditPaySchedule;
 use App\Contracts\Auditable;
 use App\Classes\AuditCheckable;
@@ -14,7 +13,7 @@ class CheckTotalDeduction extends AuditCheckable implements Auditable
     {
         $this->initialize($schedule);
 
-        if($this->hasNoPreviousSchedule()){
+        if ($this->hasNoPreviousSchedule()) {
             return;
         }
 
@@ -22,11 +21,17 @@ class CheckTotalDeduction extends AuditCheckable implements Auditable
 
         $previous_total_deduction = $this->last_schedule->total_deduction;
 
-        if($current_total_deduction == $previous_total_deduction){
+        if ($current_total_deduction == $previous_total_deduction) {
             return;
         }
 
-        $message = "TOTAL DEDUCTION AMOUNT CHANGED FROM '$previous_total_deduction' IN $this->last_payment TO '$current_total_deduction' IN $this->this_month";
+        $message = sprintf(
+            "TOTAL DEDUCTION AMOUNT CHANGED FROM '%s' IN %s TO '%s' IN %s",
+            $previous_total_deduction,
+            $this->last_payment,
+            $current_total_deduction,
+            $this->this_month
+        );
 
         $this->report(self::TOTAL_DEDUCTION_CHANGED, $message, $current_total_deduction, $previous_total_deduction);
 

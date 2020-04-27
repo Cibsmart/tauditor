@@ -7,9 +7,6 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\QueryException;
-use function sleep;
-use function compact;
 use function redirect;
 
 class PayrollController extends Controller

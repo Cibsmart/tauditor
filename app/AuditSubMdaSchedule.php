@@ -104,7 +104,7 @@ class AuditSubMdaSchedule extends Model
 
     public function scopeHasMicrofinance($query)
     {
-        return $query->whereHas('microfinanceSchedules' );
+        return $query->whereHas('microfinanceSchedules');
     }
 
     public function analysisCompleted()

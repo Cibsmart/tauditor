@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int active
  *
  */
-
 class BeneficiaryStatus extends Model
 {
     use SoftDeletes;
@@ -18,7 +17,7 @@ class BeneficiaryStatus extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
     ];
 
     public function beneficiary()

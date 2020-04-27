@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Beneficiary;
-use Inertia\Inertia;
-use Inertia\Response;
-use App\StructuredSalary;
-use App\LocalGovernment;
 use App\State;
 use App\Domain;
 use App\Gender;
+use App\Beneficiary;
+use Inertia\Inertia;
+use Inertia\Response;
 use App\MaritalStatus;
+use App\LocalGovernment;
 use App\BeneficiaryType;
+use App\StructuredSalary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -37,22 +37,22 @@ class BeneficiaryController extends Controller
                              ->filters(request()->only('search'))
                              ->paginate()
                              ->transform(fn (Beneficiary $beneficiary) => [
-                                 'id' => $beneficiary->id,
-                                 'name' => $beneficiary->name,
+                                 'id'                  => $beneficiary->id,
+                                 'name'                => $beneficiary->name,
                                  'verification_number' => $beneficiary->verification_number,
-                                 'active' => $beneficiary->status->active,
-                                 'account_number' => $beneficiary->accountNumber(),
-                                 'bank_name' => $beneficiary->bankName(),
-                                 'mda' => $beneficiary->mdaName(),
-                                 'sub_mda' => $beneficiary->subMdaName(),
-                                 'sub_sub_mda' => $beneficiary->subSubMdaName(),
-                                 'designation' => $beneficiary->designationName(),
-                                 'grade_level' => $beneficiary->gradeLevelName(),
-                                 'step' => $beneficiary->stepName(),
+                                 'active'              => $beneficiary->status->active,
+                                 'account_number'      => $beneficiary->accountNumber(),
+                                 'bank_name'           => $beneficiary->bankName(),
+                                 'mda'                 => $beneficiary->mdaName(),
+                                 'sub_mda'             => $beneficiary->subMdaName(),
+                                 'sub_sub_mda'         => $beneficiary->subSubMdaName(),
+                                 'designation'         => $beneficiary->designationName(),
+                                 'grade_level'         => $beneficiary->gradeLevelName(),
+                                 'step'                => $beneficiary->stepName(),
                              ]);
 
         return Inertia::render('Beneficiary/Index', [
-            'filters' => $filters,
+            'filters'       => $filters,
             'beneficiaries' => $beneficiaries,
         ]);
     }
@@ -72,13 +72,13 @@ class BeneficiaryController extends Controller
         $beneficiary_types = BeneficiaryType::all();
 
         $filters = Request::all('search');
-        return Inertia::render('Beneficiary/Create',[
-            'filters' => $filters,
-            'lga' => $lga,
-            'states' => $states,
-            'domains' => $domains,
-            'gender' => $gender,
-            'marital_status' => $marital_status,
+        return Inertia::render('Beneficiary/Create', [
+            'filters'           => $filters,
+            'lga'               => $lga,
+            'states'            => $states,
+            'domains'           => $domains,
+            'gender'            => $gender,
+            'marital_status'    => $marital_status,
             'beneficiary_types' => $beneficiary_types,
         ]);
     }
@@ -91,40 +91,36 @@ class BeneficiaryController extends Controller
      */
     public function store()
     {
-      //dd(Request::all('first_name'));
-        try{
-
+        //dd(Request::all('first_name'));
+        try {
             Beneficiary::create(
                 Request::validate([
-                    'verification_number'=>'nullable|string',
-                    'last_name' => 'required|string',
-                    'first_name' => 'required|string',
-                    'middle_name' => 'nullable|string',
-                    'date_of_birth' => 'required|date',
-                    'gender_id' => 'nullable|integer|min:1',
-                    'marital_status_id' => 'nullable|integer|min:1',
-                    'state_id' => 'nullable|integer|min:1',
+                    'verification_number' => 'nullable|string',
+                    'last_name'           => 'required|string',
+                    'first_name'          => 'required|string',
+                    'middle_name'         => 'nullable|string',
+                    'date_of_birth'       => 'required|date',
+                    'gender_id'           => 'nullable|integer|min:1',
+                    'marital_status_id'   => 'nullable|integer|min:1',
+                    'state_id'            => 'nullable|integer|min:1',
                     'local_government_id' => 'nullable|integer|min:1',
-                    'phone_number' => 'nullable|string',
-                    'email' => 'nullable|email',
-                    'address_line_1' => 'nullable|string',
-                    'address_line_2' => 'nullable|string',
-                    'address_city' => 'nullable|string',
-                    'address_state' => 'nullable|string',
-                    'address_country' => 'nullable|string',
-                    'domain_id' => 'required|integer|min:1',
+                    'phone_number'        => 'nullable|string',
+                    'email'               => 'nullable|email',
+                    'address_line_1'      => 'nullable|string',
+                    'address_line_2'      => 'nullable|string',
+                    'address_city'        => 'nullable|string',
+                    'address_state'       => 'nullable|string',
+                    'address_country'     => 'nullable|string',
+                    'domain_id'           => 'required|integer|min:1',
                     'beneficiary_type_id' => 'required|integer|min:1',
-                    'active' => 'nullable',
+                    'active'              => 'nullable',
                 ])
             );
 
-            return back()->with('success',"Beneficiary Created");
-
-        }catch(Exception $e){
-
-            return back()->with('errors',$e);
+            return back()->with('success', "Beneficiary Created");
+        } catch (Exception $e) {
+            return back()->with('errors', $e);
         }
-
     }
 
     /**
@@ -182,9 +178,9 @@ class BeneficiaryController extends Controller
             'mdaDetail.subMda',
             'mdaDetail.subSubMda',
             'workDetail.designation',
-            'salaryDetail.payable' => function(MorphTo $morphTo){
+            'salaryDetail.payable' => function (MorphTo $morphTo) {
                 $morphTo->morphWith([StructuredSalary::class => ['cadreStep.cadre.gradeLevel', 'cadreStep.step']]);
-            }
+            },
         ];
     }
 }

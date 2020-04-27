@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int id
  */
-
 class Deductible extends Model
 {
     use SoftDeletes;

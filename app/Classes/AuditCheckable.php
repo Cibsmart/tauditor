@@ -3,7 +3,6 @@
 
 namespace App\Classes;
 
-
 use Carbon\Carbon;
 use App\AuditPaySchedule;
 use Illuminate\Support\Str;
@@ -56,7 +55,7 @@ abstract class AuditCheckable
 
         $this->this_month = $this->getMonthYear($this->schedule->month);
 
-        if($this->last_schedule) {
+        if ($this->last_schedule) {
             $this->last_payment = $this->getMonthYear($this->last_schedule->month);
         }
     }
@@ -72,7 +71,13 @@ abstract class AuditCheckable
 
     private function thenReport()
     {
-        $this->schedule->report($this->payroll->id, $this->category, $this->message, $this->current_value, $this->previous_value);
+        $this->schedule->report(
+            $this->payroll->id,
+            $this->category,
+            $this->message,
+            $this->current_value,
+            $this->previous_value
+        );
     }
 
     private function setCategory($category)
@@ -106,10 +111,10 @@ abstract class AuditCheckable
     private function previousSchedules()
     {
         return AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
-                                ->where('month', '<', $this->month)
-                                ->latest('month')
-                                ->take(12)
-                                ->get();
+                               ->where('month', '<', $this->month)
+                               ->latest('month')
+                               ->take(12)
+                               ->get();
     }
 
     protected function hasNoPreviousSchedule()

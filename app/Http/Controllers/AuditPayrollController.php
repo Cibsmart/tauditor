@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Mda;
 use App\User;
-use App\AuditPayroll;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use App\AuditPayroll;
 use App\AuditMdaSchedule;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+
 class AuditPayrollController extends Controller
 {
     public function __construct()
@@ -21,14 +21,14 @@ class AuditPayrollController extends Controller
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()->latest()
-                                ->paginate()
-                                ->transform(fn(AuditPayroll $payroll) => [
-                                    'id' => $payroll->id,
-                                    'month' => $payroll->month_name,
-                                    'year' => $payroll->year,
-                                    'created_by' => $payroll->createdBy(),
-                                    'date_created' => $payroll->dateCreated(),
-                                ]);
+                        ->paginate()
+                        ->transform(fn (AuditPayroll $payroll) => [
+                            'id'           => $payroll->id,
+                            'month'        => $payroll->month_name,
+                            'year'         => $payroll->year,
+                            'created_by'   => $payroll->createdBy(),
+                            'date_created' => $payroll->dateCreated(),
+                        ]);
 
         return Inertia::render('AuditPayroll/Index', [
             'payrolls' => $payrolls,
@@ -42,21 +42,20 @@ class AuditPayrollController extends Controller
         $user = Auth::user();
 
         $attributes = [
-            'month' => $date->month,
+            'month'      => $date->month,
             'month_name' => $date->monthName,
-            'year' => $date->year,
+            'year'       => $date->year,
         ];
 
         $payroll = $user->auditPayrolls()->where($attributes)->first();
 
-        if($payroll)
-        {
+        if ($payroll) {
             return back()->with('error', "You Cannot Create Another Audit Payroll for $date->monthName $date->year");
         }
 
         $attributes = array_merge($attributes, ['user_id' => $user->id]);
 
-        DB::transaction(function() use ($user, $attributes){
+        DB::transaction(function () use ($user, $attributes) {
             $payroll = $user->auditPayrolls()->create($attributes);
 
             $this->createAuditMdaSchedules($payroll, $user);
@@ -77,9 +76,9 @@ class AuditPayrollController extends Controller
 
             foreach ($mdas as $mda) {
                 $attributes = [
-                    'mda_id' => $mda->id,
+                    'mda_id'   => $mda->id,
                     'mda_name' => $mda->name,
-                    'pension' => $pensioners,
+                    'pension'  => $pensioners,
                 ];
 
                 $audit_mda_schedule = $payroll->auditMdaSchedules()->create($attributes);
@@ -92,7 +91,7 @@ class AuditPayrollController extends Controller
     public function createAuditSubMdaSchedules(Mda $mda, AuditMdaSchedule $audit_mda_schedule)
     {
         //Only State Education Commission should have add subs
-        if($mda->code !== 'SEC'){
+        if ($mda->code !== 'SEC') {
             $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
             return;
         }
