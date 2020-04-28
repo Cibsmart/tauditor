@@ -8,6 +8,7 @@ use function resolve;
 
 /**
  * @property mixed computer
+ * @method static create(string[] $array)
  */
 class ComputedValue extends Model
 {

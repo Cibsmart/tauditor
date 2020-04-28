@@ -18,6 +18,7 @@ class CreateDeductionDetailsTable extends Migration
             $table->unsignedBigInteger('beneficiary_id');
             $table->unsignedBigInteger('deduction_id');
             $table->unsignedBigInteger('amount');
+            $table->unsignedBigInteger('deductible_id')->default('0');
             $table->timestamps();
             $table->softDeletes();
 

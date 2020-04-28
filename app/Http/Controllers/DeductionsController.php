@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Deduction;
 use App\ValueType;
 use App\FixedValue;
+use App\BlankValue;
 use Inertia\Inertia;
 use App\ComputedValue;
 use App\PercentageValue;
@@ -68,7 +69,7 @@ class DeductionsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(DeductionRequest $request)
     {
@@ -85,7 +86,7 @@ class DeductionsController extends Controller
             'domain_id'         => Auth::user()->domain->id,
         ]);
 
-        return redirect()->back()->withSuccess('Deduction Created Successfully');
+        return redirect()->back()->with('success', 'Deduction Created Successfully');
     }
 
     /**
@@ -164,6 +165,10 @@ class DeductionsController extends Controller
         if ($value_type == 'computed') {
             $computer = 'compute_'.$deduction_name;
             return ComputedValue::create(['computer' => $computer]);
+        }
+
+        if ($value_type == 'blank') {
+            return BlankValue::create();
         }
     }
 

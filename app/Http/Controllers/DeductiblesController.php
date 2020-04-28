@@ -63,58 +63,59 @@ class DeductiblesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         $data = $request->all();
 
         $request->validate([
-            'deductibleType' => ['required'],
-            'deductionId'    => ['required'],
+            'deductible_type' => ['required'],
+            'deduction_id'    => ['required'],
         ]);
 
 
-        $deduction_id = $data['deductionId'];
+        $deduction_id = $data['deduction_id'];
+        $deductible_id = null;
 
-        if ($data['deductibleType'] == "all") {
+        if ($data['deductible_type'] == "all") {
             $deductible_id = Auth::user()->domain_id;
-        } elseif ($data['deductibleType'] == "beneficiary_type") {
+        } elseif ($data['deductible_type'] == "beneficiary_type") {
             $deductible_id = $data['beneficiaryType'];
             $request->validate([
-                'deductibleType'  => ['required'],
+                'deductible_type'  => ['required'],
                 'beneficiaryType' => ['required', 'integer'],
                 'startDate'       => ['nullable', 'date'],
                 'endDate'         => ['nullable', 'date'],
             ]);
-        } elseif ($data['deductibleType'] == "salary_structure") {
+        } elseif ($data['deductible_type'] == "salary_structure") {
             $deductible_id = $data['salaryStructure'];
             $request->validate([
-                'deductibleType'  => ['required'],
+                'deductible_type'  => ['required'],
                 'salaryStructure' => ['required', 'integer'],
                 'startDate'       => ['nullable', 'date'],
                 'endDate'         => ['nullable', 'date'],
             ]);
-        } elseif ($data['deductibleType'] == "cadre") {
+        } elseif ($data['deductible_type'] == "cadre") {
             $deductible_id = $data['Cadre'];
             $request->validate([
-                'deductibleType' => ['required'],
+                'deductible_type' => ['required'],
                 'Cadre'          => ['required', 'integer'],
                 'startDate'      => ['nullable', 'date'],
                 'endDate'        => ['nullable', 'date'],
             ]);
-        } elseif ($data['deductibleType'] == "cadre_step") {
+        } elseif ($data['deductible_type'] == "cadre_step") {
             $deductible_id = $data['cadreStep'];
             $request->validate([
-                'deductibleType' => ['required'],
+                'deductible_type' => ['required'],
                 'Cadre'          => ['required', 'integer'],
                 'cadreStep'      => ['required', 'integer'],
                 'startDate'      => ['nullable', 'date'],
                 'endDate'        => ['nullable', 'date'],
             ]);
-        } elseif ($data['deductibleType'] == "mda_structure") {
+        } elseif ($data['deductible_type'] == "mda_structure") {
             $request->validate([
-                'deductibleType'  => ['required'],
+                'deductible_type'  => ['required'],
                 'Mda'             => ['required', 'integer'],
                 'salaryStructure' => ['required', 'integer'],
                 'startDate'       => ['nullable', 'date'],
@@ -140,7 +141,7 @@ class DeductiblesController extends Controller
         }
 
         Deductible::create([
-            'deductible_type' => $data['deductibleType'],
+            'deductible_type' => $data['deductible_type'],
             'deductible_id'   => $deductible_id,
             'deduction_id'    => $deduction_id,
             'start_date'      => $data['startDate'],
@@ -148,7 +149,7 @@ class DeductiblesController extends Controller
         ]);
 
 
-        return redirect()->back()->withSuccess('Submitted Successfuly');
+        return redirect()->back()->with('success', 'Submitted Successfully');
     }
 
     /**

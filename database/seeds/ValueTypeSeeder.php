@@ -17,6 +17,7 @@ class ValueTypeSeeder extends Seeder
             'computed' => 'COMPUTED VALUE',
             'fixed' => 'FIXED VALUE',
             'percentage' => 'PERCENTAGE VALUE',
+            'blank' => 'BLANK VALUE'
         ];
 
         foreach ($types as $key => $value) {

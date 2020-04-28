@@ -44,12 +44,12 @@ class BeneficiarySeeder extends Seeder
 
         foreach ($domains as $domain) {
             $beneficiaries = factory(Beneficiary::class, 50)->create([
-                'domain_id'           => fn () => $domain->id,
-                'gender_id'           => fn () => $gender->random()->id,
-                'marital_status_id'   => fn () => $marital->random()->id,
-                'state_id'            => fn () => $state->random()->id,
-                'local_government_id' => fn () => $lga->random()->id,
-                'beneficiary_type_id' => fn () => $domain->beneficiaryTypes->random()->id,
+                'domain_id'           => fn() => $domain->id,
+                'gender_id'           => fn() => $gender->random()->id,
+                'marital_status_id'   => fn() => $marital->random()->id,
+                'state_id'            => fn() => $state->random()->id,
+                'local_government_id' => fn() => $lga->random()->id,
+                'beneficiary_type_id' => fn() => $domain->beneficiaryTypes->random()->id,
             ]);
 
             $beneficiaries->each(function ($beneficiary) use (
@@ -59,7 +59,7 @@ class BeneficiarySeeder extends Seeder
                 $qualifications,
                 $domain,
                 $faker
-            ) {
+            ){
                 $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make());
 
                 $faker->randomElement([1, 2]) == 1
@@ -83,11 +83,11 @@ class BeneficiarySeeder extends Seeder
 
                 $beneficiary->nextOfKin()
                             ->save(factory(NextOfKin::class)
-                                ->make(['relationship_id' => fn () => $relationships->random()->id]));
+                                ->make(['relationship_id' => fn() => $relationships->random()->id]));
 
                 $beneficiary->qualifications()
                             ->saveMany(factory(Qualification::class, $faker->randomElement([1, 2, 3, 4, 5]))
-                                ->make(['qualification_type_id' => fn () => $qualifications->random()->id]));
+                                ->make(['qualification_type_id' => fn() => $qualifications->random()->id]));
 
                 $beneficiary->mdaDetail()
                             ->save(factory(MdaDetail::class)
@@ -98,6 +98,8 @@ class BeneficiarySeeder extends Seeder
                                 ->make([
                                     'beneficiary_id' => $beneficiary->id,
                                     'designation_id' => $beneficiary->beneficiaryType->designations->random()->id,
+                                    'grade_level_id' => 1,
+                                    'step_id'        => 1,
                                 ]));
             });
         }

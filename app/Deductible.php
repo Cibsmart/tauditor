@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int id
+ * @method static create(array $array)
  */
 class Deductible extends Model
 {

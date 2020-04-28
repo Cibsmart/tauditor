@@ -7,6 +7,7 @@ use function number_format;
 
 /**
  * @property mixed percentage
+ * @method static create(array $array)
  */
 class PercentageValue extends Model
 {

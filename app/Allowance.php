@@ -19,7 +19,6 @@ class Allowance extends Model
 {
     protected $guarded = [];
 
-
     /*
     |-------------------------------------------------------------------------------
     | Relationship
@@ -58,12 +57,12 @@ class Allowance extends Model
 
     /**
      * Get the Allowance Amount
-     * @param  float|null  $base_value
+     * @param  Beneficiary|null  $beneficiary
      * @return float
      */
-    public function amount(float $base_value = null) : float
+    public function amount(Beneficiary $beneficiary = null) : float
     {
-        return $this->valuable->amount($base_value);
+        return $this->valuable->amount($beneficiary);
     }
 
     public function name()

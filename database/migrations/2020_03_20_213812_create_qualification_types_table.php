@@ -14,7 +14,7 @@ class CreateQualificationTypesTable extends Migration
     public function up()
     {
         Schema::create('qualification_types', function (Blueprint $table) {
-            $table->string('id', 20)->index();
+            $table->string('id', 20)->unique();
             $table->string('name');
             $table->timestamps();
         });
