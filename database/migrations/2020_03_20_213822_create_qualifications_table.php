@@ -16,7 +16,7 @@ class CreateQualificationsTable extends Migration
         Schema::create('qualifications', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('beneficiary_id');
-            $table->unsignedBigInteger('qualification_type_id');
+            $table->string('qualification_type_id')->index();
             $table->string('institution');
             $table->string('grade');
             $table->year('year');

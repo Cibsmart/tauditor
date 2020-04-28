@@ -25,7 +25,7 @@ class QualificationTypeSeeder extends Seeder
 
         foreach ($types as $code => $name) {
             factory(QualificationType::class)->create([
-                'code' => $code,
+                'id' => $code,
                 'name' => $name,
             ]);
         }

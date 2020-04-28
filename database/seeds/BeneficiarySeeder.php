@@ -1,4 +1,4 @@
- <?php
+<?php
 
 use App\Bank;
 use App\State;
@@ -19,8 +19,8 @@ use App\StructuredSalary;
 use App\QualificationType;
 use App\BeneficiaryStatus;
 use App\PersonalizedSalary;
-use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
+use Illuminate\Database\Seeder;
 
 class BeneficiarySeeder extends Seeder
 {
@@ -44,25 +44,33 @@ class BeneficiarySeeder extends Seeder
 
         foreach ($domains as $domain) {
             $beneficiaries = factory(Beneficiary::class, 50)->create([
-                'domain_id' => fn() => $domain->id,
-                'gender_id' => fn() => $gender->random()->id,
-                'marital_status_id' => fn() => $marital->random()->id,
-                'state_id' => fn() => $state->random()->id,
-                'local_government_id' => fn() => $lga->random()->id,
-                'beneficiary_type_id' => fn() => $domain->beneficiaryTypes->random()->id,
+                'domain_id'           => fn () => $domain->id,
+                'gender_id'           => fn () => $gender->random()->id,
+                'marital_status_id'   => fn () => $marital->random()->id,
+                'state_id'            => fn () => $state->random()->id,
+                'local_government_id' => fn () => $lga->random()->id,
+                'beneficiary_type_id' => fn () => $domain->beneficiaryTypes->random()->id,
             ]);
 
-            $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $relationships, $qualifications, $domain, $faker){
-
+            $beneficiaries->each(function ($beneficiary) use (
+                $banks,
+                $mfbs,
+                $relationships,
+                $qualifications,
+                $domain,
+                $faker
+            ) {
                 $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make());
 
-                $faker->randomElement([1,2]) == 1
-                    ? $banks->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
-                    : $mfbs->random()->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
+                $faker->randomElement([1, 2]) == 1
+                    ? $banks->random()->beneficiaries()
+                            ->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
+                    : $mfbs->random()->beneficiaries()
+                           ->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
                 $cadre_step_id = 1;
 
-                if(!$domain->structures->random()->steps->isEmpty()) {
+                if (! $domain->structures->random()->steps->isEmpty()) {
                     $cadre_step_id = $domain->structures->random()->steps->random()->id;
                 }
 
@@ -75,15 +83,15 @@ class BeneficiarySeeder extends Seeder
 
                 $beneficiary->nextOfKin()
                             ->save(factory(NextOfKin::class)
-                                ->make(['relationship_id' => fn() => $relationships->random()->id]));
+                                ->make(['relationship_id' => fn () => $relationships->random()->id]));
 
                 $beneficiary->qualifications()
                             ->saveMany(factory(Qualification::class, $faker->randomElement([1, 2, 3, 4, 5]))
-                                ->make(['qualification_type_id' => fn() => $qualifications->random()->id]));
+                                ->make(['qualification_type_id' => fn () => $qualifications->random()->id]));
 
                 $beneficiary->mdaDetail()
                             ->save(factory(MdaDetail::class)
-                                ->make($this->mda_attributes($beneficiary)));
+                                ->make($this->mdaAttributes($beneficiary)));
 
                 $beneficiary->workDetail()
                             ->save(factory(WorkDetail::class)
@@ -95,7 +103,7 @@ class BeneficiarySeeder extends Seeder
         }
     }
 
-    public function mda_attributes($beneficiary)
+    public function mdaAttributes($beneficiary)
     {
         $beneficiary_type = $beneficiary->beneficiaryType;
 
@@ -104,7 +112,7 @@ class BeneficiarySeeder extends Seeder
         $mda_attributes = ['beneficiary_id' => $beneficiary->id, 'mda_id' => $mda->id];
 
         //If Selected MDA has_sub then assign sub and sub_sub
-        if($mda->has_sub) {
+        if ($mda->has_sub) {
             $sub_mda = $mda->subs->random();
             $mda_attributes = $mda->has_sub
                 ? array_merge($mda_attributes, ['sub_mda_id' => $sub_mda->id])
