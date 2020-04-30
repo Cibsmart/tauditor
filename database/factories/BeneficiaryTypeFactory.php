@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 
 $factory->define(BeneficiaryType::class, function (Faker $faker) {
     return [
-        'code' => $faker->countryCode,
+        'id' => $faker->countryCode,
         'name' => $faker->country,
         'domain_id' => factory(Domain::class),
     ];

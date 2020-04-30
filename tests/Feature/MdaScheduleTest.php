@@ -7,7 +7,6 @@ use App\Payroll;
 use Carbon\Carbon;
 use Tests\TestCase;
 use App\PaySchedule;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use function factory;
 
@@ -16,7 +15,7 @@ class MdaScheduleTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function cannot_view_mda_pay_schedules_of_payroll_yet_to_be_generated()
+    public function cannotViewMdaPaySchedulesOfPayrollYetToBeGenerated()
     {
         $this->withoutExceptionHandling();
 
@@ -30,7 +29,7 @@ class MdaScheduleTest extends TestCase
 
 
     /** @test */
-    public function can_view_mda_pay_schedules()
+    public function canViewMdaPaySchedules()
     {
         $this->withoutExceptionHandling();
 
@@ -52,8 +51,12 @@ class MdaScheduleTest extends TestCase
              ->assertPropCount('schedules.data', 2)
              ->assertPropValue('schedules.data', function ($schedules) {
                  $this->assertEquals(
-                     ['payroll_id', 'mda_id', 'mda_name', 'total_amount', 'head_count', 'month', 'year', 'domain', 'pensioner'],
-                     array_keys($schedules[0]));
+                     [
+                         'payroll_id', 'mda_id', 'mda_name', 'total_amount', 'head_count', 'month', 'year', 'domain',
+                         'pensioner',
+                     ],
+                     array_keys($schedules[0])
+                 );
              });
     }
 }

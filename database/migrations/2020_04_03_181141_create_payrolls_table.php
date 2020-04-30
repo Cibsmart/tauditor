@@ -22,7 +22,7 @@ class CreatePayrollsTable extends Migration
             $table->boolean('archived')->default(0);
             $table->timestamp('generated')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
 

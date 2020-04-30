@@ -36,7 +36,7 @@ class CreatePaySchedulesTable extends Migration
             $table->unsignedBigInteger('beneficiary_id');
 
             $table->string('verification_number');
-            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->string('beneficiary_type_id');
             $table->string('bankable_type');
             $table->unsignedBigInteger('bankable_id');
             $table->string('payable_type');

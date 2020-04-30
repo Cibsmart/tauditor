@@ -21,7 +21,7 @@ class CreateAuditPayrollsTable extends Migration
             $table->boolean('analysed')->default(0);
             $table->boolean('autopay_generated')->default(0);
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
         });

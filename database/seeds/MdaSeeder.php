@@ -2,6 +2,7 @@
 
 use App\Mda;
 use App\BeneficiaryType;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class MdaSeeder extends Seeder
@@ -21,15 +22,15 @@ class MdaSeeder extends Seeder
         //Convert json to an array
         $data = json_decode($json, true);
 
-        foreach ($data as $beneficiary_type_code => $mdas) {
-            $type_id = $types->firstWhere('code', $beneficiary_type_code)->id;
+        foreach ($data as $beneficiary_type => $mdas) {
+            $beneficiary_type = Str::lower($beneficiary_type);
 
             foreach ($mdas as $mda) {
                 $code = key($mda);
-                $attributes = ['code' => $code, 'name' => $mda[$code], 'beneficiary_type_id' => $type_id];
+                $attributes = ['code' => $code, 'name' => $mda[$code], 'beneficiary_type_id' => $beneficiary_type];
 
                 //LGEA, LGSC, SEC have Sub_MDAs, so we set the flag for those
-                $attributes = in_array($beneficiary_type_code, ['LGEA', 'LGSC']) || in_array($code, ['SEC'])
+                $attributes = in_array($beneficiary_type, ['lgea', 'lgsc']) || in_array($code, ['SEC'])
                     ? array_merge($attributes, ['has_sub' => 1])
                     : $attributes;
 

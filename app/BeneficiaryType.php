@@ -11,6 +11,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class BeneficiaryType extends Model
 {
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected $casts = [
