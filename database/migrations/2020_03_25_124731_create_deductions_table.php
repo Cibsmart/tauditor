@@ -17,7 +17,7 @@ class CreateDeductionsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('deduction_name_id');
             $table->morphs('valuable');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
 
             $table->foreign('deduction_name_id')->references('id')->on('deduction_names');

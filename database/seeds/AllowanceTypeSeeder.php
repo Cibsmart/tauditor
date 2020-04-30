@@ -1,6 +1,5 @@
 <?php
 
-use App\Structure;
 use App\AllowanceType;
 use Illuminate\Database\Seeder;
 
@@ -14,16 +13,20 @@ class AllowanceTypeSeeder extends Seeder
     public function run()
     {
         $allowance_types = [
-            'HOUSING' => 'HOUSING',
-            'MEAL' => 'MEAL',
+            'HOUSING'   => 'HOUSING',
+            'MEAL'      => 'MEAL',
             'TRANSPORT' => 'TRANSPORT',
-            'UTILITY' => 'UTILITY',
-            'OTHERS' => 'OTHER ALLOWANCES'
+            'UTILITY'   => 'UTILITY',
+            'OTHERS'    => 'OTHER ALLOWANCES',
         ];
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             foreach ($allowance_types as $code => $name) {
-                factory(AllowanceType::class)->create(['code' => $code, 'name' => $name, 'domain_id' => $i]);
+                factory(AllowanceType::class)->create([
+                    'code'      => $code,
+                    'name'      => $name,
+                    'domain_id' => $i == 1 ? 'state' : 'jaac',
+                ]);
             }
         }
     }

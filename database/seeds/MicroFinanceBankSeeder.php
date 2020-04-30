@@ -23,14 +23,13 @@ class MicroFinanceBankSeeder extends Seeder
         $data = json_decode($json, true);
 
         foreach ($data as $domain => $mfbs) {
-            $domain_id = $domains->firstWhere('code', $domain)->id;
             foreach ($mfbs as $mfb){
                 $bank_id = $banks->firstWhere('code', $mfb['code'])->id;
                 factory(MicroFinanceBank::class)->create([
                     'name' => Str::of($mfb['name'])->trim(),
                     'account_number' => Str::of($mfb['account_number'])->trim(),
                     'bank_id' => $bank_id,
-                    'domain_id' => $domain_id,
+                    'domain_id' => $domain,
                 ]);
             }
         }

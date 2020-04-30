@@ -18,7 +18,7 @@ class CreateMicroFinanceBanksTable extends Migration
             $table->string('name');
             $table->string('account_number');
             $table->unsignedBigInteger('bank_id');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
 

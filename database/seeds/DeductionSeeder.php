@@ -1,7 +1,6 @@
 <?php
 
 use App\Deduction;
-use App\Allowance;
 use App\FixedValue;
 use App\DeductionName;
 use App\PercentageValue;
@@ -19,12 +18,12 @@ class DeductionSeeder extends Seeder
         $deduction_names = DeductionName::all();
 
         $deductions = [
-            'TAX' => 5,
-            'AISHA' => 5,
+            'TAX'     => 5,
+            'AISHA'   => 5,
             'PENSION' => 2,
         ];
 
-        for($i = 1; $i <= 2; $i++){
+        for ($i = 1; $i <= 2; $i++) {
             foreach ($deductions as $name => $value) {
                 $deduction_name_id = $deduction_names->firstWhere('name', $name)->id;
 
@@ -35,7 +34,10 @@ class DeductionSeeder extends Seeder
 
                 //Create Allowance
                 $amount->deduction()->save(factory(Deduction::class)
-                    ->make(['deduction_name_id' => $deduction_name_id, 'domain_id' => $i]));
+                    ->make([
+                        'deduction_name_id' => $deduction_name_id,
+                        'domain_id'         => $i == 1 ? 'state' : 'jaac',
+                    ]));
             }
         }
     }

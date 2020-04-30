@@ -18,7 +18,7 @@ class CreateStructuresTable extends Migration
             $table->string('code');
             $table->string('name');
             $table->boolean('active')->default(1);
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
 

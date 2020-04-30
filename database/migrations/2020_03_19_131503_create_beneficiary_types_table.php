@@ -17,7 +17,7 @@ class CreateBeneficiaryTypesTable extends Migration
             $table->id();
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->boolean('pensioners')->default(0);
             $table->timestamps();
 

@@ -13,12 +13,12 @@ class DomainSeeder extends Seeder
     public function run()
     {
         factory(Domain::class)->create([
-          'code' => 'STATE',
+          'id' => 'state',
           'name' => 'ANAMBRA STATE GOVERNMENT',
         ]);
 
         factory(Domain::class)->create([
-          'code' => 'JAAC',
+          'id' => 'jaac',
           'name' => 'ANAMBRA STATE JOINT ALLOCATION ACCOUNT COMMITTEE',
         ]);
     }

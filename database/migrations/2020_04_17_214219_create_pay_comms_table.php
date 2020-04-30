@@ -21,7 +21,7 @@ class CreatePayCommsTable extends Migration
             $table->unsignedBigInteger('commission');
             $table->string('bankable_type');
             $table->unsignedBigInteger('bankable_id');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
         });

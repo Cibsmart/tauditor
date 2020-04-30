@@ -14,13 +14,15 @@ class StructureSeeder extends Seeder
     {
         $structures = [
             'CONHESS_NURSE_CALL' => 'CONSOLIDATED HEALTH SALARY STRUCTURE (NURSE CALL)',
-//            'CONMESS' => 'CONSOLIDATED MEDICAL SALARY STRUCTURE',
-//            'CONTISS' => 'CONSOLIDATED CIVIL SERVANT SALARY STRUCTURE',
         ];
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             foreach ($structures as $code => $name) {
-                factory(Structure::class)->create(['code' => $code, 'name' => $name, 'domain_id' => $i]);
+                factory(Structure::class)->create([
+                    'code'      => $code,
+                    'name'      => $name,
+                    'domain_id' => $i ? 'state' : 'jaac',
+                ]);
             }
         }
     }
