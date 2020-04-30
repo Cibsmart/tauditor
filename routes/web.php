@@ -11,6 +11,7 @@ use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\PayScheduleController;
+use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\MdaSchedulesController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
@@ -212,6 +213,20 @@ Route::middleware('auth')->group(function () {
         Route::post('audit_analysis/{audit_payroll}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
     });
 });
+
+
+
+/*
+|-------------------------------------------------------------------------------
+| Interswitch Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('interswitch.')->group(function () {
+        Route::post('interswitch/{audit_payroll}/process', [InterswitchController::class, 'process'])->name('process');
+    });
+});
+
 
 
 

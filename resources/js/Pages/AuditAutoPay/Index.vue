@@ -77,14 +77,14 @@
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
                                 <inertia-link :href="route('audit_autopay.generate', { audit_payroll: payroll.id })" method="post" class="px-5 py-3">
-                                    Generate Schedules
+                                    Generate
                                 </inertia-link>
 
-<!--                                <span> | </span>-->
+                                <span> | </span>
 
-<!--                                <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">-->
-<!--                                    View Mdas-->
-<!--                                </inertia-link>-->
+                                <inertia-link :href="route('interswitch.process', {audit_payroll: payroll.id})" method="post" class="px-5 py-3">
+                                    Upload
+                                </inertia-link>
                             </td>
                         </tr>
 
