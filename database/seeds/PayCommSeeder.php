@@ -19,7 +19,8 @@ class PayCommSeeder extends Seeder
             factory(PayComm::class)->create([
                 'code' => 'PayComm I',
                 'name' => 'Fidelity Bank Plc',
-                'account_number' => $i == 1 ? '5030101784' : '5030101784', //TODO Update account Number for State Domain = 1
+                //TODO Update account Number for State Domain = 1
+                'account_number' => $i == 1 ? '5030101784' : '5030101784',
                 'commission' => 120,
                 'bankable_type' => 'commercial',
                 'bankable_id' => $banks->where('code', '070')->first()->id,
