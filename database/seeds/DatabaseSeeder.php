@@ -43,6 +43,8 @@ class DatabaseSeeder extends Seeder
             DeductionNameSeeder::class,
             DeductionSeeder::class,
             StatusSeeder::class,
+            PaymentTypeSeeder::class,
+            PaymentCredentialSeeder::class,
 //            BeneficiarySeeder::class,
         ]);
     }
