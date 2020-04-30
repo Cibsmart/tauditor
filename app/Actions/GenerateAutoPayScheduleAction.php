@@ -26,7 +26,7 @@ class GenerateAutoPayScheduleAction
     protected $pay_comm_i_charge;
     protected $pay_comm_ii_charge;
 
-    protected const INTERSWITCH_CHARGE = 20;
+    protected const INTERSWITCH_CHARGE = 16.13;
 
     protected AuditSubMdaSchedule $sub_mda;
 

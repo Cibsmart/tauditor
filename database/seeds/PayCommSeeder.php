@@ -42,7 +42,7 @@ class PayCommSeeder extends Seeder
             'code' => 'PayComm II',
             'name' => 'TENECE PROFESSIONAL SERVICES',
             'account_number' => '4010478742',
-            'commission' => 240,
+            'commission' => 243.87,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
             'domain_id' => 'state'
@@ -53,7 +53,7 @@ class PayCommSeeder extends Seeder
             'code' => 'PayComm II',
             'name' => 'TENECE PROFESSIONAL SERVICES',
             'account_number' => '4010478742',
-            'commission' => 240,
+            'commission' => 243.87,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
             'domain_id' => 'jaac'

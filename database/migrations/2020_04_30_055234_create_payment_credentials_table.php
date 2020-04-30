@@ -23,8 +23,8 @@ class CreatePaymentCredentialsTable extends Migration
             $table->enum('account_type', ['00', '10', '20']);
             $table->unsignedBigInteger('bank_id');
             $table->boolean('is_single_debit')->default(0);
-            $table->unsignedBigInteger('beneficiary_type_id');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('beneficiary_type_id');
+            $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
         });
