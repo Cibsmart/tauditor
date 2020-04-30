@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'email' => 'john@payroll.com',
             'email_verified_at' => now(),
             'password' => 'password',
-            'domain_id' => 1,
+            'domain_id' => 'state',
             'remember_token' => Str::random(10),
         ]);
 
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             'email' => 'jane@payroll.com',
             'email_verified_at' => now(),
             'password' => 'password',
-            'domain_id' => 2,
+            'domain_id' => 'jaac',
             'remember_token' => Str::random(10),
         ]);
 

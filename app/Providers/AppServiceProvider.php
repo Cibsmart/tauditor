@@ -100,7 +100,7 @@ class AppServiceProvider extends ServiceProvider
                         'email' => Auth::user()->email,
                         'domain' => [
                             'id' => Auth::user()->domain->id,
-                            'name' => Auth::user()->domain->code,
+                            'name' => Auth::user()->domain->name,
                         ]
                     ] : null,
                 ];

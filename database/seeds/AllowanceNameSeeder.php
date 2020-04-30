@@ -1,6 +1,5 @@
 <?php
 
-use App\Structure;
 use App\AllowanceName;
 use App\AllowanceType;
 use Illuminate\Database\Seeder;
@@ -17,20 +16,22 @@ class AllowanceNameSeeder extends Seeder
         $allowance_types = AllowanceType::all();
 
         $others = [
-            'CD' => 'CALL DUTY',
-            'HZ' => 'HAZARD',
+            'CD'     => 'CALL DUTY',
+            'HZ'     => 'HAZARD',
             'INDUCE' => 'INDUCEMENT',
         ];
 
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
+            $domain_id = $i == 1 ? 'state' : 'jaac';
+
             foreach ($others as $code => $name) {
                 factory(AllowanceName::class)
                     ->create([
-                        'code' => $code,
-                        'name' => $name,
-                        'allowance_type_id' => $allowance_types
-                            ->where('domain_id', $i)
-                            ->where('code', 'OTHERS')->first()->id
+                        'code'              => $code,
+                        'name'              => $name,
+                        'allowance_type_id' => $allowance_types->where('domain_id', $domain_id)
+                                                               ->where('code', 'OTHERS')
+                                                               ->first()->id,
                     ]);
             }
         }

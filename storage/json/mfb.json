@@ -1,5 +1,5 @@
 {
-    "JAAC": [
+    "jaac": [
         {
             "code": "011",
             "name": "ACHINA MICRO FINANCE BANK LTD",
@@ -276,7 +276,7 @@
             "account_number": "1700001629"
         }
     ],
-    "STATE": [
+    "state": [
         {
             "code": "011",
             "name": "ACHINA MICRO FINANCE BANK LTD",

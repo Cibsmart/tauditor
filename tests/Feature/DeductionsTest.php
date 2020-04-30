@@ -50,7 +50,7 @@ class DeductionsTest extends TestCase
 
         $user = $this->signIn();
 
-        $deduction_type = factory(DeductionType::class)->create(['domain_id' => $user->id]);
+        $deduction_type = factory(DeductionType::class)->create(['domain_id' => $user->domain_id]);
         $value_type = factory(ValueType::class)->create(['id' => 'fixed']);
         $amount = random_int(100, 100000);
 

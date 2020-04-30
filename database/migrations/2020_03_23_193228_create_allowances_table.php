@@ -17,7 +17,7 @@ class CreateAllowancesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('allowance_name_id');
             $table->morphs('valuable');
-            $table->unsignedBigInteger('domain_id');
+            $table->string('domain_id');
             $table->timestamps();
 
             $table->foreign('allowance_name_id')->references('id')->on('allowance_names');
