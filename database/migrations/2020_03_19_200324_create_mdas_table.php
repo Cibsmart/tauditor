@@ -17,7 +17,7 @@ class CreateMdasTable extends Migration
             $table->id();
             $table->string('code', 20);
             $table->string('name');
-            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->string('beneficiary_type_id');
             $table->boolean('has_sub')->default(0);
             $table->timestamps();
 

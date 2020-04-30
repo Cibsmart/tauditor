@@ -14,14 +14,13 @@ class CreateBeneficiaryTypesTable extends Migration
     public function up()
     {
         Schema::create('beneficiary_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 20);
+            $table->string('id', 20)->unique();
             $table->string('name');
             $table->string('domain_id');
             $table->boolean('pensioners')->default(0);
             $table->timestamps();
 
-            $table->unique(['code', 'name', 'domain_id'], 'unique_beneficiary_type');
+            $table->unique(['name', 'domain_id'], 'unique_beneficiary_type');
 
             $table->foreign('domain_id')
                   ->references('id')

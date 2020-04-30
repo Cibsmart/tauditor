@@ -2,6 +2,7 @@
 
 use App\Mda;
 use App\SubMda;
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 
 class SubMdaSeeder extends Seeder
@@ -16,16 +17,16 @@ class SubMdaSeeder extends Seeder
         $dbmdas = Mda::where('has_sub', 1)->get();
 
         //Get the content of of sub_mda.json
-        $json =  file_get_contents(storage_path() .'/json/sub_mda.json');
+        $json = file_get_contents(storage_path().'/json/sub_mda.json');
 
         //Convert json to an array
         $data = json_decode($json, true);
 
-        foreach($data as $beneficiary_type => $mdas) {
+        foreach ($data as $beneficiary_type => $mdas) {
             foreach ($mdas as $mda => $depts) {
                 $mda_id = $dbmdas->firstWhere('code', $mda)->id;
-                foreach ($depts as $dept) {
 
+                foreach ($depts as $dept) {
                     $attributes = ['name' => $dept, 'mda_id' => $mda_id];
 
                     //SEC has Sub_Sub_MDAs, so we set the flag for those

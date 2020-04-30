@@ -1,6 +1,7 @@
 <?php
 
 use App\Designation;
+use App\BeneficiaryType;
 use Illuminate\Database\Seeder;
 
 class DesignationSeeder extends Seeder
@@ -12,17 +13,19 @@ class DesignationSeeder extends Seeder
      */
     public function run()
     {
+        $beneficiary_types = BeneficiaryType::all();
+
         $designations = [
-            'HM' => 'HEAD MASTER',
+            'HM'  => 'HEAD MASTER',
             'PEO' => 'PRINCIPAL EXECUTIVE OFFICER',
-            'DR' => 'DIRECTOR',
+            'DR'  => 'DIRECTOR',
             'PEN' => 'PENSIONER',
         ];
 
-        for($i = 1; $i <= 7; $i++) {
+        foreach ($beneficiary_types as $beneficiary_type) {
             foreach ($designations as $code => $name) {
                 factory(Designation::class)
-                    ->create(['code' => $code, 'name' => $name, 'beneficiary_type_id' => $i]);
+                    ->create(['code' => $code, 'name' => $name, 'beneficiary_type_id' => $beneficiary_type->id]);
             }
         }
     }

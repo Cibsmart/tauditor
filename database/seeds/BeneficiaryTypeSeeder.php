@@ -13,20 +13,20 @@ class BeneficiaryTypeSeeder extends Seeder
     public function run()
     {
         $staff_types_state = [
-            'CV' => 'ANAMBRA STATE CIVIL SERVANT',
-            'SCO' => 'STATUTORY COMMISSION AND OFFICERS',
-            'PA' => 'POLITICAL APPOINTEES',
-            'ANPEN' => 'ANAMBRA STATE GOVERNMENT PENSIONERS',
+            'cv' => 'ANAMBRA STATE CIVIL SERVANT',
+            'sco' => 'STATUTORY COMMISSION AND OFFICERS',
+            'pa' => 'POLITICAL APPOINTEES',
+            'anpen' => 'ANAMBRA STATE GOVERNMENT PENSIONERS',
         ];
 
         $staff_types_jaac = [
-            'LGEA' => 'LOCAL GOVERNMENT EDUCATION AUTHORITY',
-            'LGSC' => 'LOCAL GOVERNMENT SERVICE COMMISSION',
-            'LGPEN' => 'LOCAL GOVERNMENT PENSIONERS',
+            'lgea' => 'LOCAL GOVERNMENT EDUCATION AUTHORITY',
+            'lgsc' => 'LOCAL GOVERNMENT SERVICE COMMISSION',
+            'lgpen' => 'LOCAL GOVERNMENT PENSIONERS',
         ];
 
         foreach($staff_types_state as $code => $name){
-            $attributes = [ 'code' => $code, 'name' => $name, 'domain_id' => 'state' ];
+            $attributes = [ 'id' => $code, 'name' => $name, 'domain_id' => 'state' ];
 
             $attributes = $code == 'ANPEN' ? array_merge($attributes, ['pensioners' => 1]) : $attributes;
 
@@ -35,7 +35,7 @@ class BeneficiaryTypeSeeder extends Seeder
         }
 
         foreach($staff_types_jaac as $code => $name){
-            $attributes = [ 'code' => $code, 'name' => $name, 'domain_id' => 'jaac' ];
+            $attributes = [ 'id' => $code, 'name' => $name, 'domain_id' => 'jaac' ];
 
             $attributes = $code == 'LGPEN' ? array_merge($attributes, ['pensioners' => 1]) : $attributes;
 

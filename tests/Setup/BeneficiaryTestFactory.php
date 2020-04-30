@@ -48,14 +48,14 @@ class BeneficiaryTestFactory
      */
     public function withMfb(MicroFinanceBank $micro_finance_bank = null)
     {
-        $this->bank = $micro_finance_bank ?? factory(MicroFinanceBank::class)->create() ;
+        $this->bank = $micro_finance_bank ?? factory(MicroFinanceBank::class)->create();
 
         return $this;
     }
 
     public function withBank(Bank $bank = null)
     {
-        $this->bank = $bank ?? factory(Bank::class)->create() ;
+        $this->bank = $bank ?? factory(Bank::class)->create();
 
         return $this;
     }
@@ -66,7 +66,7 @@ class BeneficiaryTestFactory
      */
     public function withPersonalizedSalary(PersonalizedSalary $personalized_salary = null)
     {
-        if($personalized_salary){
+        if ($personalized_salary) {
             $this->payable = $personalized_salary;
 
             return $this;
@@ -81,12 +81,12 @@ class BeneficiaryTestFactory
 
     public function withStructuredSalary(StructuredSalary $structured_salary = null)
     {
-        if($structured_salary){
+        if ($structured_salary) {
             $this->payable = $structured_salary;
             return $this;
         }
 
-        if(! $this->monthly_basic){
+        if (! $this->monthly_basic) {
             $this->payable = factory(StructuredSalary::class)->create();
 
             return $this;
@@ -175,32 +175,35 @@ class BeneficiaryTestFactory
 
         $beneficiary = factory(Beneficiary::class)->create($override);
 
-        $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make(['beneficiary_id' => $beneficiary->id, 'active' => $this->beneficiary_status]));
+        $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make([
+            'beneficiary_id' => $beneficiary->id, 'active' => $this->beneficiary_status,
+        ]));
 
-        if($this->bank) {
-            $this->bank->beneficiaries()->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
+        if ($this->bank) {
+            $this->bank->beneficiaries()->save(factory(BankDetail::class)->make([
+                'beneficiary_id' => $beneficiary->id
+            ]));
         }
 
-        if($this->payable){
+        if ($this->payable) {
             $this->payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
         }
 
-        if($this->next_of_kin){
+        if ($this->next_of_kin) {
             $beneficiary->nextOfKin()->save(factory(NextOfKin::class)->make(['beneficiary_id' => $beneficiary->id]));
         }
 
         $beneficiary->qualifications()->saveMany(factory(Qualification::class, $this->qualification_count)->make());
 
-        if($this->mda){
+        if ($this->mda) {
             $beneficiary->mdaDetail()->save(factory(MdaDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
         }
 
-        if($this->work_detail){
+        if ($this->work_detail) {
             $beneficiary->workDetail()->save(factory(WorkDetail::class)->make());
         }
 
-        if($this->allowance_count){
-
+        if ($this->allowance_count) {
             $attributes = $this->valuable_amount
                 ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
                 : ['beneficiary_id' => $beneficiary->id];
@@ -208,7 +211,7 @@ class BeneficiaryTestFactory
             factory(AllowanceDetail::class, $this->allowance_count)->create($attributes);
         }
 
-        if($this->deduction_count){
+        if ($this->deduction_count) {
             $attributes = $this->valuable_amount
                 ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
                 : ['beneficiary_id' => $beneficiary->id];

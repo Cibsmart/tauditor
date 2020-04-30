@@ -17,7 +17,7 @@ class CreateDesignationsTable extends Migration
             $table->id();
             $table->string('code', 20)->nullable();
             $table->string('name');
-            $table->unsignedBigInteger('beneficiary_type_id');
+            $table->string('beneficiary_type_id');
             $table->timestamps();
 
             $table->foreign('beneficiary_type_id')
