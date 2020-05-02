@@ -1,15 +1,14 @@
 <?php
 
-use App\AuditMdaSchedule;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AllowancesController;
 use App\Http\Controllers\DeductionsController;
-use App\Http\Controllers\DeductiblesController;
 use App\Http\Controllers\RunPayrollController;
-use App\Http\Controllers\BeneficiaryController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\DeductiblesController;
+use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\PayScheduleController;
 use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\MdaSchedulesController;
@@ -40,7 +39,6 @@ Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->n
 
 Route::get('register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->middleware('guest')->name('register.store');
-
 
 
 /*
@@ -98,7 +96,6 @@ Route::middleware('auth')->group(function () {
 });
 
 
-
 /*
 |-------------------------------------------------------------------------------
 | Payroll Routes
@@ -132,7 +129,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('pay_schedules.')->group(function () {
-        Route::get('payroll_pay_schedule/{payroll}/mda/{mda}/index', [PayScheduleController::class, 'index'])->name('index');
+        Route::get(
+            'payroll_pay_schedule/{payroll}/mda/{mda}/index',
+            [PayScheduleController::class, 'index']
+        )->name('index');
         Route::post('payroll_pay_schedule/{payroll}/store', [PayScheduleController::class, 'store'])->name('store');
     });
 });
@@ -158,7 +158,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_mda_schedules.')->group(function () {
-        Route::get('audit_mda_schedules/{audit_payroll}/index', [AuditMdaScheduleController::class, 'index'])->name('index');
+        Route::get(
+            'audit_mda_schedules/{audit_payroll_category}/index',
+            [AuditMdaScheduleController::class, 'index']
+        )->name('index');
     });
 });
 
@@ -169,7 +172,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_sub_mda_schedules.')->group(function () {
-        Route::get('audit_sub_mda_schedules/{audit_mda_schedule}/index', [AuditSubMdaSchedulesController::class, 'index'])->name('index');
+        Route::get(
+            'audit_sub_mda_schedules/{audit_mda_schedule}/index',
+            [AuditSubMdaSchedulesController::class, 'index']
+        )->name('index');
     });
 });
 
@@ -181,7 +187,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_pay_schedules.')->group(function () {
-        Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
+        Route::get(
+            'audit_pay_schedules/{audit_sub_mda_schedule}/index',
+            [AuditPayScheduleController::class, 'index']
+        )->name('index');
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });
@@ -195,9 +204,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
         Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
-        Route::post('audit_autopay/{audit_payroll}/generate', [AuditAutopayController::class, 'generate'])->name('generate');
-        Route::get('audit_autopay/{audit_payroll}/download', [AuditAutopayController::class, 'download'])->name('download');
-        Route::get('audit_autopay/{audit_payroll}/downloadMfb', [AuditAutopayController::class, 'downloadMfb'])->name('downloadMfb');
+        Route::post(
+            'audit_autopay/{audit_payroll}/generate',
+            [AuditAutopayController::class, 'generate']
+        )->name('generate');
+        Route::get(
+            'audit_autopay/{audit_payroll}/download',
+            [AuditAutopayController::class, 'download']
+        )->name('download');
+        Route::get(
+            'audit_autopay/{audit_payroll}/downloadMfb',
+            [AuditAutopayController::class, 'downloadMfb']
+        )->name('downloadMfb');
     });
 });
 
@@ -210,10 +228,12 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
         Route::get('audit_analysis/{audit_payroll}/show', [AuditAnalysisController::class, 'show'])->name('show');
-        Route::post('audit_analysis/{audit_payroll}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
+        Route::post(
+            'audit_analysis/{audit_payroll}/analyse',
+            [AuditAnalysisController::class, 'analyse']
+        )->name('analyse');
     });
 });
-
 
 
 /*
@@ -226,8 +246,6 @@ Route::middleware('auth')->group(function () {
         Route::post('interswitch/{audit_payroll}/process', [InterswitchController::class, 'process'])->name('process');
     });
 });
-
-
 
 
 /*
