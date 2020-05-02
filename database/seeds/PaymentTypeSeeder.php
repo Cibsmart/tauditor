@@ -16,7 +16,6 @@ class PaymentTypeSeeder extends Seeder
         $types = [
             'sal' => 'SALARY',
             'pen' => 'PENSION',
-            'leave' => 'LEAVE ALLOWANCE',
         ];
 
         foreach ($types as $key => $value) {

@@ -15,7 +15,7 @@ class CreateAuditMdaSchedulesTable extends Migration
     {
         Schema::create('audit_mda_schedules', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('audit_payroll_id');
+            $table->unsignedBigInteger('audit_payroll_category_id');
             $table->unsignedBigInteger('mda_id');
             $table->string('mda_name');
             $table->unsignedBigInteger('total_net_pay')->nullable();

@@ -17,6 +17,7 @@ class CreateSubSubMdasTable extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('sub_mda_id');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }
