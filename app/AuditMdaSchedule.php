@@ -24,9 +24,9 @@ class AuditMdaSchedule extends Model
         return $this->belongsTo(Mda::class);
     }
 
-    public function auditPayroll()
+    public function auditPayrollCategory()
     {
-        return $this->belongsTo(AuditPayroll::class);
+        return $this->belongsTo(AuditPayrollCategory::class);
     }
 
     public function auditSubMdaSchedules()
@@ -44,7 +44,7 @@ class AuditMdaSchedule extends Model
         return $value / 100;
     }
 
-    public function uploadeComplete()
+    public function uploadComplete()
     {
         return $this->auditSubMdaSchedules()->where('uploaded', 0)->doesntExist();
     }
@@ -53,7 +53,7 @@ class AuditMdaSchedule extends Model
     {
         $this->total_net_pay = $this->auditSubMdaSchedules()->sum('total_net_pay') / 100;
         $this->head_count = $this->auditSubMdaSchedules()->sum('head_count');
-        $this->uploaded = $this->uploadeComplete();
+        $this->uploaded = $this->uploadComplete();
 
         $this->save();
     }

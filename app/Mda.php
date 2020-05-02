@@ -11,10 +11,16 @@ class Mda extends Model
 
     protected $casts = [
         'has_sub' => 'boolean',
+        'active' => 'boolean',
     ];
 
     public function subs() : HasMany
     {
         return $this->hasMany(SubMda::class);
+    }
+
+    public function scopeIsActive($query)
+    {
+        return $query->where('active', 1);
     }
 }

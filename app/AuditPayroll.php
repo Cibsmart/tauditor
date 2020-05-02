@@ -27,9 +27,9 @@ class AuditPayroll extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function auditMdaSchedules()
+    public function auditPaymentCategories()
     {
-        return $this->hasMany(AuditMdaSchedule::class);
+        return $this->hasMany(AuditPayrollCategory::class);
     }
 
     public function auditReports()
