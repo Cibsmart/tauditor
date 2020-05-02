@@ -2,12 +2,9 @@
     <div>
         <h1 class="mb-8 font-bold text-3xl">Audit Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
-            <!-- Search Filter goes here -->
-            <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
-            <!--            </search-filter>-->
             <div></div>
-            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">
-                <span class="hidden md:inline">New Audit Payroll</span>
+            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo" preserve-state>
+                Add <span class="hidden md:inline"> &nbsp Payroll</span>
             </inertia-link>
         </div>
 
@@ -28,8 +25,8 @@
                             </th>
                         </tr>
                         </thead>
-                        <tbody class="bg-white">
-                        <tr v-for="payroll in payrolls.data" :key="payroll.id">
+                        <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
+                        <tr :key="payroll.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div class="ml-4">
@@ -47,14 +44,36 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll: payroll.id})" class="px-5 py-3">
-                                    View Mdas
+                                <inertia-link href="#" class="px-5 py-3">
+                                    >
                                 </inertia-link>
                             </td>
                         </tr>
 
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 whitespace-no-wrap text-left border-b border-gray-200 text-sm leading-5 font-medium">
+                                <table class="min-w-full">
+                                    <tr v-for="category in payroll.categories" :key="category.id">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-5 font-medium">
+                                            {{ category.payment_title }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-5 font-medium">
+                                            {{ category.payment_type }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
+                                            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})" class="px-5 py-3">
+                                                View Mdas
+                                            </inertia-link>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+
+                        <tbody>
                         <tr v-if="payrolls.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                            <td colspan="3" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 No Payroll
                             </td>
                         </tr>
@@ -71,12 +90,6 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
-    import SearchFilter from '@/Shared/SearchFilter'
-
-
-    import mapValues from 'lodash/mapValues'
-    import pickBY from 'lodash/pickBY'
-    import throttle from 'lodash/throttle'
 
     export default {
         metaInfo: { title: 'Payroll' },
@@ -95,9 +108,6 @@
 
         data(){
             return {
-                // form: {
-                //     search: this.filters.search,
-                // },
             }
         },
     }
