@@ -26,42 +26,50 @@
                         </tr>
                         </thead>
                         <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
-                        <tr :key="payroll.id">
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="flex items-center">
-                                    <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ payroll.month }}</div>
-                                        <div class="text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
+                        <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
+                            <td class="whitespace-no-wrap border-b border-gray-200">
+                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                    <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase" >{{ payroll.month }}</div>
+                                    <div class="px-6 pb-4 text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
+                                </inertia-link>
+                            </td>
+                            <td class="whitespace-no-wrap border-b border-gray-200">
+                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                    <div class="px-6 pt-4 text-sm leading-5 text-gray-900">
+                                        {{ payroll.created_by }}
                                     </div>
-                                </div>
+                                    <div class="px-6 pb-4 text-sm leading-5 text-gray-600">
+                                        {{ payroll.date_created }}
+                                    </div>
+                                </inertia-link>
                             </td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="text-sm leading-5 text-gray-900">
-                                    {{ payroll.created_by }}
-                                </div>
-                                <div class="text-sm leading-5 text-gray-600">
-                                    {{ payroll.date_created }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link href="#" class="px-5 py-3">
-                                    >
+                            <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
+                                <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
+                                    <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400" />
                                 </inertia-link>
                             </td>
                         </tr>
 
-                        <tr>
-                            <td colspan="6" class="px-6 py-4 whitespace-no-wrap text-left border-b border-gray-200 text-sm leading-5 font-medium">
+                        <tr v-if="show_detail[payroll.id]">
+                            <td colspan="6" class="whitespace-no-wrap text-left border-b border-gray-200 text-sm text-indigo-800 leading-5 font-medium">
                                 <table class="min-w-full">
                                     <tr v-for="category in payroll.categories" :key="category.id">
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-5 font-medium">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
                                             {{ category.payment_title }}
+                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full"
+                                                  :class="category.payment_type_id === 'sal' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'">
+                                             {{ category.payment_type }}
+                                           </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm leading-5 font-medium">
-                                            {{ category.payment_type }}
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            {{ category.total_amount }}
                                         </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm leading-5 font-medium">
-                                            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})" class="px-5 py-3">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            {{ category.head_count }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-right text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})"
+                                                          class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Mdas
                                             </inertia-link>
                                         </td>
@@ -97,18 +105,23 @@
 
         props: {
             payrolls: Object,
-            // filters: Object,
         },
 
         components: {
             Icon,
             Pagination,
-            // SearchFilter,
         },
 
         data(){
             return {
+                show_detail: [],
             }
+        },
+
+        methods: {
+          show(payroll){
+              this.show_detail[payroll] = !this.show_detail[payroll]
+          }
         },
     }
 </script>

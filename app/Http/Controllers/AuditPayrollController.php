@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mda;
 use Carbon\Carbon;
 use Inertia\Inertia;
-use App\PaymentType;
 use App\AuditPayroll;
 use App\BeneficiaryType;
 use App\AuditMdaSchedule;
@@ -33,14 +32,17 @@ class AuditPayrollController extends Controller
                             'created_by'   => $payroll->createdBy(),
                             'date_created' => $payroll->dateCreated(),
                             'categories'   => $payroll->auditPaymentCategories->transform(fn ($category) => [
-                                'id'           => $category->id,
-                                'payment_type' => $category->paymentTypeName(),
-                                'payment_title' => $category->payment_title
+                                'id'              => $category->id,
+                                'payment_type_id' => $category->payment_type_id,
+                                'payment_type'    => $category->paymentTypeName(),
+                                'payment_title'   => $category->payment_title,
+                                'total_amount'   => $category->total_net_pay,
+                                'head_count'   => $category->head_count,
                             ]),
                         ]);
 
         return Inertia::render('AuditPayroll/Index', [
-            'payrolls'      => $payrolls,
+            'payrolls' => $payrolls,
         ]);
     }
 
