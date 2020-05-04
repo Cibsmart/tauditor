@@ -17,6 +17,8 @@ class CreateAuditPayrollCategoriesTable extends Migration
             $table->id();
             $table->string('payment_type_id')->index();
             $table->string('payment_title');
+            $table->unsignedBigInteger('total_net_pay')->nullable();
+            $table->unsignedBigInteger('head_count')->nullable();
             $table->unsignedBigInteger('audit_payroll_id');
             $table->timestamps();
         });

@@ -27,4 +27,22 @@ class AuditPayrollCategory extends Model
     {
         return $this->paymentType->name;
     }
+
+    public function setTotalNetPayAttribute(float $value) : int
+    {
+        return $this->attributes['total_net_pay'] = $value * 100;
+    }
+
+    public function getTotalNetPayAttribute(?int $value = 0) : float
+    {
+        return $value / 100;
+    }
+
+    public function auditMdaScheduleWasUpdated()
+    {
+        $this->total_net_pay = $this->auditMdaSchedules()->sum('total_net_pay') / 100;
+        $this->head_count = $this->auditMdaSchedules()->sum('head_count');
+
+        $this->save();
+    }
 }

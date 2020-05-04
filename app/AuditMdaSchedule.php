@@ -56,5 +56,7 @@ class AuditMdaSchedule extends Model
         $this->uploaded = $this->uploadComplete();
 
         $this->save();
+
+        $this->auditPayrollCategory->auditMdaScheduleWasUpdated();
     }
 }
