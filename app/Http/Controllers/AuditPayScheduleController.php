@@ -95,5 +95,6 @@ class AuditPayScheduleController extends Controller
         $schedule->save();
 
         $schedule->auditMdaSchedule->auditSubMdaScheduleWasUpdated();
+        $schedule->auditMdaSchedule->auditPayrollCategory->auditMdaScheduleWasUpdated();
     }
 }

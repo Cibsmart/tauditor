@@ -62,10 +62,16 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
-                                            {{ category.total_amount }}
+                                            Total Amount: <span class="line-through">N</span>
+                                            <span class="font-bold">
+                                                {{ category.total_amount }}
+                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
-                                            {{ category.head_count }}
+                                            Head Count:
+                                            <span class="font-bold">
+                                                {{ category.head_count }}
+                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
                                             <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})"
