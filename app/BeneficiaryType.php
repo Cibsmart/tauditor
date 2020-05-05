@@ -41,6 +41,11 @@ class BeneficiaryType extends Model
         return $this->belongsToMany(PaymentType::class);
     }
 
+    public function paymentCredential()
+    {
+        return $this->hasOne(PaymentCredential::class);
+    }
+
     public function scopeThatReceives($query, $payment_type)
     {
         return $query->whereHas('paymentTypes', function ($query) use ($payment_type) {

@@ -38,7 +38,6 @@ class AuditPayrollCategory extends Model
         return $this->auditPayroll->month();
     }
 
-
     public function domain()
     {
         return $this->auditPayroll->domain;

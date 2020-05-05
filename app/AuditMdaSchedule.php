@@ -39,6 +39,11 @@ class AuditMdaSchedule extends Model
         return $this->auditPayrollCategory->auditPayroll->domain;
     }
 
+    public function paymentCredential()
+    {
+        return $this->mda->beneficiaryType->paymentCredential;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
@@ -47,6 +52,13 @@ class AuditMdaSchedule extends Model
     public function getTotalNetPayAttribute(?int $value = 0) : float
     {
         return $value / 100;
+    }
+
+    public function scopeAutopayGenerated($query)
+    {
+        return $query->whereHas('auditSubMdaSchedules', function ($query) {
+            $query->whereNotNull('autopay_generated');
+        });
     }
 
     public function uploadComplete()
