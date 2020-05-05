@@ -115,7 +115,7 @@ class AuditPayrollController extends Controller
 
     private function createAuditMdaSchedules(BeneficiaryType $beneficiary_type, AuditPayrollCategory $category)
     {
-        $mdas = $beneficiary_type->mdas()->isActive()->get();
+        $mdas = $beneficiary_type->mdas->isActive()->get();
         $pensioners = $beneficiary_type->pensioners;
 
         foreach ($mdas as $mda) {
