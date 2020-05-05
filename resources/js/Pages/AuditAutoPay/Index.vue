@@ -81,13 +81,15 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <a :href="route('audit_autopay.download', { audit_payroll_category: category.id })" class="px-5 py-3">
+                                            <a :href="route('audit_autopay.download', { audit_payroll_category: category.id })"
+                                               class="px-5 py-3">
                                                 Autopay
                                             </a>
 
                                             <span> | </span>
 
-                                            <a :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })" class="px-5 py-3">
+                                            <a :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })"
+                                               class="px-5 py-3">
                                                 MFB
                                             </a>
 
@@ -95,13 +97,14 @@
 
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
                                             <inertia-link :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
-                                                          method="post" class="px-5 py-3">
+                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
                                                 Generate
                                             </inertia-link>
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <inertia-link :href="route('interswitch.process', {audit_payroll_category: category.id})" method="post" class="px-5 py-3">
+                                            <inertia-link :href="route('interswitch.process', {audit_payroll_category: category.id})"
+                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
                                                 Upload
                                             </inertia-link>
                                         </td>

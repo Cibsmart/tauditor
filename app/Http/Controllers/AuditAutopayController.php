@@ -94,7 +94,10 @@ class AuditAutopayController extends Controller
 
         $zipped_file = $this->prepareDownload($directory);
 
-        return response()->download(public_path($zipped_file))->deleteFileAfterSend();
+        $headers = ['Content-Type' => 'application/zip'];
+
+        return response()->download(public_path($zipped_file), null, $headers)
+                         ->deleteFileAfterSend();
     }
 
     public function createFiles(AuditPayrollCategory $audit_payroll_category)
@@ -161,7 +164,10 @@ class AuditAutopayController extends Controller
 
         $zipped_file = $this->prepareDownload($directory);
 
-        return response()->download(public_path($zipped_file))->deleteFileAfterSend();
+        $headers = ['Content-Type' => 'application/zip'];
+
+        return response()->download(public_path($zipped_file), null, $headers)
+                         ->deleteFileAfterSend();
     }
 
     public function createMfbFiles(AuditPayrollCategory $audit_payroll_category)
