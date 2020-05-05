@@ -1,8 +1,9 @@
 <?php
 
 
-namespace App;
+namespace App\Casts;
 
+use App\Address;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class AddressCast implements CastsAttributes
