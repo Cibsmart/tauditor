@@ -41,7 +41,7 @@ class PaymentCredentialSeeder extends Seeder
             'pan' => '6280510107035825320',
             'account_type' => '10',
             'bank_id' => $bank,
-            'beneficiary_type_id' => 'cv',
+            'beneficiary_type_id' => 'sco',
             'domain_id' => 'state',
         ]);
 
@@ -54,7 +54,7 @@ class PaymentCredentialSeeder extends Seeder
             'pan' => '6280510107035825320',
             'account_type' => '10',
             'bank_id' => $bank,
-            'beneficiary_type_id' => 'cv',
+            'beneficiary_type_id' => 'pa',
             'domain_id' => 'state',
         ]);
 
