@@ -36,10 +36,10 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        $this->generateAutoPayScheduleFor();
+        $this->generateAutoPaySchedule();
     }
 
-    private function generateAutoPayScheduleFor()
+    private function generateAutoPaySchedule()
     {
         $schedules = $this->sub_mda->auditPaySchedules;
 
@@ -252,7 +252,7 @@ class GenerateAutoPayScheduleAction
 
     private function initializePayComms() : void
     {
-        $this->domain = $this->sub_mda->auditMdaSchedule->auditPayroll->domain;
+        $this->domain = $this->sub_mda->auditMdaSchedule->domain();
 
         $pay_comms = $this->domain->payComms;
 

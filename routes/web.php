@@ -205,15 +205,15 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
         Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
         Route::post(
-            'audit_autopay/{audit_payroll}/generate',
+            'audit_autopay/{audit_payroll_category}/generate',
             [AuditAutopayController::class, 'generate']
         )->name('generate');
         Route::get(
-            'audit_autopay/{audit_payroll}/download',
+            'audit_autopay/{audit_payroll_category}/download',
             [AuditAutopayController::class, 'download']
         )->name('download');
         Route::get(
-            'audit_autopay/{audit_payroll}/downloadMfb',
+            'audit_autopay/{audit_payroll_category}/downloadMfb',
             [AuditAutopayController::class, 'downloadMfb']
         )->name('downloadMfb');
     });
@@ -247,7 +247,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('interswitch.')->group(function () {
-        Route::post('interswitch/{audit_payroll}/process', [InterswitchController::class, 'process'])->name('process');
+        Route::post(
+            'interswitch/{audit_payroll_category}/process',
+            [InterswitchController::class, 'process']
+        )->name('process');
     });
 });
 

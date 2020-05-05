@@ -34,6 +34,11 @@ class AuditMdaSchedule extends Model
         return $this->hasMany(AuditSubMdaSchedule::class);
     }
 
+    public function domain()
+    {
+        return $this->auditPayrollCategory->auditPayroll->domain;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;

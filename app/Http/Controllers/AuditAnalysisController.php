@@ -36,8 +36,6 @@ class AuditAnalysisController extends Controller
                                 'payment_type_id' => $category->payment_type_id,
                                 'payment_type'    => $category->paymentTypeName(),
                                 'payment_title'   => $category->payment_title,
-                                'total_amount'    => number_format($category->total_net_pay, 2),
-                                'head_count'      => number_format($category->head_count),
                             ]),
                         ]);
 

@@ -33,6 +33,17 @@ class AuditPayrollCategory extends Model
         return $this->paymentType->name;
     }
 
+    public function monthYear()
+    {
+        return $this->auditPayroll->month();
+    }
+
+
+    public function domain()
+    {
+        return $this->auditPayroll->domain;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
@@ -49,5 +60,19 @@ class AuditPayrollCategory extends Model
         $this->head_count = $this->auditMdaSchedules()->sum('head_count');
 
         $this->save();
+    }
+
+    public function noAutopaySchedule()
+    {
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query) {
+            return $query->whereNotNull('autopay_generated');
+        })->doesntExist();
+    }
+
+    public function noMfbSchedule()
+    {
+        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query) {
+            return $query->whereHas('microfinanceSchedules');
+        })->doesntExist();
     }
 }
