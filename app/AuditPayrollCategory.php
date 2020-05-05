@@ -23,6 +23,11 @@ class AuditPayrollCategory extends Model
         return $this->belongsTo(PaymentType::class);
     }
 
+    public function auditReports()
+    {
+        return $this->hasMany(AuditReport::class);
+    }
+
     public function paymentTypeName()
     {
         return $this->paymentType->name;

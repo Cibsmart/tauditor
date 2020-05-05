@@ -106,7 +106,7 @@
     import Pagination from '@/Shared/Pagination'
 
     export default {
-        metaInfo: { title: 'Payroll' },
+        metaInfo: { title: 'Audit Payroll' },
         layout: Layout,
 
         props: {

@@ -11,7 +11,8 @@ abstract class AuditCheckable
 {
     protected $month;
     protected $domain;
-    protected $payroll;
+//    protected $payroll;
+    protected $payroll_category;
 
     protected string $category = '';
     protected string $message = '';
@@ -45,9 +46,11 @@ abstract class AuditCheckable
     {
         $this->schedule = $schedule;
 
-        $this->month = $this->schedule->month;
+        $this->month = $schedule->month;
 
-        $this->payroll = $this->schedule->auditPayroll();
+//        $this->payroll = $schedule->auditPayroll();
+
+        $this->payroll_category = $schedule->auditPayrollCategory();
 
         $this->previous_schedules = $this->previousSchedules();
 
@@ -72,7 +75,7 @@ abstract class AuditCheckable
     private function thenReport()
     {
         $this->schedule->report(
-            $this->payroll->id,
+            $this->payroll_category->id,
             $this->category,
             $this->message,
             $this->current_value,

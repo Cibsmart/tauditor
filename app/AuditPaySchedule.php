@@ -42,12 +42,17 @@ class AuditPaySchedule extends Model
 
     public function auditPayroll()
     {
-        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayroll;
+        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory->auditPayroll;
+    }
+
+    public function auditPayrollCategory()
+    {
+        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory;
     }
 
     public function domain()
     {
-        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayroll->domain;
+        return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory->auditPayroll->domain;
     }
 
     public function setAccountNumberAttribute($value)

@@ -227,9 +227,13 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
-        Route::get('audit_analysis/{audit_payroll}/show', [AuditAnalysisController::class, 'show'])->name('show');
+        Route::get(
+            'audit_analysis/{audit_payroll_category}/show',
+            [AuditAnalysisController::class, 'show']
+        )->name('show');
+
         Route::post(
-            'audit_analysis/{audit_payroll}/analyse',
+            'audit_analysis/{audit_payroll_category}/analyse',
             [AuditAnalysisController::class, 'analyse']
         )->name('analyse');
     });
