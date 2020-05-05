@@ -8,6 +8,11 @@ class AutopaySchedule extends Model
 {
     protected $guarded = [];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function setAmountAttribute(float $value) : int
     {
         return $this->attributes['amount'] = $value * 100;

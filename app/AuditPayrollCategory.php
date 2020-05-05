@@ -33,9 +33,9 @@ class AuditPayrollCategory extends Model
         return $this->paymentType->name;
     }
 
-    public function monthYear()
+    public function monthYear($abbreviation = false)
     {
-        return $this->auditPayroll->month();
+        return $this->auditPayroll->month($abbreviation);
     }
 
     public function domain()

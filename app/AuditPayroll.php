@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,8 +43,15 @@ class AuditPayroll extends Model
         return $this->created_at->timezone('Africa/Lagos')->diffForHumans();
     }
 
-    public function month()
+    public function month($abbreviation = false)
     {
-        return "$this->month_name $this->year";
+        if (! $abbreviation) {
+            return "$this->month_name $this->year";
+        }
+
+        $month = Str::of($this->month_name)->limit(3, '');
+        $year = Str::of($this->year)->substr(2, 2);
+
+        return "$month $year";
     }
 }
