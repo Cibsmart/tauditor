@@ -86,15 +86,30 @@ class AuditPayrollController extends Controller
         $domain = $domains[$payroll->domain->id];
         $month = $payroll->month();
 
-        $title = Str::upper("$domain $month salary");
+        if ($payroll->domain->id === 'state') {
+            $title = Str::upper("$domain $month salary");
 
-        $category = $payroll->auditPaymentCategories()->create([
-            'payment_type_id' => $salary,
-            'payment_title'   => $title,
-        ]);
+            $category = $payroll->auditPaymentCategories()->create([
+                'payment_type_id' => $salary,
+                'payment_title'   => $title,
+            ]);
 
-        foreach ($salary_beneficiary_types as $salary_beneficiary_type) {
-            $this->createAuditMdaSchedules($salary_beneficiary_type, $category);
+            foreach ($salary_beneficiary_types as $beneficiary_type) {
+                $this->createAuditMdaSchedules($beneficiary_type, $category);
+            }
+        }
+
+        if ($payroll->domain->id === 'jaac') {
+            foreach ($salary_beneficiary_types as $beneficiary_type) {
+                $title = Str::upper("$domain $beneficiary_type $month salary");
+
+                $category = $payroll->auditPaymentCategories()->create([
+                    'payment_type_id' => $salary,
+                    'payment_title'   => $title,
+                ]);
+
+                $this->createAuditMdaSchedules($beneficiary_type, $category);
+            }
         }
 
         $pension_beneficiary_types = $payroll->domain->beneficiaryTypes()
