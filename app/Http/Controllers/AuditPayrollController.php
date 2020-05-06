@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Mda;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\AuditPayroll;
-use App\BeneficiaryType;
-use App\AuditMdaSchedule;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,8 +31,8 @@ class AuditPayrollController extends Controller
                                 'payment_type_id' => $category->payment_type_id,
                                 'payment_type'    => $category->paymentTypeName(),
                                 'payment_title'   => $category->payment_title,
-                                'total_amount'   => number_format($category->total_net_pay, 2),
-                                'head_count'   => number_format($category->head_count),
+                                'total_amount'    => number_format($category->total_net_pay, 2),
+                                'head_count'      => number_format($category->head_count),
                             ]),
                         ]);
 
@@ -46,7 +41,7 @@ class AuditPayrollController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store()
     {
         $date = Carbon::now();
 
@@ -60,8 +55,10 @@ class AuditPayrollController extends Controller
 
         $payroll = $user->auditPayrolls()->where($attributes)->first();
 
+        $message = "You Cannot Create Another Audit Payroll for $date->monthName $date->year";
+
         if ($payroll) {
-            return back()->with('error', "You Cannot Create Another Audit Payroll for $date->monthName $date->year");
+            return back()->with('error', $message);
         }
 
         $attributes = array_merge($attributes, ['user_id' => $user->id]);
@@ -72,8 +69,10 @@ class AuditPayrollController extends Controller
             $this->createPaymentCategories($payroll);
         });
 
+        $message = "Payroll for $date->monthName $date->year Created Successfully";
+
         return redirect()->route('audit_payroll.index')
-                         ->with('success', "Payroll for $date->monthName $date->year Created Successfully");
+                         ->with('success', $message);
     }
 
     private function createPaymentCategories(AuditPayroll $payroll)
@@ -101,7 +100,8 @@ class AuditPayrollController extends Controller
 
         if ($payroll->domain->id === 'jaac') {
             foreach ($salary_beneficiary_types as $beneficiary_type) {
-                $title = Str::upper("$domain $beneficiary_type $month salary");
+                $beneficiary_type_id = $beneficiary_type->id;
+                $title = Str::upper("$domain $beneficiary_type_id $month salary");
 
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
@@ -128,9 +128,10 @@ class AuditPayrollController extends Controller
         }
     }
 
-    private function createAuditMdaSchedules(BeneficiaryType $beneficiary_type, AuditPayrollCategory $category)
+    private function createAuditMdaSchedules($beneficiary_type, $category)
     {
-        $mdas = $beneficiary_type->mdas->isActive()->get();
+        $mdas = $beneficiary_type->mdas()->isActive()->get();
+
         $pensioners = $beneficiary_type->pensioners;
 
         foreach ($mdas as $mda) {
@@ -146,7 +147,7 @@ class AuditPayrollController extends Controller
         }
     }
 
-    private function createAuditSubMdaSchedules(Mda $mda, AuditMdaSchedule $audit_mda_schedule)
+    private function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
     {
         //Only State Education Commission should have add subs
         if ($mda->code !== 'SEC') {
