@@ -123,8 +123,8 @@ class AuditPayrollController extends Controller
             'payment_title'   => $title,
         ]);
 
-        foreach ($pension_beneficiary_types as $salary_beneficiary_type) {
-            $this->createAuditMdaSchedules($salary_beneficiary_type, $category);
+        foreach ($pension_beneficiary_types as $beneficiary_type) {
+            $this->createAuditMdaSchedules($beneficiary_type, $category);
         }
     }
 
@@ -151,7 +151,8 @@ class AuditPayrollController extends Controller
     {
         //Only State Education Commission should have add subs
         if ($mda->code !== 'SEC') {
-            $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
+            $audit_mda_schedule->auditSubMdaSchedules()
+                               ->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
             return;
         }
 
@@ -161,7 +162,8 @@ class AuditPayrollController extends Controller
         $audit_mda_schedule->save();
 
         foreach ($sub_mdas as $sub_mda) {
-            $audit_mda_schedule->auditSubMdaSchedules()->create(['sub_mda_name' => $sub_mda->name,]);
+            $audit_mda_schedule->auditSubMdaSchedules()
+                               ->create(['sub_mda_name' => $sub_mda->name,]);
         }
 
         return;

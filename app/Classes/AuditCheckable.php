@@ -42,6 +42,8 @@ abstract class AuditCheckable
     protected const ALLOWANCES_CHANGED = 'changed_allowances';
     protected const DEDUCTION_CHANGED = 'changed_deductions';
 
+    abstract public function check(AuditPaySchedule $schedule);
+
     protected function initialize(AuditPaySchedule $schedule)
     {
         $this->schedule = $schedule;

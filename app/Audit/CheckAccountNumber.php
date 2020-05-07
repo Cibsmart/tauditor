@@ -4,10 +4,9 @@
 namespace App\Audit;
 
 use App\AuditPaySchedule;
-use App\Contracts\Auditable;
 use App\Classes\AuditCheckable;
 
-class CheckAccountNumber extends AuditCheckable implements Auditable
+class CheckAccountNumber extends AuditCheckable
 {
     public function check(AuditPaySchedule $schedule)
     {

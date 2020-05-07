@@ -4,11 +4,10 @@
 namespace App\Audit;
 
 use App\AuditPaySchedule;
-use App\Contracts\Auditable;
 use App\Classes\AuditCheckable;
 use function is_null;
 
-class CheckNewBeneficiary extends AuditCheckable implements Auditable
+class CheckNewBeneficiary extends AuditCheckable
 {
     public function check(AuditPaySchedule $schedule)
     {

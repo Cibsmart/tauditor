@@ -4,12 +4,11 @@
 namespace App\Audit;
 
 use App\AuditPaySchedule;
-use App\Contracts\Auditable;
 use App\Classes\AuditCheckable;
 use Illuminate\Support\Collection;
 use function collect;
 
-class CheckDeductions extends AuditCheckable implements Auditable
+class CheckDeductions extends AuditCheckable
 {
     protected Collection $current_deductions;
     protected Collection $previous_deductions;
