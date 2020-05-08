@@ -7,7 +7,7 @@
         <div class="mt-1 relative rounded-md shadow-sm">
             <input :id="id" :type="type" v-bind="$attrs" :value="value" ref="input"
                    :class="{ error: errors.length }" @input="$emit('input', $event.target.value)"
-                   class="form-input pl-10 pr-12 text-right leading-normal block w-full focus:outline-none focus:border-indigo-500 focus:shadow">
+                   class="form-input block w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-indigo-500 focus:shadow">
 
             <div class="absolute inset-y-0 right-0 flex items-center">
                 <span class="text-gray-500 pr-3">
