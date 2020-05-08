@@ -17,7 +17,7 @@
                         :class="tab.isActive
                        ? 'border-indigo-700 text-indigo-800 focus:text-indigo-900 focus:border-indigo-800'
                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300'"
-                       class="whitespace-no-wrap mr-8 py-4 px-1 border-b-2 font-extrabold text-sm leading-5 focus:outline-none"
+                        class="whitespace-no-wrap mr-8 py-4 px-1 border-b-2 font-extrabold text-sm leading-5 focus:outline-none"
                         preserve-state preserve-scroll>
                         {{ tab.title }}
                     </inertia-link>
@@ -32,45 +32,45 @@
 <script>
     import SelectInput from '@/Shared/SelectInput'
 
-export default {
+    export default {
 
-    props: {
+        props: {
 
-    },
+        },
 
-    components: {
-        SelectInput,
-    },
+        components: {
+            SelectInput,
+        },
 
-    data() {
-        return {
-            tabs: [],
-            current: null,
-            activeTab: null,
+        data() {
+            return {
+                tabs: [],
+                current: null,
+                activeTab: null,
+            }
+        },
+
+        mounted() {
+            this.tabs = this.$children
+
+            this.setInitialActiveTab();
+        },
+
+        watch: {
+            activeTab(activeTab){
+                this.tabs.map(tab => tab.isActive = tab === activeTab);
+            },
+        },
+
+        methods: {
+            setInitialActiveTab(){
+                this.activeTab = this.tabs.find(tab => tab.active) || this.tabs[0];
+            },
+
+            selectedTab(value){
+                this.activeTab = this.tabs[value];
+            },
         }
-    },
-
-    mounted() {
-        this.tabs = this.$children
-
-        this.setInitialActiveTab();
-    },
-
-    watch: {
-        activeTab(activeTab){
-            this.tabs.map(tab => tab.isActive = tab === activeTab);
-        },
-    },
-
-    methods: {
-        setInitialActiveTab(){
-            this.activeTab = this.tabs.find(tab => tab.active) || this.tabs[0];
-        },
-
-        selectedTab(value){
-            this.activeTab = this.tabs[value];
-        },
     }
-}
 </script>
 

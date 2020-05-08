@@ -1,5 +1,5 @@
 <template>
-    <tabs>
+    <h-tabs>
         <tab title="General">
             <p>General</p>
         </tab>
@@ -9,13 +9,13 @@
         <tab title="Salary" active>
             <p>Salary</p>
         </tab>
-    </tabs>
+    </h-tabs>
 </template>
 
 <script>
 import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
-import Tabs from "@/Shared/Tabs";
+import HTabs from "@/Shared/HTabs";
 import Layout from "@/Shared/Layout";
 
 export default {
@@ -32,7 +32,7 @@ export default {
     components: {
         Tab,
         Icon,
-        Tabs,
+        HTabs,
     },
 
     data() {
