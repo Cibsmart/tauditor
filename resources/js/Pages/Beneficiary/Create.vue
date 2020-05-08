@@ -1,12 +1,12 @@
 <template>
     <h-tabs>
-        <tab title="General">
-            <p>General</p>
+        <tab title="General" active>
+            <general></general>
         </tab>
         <tab title="Bio Data">
             <p>Bio Data</p>
         </tab>
-        <tab title="Salary" active>
+        <tab title="Salary">
             <p>Salary</p>
         </tab>
     </h-tabs>
@@ -17,6 +17,7 @@ import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
 import HTabs from "@/Shared/HTabs";
 import Layout from "@/Shared/Layout";
+import General from "@/Pages/Beneficiary/NavTab/General";
 
 export default {
     metaInfo: {
@@ -33,6 +34,7 @@ export default {
         Tab,
         Icon,
         HTabs,
+        General
     },
 
     data() {

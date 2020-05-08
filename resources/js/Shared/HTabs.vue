@@ -10,7 +10,7 @@
         </div>
         <div class="hidden sm:block">
             <div class="border-b border-gray-200">
-                <nav class="flex">
+                <nav class="-mb-px flex">
                     <inertia-link
                         v-for="(tab, index) in tabs" role="tab" href="#"
                         @click="activeTab = tab" :key="index"
@@ -51,7 +51,7 @@
         },
 
         mounted() {
-            this.tabs = this.$children
+            this.tabs = this.$children.slice(1);
 
             this.setInitialActiveTab();
         },

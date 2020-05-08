@@ -8,16 +8,17 @@
                 </option>
             </select-input>
         </div>
+        <div class="flex">
         <div class="hidden sm:block">
-            <div class="border-b border-gray-200">
-                <nav class="flex">
+            <div class="border-gray-200">
+                <nav class="mt-4 ml-4 w-64 flex flex-col border border-gray-200 rounded">
                     <inertia-link
                         v-for="(tab, index) in tabs" role="tab" href="#"
                         @click="activeTab = tab" :key="index"
                         :class="tab.isActive
-                       ? 'border-indigo-700 text-indigo-800 focus:text-indigo-900 focus:border-indigo-800'
-                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300'"
-                        class="whitespace-no-wrap mr-8 py-4 px-1 border-b-2 font-extrabold text-sm leading-5 focus:outline-none"
+                       ? 'text-indigo-800 border-r bg-gray-100 focus:text-indigo-900 focus:border-indigo-800'
+                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:text-gray-700 focus:border-gray-300'"
+                        class="whitespace-no-wrap py-4 px-4 border-gray-200 font-extrabold text-sm leading-5 focus:outline-none"
                         preserve-state preserve-scroll>
                         {{ tab.title }}
                     </inertia-link>
@@ -26,6 +27,7 @@
         </div>
 
         <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -51,7 +53,7 @@
         },
 
         mounted() {
-            this.tabs = this.$children
+            this.tabs = this.$children.slice(1);
 
             this.setInitialActiveTab();
         },
