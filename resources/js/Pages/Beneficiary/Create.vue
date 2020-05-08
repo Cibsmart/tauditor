@@ -1,12 +1,12 @@
 <template>
     <tabs>
-        <tab title="General" class="ml">
+        <tab title="General">
             <p>General</p>
         </tab>
-        <tab title="Bio">
-            <p>Bio</p>
+        <tab title="Bio Data">
+            <p>Bio Data</p>
         </tab>
-        <tab title="Salary">
+        <tab title="Salary" active>
             <p>Salary</p>
         </tab>
     </tabs>

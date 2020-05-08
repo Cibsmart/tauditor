@@ -1,5 +1,5 @@
 <template>
-    <div role="tabpanel" v-show="show">
+    <div role="tabpanel" v-show="isActive">
 
         <slot></slot>
     </div>
@@ -9,11 +9,15 @@
 export default {
     props:{
         title: String,
+        active: {
+            type: Boolean,
+            default: false,
+        }
     },
 
     data(){
         return{
-            show: false,
+            isActive: this.active,
         }
     },
 }
