@@ -65,11 +65,11 @@
 
 
 <script>
-import FlashMessages from '@/Shared/FlashMessages'
+import Logo from '@/Shared/Logo'
+import Icon from '@/Shared/Icon'
 import Dropdown from '@/Shared/Dropdown'
 import MainMenu from '@/Shared/MainMenu'
-import Icon from '@/Shared/Icon'
-import Logo from '@/Shared/Logo'
+import FlashMessages from '@/Shared/FlashMessages'
 
 export default {
   components:{

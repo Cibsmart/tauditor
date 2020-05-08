@@ -479,11 +479,11 @@ export default {
   layout: Layout,
 
   props: {
-    filters: Object,
     lga: Array,
     states: Array,
-    domains: Array,
     gender: Array,
+    domains: Array,
+    filters: Object,
     marital_status: Array,
     beneficiary_types: Array
   },
