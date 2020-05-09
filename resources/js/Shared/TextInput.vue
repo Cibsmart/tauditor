@@ -1,7 +1,7 @@
 <template>
     <div>
       <label v-if="label" :for="id" class="mb-2 block select-none text-gray-800">
-        {{ label }}:
+        {{ label }} <span v-show="required && label" class="text-red-600 ml-1 font-bold">*</span>
       </label>
 
       <input :id="id" :type="type" v-bind="$attrs" :value="value" ref="input"
@@ -19,13 +19,14 @@
 export default{
   inheritAttrs: false,
   props: {
-    value: String,
-    label: String,
-    type: { type: String, default: 'text' },
-    errors: { type: Array, default: () => [] },
-    id: { type: String, default() {
-      return `text-input-${this._uid}` },
-    }
+      value: String,
+      label: String,
+      type: { type: String, default: 'text' },
+      errors: { type: Array, default: () => [] },
+      id: { type: String, default() {
+          return `text-input-${this._uid}` },
+      },
+      required: { type: Boolean, default: false},
   },
 
   methods: {

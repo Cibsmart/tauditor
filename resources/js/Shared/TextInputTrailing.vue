@@ -1,7 +1,7 @@
 <template>
     <div>
         <label v-if="label" :for="id" class="mb-2 block select-none text-gray-800">
-            {{ label }}:
+            {{ label }} <span v-show="required && label" class="text-red-600 ml-1 font-bold">*</span>
         </label>
 
         <div class="mt-1 relative rounded-md shadow-sm">
@@ -34,7 +34,8 @@
             errors: { type: Array, default: () => [] },
             id: { type: String, default() {
                     return `text-input-${this._uid}` },
-            }
+            },
+            required: { type: Boolean, default: false},
         },
 
         methods: {

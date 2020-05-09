@@ -9,29 +9,38 @@
             </select-input>
         </div>
         <div class="flex">
-        <div class="hidden sm:block">
-            <div class="border-gray-200">
-                <nav class="mt-4 ml-4 w-64 flex flex-col border border-gray-200 rounded">
-                    <inertia-link
-                        v-for="(tab, index) in tabs" role="tab" href="#"
-                        @click="activeTab = tab" :key="index"
-                        :class="tab.isActive
-                       ? 'text-indigo-800 border-r bg-gray-100 focus:text-indigo-900 focus:border-indigo-800'
-                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:text-gray-700 focus:border-gray-300'"
-                        class="whitespace-no-wrap py-4 px-4 border-gray-200 font-extrabold text-sm leading-5 focus:outline-none"
-                        preserve-state preserve-scroll>
-                        {{ tab.title }}
-                    </inertia-link>
-                </nav>
+            <div class="hidden sm:block">
+                <div class="border-gray-200">
+                    <nav class="mt-4 ml-4 w-64 flex flex-col border border-gray-200 rounded">
+                        <inertia-link
+                            v-for="(tab, index) in tabs" role="tab" href="#"
+                            @click="activeTab = tab" :key="index"
+                            :class="tab.isActive
+                           ? 'text-indigo-800 border-r bg-gray-100 focus:text-indigo-900 focus:border-indigo-800'
+                           : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:text-gray-700 focus:border-gray-300'"
+                            class="whitespace-no-wrap group flex items-center py-4 px-4 border-gray-200 font-extrabold text-sm leading-5 focus:outline-none"
+                            preserve-state preserve-scroll>
+                            <span class="truncate">
+                                {{ tab.title }}
+                            </span>
+                            <span v-show="tab.completed"
+                                  class="ml-auto inline-block transition ease-in-out duration-150">
+                              <icon name="check" class="text-green-600"></icon>
+                            </span>
+                        </inertia-link>
+                    </nav>
+                </div>
             </div>
-        </div>
 
-        <slot></slot>
+            <div class="mx-4 my-4 flex-1">
+                <slot></slot>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import Icon from '@/Shared/Icon'
     import SelectInput from '@/Shared/SelectInput'
 
     export default {
@@ -41,6 +50,7 @@
         },
 
         components: {
+            Icon,
             SelectInput,
         },
 
