@@ -1,8 +1,8 @@
 <template>
-    <div class="w-full h-screen bg-white rounded">
+    <div class="bg-white rounded">
         <v-tabs>
             <tab title="Basic Information" active>
-                <p>Basic Information</p>
+                <basic-information></basic-information>
             </tab>
             <tab title="Next of Kin">
                 <p>Next of Kin</p>
@@ -18,6 +18,7 @@
 import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
 import VTabs from "@/Shared/VTabs";
+import BasicInformation from "@/Pages/Beneficiary/Tabs/BasicInformation";
 
 export default {
     props: {
@@ -28,6 +29,7 @@ export default {
         Tab,
         Icon,
         VTabs,
+        BasicInformation,
     },
 
     data() {
