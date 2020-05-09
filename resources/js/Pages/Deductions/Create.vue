@@ -35,8 +35,7 @@
                   <option v-for="value_type in value_types"
                           :key="value_type.id"
                           :value="value_type.id"
-                          v-text="value_type.name"
-                  >
+                          v-text="value_type.name">
                   </option>
               </select-input>
 

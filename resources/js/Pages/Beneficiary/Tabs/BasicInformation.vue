@@ -1,10 +1,109 @@
 <template>
+    <div class="bg-white overflow-hidden shadow rounded-lg">
+        <form @submit.prevent="submit">
+        <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
+            Basic Information
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+            <div class="flex flex-col lg:flex-row w-full">
+                <text-input v-model="form.last_name"
+                            placeholder="Last Name" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="Last Name" :errors="$page.errors.last_name" required>
+                </text-input>
 
+                <text-input v-model="form.first_name"
+                            placeholder="First Name" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="First Name" :errors="$page.errors.first_name" required>
+                </text-input>
+
+                <text-input v-model="form.middle_name"
+                            placeholder="Middle Name" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="Middle Name" :errors="$page.errors.middle_name" required>
+                </text-input>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <date-picker class="pr-6 pb-8 w-full lg:w-1/3"></date-picker>
+<!--                <text-input v-model="form.date_of_birth"-->
+<!--                            placeholder="Date Of Birth" class="pr-6 pb-8 w-full lg:w-1/3"-->
+<!--                            label="Date Of Birth" :errors="$page.errors.date_of_birth">-->
+<!--                </text-input>-->
+
+                <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
+                              :errors="$page.errors.gender_id" required>
+                    <option v-for="gender in prop.genders" :key="gender.id"
+                            :value="gender.id" v-text="gender.name">
+                    </option>
+                </select-input>
+
+                <select-input v-model="form.marital_status_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Marital Status"
+                              :errors="$page.errors.marital_status_id" required>
+                    <option v-for="marital_status in prop.marital_statues" :key="marital_status.id"
+                            :value="marital_status.id" v-text="marital_status.name">
+                    </option>
+                </select-input>
+            </div>
+        </div>
+        <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
+            <span class="flex justify-end rounded-md shadow-sm ">
+                <button type="button" class="inline-flex btn btn-big btn-indigo">
+                    Save & Continue
+                </button>
+            </span>
+        </div>
+        </form>
+    </div>
 </template>
 
 <script>
-    export default {
-        name: "BasicInformation"
-    }
+import TextInput from "@/Shared/TextInput";
+import DatePicker from "@/Shared/DatePicker";
+import SelectInput from "@/Shared/SelectInput";
+
+export default {
+    name: "BasicInformation",
+
+    props: {
+
+    },
+
+    components: {
+        TextInput,
+        DatePicker,
+        SelectInput,
+    },
+
+    data() {
+        return {
+            prop: {
+                genders: null,
+                marital_statues: null,
+            },
+            form: {
+                last_name: null,
+                first_name: null,
+                middle_name: null,
+                date_of_birth: null,
+                gender_id: null,
+                marital_status_id: null,
+                state_id: null,
+                local_government_id: null,
+                phone_number: null,
+                email: null,
+                address_line_1: null,
+                address_line_2: null,
+                address_city: null,
+                address_state: null,
+                address_country: null,
+                domain_id: null,
+                beneficiary_type_id: null
+            }
+        }
+    },
+
+    methods: {
+
+    },
+}
 </script>
 
