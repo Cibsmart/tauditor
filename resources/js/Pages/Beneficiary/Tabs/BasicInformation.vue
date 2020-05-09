@@ -23,11 +23,10 @@
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <date-picker class="pr-6 pb-8 w-full lg:w-1/3"></date-picker>
-<!--                <text-input v-model="form.date_of_birth"-->
-<!--                            placeholder="Date Of Birth" class="pr-6 pb-8 w-full lg:w-1/3"-->
-<!--                            label="Date Of Birth" :errors="$page.errors.date_of_birth">-->
-<!--                </text-input>-->
+                <text-input v-model="form.date_of_birth"
+                            placeholder="Date Of Birth" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="Date Of Birth" :errors="$page.errors.date_of_birth">
+                </text-input>
 
                 <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
                               :errors="$page.errors.gender_id" required>
@@ -43,9 +42,77 @@
                     </option>
                 </select-input>
             </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <text-input v-model="form.phone_number"
+                            placeholder="Phone Number" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="Phone Number" :errors="$page.errors.phone_number" required>
+                </text-input>
+
+                <text-input v-model="form.email"
+                            placeholder="Email" class="pr-6 pb-8 w-full lg:w-2/3"
+                            label="Email" :errors="$page.errors.email">
+                </text-input>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <select-input v-model="form.state_id" class="pr-6 pb-8 w-full lg:w-1/2" label="State of Origin"
+                              :errors="$page.errors.state_id" required>
+                    <option v-for="state in prop.states" :key="state.id"
+                            :value="state.id" v-text="state.name">
+                    </option>
+                </select-input>
+
+                <select-input v-model="form.local_government_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Local Government of Origin"
+                              :errors="$page.errors.local_government_id" required>
+                    <option v-for="local_government in prop.local_governments" :key="local_government.id"
+                            :value="local_government.id" v-text="local_government.name">
+                    </option>
+                </select-input>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <text-input v-model="form.address_line_1"
+                            placeholder="Address Line 1" class="pr-6 pb-8 w-full lg:w-1/2"
+                            label="Address Line 1" :errors="$page.errors.address_line_1" required>
+                </text-input>
+
+                <text-input v-model="form.address_line_2"
+                            placeholder="Address Line 2" class="pr-6 pb-8 w-full lg:w-1/2"
+                            label="Address Line 2" :errors="$page.errors.address_line_2">
+                </text-input>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <text-input v-model="form.city"
+                            placeholder="City" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="City" :errors="$page.errors.city" required>
+                </text-input>
+
+                <text-input v-model="form.state"
+                            placeholder="State" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="State" :errors="$page.errors.state" required>
+                </text-input>
+
+                <text-input v-model="form.country"
+                            placeholder="Country" class="pr-6 pb-8 w-full lg:w-1/3"
+                            label="Country" :errors="$page.errors.country" required>
+                </text-input>
+            </div>
+
+            <div class="flex flex-col lg:flex-row w-full">
+                <check-input v-model="form.pensioner" class="pr-6 pb-8 w-full lg:w-1/3" label="Pensioner" ></check-input>
+
+                <select-input v-model="form.beneficiary_type_id" class="pr-6 pb-8 w-full lg:w-2/3" label="Beneficiary Type"
+                              :errors="$page.errors.beneficiary_type_id" required>
+                    <option v-for="beneficiary_type in prop.beneficiary_types" :key="beneficiary_type.id"
+                            :value="beneficiary_type.id" v-text="beneficiary_type.name">
+                    </option>
+                </select-input>
+            </div>
         </div>
         <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
-            <span class="flex justify-end rounded-md shadow-sm ">
+            <span class="flex justify-end">
                 <button type="button" class="inline-flex btn btn-big btn-indigo">
                     Save & Continue
                 </button>
@@ -57,6 +124,7 @@
 
 <script>
 import TextInput from "@/Shared/TextInput";
+import CheckInput from "@/Shared/CheckInput";
 import DatePicker from "@/Shared/DatePicker";
 import SelectInput from "@/Shared/SelectInput";
 
@@ -69,6 +137,7 @@ export default {
 
     components: {
         TextInput,
+        CheckInput,
         DatePicker,
         SelectInput,
     },
@@ -76,9 +145,13 @@ export default {
     data() {
         return {
             prop: {
+                state: null,
                 genders: null,
                 marital_statues: null,
+                local_governments: null,
+                beneficiary_types: null,
             },
+
             form: {
                 last_name: null,
                 first_name: null,
@@ -96,6 +169,7 @@ export default {
                 address_state: null,
                 address_country: null,
                 domain_id: null,
+                pensioner: null,
                 beneficiary_type_id: null
             }
         }

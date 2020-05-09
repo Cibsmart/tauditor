@@ -116,7 +116,6 @@ export default {
 
     methods: {
         nameChange(value) {
-            console.log(value);
             this.deduction_names_data = this.deduction_names.filter(deduction => deduction.deduction_type_id === value)
         },
 
