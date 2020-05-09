@@ -19,7 +19,7 @@ class CreateBeneficiariesTable extends Migration
             $table->string('last_name');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
-            $table->date('date_of_birth');
+            $table->dateTime('date_of_birth');
             $table->unsignedBigInteger('gender_id')->nullable();
             $table->unsignedBigInteger('marital_status_id')->nullable();
             $table->unsignedBigInteger('state_id')->nullable();

@@ -19,11 +19,11 @@ class CreateWorkDetailsTable extends Migration
             $table->unsignedBigInteger('designation_id');
             $table->unsignedBigInteger('grade_level_id');
             $table->unsignedBigInteger('step_id');
-            $table->date('date_of_appointment')->nullable();
+            $table->dateTime('date_of_appointment')->nullable();
             $table->string('place_of_appointment')->nullable();
-            $table->date('confirmed')->nullable();
-            $table->date('last_promotion_date')->nullable();
-            $table->date('retirement_date')->nullable();
+            $table->dateTime('confirmed')->nullable();
+            $table->dateTime('last_promotion_date')->nullable();
+            $table->dateTime('retirement_date')->nullable();
             $table->timestamps();
         });
     }
