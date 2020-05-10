@@ -1,12 +1,18 @@
 <template>
     <div class="bg-white rounded">
         <v-tabs>
-            <tab title="Basic Information" active>
+            <tab title="Basic Information" :completed="data.basic.completed">
                 <basic-information :data="data.basic"></basic-information>
             </tab>
+
+            <tab title="Employment Details">
+                <p>Employment Details</p>
+            </tab>
+
             <tab title="Next of Kin">
                 <p>Next of Kin</p>
             </tab>
+
             <tab title="Work Details">
                 <p>Work Details</p>
             </tab>

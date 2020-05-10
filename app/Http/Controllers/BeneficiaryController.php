@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\ViewModels\CreateBeneficiaryData;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use function array_merge;
 
 class BeneficiaryController extends Controller
 {
@@ -76,30 +77,33 @@ class BeneficiaryController extends Controller
      */
     public function store(Request $request)
     {
+        $domain_id = auth()->user()->domain->id;
+
         $attributes = $request->validate([
-            'last_name'           => 'required|string',
-            'first_name'          => 'required|string',
-            'middle_name'         => 'nullable|string',
-            'date_of_birth'       => 'required',
-            'gender_id'           => 'nullable|integer|min:1',
-            'marital_status_id'   => 'nullable|integer|min:1',
-            'state_id'            => 'nullable|integer|min:1',
-            'local_government_id' => 'nullable|integer|min:1',
-            'phone_number'        => 'nullable|string',
-            'email'               => 'nullable|email',
-            'address_line_1'      => 'nullable|string',
-            'address_line_2'      => 'nullable|string',
-            'address_city'        => 'nullable|string',
-            'address_state'       => 'nullable|string',
-            'address_country'     => 'nullable|string',
-            'domain_id'           => 'required|integer|min:1',
-            'beneficiary_type_id' => 'required|integer|min:1',
-            'active'              => 'nullable',
+            'last_name'           => ['required', 'string'],
+            'first_name'          => ['required', 'string'],
+            'middle_name'         => ['nullable', 'string'],
+            'date_of_birth'       => ['required'],
+            'gender_id'           => ['required', 'string', 'max:1'],
+            'marital_status_id'   => ['required', 'string', 'max:2'],
+            'state_id'            => ['required', 'integer', 'min:1'],
+            'local_government_id' => ['required', 'integer', 'min:1'],
+            'phone_number'        => ['required', 'string'],
+            'email'               => ['nullable', 'email'],
+            'address_line_1'      => ['required', 'string'],
+            'address_line_2'      => ['nullable', 'string'],
+            'address_city'        => ['required', 'string'],
+            'address_state'       => ['required', 'string'],
+            'address_country'     => ['required', 'string'],
+            'beneficiary_type_id' => ['required', 'string', 'min:1'],
+            'pensioner'           => ['required', 'boolean'],
         ]);
+
+        $attributes = array_merge($attributes, ['domain_id' => $domain_id]);
 
         Beneficiary::create($attributes);
 
-        return back()->with('success', "Beneficiary Created");
+        return back()->with('success', "Beneficiary Created Successfully");
     }
 
     /**

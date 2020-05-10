@@ -96,11 +96,6 @@ class Beneficiary extends Model
     {
         return $this->belongsTo(BeneficiaryType::class)->withDefault();
     }
-//
-//    public function salaryStructure() : BelongsTo
-//    {
-//        return $this->belongsTo(Structure::class);
-//    }
 
     public function qualifications() : HasMany
     {
@@ -317,9 +312,9 @@ class Beneficiary extends Model
         return $this->attributes['first_name'] = Str::upper($value);
     }
 
-    public function setMiddleNameAttribute(string $value) : string
+    public function setMiddleNameAttribute(string $value = null) : ?string
     {
-        return $this->attributes['middle_name'] = Str::upper($value);
+        return $this->attributes['middle_name'] = Str::upper($value) ?? null;
     }
 
     public function scopeActive($query)

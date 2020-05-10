@@ -34,6 +34,7 @@ class CreateBeneficiariesTable extends Migration
             $table->string('domain_id');
             $table->string('beneficiary_type_id');
             $table->boolean('pensioner')->default(0);
+            $table->boolean('filled')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

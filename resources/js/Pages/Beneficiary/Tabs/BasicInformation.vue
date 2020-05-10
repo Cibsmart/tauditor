@@ -19,7 +19,7 @@
 
                 <text-input v-model="form.middle_name"
                             placeholder="Middle Name" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Middle Name" :errors="$page.errors.middle_name" required>
+                            label="Middle Name" :errors="$page.errors.middle_name">
                 </text-input>
             </div>
 
@@ -84,19 +84,19 @@
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <text-input v-model="form.city"
+                <text-input v-model="form.address_city"
                             placeholder="City" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="City" :errors="$page.errors.city" required>
+                            label="City" :errors="$page.errors.address_city" required>
                 </text-input>
 
-                <text-input v-model="form.state"
+                <text-input v-model="form.address_state"
                             placeholder="State" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="State" :errors="$page.errors.state" required>
+                            label="State" :errors="$page.errors.address_state" required>
                 </text-input>
 
-                <text-input v-model="form.country"
+                <text-input v-model="form.address_country"
                             placeholder="Country" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Country" :errors="$page.errors.country" required>
+                            label="Country" :errors="$page.errors.address_country" required>
                 </text-input>
             </div>
 
@@ -176,7 +176,7 @@ export default {
 
     methods: {
         submit() {
-            this.$inertia.post(route('beneficiaries.store'), this.form);
+            this.$inertia.post(route('beneficiaries.store'), this.form, {});
         },
 
         stateChanged(value) {
