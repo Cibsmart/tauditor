@@ -4,6 +4,7 @@
         <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
             Basic Information
         </div>
+
         <div class="px-4 py-5 sm:p-6">
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.last_name"
@@ -23,10 +24,9 @@
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <text-input v-model="form.date_of_birth"
-                            placeholder="Date Of Birth" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Date Of Birth" :errors="$page.errors.date_of_birth">
-                </text-input>
+                <date-picker v-model="form.date_of_birth" class="pr-6 pb-8 w-full lg:w-1/3" from="1980"
+                            label="Date Of Birth" :errors="$page.errors.date_of_birth" required>
+                </date-picker>
 
                 <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
                               :errors="$page.errors.gender_id" required>
@@ -111,9 +111,10 @@
                 </select-input>
             </div>
         </div>
+
         <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
             <span class="flex justify-end">
-                <button type="button" class="inline-flex btn btn-big btn-indigo">
+                <button type="submit" class="inline-flex btn btn-big btn-indigo">
                     Save & Continue
                 </button>
             </span>
@@ -132,7 +133,11 @@ export default {
     name: "BasicInformation",
 
     props: {
-
+        states: Array,
+        genders: Array,
+        marital_statues: Array,
+        beneficiary_types: Array,
+        local_governments: Array,
     },
 
     components: {
@@ -145,11 +150,11 @@ export default {
     data() {
         return {
             prop: {
-                state: null,
-                genders: null,
-                marital_statues: null,
-                local_governments: null,
-                beneficiary_types: null,
+                states: Array,
+                genders: Array,
+                marital_statues: Array,
+                beneficiary_types: Array,
+                local_governments: Array,
             },
 
             form: {
@@ -168,7 +173,6 @@ export default {
                 address_city: null,
                 address_state: null,
                 address_country: null,
-                domain_id: null,
                 pensioner: null,
                 beneficiary_type_id: null
             }
@@ -176,7 +180,9 @@ export default {
     },
 
     methods: {
-
+        submit() {
+            this.$inertia.post(route('beneficiaries.store'), this.beneficiary_form);
+        }
     },
 }
 </script>
