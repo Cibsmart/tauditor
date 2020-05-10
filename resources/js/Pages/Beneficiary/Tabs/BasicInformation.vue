@@ -181,7 +181,7 @@ export default {
 
     methods: {
         submit() {
-            this.$inertia.post(route('beneficiaries.store'), this.beneficiary_form);
+            this.$inertia.post(route('beneficiaries.store'), this.form);
         }
     },
 }
