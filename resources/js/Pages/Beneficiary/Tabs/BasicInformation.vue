@@ -4,6 +4,7 @@
         <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
             Basic Information
         </div>
+
         <div class="px-4 py-5 sm:p-6">
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.last_name"
@@ -110,9 +111,10 @@
                 </select-input>
             </div>
         </div>
+
         <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
             <span class="flex justify-end">
-                <button type="button" class="inline-flex btn btn-big btn-indigo">
+                <button type="submit" class="inline-flex btn btn-big btn-indigo">
                     Save & Continue
                 </button>
             </span>
@@ -179,7 +181,7 @@ export default {
 
     methods: {
         submit() {
-            this.$inertia.post(route('beneficiary.store'), this.beneficiary_form);
+            this.$inertia.post(route('beneficiaries.store'), this.beneficiary_form);
         }
     },
 }
