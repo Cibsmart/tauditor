@@ -1,20 +1,24 @@
 <template>
     <div class="bg-white rounded">
         <v-tabs>
-            <tab title="Basic Information" :completed="data.basic.completed">
+            <tab title="Basic Information">
                 <basic-information :data="data.basic"></basic-information>
             </tab>
 
             <tab title="Employment Details">
-                <p>Employment Details</p>
+                <employment-details></employment-details>
+            </tab>
+
+            <tab title="Bank Details">
+                <bank-details></bank-details>
             </tab>
 
             <tab title="Next of Kin">
-                <p>Next of Kin</p>
+                <next-of-kin></next-of-kin>
             </tab>
 
-            <tab title="Work Details">
-                <p>Work Details</p>
+            <tab title="Qualifications">
+                <qualifications></qualifications>
             </tab>
         </v-tabs>
     </div>
@@ -24,7 +28,11 @@
 import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
 import VTabs from "@/Shared/VTabs";
+import NextOfKin from "@/Pages/Beneficiary/Tabs/NextOfKin";
+import BankDetails from "@/Pages/Beneficiary/Tabs/BankDetails";
+import Qualifications from "@/Pages/Beneficiary/Tabs/Qualifications";
 import BasicInformation from "@/Pages/Beneficiary/Tabs/BasicInformation";
+import EmploymentDetails from "@/Pages/Beneficiary/Tabs/EmploymentDetails";
 
 export default {
     props: {
@@ -35,7 +43,11 @@ export default {
         Tab,
         Icon,
         VTabs,
+        NextOfKin,
+        BankDetails,
+        Qualifications,
         BasicInformation,
+        EmploymentDetails,
     },
 
     data() {

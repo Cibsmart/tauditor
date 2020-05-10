@@ -3,21 +3,23 @@
         <tab title="General" active>
             <general :data="general"></general>
         </tab>
-        <tab title="Bio Data">
-            <p>Bio Data</p>
+        <tab title="Biometrics">
+            <biometrics></biometrics>
         </tab>
-        <tab title="Salary">
-            <p>Salary</p>
+        <tab title="Basic Pay">
+            <salary></salary>
         </tab>
     </h-tabs>
 </template>
 
 <script>
-import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
+import Icon from "@/Shared/Icon";
 import HTabs from "@/Shared/HTabs";
 import Layout from "@/Shared/Layout";
+import Salary from "@/Pages/Beneficiary/NavTab/Salary";
 import General from "@/Pages/Beneficiary/NavTab/General";
+import Biometrics from "@/Pages/Beneficiary/NavTab/Biometrics";
 
 export default {
     metaInfo: {
@@ -34,7 +36,9 @@ export default {
         Tab,
         Icon,
         HTabs,
-        General
+        Salary,
+        General,
+        Biometrics,
     },
 
     data() {

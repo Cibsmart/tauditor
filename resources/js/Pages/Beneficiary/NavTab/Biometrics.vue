@@ -1,16 +1,12 @@
 <template>
     <div class="bg-white rounded">
         <v-tabs>
-            <tab title="Salary">
-                <salary></salary>
+            <tab title="Photo Capture">
+                <photo-capture></photo-capture>
             </tab>
 
-            <tab title="Allowances">
-                <allowances></allowances>
-            </tab>
-
-            <tab title="Deductions">
-                <deductions></deductions>
+            <tab title="Finger Prints">
+                <finger-prints></finger-prints>
             </tab>
         </v-tabs>
     </div>
@@ -20,9 +16,8 @@
     import Icon from "@/Shared/Icon";
     import Tab from "@/Shared/Tab";
     import VTabs from "@/Shared/VTabs";
-    import Salary from "@/Pages/Beneficiary/Tabs/Salary";
-    import Allowances from "@/Pages/Beneficiary/Tabs/Allowances";
-    import Deductions from "@/Pages/Beneficiary/Tabs/Deductions";
+    import PhotoCapture from "@/Pages/Beneficiary/Tabs/PhotoCapture";
+    import FingerPrints from "@/Pages/Beneficiary/Tabs/FingerPrints";
 
     export default {
         props: {
@@ -33,9 +28,8 @@
             Tab,
             Icon,
             VTabs,
-            Salary,
-            Allowances,
-            Deductions,
+            PhotoCapture,
+            FingerPrints,
         },
 
         data() {

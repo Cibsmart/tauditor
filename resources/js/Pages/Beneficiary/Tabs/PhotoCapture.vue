@@ -2,12 +2,12 @@
     <div class="bg-white overflow-hidden shadow rounded-lg">
         <form @submit.prevent="submit">
             <div class="border-b border-gray-200 px-4 py-5 sm:px-6">
-                Employment Details
+                Photo Capture
             </div>
 
             <div class="px-4 py-5 sm:p-6">
                 <div class="flex flex-col lg:flex-row w-full">
-                    <h3>Employment Details Create Form Goes Here</h3>
+                    <h3>Photo Capture Create Form Goes Here</h3>
                 </div>
             </div>
 
@@ -24,17 +24,15 @@
 
 <script>
     import TextInput from "@/Shared/TextInput";
-    import SelectInput from "@/Shared/SelectInput";
 
     export default {
-        name: "EmploymentDetails",
+        name: "BankDetails",
 
         props: {
         },
 
         components: {
             TextInput,
-            SelectInput,
         },
 
         data() {
