@@ -2,7 +2,7 @@
     <div class="bg-white rounded">
         <v-tabs>
             <tab title="Basic Information" active>
-                <basic-information></basic-information>
+                <basic-information :data="data.basic"></basic-information>
             </tab>
             <tab title="Next of Kin">
                 <p>Next of Kin</p>
@@ -22,7 +22,7 @@ import BasicInformation from "@/Pages/Beneficiary/Tabs/BasicInformation";
 
 export default {
     props: {
-
+        data: Object,
     },
 
     components: {

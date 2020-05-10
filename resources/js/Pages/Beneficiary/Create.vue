@@ -1,7 +1,7 @@
 <template>
     <h-tabs>
         <tab title="General" active>
-            <general></general>
+            <general :data="general"></general>
         </tab>
         <tab title="Bio Data">
             <p>Bio Data</p>
@@ -27,7 +27,7 @@ export default {
     layout: Layout,
 
     props: {
-
+        create_beneficiary_data: Object,
     },
 
     components: {
@@ -39,12 +39,11 @@ export default {
 
     data() {
         return {
+            general: {
+                'basic': this.create_beneficiary_data,
+            },
         }
     },
-
-    methods: {
-
-    }
 }
 </script>
 

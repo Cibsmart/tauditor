@@ -21,10 +21,10 @@ class CreateBeneficiaryData
     public function data()
     {
         return [
-            'lga' => LocalGovernment::all()->toArray(),
+            'local_governments' => LocalGovernment::all()->toArray(),
             'states' => State::all()->toArray(),
-            'gender' => Gender::all()->toArray(),
-            'marital_status' => MaritalStatus::all()->toArray(),
+            'genders' => Gender::all()->toArray(),
+            'marital_statues' => MaritalStatus::all()->toArray(),
             'beneficiary_types' => $this->user->domain->beneficiaryTypes->toArray(),
         ];
     }

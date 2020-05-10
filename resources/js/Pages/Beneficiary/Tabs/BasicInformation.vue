@@ -30,14 +30,14 @@
 
                 <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
                               :errors="$page.errors.gender_id" required>
-                    <option v-for="gender in prop.genders" :key="gender.id"
+                    <option v-for="gender in data.genders" :key="gender.id"
                             :value="gender.id" v-text="gender.name">
                     </option>
                 </select-input>
 
                 <select-input v-model="form.marital_status_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Marital Status"
                               :errors="$page.errors.marital_status_id" required>
-                    <option v-for="marital_status in prop.marital_statues" :key="marital_status.id"
+                    <option v-for="marital_status in data.marital_statues" :key="marital_status.id"
                             :value="marital_status.id" v-text="marital_status.name">
                     </option>
                 </select-input>
@@ -57,15 +57,15 @@
 
             <div class="flex flex-col lg:flex-row w-full">
                 <select-input v-model="form.state_id" class="pr-6 pb-8 w-full lg:w-1/2" label="State of Origin"
-                              :errors="$page.errors.state_id" required>
-                    <option v-for="state in prop.states" :key="state.id"
+                              :errors="$page.errors.state_id" @input="stateChanged" required>
+                    <option v-for="state in data.states" :key="state.id"
                             :value="state.id" v-text="state.name">
                     </option>
                 </select-input>
 
                 <select-input v-model="form.local_government_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Local Government of Origin"
                               :errors="$page.errors.local_government_id" required>
-                    <option v-for="local_government in prop.local_governments" :key="local_government.id"
+                    <option v-for="local_government in local_governments" :key="local_government.id"
                             :value="local_government.id" v-text="local_government.name">
                     </option>
                 </select-input>
@@ -101,11 +101,11 @@
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <check-input v-model="form.pensioner" class="pr-6 pb-8 w-full lg:w-1/3" label="Pensioner" ></check-input>
+                <check-input v-model="form.pensioner" class="pr-6 pb-8 w-full lg:w-1/3" label="Pensioner" @input="checkedPensioner" ></check-input>
 
                 <select-input v-model="form.beneficiary_type_id" class="pr-6 pb-8 w-full lg:w-2/3" label="Beneficiary Type"
                               :errors="$page.errors.beneficiary_type_id" required>
-                    <option v-for="beneficiary_type in prop.beneficiary_types" :key="beneficiary_type.id"
+                    <option v-for="(beneficiary_type, index) in beneficiary_types" :key="index"
                             :value="beneficiary_type.id" v-text="beneficiary_type.name">
                     </option>
                 </select-input>
@@ -133,11 +133,7 @@ export default {
     name: "BasicInformation",
 
     props: {
-        states: Array,
-        genders: Array,
-        marital_statues: Array,
-        beneficiary_types: Array,
-        local_governments: Array,
+        data: Object,
     },
 
     components: {
@@ -149,13 +145,8 @@ export default {
 
     data() {
         return {
-            prop: {
-                states: Array,
-                genders: Array,
-                marital_statues: Array,
-                beneficiary_types: Array,
-                local_governments: Array,
-            },
+            local_governments: null,
+            beneficiary_types: null,
 
             form: {
                 last_name: null,
@@ -173,16 +164,28 @@ export default {
                 address_city: null,
                 address_state: null,
                 address_country: null,
-                pensioner: null,
+                pensioner: false,
                 beneficiary_type_id: null
             }
         }
     },
 
+    mounted() {
+        this.checkedPensioner();
+    },
+
     methods: {
         submit() {
             this.$inertia.post(route('beneficiaries.store'), this.form);
-        }
+        },
+
+        stateChanged(value) {
+            this.local_governments = this.data.local_governments.filter(lga => lga.state_id === value)
+        },
+
+        checkedPensioner() {
+            this.beneficiary_types = this.data.beneficiary_types.filter(type => type.pensioners === this.form.pensioner)
+        },
     },
 }
 </script>

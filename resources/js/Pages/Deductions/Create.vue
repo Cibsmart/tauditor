@@ -12,7 +12,7 @@
       <div class="mt-8 bg-white rounded shadow-none overflow-hidden max-w-3xl">
           <form @submit.prevent="submit">
             <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-              <select-input v-model="form.deduction_type" class="pr-6 pb-8 w-full" label="Deduction Type" :errors="$page.errors.deduction_type" @input="nameChange" >
+              <select-input v-model="form.deduction_type" class="pr-6 pb-8 w-full" label="Deduction Type" :errors="$page.errors.deduction_type" @input="nameChange">
                 <option disabled value="" class="text-gray-100">Select Type</option>
                 <option v-for="deduction_type in deduction_types" :key="deduction_type.id" :value="deduction_type.id">
                     {{ deduction_type.name }}
