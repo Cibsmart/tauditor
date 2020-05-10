@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\State;
-use App\Domain;
-use App\Gender;
 use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\MaritalStatus;
-use App\LocalGovernment;
-use App\BeneficiaryType;
 use App\StructuredSalary;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\RedirectResponse;
+use App\ViewModels\CreateBeneficiaryData;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class BeneficiaryController extends Controller
@@ -64,63 +60,46 @@ class BeneficiaryController extends Controller
      */
     public function create()
     {
-        $lga = LocalGovernment::all();
-        $states = State::all();
-        $domains = Domain::all();
-        $gender = Gender::all();
-        $marital_status = MaritalStatus::all();
-        $beneficiary_types = BeneficiaryType::all();
+        $user = auth()->user();
+        $data = (new CreateBeneficiaryData($user))->data();
 
-        $filters = Request::all('search');
         return Inertia::render('Beneficiary/Create', [
-            'filters'           => $filters,
-            'lga'               => $lga,
-            'states'            => $states,
-            'domains'           => $domains,
-            'gender'            => $gender,
-            'marital_status'    => $marital_status,
-            'beneficiary_types' => $beneficiary_types,
+            'create_beneficiary_data' => $data,
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response
+     * @param  Request  $request
+     * @return RedirectResponse|\Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        //dd(Request::all('first_name'));
-        try {
-            Beneficiary::create(
-                Request::validate([
-                    'verification_number' => 'nullable|string',
-                    'last_name'           => 'required|string',
-                    'first_name'          => 'required|string',
-                    'middle_name'         => 'nullable|string',
-                    'date_of_birth'       => 'required|date',
-                    'gender_id'           => 'nullable|integer|min:1',
-                    'marital_status_id'   => 'nullable|integer|min:1',
-                    'state_id'            => 'nullable|integer|min:1',
-                    'local_government_id' => 'nullable|integer|min:1',
-                    'phone_number'        => 'nullable|string',
-                    'email'               => 'nullable|email',
-                    'address_line_1'      => 'nullable|string',
-                    'address_line_2'      => 'nullable|string',
-                    'address_city'        => 'nullable|string',
-                    'address_state'       => 'nullable|string',
-                    'address_country'     => 'nullable|string',
-                    'domain_id'           => 'required|integer|min:1',
-                    'beneficiary_type_id' => 'required|integer|min:1',
-                    'active'              => 'nullable',
-                ])
-            );
+        $attributes = $request->validate([
+            'last_name'           => 'required|string',
+            'first_name'          => 'required|string',
+            'middle_name'         => 'nullable|string',
+            'date_of_birth'       => 'required',
+            'gender_id'           => 'nullable|integer|min:1',
+            'marital_status_id'   => 'nullable|integer|min:1',
+            'state_id'            => 'nullable|integer|min:1',
+            'local_government_id' => 'nullable|integer|min:1',
+            'phone_number'        => 'nullable|string',
+            'email'               => 'nullable|email',
+            'address_line_1'      => 'nullable|string',
+            'address_line_2'      => 'nullable|string',
+            'address_city'        => 'nullable|string',
+            'address_state'       => 'nullable|string',
+            'address_country'     => 'nullable|string',
+            'domain_id'           => 'required|integer|min:1',
+            'beneficiary_type_id' => 'required|integer|min:1',
+            'active'              => 'nullable',
+        ]);
 
-            return back()->with('success', "Beneficiary Created");
-        } catch (Exception $e) {
-            return back()->with('errors', $e);
-        }
+        Beneficiary::create($attributes);
+
+        return back()->with('success', "Beneficiary Created");
     }
 
     /**
@@ -148,7 +127,7 @@ class BeneficiaryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  \App\Beneficiary  $employee
      * @return \Illuminate\Http\Response
      */
