@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubSubMdasTable extends Migration
+class CreatePaymentTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,9 @@ class CreateSubSubMdasTable extends Migration
      */
     public function up()
     {
-        Schema::create('sub_sub_mdas', function (Blueprint $table) {
-            $table->id();
+        Schema::create('payment_types', function (Blueprint $table) {
+            $table->string('id', 20)->unique();
             $table->string('name');
-            $table->unsignedBigInteger('sub_mda_id');
-            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }
@@ -29,6 +27,6 @@ class CreateSubSubMdasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sub_sub_mdas');
+        Schema::dropIfExists('payment_types');
     }
 }

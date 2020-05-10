@@ -36,6 +36,23 @@ class BeneficiaryType extends Model
         return $this->morphMany(Allowable::class, 'allowable');
     }
 
+    public function paymentTypes()
+    {
+        return $this->belongsToMany(PaymentType::class);
+    }
+
+    public function paymentCredential()
+    {
+        return $this->hasOne(PaymentCredential::class);
+    }
+
+    public function scopeThatReceives($query, $payment_type)
+    {
+        return $query->whereHas('paymentTypes', function ($query) use ($payment_type) {
+            $query->where('payment_type_id', $payment_type);
+        });
+    }
+
     /**
      * Synchronize all BeneficiaryType Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary

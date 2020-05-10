@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditReport;
 use App\AuditPayroll;
+use Illuminate\Support\Str;
+use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\AuditPayScheduleAction;
 use function back;
+use function number_format;
 
 class AuditAnalysisController extends Controller
 {
@@ -28,6 +31,12 @@ class AuditAnalysisController extends Controller
                             'created_by'        => $payroll->createdBy(),
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
+                            'categories'        => $payroll->auditPaymentCategories->transform(fn ($category) => [
+                                'id'              => $category->id,
+                                'payment_type_id' => $category->payment_type_id,
+                                'payment_type'    => $category->paymentTypeName(),
+                                'payment_title'   => $category->payment_title,
+                            ]),
                         ]);
 
         return Inertia::render('AuditAnalysis/Index', [
@@ -35,14 +44,16 @@ class AuditAnalysisController extends Controller
         ]);
     }
 
-    public function analyse(AuditPayroll $audit_payroll)
+    public function analyse(AuditPayrollCategory $audit_payroll_category)
     {
-        $mdas = $audit_payroll->auditMdaSchedules;
-        $message = 'Analysis Report Generated for ';
+        $mdas = $audit_payroll_category->auditMdaSchedules;
+        $title = $audit_payroll_category->payment_title;
+        $message = "Analysis Report Generated for $title ";
         $count = 0;
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
+
 
             foreach ($sub_mdas as $sub_mda) {
                 (new AuditPayScheduleAction)->execute($sub_mda);
@@ -52,20 +63,20 @@ class AuditAnalysisController extends Controller
         }
 
         if ($count === 0) {
-            $month = $audit_payroll->month_name;
-            $year = $audit_payroll->year;
-            $message = "Not Schedule Has Been Uploaded for $month $year";
+            $message = "No New Schedule Has Been Uploaded for $title";
             return back()->with('error', $message);
         }
 
-        $message = "$message $count MDAs, View Report for Details";
+        $mda_string = Str::plural('MDA', $count);
+
+        $message = "$message, $count $mda_string Affected, View Report for Details";
 
         return back()->with('success', $message);
     }
 
-    public function show(AuditPayroll $audit_payroll)
+    public function show(AuditPayrollCategory $audit_payroll_category)
     {
-        $reports = $audit_payroll->auditReports()
+        $reports = $audit_payroll_category->auditReports()
                                  ->select(DB::raw('reportable_type, reportable_id'))
                                  ->groupBy('reportable_type', 'reportable_id')
                                  ->where('reportable_type', 'audit_pay_schedule')

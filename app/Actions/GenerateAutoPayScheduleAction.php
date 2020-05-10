@@ -26,7 +26,7 @@ class GenerateAutoPayScheduleAction
     protected $pay_comm_i_charge;
     protected $pay_comm_ii_charge;
 
-    protected const INTERSWITCH_CHARGE = 20;
+    protected const INTERSWITCH_CHARGE = 16.13;
 
     protected AuditSubMdaSchedule $sub_mda;
 
@@ -36,10 +36,10 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        $this->generateAutoPayScheduleFor();
+        $this->generateAutoPaySchedule();
     }
 
-    private function generateAutoPayScheduleFor()
+    private function generateAutoPaySchedule()
     {
         $schedules = $this->sub_mda->auditPaySchedules;
 
@@ -252,7 +252,7 @@ class GenerateAutoPayScheduleAction
 
     private function initializePayComms() : void
     {
-        $this->domain = $this->sub_mda->auditMdaSchedule->auditPayroll->domain;
+        $this->domain = $this->sub_mda->auditMdaSchedule->domain();
 
         $pay_comms = $this->domain->payComms;
 

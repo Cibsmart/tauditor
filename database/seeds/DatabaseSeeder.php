@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
 
             DomainSeeder::class,
             RolesAndPermissionsSeeder::class,
+            PaymentTypeSeeder::class,
             BeneficiaryTypeSeeder::class,
             UserSeeder::class,
             GenderSeeder::class,
@@ -43,6 +44,7 @@ class DatabaseSeeder extends Seeder
             DeductionNameSeeder::class,
             DeductionSeeder::class,
             StatusSeeder::class,
+            PaymentCredentialSeeder::class,
 //            BeneficiarySeeder::class,
         ]);
     }

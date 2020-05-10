@@ -6,12 +6,15 @@ use Inertia\Inertia;
 use App\AuditPayroll;
 use Illuminate\Support\Str;
 use App\Classes\ZipDirectory;
+use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
+use function back;
+use function number_format;
 
 class AuditAutopayController extends Controller
 {
@@ -31,6 +34,12 @@ class AuditAutopayController extends Controller
                             'created_by'        => $payroll->createdBy(),
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
+                            'categories'        => $payroll->auditPaymentCategories->transform(fn ($category) => [
+                                'id'              => $category->id,
+                                'payment_type_id' => $category->payment_type_id,
+                                'payment_type'    => $category->paymentTypeName(),
+                                'payment_title'   => $category->payment_title,
+                            ]),
                         ]);
 
         return Inertia::render('AuditAutoPay/Index', [
@@ -38,10 +47,11 @@ class AuditAutopayController extends Controller
         ]);
     }
 
-    public function generate(AuditPayroll $audit_payroll)
+    public function generate(AuditPayrollCategory $audit_payroll_category)
     {
-        $mdas = $audit_payroll->auditMdaSchedules;
-        $message = 'Autopay Schedules Generated for ';
+        $mdas = $audit_payroll_category->auditMdaSchedules;
+        $title = $audit_payroll_category->payment_title;
+        $message = "Autopay Schedules Generated for $title ";
         $count = 0;
 
         foreach ($mdas as $mda) {
@@ -57,41 +67,48 @@ class AuditAutopayController extends Controller
             }
         }
 
-        $message = "$message $count MDAs, View MDAs for Details";
+        if ($count === 0) {
+            $message = "No New Schedule Has Been Uploaded for $title";
+            return back()->with('error', $message);
+        }
+
+        $mda_string = Str::plural('MDA', $count);
+
+        $message = "$message, $count $mda_string Affected, View MDAs for Details";
 
         return back()->with('success', $message);
     }
 
-    public function download(AuditPayroll $audit_payroll)
+    public function download(AuditPayrollCategory $audit_payroll_category)
     {
-        $year = $audit_payroll->year;
-        $month = $audit_payroll->month_name;
+        $month_year = $audit_payroll_category->monthYear();
 
-        if ($audit_payroll->noAutopaySchedule()) {
+        if ($audit_payroll_category->noAutopaySchedule()) {
             return back()->with(
                 'error',
-                "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below"
+                "Autopay Schedule for $month_year yet to be Generated, Click on Generate to Generated Autopay Schedule"
             );
         }
 
-        $directory = $this->createFiles($audit_payroll);
+        $directory = $this->createFiles($audit_payroll_category);
 
         $zipped_file = $this->prepareDownload($directory);
 
-        return response()->download(public_path($zipped_file))->deleteFileAfterSend();
+        $headers = ['Content-Type' => 'application/zip'];
+
+        return response()->download(public_path($zipped_file), null, $headers)
+                         ->deleteFileAfterSend();
     }
 
-    public function createFiles(AuditPayroll $audit_payroll)
+    public function createFiles(AuditPayrollCategory $audit_payroll_category)
     {
-        $mdas = $audit_payroll->auditMdaSchedules;
+        $category = $audit_payroll_category->payment_title;
 
-        $domain = $audit_payroll->domain->code;
+        $mdas = $audit_payroll_category->auditMdaSchedules;
 
-        $month = $audit_payroll->month_name;
+        $month_year = $audit_payroll_category->monthYear();
 
-        $year = $audit_payroll->year;
-
-        $directory = "autopay/$domain AUTOPAY SCHEDULE - $month $year";
+        $directory = "autopay/$category - AUTOPAY SCHEDULE - $month_year";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->get();
@@ -99,7 +116,7 @@ class AuditAutopayController extends Controller
             foreach ($sub_mdas as $sub_mda) {
                 $name = $sub_mda->sub_mda_name;
 
-                $file_name = "$name $month $year.xlsx";
+                $file_name = "$name $month_year.xlsx";
 
                 $path = "$directory/$file_name";
 
@@ -128,40 +145,40 @@ class AuditAutopayController extends Controller
     }
 
 
-    public function downloadMfb(AuditPayroll $audit_payroll)
+    public function downloadMfb(AuditPayrollCategory $audit_payroll_category)
     {
-        $year = $audit_payroll->year;
-        $month = $audit_payroll->month_name;
+        $month_year = $audit_payroll_category->monthYear();
 
-        if ($audit_payroll->noAutopaySchedule()) {
+        if ($audit_payroll_category->noAutopaySchedule()) {
             return back()->with(
                 'error',
-                "Autopay Schedule for $month $year yet to be Generated, Click on Generate Schedules Below"
+                "Autopay Schedule for $month_year yet to be Generated, Click on Generate Schedules Below"
             );
         }
 
-        if ($audit_payroll->noMfbSchedule()) {
-            return back()->with('error', "No Beneficiary Used Microfinance in $month $year Payment Schedule");
+        if ($audit_payroll_category->noMfbSchedule()) {
+            return back()->with('error', "No Beneficiary Used Microfinance in $month_year Payment Schedule");
         }
 
-        $directory = $this->createMfbFiles($audit_payroll);
+        $directory = $this->createMfbFiles($audit_payroll_category);
 
         $zipped_file = $this->prepareDownload($directory);
 
-        return response()->download(public_path($zipped_file))->deleteFileAfterSend();
+        $headers = ['Content-Type' => 'application/zip'];
+
+        return response()->download(public_path($zipped_file), null, $headers)
+                         ->deleteFileAfterSend();
     }
 
-    public function createMfbFiles(AuditPayroll $audit_payroll)
+    public function createMfbFiles(AuditPayrollCategory $audit_payroll_category)
     {
-        $mdas = $audit_payroll->auditMdaSchedules;
+        $category = $audit_payroll_category->payment_title;
 
-        $domain = $audit_payroll->domain->code;
+        $mdas = $audit_payroll_category->auditMdaSchedules;
 
-        $month = $audit_payroll->month_name;
+        $month_year = $audit_payroll_category->monthYear();
 
-        $year = $audit_payroll->year;
-
-        $directory = "microfinance/$domain MFB SCHEDULE - $month $year";
+        $directory = "autopay/$category - MFB SCHEDULE - $month_year";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
@@ -182,7 +199,7 @@ class AuditAutopayController extends Controller
 
                     $mfb_name = $mfb->name;
 
-                    $file_name = "$sub_mda_name $month $year.xlsx";
+                    $file_name = "$sub_mda_name $month_year.xlsx";
 
                     $path = "$directory/$mfb_name/$file_name";
 

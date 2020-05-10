@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,14 +28,9 @@ class AuditPayroll extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function auditMdaSchedules()
+    public function auditPaymentCategories()
     {
-        return $this->hasMany(AuditMdaSchedule::class);
-    }
-
-    public function auditReports()
-    {
-        return $this->hasMany(AuditReport::class);
+        return $this->hasMany(AuditPayrollCategory::class);
     }
 
     public function createdBy()
@@ -47,17 +43,15 @@ class AuditPayroll extends Model
         return $this->created_at->timezone('Africa/Lagos')->diffForHumans();
     }
 
-    public function noAutopaySchedule()
+    public function month($abbreviation = false)
     {
-        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query){
-            return $query->whereNotNull('autopay_generated');
-        })->doesntExist();
-    }
+        if (! $abbreviation) {
+            return "$this->month_name $this->year";
+        }
 
-    public function noMfbSchedule()
-    {
-        return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query){
-            return $query->whereHas('microfinanceSchedules');
-        })->doesntExist();
+        $month = Str::of($this->month_name)->limit(3, '');
+        $year = Str::of($this->year)->substr(2, 2);
+
+        return "$month $year";
     }
 }

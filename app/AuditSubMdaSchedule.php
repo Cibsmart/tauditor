@@ -54,17 +54,32 @@ class AuditSubMdaSchedule extends Model
 
     public function month()
     {
-        return $this->auditMdaSchedule->auditPayroll->month_name;
+        return $this->auditMdaSchedule->auditPayrollCategory->auditPayroll->month_name;
     }
 
     public function year()
     {
-        return $this->auditMdaSchedule->auditPayroll->year;
+        return $this->auditMdaSchedule->auditPayrollCategory->auditPayroll->year;
     }
 
     public function domain()
     {
-        return $this->auditMdaSchedule->auditPayroll->domain;
+        return $this->auditMdaSchedule->auditPayrollCategory->auditPayroll->domain;
+    }
+
+    public function mdaBeneficiaryCodes()
+    {
+        return $this->autopaySchedules->pluck('beneficiary_code')->join('');
+    }
+
+    public function mdaBeneficiaryAccountNumbers()
+    {
+        return $this->autopaySchedules->pluck('account_number')->join('');
+    }
+
+    public function mdaTotalAmount()
+    {
+        return $this->autopaySchedules()->sum('amount');
     }
 
     public function setTotalNetPayAttribute(float $value) : int

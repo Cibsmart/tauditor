@@ -5,7 +5,7 @@
                 Audit Payroll
             </inertia-link>
             <span class="text-indigo-500 font-medium">/</span>
-            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll})" class="text-indigo-500 hover:text-indigo-700">
+            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category})" class="text-indigo-500 hover:text-indigo-700">
                 MDA Schedules
             </inertia-link>
             <span class="text-indigo-500 font-medium">/</span>
@@ -130,7 +130,7 @@
 
         props: {
             schedules: Object,
-            audit_payroll: Number,
+            audit_payroll_category: Number,
             audit_mda_schedule: Number,
             // filters: Object,
         },

@@ -3,13 +3,12 @@
 
 namespace App\Audit;
 
-
 use App\AuditPaySchedule;
 
 class Analyse
 {
 
-    protected $checks = [
+    protected array $checks = [
         CheckNewBeneficiary::class,
         CheckAccountNumber::class,
         CheckBankName::class,

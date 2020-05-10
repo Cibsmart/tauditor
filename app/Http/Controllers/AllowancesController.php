@@ -24,7 +24,6 @@ class AllowancesController extends Controller
      *
      * @return \Inertia\Response
      */
-
     public function index()
     {
         $filters = request()->all('search');

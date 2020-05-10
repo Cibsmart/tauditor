@@ -44,7 +44,7 @@ class AuditPayScheduleController extends Controller
         return Inertia::render('AuditPaySchedules/Index', [
             'schedules'          => $schedules,
             'audit_mda_schedule' => $audit_mda_schedule->id,
-            'audit_payroll'      => $audit_mda_schedule->auditPayroll->id,
+            'audit_payroll_category'      => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
     }
 
@@ -95,5 +95,6 @@ class AuditPayScheduleController extends Controller
         $schedule->save();
 
         $schedule->auditMdaSchedule->auditSubMdaScheduleWasUpdated();
+        $schedule->auditMdaSchedule->auditPayrollCategory->auditMdaScheduleWasUpdated();
     }
 }
