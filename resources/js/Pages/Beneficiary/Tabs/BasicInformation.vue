@@ -23,10 +23,9 @@
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <text-input v-model="form.date_of_birth"
-                            placeholder="Date Of Birth" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Date Of Birth" :errors="$page.errors.date_of_birth">
-                </text-input>
+                <date-picker v-model="form.date_of_birth" class="pr-6 pb-8 w-full lg:w-1/3" from="1980"
+                            label="Date Of Birth" :errors="$page.errors.date_of_birth" required>
+                </date-picker>
 
                 <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
                               :errors="$page.errors.gender_id" required>
@@ -132,7 +131,11 @@ export default {
     name: "BasicInformation",
 
     props: {
-
+        states: Array,
+        genders: Array,
+        marital_statues: Array,
+        beneficiary_types: Array,
+        local_governments: Array,
     },
 
     components: {
@@ -145,11 +148,11 @@ export default {
     data() {
         return {
             prop: {
-                state: null,
-                genders: null,
-                marital_statues: null,
-                local_governments: null,
-                beneficiary_types: null,
+                states: Array,
+                genders: Array,
+                marital_statues: Array,
+                beneficiary_types: Array,
+                local_governments: Array,
             },
 
             form: {
@@ -168,7 +171,6 @@ export default {
                 address_city: null,
                 address_state: null,
                 address_country: null,
-                domain_id: null,
                 pensioner: null,
                 beneficiary_type_id: null
             }
@@ -176,7 +178,9 @@ export default {
     },
 
     methods: {
-
+        submit() {
+            this.$inertia.post(route('beneficiary.store'), this.beneficiary_form);
+        }
     },
 }
 </script>
