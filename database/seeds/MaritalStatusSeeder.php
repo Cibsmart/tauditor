@@ -21,7 +21,7 @@ class MaritalStatusSeeder extends Seeder
 
         foreach ($status as $key => $value) {
             factory(MaritalStatus::class)->create([
-              'code' => $key,
+              'id' => $key,
               'name' => $value,
             ]);
         }

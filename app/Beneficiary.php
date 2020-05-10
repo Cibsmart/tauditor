@@ -28,6 +28,7 @@ use function array_merge;
  * @property mixed status
  * @property mixed pensioner
  * @property mixed allowanceDetails
+ * @method static create($validate)
  */
 class Beneficiary extends Model
 {

@@ -20,8 +20,8 @@ class CreateBeneficiariesTable extends Migration
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->dateTime('date_of_birth');
-            $table->unsignedBigInteger('gender_id')->nullable();
-            $table->unsignedBigInteger('marital_status_id')->nullable();
+            $table->string('gender_id')->nullable();
+            $table->string('marital_status_id')->nullable();
             $table->unsignedBigInteger('state_id')->nullable();
             $table->unsignedBigInteger('local_government_id')->nullable();
             $table->string('phone_number', 50)->nullable();

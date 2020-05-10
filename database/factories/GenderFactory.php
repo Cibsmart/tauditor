@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Gender::class, function (Faker $faker) {
     $gender = $faker->randomElement(['M', 'F']);
     return [
-        'code' => $gender,
+        'id' => $gender,
         'name' => fn () => $gender == 'M' ? 'Male' : 'Female',
     ];
 });

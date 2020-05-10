@@ -13,12 +13,12 @@ class GenderSeeder extends Seeder
     public function run()
     {
         factory(Gender::class)->create([
-          'code' => 'M',
+          'id' => 'M',
           'name' => 'MALE'
         ]);
 
         factory(Gender::class)->create([
-          'code' => 'F',
+          'id' => 'F',
           'name' => 'FEMALE'
         ]);
     }

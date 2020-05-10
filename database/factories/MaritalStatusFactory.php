@@ -9,7 +9,7 @@ $factory->define(MaritalStatus::class, function (Faker $faker) {
     $status = $faker->randomElement(['S', 'M']);
 
     return [
-        'code' => $status,
+        'id' => $status,
         'name' => fn () => $status == 'S' ? 'Single' : 'Married',
     ];
 });

@@ -14,8 +14,7 @@ class CreateMaritalStatusesTable extends Migration
     public function up()
     {
         Schema::create('marital_statuses', function (Blueprint $table) {
-            $table->id();
-            $table->string('code', 10);
+            $table->string('id', 10)->unique();
             $table->string('name', 50);
             $table->timestamps();
         });
