@@ -11,14 +11,19 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 class BeneficiaryType extends Model
 {
+    protected $guarded = [];
+
     public $incrementing = false;
 
     protected $keyType = 'string';
 
-    protected $guarded = [];
-
     protected $casts = [
         'pensioners' => 'boolean',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
     ];
 
     public function designations() : HasMany
