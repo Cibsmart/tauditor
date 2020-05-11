@@ -9,7 +9,7 @@ use App\StructuredSalary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
-use App\ViewModels\CreateBeneficiaryData;
+use App\ViewModels\BeneficiaryViewModel;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use function array_merge;
 
@@ -62,7 +62,7 @@ class BeneficiaryController extends Controller
     public function create()
     {
         $user = auth()->user();
-        $data = (new CreateBeneficiaryData($user))->data();
+        $data = (new BeneficiaryViewModel($user))->data();
 
         return Inertia::render('Beneficiary/Create', [
             'create_beneficiary_data' => $data,
@@ -101,7 +101,9 @@ class BeneficiaryController extends Controller
 
         $attributes = array_merge($attributes, ['domain_id' => $domain_id]);
 
-        Beneficiary::create($attributes);
+        $beneficiary = Beneficiary::create($attributes);
+
+        $beneficiary->status()->create();
 
         return back()->with('success', "Beneficiary Created Successfully");
     }

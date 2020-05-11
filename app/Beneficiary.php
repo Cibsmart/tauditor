@@ -69,7 +69,7 @@ class Beneficiary extends Model
 
     public function salaryDetail() : HasOne
     {
-        return $this->hasOne(SalaryDetail::class);
+        return $this->hasOne(SalaryDetail::class)->withDefault();
     }
 
     public function allowanceDetails() : HasMany
@@ -145,14 +145,14 @@ class Beneficiary extends Model
         return $this->deductionDetails->sum('amount');
     }
 
-    public function accountNumber() : string
+    public function accountNumber() : ?string
     {
-        return $this->bankDetail->account_number;
+        return $this->bankDetail->account_number ?? null;
     }
 
-    public function bankName() : string
+    public function bankName() : ?string
     {
-        return $this->bankDetail->bankable->name;
+        return $this->bankDetail->bankable->name ?? null;
     }
 
     public function bank()
@@ -160,33 +160,41 @@ class Beneficiary extends Model
         return $this->bankDetail->bankable();
     }
 
-    public function mdaName() : string
+    public function mdaName() : ?string
     {
-        return $this->mdaDetail->mda->name;
+        return $this->mdaDetail->mda->name ?? null;
     }
 
     public function subMdaName() : ?string
     {
-        return $this->mdaDetail->subMda->name;
+        return $this->mdaDetail->subMda->name ?? null;
     }
 
     public function subSubMdaName() : ?string
     {
-        return $this->mdaDetail->subSubMda->name;
+        return $this->mdaDetail->subSubMda->name ?? null;
     }
 
-    public function designationName() : string
+    public function designationName() : ?string
     {
-        return $this->workDetail->designation->name;
+        return $this->workDetail->designation->name ?? null;
     }
 
     public function gradeLevelName() : ?string
     {
+        if ($this->has('salaryDetail')->doesntExist()) {
+            return null;
+        }
+
         return $this->salaryDetail->payable->gradeLevel()->name;
     }
 
     public function stepName() : ?string
     {
+        if ($this->has('salaryDetail')->doesntExist()) {
+            return null;
+        }
+
         return $this->salaryDetail->payable->step()->name;
     }
 
