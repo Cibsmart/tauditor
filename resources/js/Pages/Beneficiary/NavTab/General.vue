@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white rounded">
         <v-tabs>
-            <tab title="Basic Information">
+            <tab title="Basic Information" :completed="basic_information_completed">
                 <basic-information :data="data.basic"></basic-information>
             </tab>
 
@@ -25,14 +25,16 @@
 </template>
 
 <script>
-import Icon from "@/Shared/Icon";
 import Tab from "@/Shared/Tab";
+import Icon from "@/Shared/Icon";
 import VTabs from "@/Shared/VTabs";
 import NextOfKin from "@/Pages/Beneficiary/Tabs/NextOfKin";
 import BankDetails from "@/Pages/Beneficiary/Tabs/BankDetails";
 import Qualifications from "@/Pages/Beneficiary/Tabs/Qualifications";
 import BasicInformation from "@/Pages/Beneficiary/Tabs/BasicInformation";
 import EmploymentDetails from "@/Pages/Beneficiary/Tabs/EmploymentDetails";
+
+import { mapState }  from 'vuex';
 
 export default {
     props: {
@@ -55,6 +57,10 @@ export default {
 
         }
     },
+
+    computed: mapState([
+        'basic_information_completed'
+    ]),
 
     methods: {
 
