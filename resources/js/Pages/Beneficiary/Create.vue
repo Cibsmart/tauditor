@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
 import Tab from "@/Shared/Tab";
 import Icon from "@/Shared/Icon";
 import HTabs from "@/Shared/HTabs";
@@ -29,7 +30,7 @@ export default {
     layout: Layout,
 
     props: {
-        create_beneficiary_data: Object,
+        beneficiary_view_model: Object,
     },
 
     components: {
@@ -43,10 +44,21 @@ export default {
 
     data() {
         return {
+            beneficiary: this.beneficiary_view_model.beneficiary,
             general: {
-                'basic': this.create_beneficiary_data,
+                'basic': this.beneficiary_view_model,
             },
         }
+    },
+
+    mounted() {
+        this.setBeneficiary(this.beneficiary);
+    },
+
+    methods: {
+        ...mapMutations([
+            'setBeneficiary'
+        ]),
     },
 }
 </script>

@@ -65,7 +65,7 @@ class BeneficiaryController extends Controller
         $data = (new BeneficiaryViewModel($user))->data();
 
         return Inertia::render('Beneficiary/Create', [
-            'create_beneficiary_data' => $data,
+            'beneficiary_view_model' => $data,
         ]);
     }
 
