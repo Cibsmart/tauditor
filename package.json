@@ -28,6 +28,7 @@
         "postcss-import": "^12.0.1",
         "postcss-nesting": "^7.0.1",
         "tailwindcss": "^1.2.0",
-        "vue-meta": "^2.3.3"
+        "vue-meta": "^2.3.3",
+        "vuex": "^3.3.0"
     }
 }
