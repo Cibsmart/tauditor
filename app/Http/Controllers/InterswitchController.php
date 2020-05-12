@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use function is_int;
 use function collect;
 use function str_pad;
+use function basename;
 use function random_int;
 use const STR_PAD_LEFT;
 
@@ -35,7 +36,7 @@ class InterswitchController extends Controller
         foreach ($mdas as $mda) {
             $payment_credential = $mda->paymentCredential();
 
-            $is_single_debit = false; //$payment_credential->is_single_debit;
+            $is_single_debit = $payment_credential->is_single_debit ? 'true' : 'false';
             $terminal_id = $payment_credential->terminal_id;
             $account_number = $payment_credential->account_number;
             $bank_code = $payment_credential->bank->code;
@@ -52,7 +53,7 @@ class InterswitchController extends Controller
             foreach ($sub_mdas as $sub_mda) {
                 $sub_mda_name = $sub_mda->sub_mda_name;
 
-                $file_name = "$directory/$sub_mda_name";
+                $file_name = "$directory/$sub_mda_name.csv";
 
                 $total_amount = $sub_mda->mdaTotalAmount();
                 $beneficiary_codes = $sub_mda->mdaBeneficiaryCodes();
@@ -83,7 +84,7 @@ class InterswitchController extends Controller
 
                 $row_two_data = [
                     'secure_data'           => '',
-                    'source_account_number' => $pan,
+                    'source_account_number' => $account_number,
                     'source_account_type'   => $account_type,
                     'bank_cbn_code'         => $bank_code,
                     'encrypted_pin'         => '',
@@ -100,18 +101,30 @@ class InterswitchController extends Controller
                         'amount'            => $schedule->amount * 100,
                         'narration'         => $schedule->narration,
                         'beneficiary_code'  => $schedule->beneficiary_code,
-                        'beneficiary_email' => '',
+                        'beneficiary_email' => 'test@test.com',
                         'cbn_code'          => $schedule->cbn_code,
                         'account_number'    => $schedule->account_number,
                         'account_type'      => $schedule->account_type,
                         'is_prepaid_load'   => 'false',
                         'currency_code'     => $schedule->currency,
                         'beneficiary_name'  => $schedule->beneficiary_name,
-                        'mobile_number'     => '',
+                        'mobile_number'     => '08080808080',
                     ];
                     $content = $this->formatContent($data);
                     Storage::disk('local')->append($file_name, $content);
                 }
+            }
+
+            $files = Storage::allFiles($directory);
+
+            foreach ($files as $file) {
+//                $file_name = basename($file);
+                $file_name = 'IN/anambra_test.csv';
+
+                $content = Storage::disk('local')->get($file);
+
+                $x = Storage::disk('sftp')->put($file_name, $content);
+
             }
         }
 
