@@ -12,7 +12,7 @@
               <logo class="text-indigo-900" width="120" height="28" />
             </inertia-link>
             <!-- Menu for Mobile Screen Visible only on Mobile screen -->
-            <dropdown class="md:hidden" placement="bottom-end">
+            <dropdown class="md:hidden">
               <icon name="list" class="text-indigo-800 w-6 h-6" />
               <div slot="dropdown" class="mt-2 shadow-lg bg-white rounded">
                 <main-menu :url="url()" />
@@ -26,7 +26,7 @@
             <div class="mt-1 mr-4"> {{ $page.auth.user.domain.name }} </div>
 
             <!-- Profile with Dropdown -->
-            <dropdown class="mt-1" placement="bottom-end">
+            <dropdown class="mt-1">
               <div class="flex items-center cursor-pointer select-none">
                 <div class="text-gray-900 focus:text-indigo-800 mr-1 whitespace-no-wrap">
                   <span>{{ $page.auth.user.first_name }}</span>
@@ -35,11 +35,11 @@
                 <icon class="w-5 h-5 fill-current text-gray-900 focus:fill-current focus:text-indigo-800" name="cheveron-down" />
               </div>
               <div slot="dropdown" class="mt-2 py-2 shadow-lg bg-white rounded text-sm">
-                <inertia-link class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" href="#">My Profile</inertia-link>
-                <inertia-link class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" href="#">
+                <inertia-link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" href="#">My Profile</inertia-link>
+                <inertia-link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" href="#">
                   Manage Users
                 </inertia-link>
-                <inertia-link class="block px-6 py-2 hover:bg-indigo-500 hover:text-white" :href="route('logout')" method="post">
+                <inertia-link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" :href="route('logout')" method="post">
                   Logout
                 </inertia-link>
               </div>
