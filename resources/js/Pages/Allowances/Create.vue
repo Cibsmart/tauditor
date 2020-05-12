@@ -129,7 +129,7 @@
 
 <script>
 import Icon from '@/Shared/Icon'
-import Layout from '../../Shared/Layout'
+import Layout from '@/Shared/Layout'
 import SearchFilter from '@/Shared/SearchFilter'
 
 export default {
