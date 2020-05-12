@@ -22,9 +22,9 @@
                             </label>
                             <div class="relative">
                                 <select v-model="allowance_form.allowance_name_id" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                   <option selected >Select Type </option>         
+                                   <option selected >Select Type </option>
                                     <option v-for="allowance_name in allowance_names" :key="allowance_name.id" :value="allowance_name.id">{{allowance_name.name}}</option>
-                                   
+
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -34,7 +34,7 @@
                         </div>
                             <div class="text-red-600" v-if="$page.errors.allowance_name_id">{{ $page.errors.allowance_name_id[0] }}</div>
                     </div>
-                  
+
 
                     <div class="flex flex-wrap -mx-3 mb-6">
                        <div class="w-full md:w-1/1 px-3 mb-6">
@@ -47,7 +47,7 @@
                                 Fixed Type
                             </label>
                             <input type="radio" v-model="allowance_form.allowance_type" id="fixed_value" v-on:click="toggle_value_type(0)"  name="allowance_type" value="fixed_value">
-                                
+
                             <div class="text-red-600" v-if="$page.errors.allowance_type">{{ $page.errors.allowance_type[0] }}</div>
                         </div>
                           <div class="w-full md:w-1/2 px-3">
@@ -55,11 +55,11 @@
                                 Percentage Type
                             </label>
                             <input type="radio"  v-model="allowance_form.allowance_type" id="percentage_value" v-on:click="toggle_value_type(1)" name="allowance_type" value="percentage_type">
-                                
+
                             <div class="text-red-600" v-if="$page.errors.allowance_type">{{ $page.errors.allowance_type[0] }}</div>
-                          
+
                         </div>
-                    </div> 
+                    </div>
                       <div class="flex flex-wrap -mx-3 mb-6">
                         <div class="w-full md:w-1/1 px-3 mb-6 md:mb-0">
                             <!-- <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-state">
@@ -67,7 +67,7 @@
                             </label> -->
                             <!-- <div class="relative" v-if="selected_value_type == 0">
                                 <select v-model="allowance_form.percentage_value_id" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option selected >Select Fixed Value </option>         
+                                    <option selected >Select Fixed Value </option>
                                     <option v-for="fixed_value in fixed_values" :key="fixed_value.id" :value="fixed_value.id">{{fixed_value.amount}}</option>
 
                                 </select>
@@ -78,9 +78,9 @@
                             </div>
                             <div class="relative" v-else>
                                 <select v-model="allowance_form.percentage_value_id" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option selected >Select Percentage Value </option>         
+                                    <option selected >Select Percentage Value </option>
                                     <option v-for="percentage_value in percentage_values" :key="percentage_value.id" :value="percentage_value.id">{{percentage_value.percentage}}</option>
-                                    
+
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -106,16 +106,16 @@
                                 <div class="text-red-600" v-if="$page.errors.percentage">{{ $page.errors.percentage[0] }}</div>
                             </div>
                         </div>
-                            
+
                     </div>
-                  
-                    <div class="md:flex md:items-center">           
+
+                    <div class="md:flex md:items-center">
                         <div class="md:w-1/3">
-                            
+
                             <button type="submit" class="hover:bg-blue-500 px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap">
                               Enroll
                             </button>
-                            
+
                         </div>
                     </div>
                 </form>
@@ -132,10 +132,6 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import SearchFilter from '@/Shared/SearchFilter'
 
-import mapValues from 'lodash/mapValues'
-import pickBY from 'lodash/pickBY'
-import throttle from 'lodash/throttle'
-
 export default {
     metaInfo: {
         title: 'Add allowance'
@@ -143,10 +139,10 @@ export default {
     layout: Layout,
 
     props: {
-        //filters: Object,   
+        //filters: Object,
         allowance_names:Array,
         percentage_values:Array,
-        fixed_values:Array,   
+        fixed_values:Array,
 
     },
 
@@ -161,14 +157,14 @@ export default {
             //   search: this.filters.search,
             // },
             allowance_form: {
-               
+
                 allowance_name_id: null,
                 amount:null,
                 percentage:null,
                 allowance_type:null
             },
             selected_value_type: 0
-            
+
         }
     },
 
