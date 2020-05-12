@@ -70,12 +70,8 @@ import TextInput from '@/Shared/TextInput'
 import Pagination from '@/Shared/Pagination'
 import SelectInput from '@/Shared/SelectInput'
 import SearchFilter from '@/Shared/SearchFilter'
-
-import mapValues from 'lodash/mapValues'
-import pickBY from 'lodash/pickBY'
-import throttle from 'lodash/throttle'
-import TextInputLeading from "../../Shared/TextInputLeading";
-import TextInputTrailing from "../../Shared/TextInputTrailing";
+import TextInputLeading from "@/Shared/TextInputLeading";
+import TextInputTrailing from "@/Shared/TextInputTrailing";
 
 export default {
     metaInfo: { title: 'Deductions' },
@@ -109,9 +105,6 @@ export default {
             selected: 'fixed',
             deduction_names_data: [],
         }
-    },
-
-    mounted() {
     },
 
     methods: {

@@ -114,12 +114,6 @@
     import Layout from '@/Shared/Layout'
     import FileInput from "@/Shared/FileInput";
     import Pagination from '@/Shared/Pagination'
-    import SearchFilter from '@/Shared/SearchFilter'
-
-
-    import mapValues from 'lodash/mapValues'
-    import pickBY from 'lodash/pickBY'
-    import throttle from 'lodash/throttle'
 
     export default {
         metaInfo: { title: 'Audit Sub MDA Schedules' },
@@ -128,21 +122,16 @@
         props: {
             schedules: Object,
             audit_payroll_category: Number,
-            // filters: Object,
         },
 
         components: {
             Icon,
             FileInput,
             Pagination,
-            // SearchFilter,
         },
 
         data(){
             return {
-                // form: {
-                //     search: this.filters.search,
-                // },
                 schedule_form: {
                     schedule_file: [],
                 }

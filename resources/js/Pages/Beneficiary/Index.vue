@@ -94,8 +94,7 @@ import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
 import SearchFilter from '@/Shared/SearchFilter'
 
-import mapValues from 'lodash/mapValues'
-import pickBY from 'lodash/pickBY'
+import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
 
 export default {
@@ -124,7 +123,7 @@ export default {
   watch: {
     form: {
       handler: throttle(function() {
-        let query = pickBY(this.form)
+        let query = pickBy(this.form)
           this.$inertia.replace(this.route('beneficiaries.index', Object.keys(query).length ? query : { remember: 'forget'}))
       }, 300),
       deep: true,

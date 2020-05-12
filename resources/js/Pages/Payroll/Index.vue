@@ -102,12 +102,6 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
-    import SearchFilter from '@/Shared/SearchFilter'
-
-
-    import mapValues from 'lodash/mapValues'
-    import pickBY from 'lodash/pickBY'
-    import throttle from 'lodash/throttle'
 
     export default {
         metaInfo: { title: 'Payroll' },
@@ -115,21 +109,11 @@
 
         props: {
             payrolls: Object,
-            // filters: Object,
         },
 
         components: {
             Icon,
             Pagination,
-            // SearchFilter,
-        },
-
-        data(){
-            return {
-                // form: {
-                //     search: this.filters.search,
-                // },
-            }
         },
     }
 </script>

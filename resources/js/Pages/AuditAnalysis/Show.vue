@@ -73,7 +73,7 @@
 
 
     import mapValues from 'lodash/mapValues'
-    import pickBY from 'lodash/pickBY'
+    import pickBY from 'lodash/pickBy'
     import throttle from 'lodash/throttle'
 
     export default {
