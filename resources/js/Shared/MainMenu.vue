@@ -53,31 +53,31 @@ export default{
     return{
       menus: {
           // dashboard : { id: 1, name: '',  label: 'Dashboard', url: route('dashboard'), icon: 'dashboard', active: false },
-          beneficiaries : { id: 2, name: 'beneficiaries',  label: 'Beneficiaries', icon: 'users', active: false,
-              subs: {
-                    index: { id: 1, label: 'Beneficiaries', uri: this.uri('beneficiaries.index'), },
-                    create: { id: 2, label: 'New Beneficiary', uri: this.uri('beneficiaries.create'), }
-              }
-          },
-          allowances: { id: 3, name: 'allowances',  label: 'Allowances', icon: 'shopping-cart', active: false,
-              subs: {
-                  index: { id: 1, label: 'Allowances', uri: this.uri('allowances.index'), },
-                  create: { id: 2, label: 'New Allowance', uri: this.uri('allowances.create'), }
-              }
-          },
-          deductions: { id: 4, name: 'deductions',  label: 'Deductions', icon: 'trash', active: false,
-              subs: {
-                  index: { id: 1, label: 'Deductions', uri: this.uri('deductions.index'), },
-                  create: { id: 2, label: 'New Deduction', uri: this.uri('deductions.create'), }
-              }
-          },
-          payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false,
-              subs: {
-                  index: { id: 1, label: 'Payroll', uri: this.uri('payroll.index'), },
-              }
-          },
-          setup: { id: 6, name: 'setup',  label: 'Setup', icon: 'store-front', active: false },
-          reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false },
+          // beneficiaries : { id: 2, name: 'beneficiaries',  label: 'Beneficiaries', icon: 'users', active: false,
+          //     subs: {
+          //           index: { id: 1, label: 'Beneficiaries', uri: this.uri('beneficiaries.index'), },
+          //           create: { id: 2, label: 'New Beneficiary', uri: this.uri('beneficiaries.create'), }
+          //     }
+          // },
+          // allowances: { id: 3, name: 'allowances',  label: 'Allowances', icon: 'shopping-cart', active: false,
+          //     subs: {
+          //         index: { id: 1, label: 'Allowances', uri: this.uri('allowances.index'), },
+          //         create: { id: 2, label: 'New Allowance', uri: this.uri('allowances.create'), }
+          //     }
+          // },
+          // deductions: { id: 4, name: 'deductions',  label: 'Deductions', icon: 'trash', active: false,
+          //     subs: {
+          //         index: { id: 1, label: 'Deductions', uri: this.uri('deductions.index'), },
+          //         create: { id: 2, label: 'New Deduction', uri: this.uri('deductions.create'), }
+          //     }
+          // },
+          // payroll: { id: 5, name: 'payroll',  label: 'Payroll', icon: 'office', active: false,
+          //     subs: {
+          //         index: { id: 1, label: 'Payroll', uri: this.uri('payroll.index'), },
+          //     }
+          // },
+          // setup: { id: 6, name: 'setup',  label: 'Setup', icon: 'store-front', active: false },
+          // reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false },
           audit: { id: 8, name: 'audit',  label: 'Audit', icon: 'brief-case', active: false,
               subs: {
                   payroll: { id: 1, label: 'Upload Schedule', uri: this.uri('audit_payroll.index'), },

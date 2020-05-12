@@ -22,7 +22,7 @@ class PaymentCredentialSeeder extends Seeder
         //Civil Servants
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'sal',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030101791',
             'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
             'pan' => '6280510107035825320',
@@ -35,7 +35,7 @@ class PaymentCredentialSeeder extends Seeder
         //Statutory Commission and Officers
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'sal',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030101791',
             'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
             'pan' => '6280510107035825320',
@@ -48,7 +48,7 @@ class PaymentCredentialSeeder extends Seeder
         //political appointees
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'sal',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030101791',
             'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
             'pan' => '6280510107035825320',
@@ -61,7 +61,7 @@ class PaymentCredentialSeeder extends Seeder
         //Anambra State Government Pensioners
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'pen',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030101801',
             'account_name' => 'ANSG-Pension Administration Account 2',
             'pan' => '6280510107035825379',
@@ -78,7 +78,7 @@ class PaymentCredentialSeeder extends Seeder
         //Local Government Education Authority
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'sal',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030090220',
             'account_name' => 'ANS-LGEA SALARY ADMIN1-TEACHERS',
             'pan' => '6280510107035528080',
@@ -91,7 +91,7 @@ class PaymentCredentialSeeder extends Seeder
         //Local Government Service Commission
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'sal',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030090237',
             'account_name' => 'ANS-LGA SALARY ADMIN2-LGA WORKERS',
             'pan' => '6280510107035528106',
@@ -104,7 +104,7 @@ class PaymentCredentialSeeder extends Seeder
         // Anambra State Local Government Pensioners
         factory(PaymentCredential::class)->create([
             'payment_type_id' => 'pen',
-            'terminal_id' => '',
+            'terminal_id' => 'PSI',
             'account_number' => '5030090244',
             'account_name' => 'ANS-LGA PENSION ADMIN SALARY',
             'pan' => '6280510107035528114',
