@@ -16,25 +16,7 @@ Vue.use(Vuex)
 
 const app = document.getElementById('app')
 
-const store = new Vuex.Store({
-    state: {
-        beneficiary: null,
-        basic_information_completed: false,
-    },
-    mutations: {
-        setBasicInformationCompleted(state){
-            state.basic_information_completed = true;
-        },
-
-        setBeneficiary(state, beneficiary){
-            state.beneficiary = beneficiary;
-        },
-    }
-})
-
 new Vue({
-    store: store,
-
     metaInfo: {
         titleTemplate: (title) => title ? `${title} - HRMEdge` : 'HRMEdge'
     },

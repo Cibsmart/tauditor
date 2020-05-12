@@ -35,7 +35,7 @@ class InterswitchController extends Controller
         foreach ($mdas as $mda) {
             $payment_credential = $mda->paymentCredential();
 
-            $is_single_debit = $payment_credential->is_single_debit;
+            $is_single_debit = false; //$payment_credential->is_single_debit;
             $terminal_id = $payment_credential->terminal_id;
             $account_number = $payment_credential->account_number;
             $bank_code = $payment_credential->bank->code;
@@ -100,14 +100,14 @@ class InterswitchController extends Controller
                         'amount'            => $schedule->amount * 100,
                         'narration'         => $schedule->narration,
                         'beneficiary_code'  => $schedule->beneficiary_code,
-                        'beneficiary_email' => 'test@test.com',
+                        'beneficiary_email' => '',
                         'cbn_code'          => $schedule->cbn_code,
                         'account_number'    => $schedule->account_number,
                         'account_type'      => $schedule->account_type,
                         'is_prepaid_load'   => 'false',
                         'currency_code'     => $schedule->currency,
                         'beneficiary_name'  => $schedule->beneficiary_name,
-                        'mobile_number'     => '07032434429',
+                        'mobile_number'     => '',
                     ];
                     $content = $this->formatContent($data);
                     Storage::disk('local')->append($file_name, $content);
