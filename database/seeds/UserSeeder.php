@@ -17,9 +17,9 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = factory(User::class)->create([
-            'first_name' => 'John',
-            'last_name' => 'Doe',
-            'email' => 'john@payroll.com',
+            'first_name' => 'State',
+            'last_name' => 'Admin',
+            'email' => 'ansgadmin@payroll.com',
             'email_verified_at' => now(),
             'password' => 'password',
             'domain_id' => 'state',
@@ -29,9 +29,9 @@ class UserSeeder extends Seeder
         $user->assignRole('super_admin');
 
         $user = factory(User::class)->create([
-            'first_name' => 'Jane',
-            'last_name' => 'Doe',
-            'email' => 'jane@payroll.com',
+            'first_name' => 'Jaac',
+            'last_name' => 'Admin',
+            'email' => 'jaacadmin@payroll.com',
             'email_verified_at' => now(),
             'password' => 'password',
             'domain_id' => 'jaac',
