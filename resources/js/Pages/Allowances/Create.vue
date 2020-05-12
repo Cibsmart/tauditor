@@ -148,7 +148,6 @@ export default {
 
     components: {
         Icon,
-        Layout,
         SearchFilter,
     },
 
