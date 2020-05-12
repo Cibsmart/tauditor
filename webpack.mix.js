@@ -16,21 +16,21 @@ const cssNesting = require('postcss-nesting')
  */
 
 mix.js('resources/js/app.js', 'public/js')
-   .postCss('resources/css/app.css', 'public/css')
-   .options({
-      postCss: [
-        cssImport(),
-        cssNesting(),
-        tailwindcss('tailwind.config.js'),
-      ]
+    .postCss('resources/css/app.css', 'public/css')
+    .options({
+        postCss: [
+            cssImport(),
+            cssNesting(),
+            tailwindcss('tailwind.config.js'),
+        ]
     })
-   .webpackConfig({
-      output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
-      resolve: {
-          alias: {
-              '@': path.resolve('resources/js'),
-          },
-      },
-   })
-   .version()
-   .sourceMaps();
+    .webpackConfig({
+        output: {chunkFilename: 'js/[name].js?id=[chunkhash]'},
+        resolve: {
+            alias: {
+                '@': path.resolve(__dirname, 'resources/js'),
+            },
+        },
+    })
+    .version()
+    .sourceMaps();
