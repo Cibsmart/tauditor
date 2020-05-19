@@ -64,20 +64,18 @@ return [
             'url' => env('AWS_URL'),
         ],
 
-        'sftp' => [
+        'sftp_state' => [
             'driver' => 'sftp',
-            'host' => env('SFTP_HOST', 'example.com'),
-            'username' => env('SFTP_USERNAME', 'username'),
-            'password' => env('SFTP_PASSWORD', 'password'),
+            'host' => env('SFTP_HOST_STATE'),
+            'username' => env('SFTP_USERNAME_STATE'),
+            'password' => env('SFTP_PASSWORD_STATE'),
+        ],
 
-            // Settings for SSH key based authentication...
-            // 'privateKey' => '/path/to/privateKey',
-            // 'password' => 'encryption-password',
-
-            // Optional SFTP Settings...
-            // 'port' => 22,
-            // 'root' => '',
-            // 'timeout' => 30,
+        'sftp_jaac' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_HOST_JAAC'),
+            'username' => env('SFTP_USERNAME_JAAC'),
+            'password' => env('SFTP_PASSWORD_JAAC'),
         ],
 
     ],
