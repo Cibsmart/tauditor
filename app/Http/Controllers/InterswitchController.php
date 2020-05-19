@@ -118,13 +118,13 @@ class InterswitchController extends Controller
             $files = Storage::allFiles($directory);
 
             foreach ($files as $file) {
-//                $file_name = basename($file);
-                $file_name = 'IN/anambra_test.csv';
+                $file_name = 'IN/'.basename($file);
 
                 $content = Storage::disk('local')->get($file);
 
-                $x = Storage::disk('sftp')->put($file_name, $content);
+                $disk = "sftp_$domain";
 
+                $success = Storage::disk($disk)->put($file_name, $content);
             }
         }
 
@@ -158,10 +158,11 @@ class InterswitchController extends Controller
 
     private function getBatchDescription($beneficiary_type_id, $sub_mda_name, $month_full)
     {
-        return Str::upper(Str::of($beneficiary_type_id)->append(' - ')
+        return Str::upper(Str::of($beneficiary_type_id)->append('_')
                              ->append($sub_mda_name)
-                             ->append(' - ')
-                             ->append($month_full));
+                             ->append('_')
+                             ->append($month_full)
+                             ->slug('_'));
     }
 
     protected static function pad($string, $padding)
