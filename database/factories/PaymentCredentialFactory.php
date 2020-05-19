@@ -11,6 +11,7 @@ use Faker\Generator as Faker;
 
 $factory->define(PaymentCredential::class, function (Faker $faker) {
     return [
+        'corporate_code' => $faker->randomElement(['TPA', 'TLA']),
         'payment_type_id' => factory(PaymentType::class),
         'terminal_id' => $faker->randomNumber(8, true),
         'account_number' => $faker->bankAccountNumber,

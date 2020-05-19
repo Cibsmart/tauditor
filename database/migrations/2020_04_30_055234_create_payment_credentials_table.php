@@ -15,6 +15,7 @@ class CreatePaymentCredentialsTable extends Migration
     {
         Schema::create('payment_credentials', function (Blueprint $table) {
             $table->id();
+            $table->string('corporate_code');
             $table->string('payment_type_id');
             $table->string('terminal_id', 20);
             $table->string('account_number');
