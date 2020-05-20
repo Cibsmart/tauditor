@@ -27,14 +27,13 @@ class BankSeeder extends Seeder
             '082' => 'KEYSTONE BANK PLC',
             '014' => 'MAINSTREET BANK PLC',
             '076' => 'SKYE BANK PLC',
-            '068' => 'STANBIC-IBTC BANK PLC',
+            '039' => 'STANBIC-IBTC BANK PLC',
             '232' => 'STERLING BANK PLC',
             '032' => 'UNION BANK OF NIGERIA PLC',
             '033' => 'UNITED BANK FOR Africa PLC',
             '215' => 'UNITY BANK PLC',
             '035' => 'WEMA BANK PLC',
             '057' => 'ZENITH BANK PLC',
-            '319' => 'MAYFRESH SAVINGS AND LOAN'
         ];
 
         foreach ($banks as $key => $value) {

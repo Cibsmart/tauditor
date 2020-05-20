@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
+/**
+ * @method static where(string $string, $bank_name)
+ */
 class Bank extends Model
 {
     protected $guarded = [];
