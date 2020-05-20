@@ -6,6 +6,7 @@ namespace App\Actions;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
 use App\AuditSubMdaSchedule;
+use function uniqid;
 
 class GenerateAutoPayScheduleAction
 {
@@ -47,7 +48,7 @@ class GenerateAutoPayScheduleAction
 
         $this->year = $schedule->month->year;
         $this->month = $schedule->month->monthName;
-        $this->payment = $schedule->pension ? '_PEN_' : '_SAL_';
+        $this->payment = $schedule->pension ? 'PEN' : 'SAL';
 
         [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn (
             $schedule
@@ -221,28 +222,29 @@ class GenerateAutoPayScheduleAction
 
         $year = Str::of($this->year)->substr(2);
 
-        $reference_id = $this->pad($this->reference_id++, 4);
+        $unique_id = uniqid();
 
-        $schedule_id = $this->pad($id, 8);
-
-        $random_numbers = $this->pad(random_int(1, 999), 3);
-
-        return $month->append('_')
-                     ->append($year)
-                     ->append($this->payment)
-                     ->append($random_numbers, $schedule_id)
-                     ->append($reference_id);
+        return Str::of($this->payment)
+                  ->append($month)
+                  ->append($year)
+                  ->append($id, $unique_id)
+                  ->upper();
     }
 
     private function createNarration($department_name)
     {
-        $domain = $this->domain->code == 'STATE' ? '_ANSG_' : '_ANLG_';
+        $domain = $this->domain->code == 'STATE' ? 'ANSG' : 'ANLG';
 
         $sub_mda_abbr = Str::of($department_name)->explode(' ')
                            ->map(fn ($word) => Str::limit($word, 1, ''))
                            ->join('');
 
-        return Str::of($this->reference)->limit(10, '')->append($domain)->append($sub_mda_abbr);
+        return Str::of($this->reference)
+                  ->limit(8, '')
+                  ->append('_')
+                  ->append($domain)
+                  ->append('_')
+                  ->append($sub_mda_abbr);
     }
 
     protected static function pad($string, $padding)

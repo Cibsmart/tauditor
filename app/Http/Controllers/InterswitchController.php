@@ -6,6 +6,8 @@ use Illuminate\Support\Str;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\Storage;
 use function is_int;
+use function uniqid;
+use function hexdec;
 use function collect;
 use function str_pad;
 use function basename;
@@ -59,11 +61,11 @@ class InterswitchController extends Controller
                 $beneficiary_codes = $sub_mda->mdaBeneficiaryCodes();
                 $beneficiary_account_numbers = $sub_mda->mdaBeneficiaryAccountNumbers();
 
-                $batch_reference = $this->generateBatchReference($sub_mda->id, $payment_type, $month);
+                $batch_reference = $this->generateBatchReference($sub_mda->id);
                 $batch_description = $this->getBatchDescription(
-                    $beneficiary_type_id,
+                    $payment_type,
                     $sub_mda_name,
-                    $month_full
+                    $month
                 );
 
                 $mac_data = $this->macData(
@@ -97,7 +99,7 @@ class InterswitchController extends Controller
 
                 foreach ($schedules as $schedule) {
                     $data = [
-                        'payment_reference' => $schedule->payment_reference,
+                        'payment_reference' => $this->generatePaymentReference($schedule->id),
                         'amount'            => $schedule->amount * 100,
                         'narration'         => $schedule->narration,
                         'beneficiary_code'  => $schedule->beneficiary_code,
@@ -142,27 +144,33 @@ class InterswitchController extends Controller
         return collect($data)->join(',');
     }
 
-    private function generateBatchReference($sub_mda, $payemnt_type, $payment_month)
+    private function generateBatchReference($sub_mda)
     {
-        $reference_id = $this->pad($this->reference_id++, 2);
+        $unique_id = uniqid();
 
-        $sub_mda_id = $this->pad($sub_mda, 6);
-
-        $random_numbers = $this->pad(random_int(1, 99), 3);
-
-        return Str::upper(Str::of($payemnt_type)->append($payment_month)
-                             ->append($random_numbers, $sub_mda_id)
-                             ->append($reference_id)
+        return Str::upper(Str::of($sub_mda)->append($unique_id)
                              ->replace(' ', ''));
     }
 
-    private function getBatchDescription($beneficiary_type_id, $sub_mda_name, $month_full)
+    private function generatePaymentReference($pay_schedule_id)
     {
-        return Str::upper(Str::of($beneficiary_type_id)->append('_')
-                             ->append($sub_mda_name)
-                             ->append('_')
+        $unique_id = uniqid();
+
+        return Str::upper(Str::of($pay_schedule_id)->append($unique_id)
+                             ->replace(' ', ''));
+    }
+
+    private function getBatchDescription($payment_type, $sub_mda_name, $month_full)
+    {
+        $unique_id = uniqid();
+
+        return Str::upper(Str::of($payment_type)
                              ->append($month_full)
-                             ->slug('_'));
+                             ->upper()->append('_')
+                             ->replace(' ', '')
+                             ->append(Str::of($sub_mda_name)->slug('_'))
+                             ->append('_')
+                             ->append($unique_id));
     }
 
     protected static function pad($string, $padding)
