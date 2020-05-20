@@ -98,6 +98,8 @@ class PensionPayScheduleImport implements OnEachRow
 
         $month = Carbon::parse("25 $this->month $this->year");
 
+        $deductions = ['tax' => $beneficiary['total_deduction']];
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name'    => $beneficiary['employee_name'],
@@ -111,7 +113,7 @@ class PensionPayScheduleImport implements OnEachRow
             'total_deduction'     => $beneficiary['total_deduction'],
             'net_pay'             => $beneficiary['net_pay'],
             'allowances'          => [],
-            'deductions'          => [],
+            'deductions'          => $deductions,
             'month'               => $month,
             'bankable_type'       => $bankable->bankableType(),
             'bankable_id'         => $bankable->id,
@@ -132,20 +134,22 @@ class PensionPayScheduleImport implements OnEachRow
     {
         Str::of($bank_name)->upper()->trim();
 
+        $bank_name = $this->checkBankExceptions($bank_name);
+
         $commercial = Bank::where('name', $bank_name)->first();
 
         if ($commercial) {
             return $commercial;
         }
 
-        $bank_name = $this->checkMfbExists($bank_name);
-
         return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
     }
 
-    private function checkMfbExists($bank_name)
+    private function checkBankExceptions($bank_name)
     {
         $exceptions = [
+            'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',

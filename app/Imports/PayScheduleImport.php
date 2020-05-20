@@ -54,7 +54,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -110,10 +110,10 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
@@ -157,20 +157,23 @@ class PayScheduleImport implements OnEachRow
     {
         Str::of($bank_name)->upper()->trim();
 
+        $bank_name = $this->checkBankExceptions($bank_name);
+
         $commercial = Bank::where('name', $bank_name)->first();
 
         if ($commercial) {
             return $commercial;
         }
 
-        $bank_name = $this->checkMfbExists($bank_name);
-
         return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
     }
 
-    private function checkMfbExists($bank_name)
+    private function checkBankExceptions($bank_name)
     {
         $exceptions = [
+            'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
+            'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
