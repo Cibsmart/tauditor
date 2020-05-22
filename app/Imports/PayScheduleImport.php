@@ -123,11 +123,13 @@ class PayScheduleImport implements OnEachRow
 
         $month = Carbon::parse("25 $this->month $this->year");
 
+        $designation = $beneficiary['designation'] == '' ? 'None' : $beneficiary['designation'];
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name'    => $beneficiary['employee_name'],
             'beneficiary_cadre'   => $beneficiary['employee_grade'],
-            'designation'         => $beneficiary['designation'],
+            'designation'         => $designation,
             'basic_pay'           => $beneficiary['basic_salary'],
             'bank_name'           => $beneficiary['bank_name'],
             'account_number'      => $beneficiary['account_no'],
