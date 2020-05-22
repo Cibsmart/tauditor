@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditMdaSchedule;
 use App\AuditSubMdaSchedule;
+use function auth;
+use function route;
+use function redirect;
 
 class AuditSubMdaSchedulesController extends Controller
 {
@@ -14,8 +17,16 @@ class AuditSubMdaSchedulesController extends Controller
     }
 
 
+    /**
+     * @param  AuditMdaSchedule  $audit_mda_schedule
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Inertia\Response
+     */
     public function index(AuditMdaSchedule $audit_mda_schedule)
     {
+        if ($audit_mda_schedule->domain()->id !== auth()->user()->domain->id) {
+            return redirect(route('audit_payroll.index'));
+        }
+
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
@@ -31,7 +42,7 @@ class AuditSubMdaSchedulesController extends Controller
                                         ]);
 
         return Inertia::render('AuditSubMdaSchedules/Index', [
-            'schedules'     => $schedules,
+            'schedules'              => $schedules,
             'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
     }
