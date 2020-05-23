@@ -15,12 +15,15 @@ class CreateAuditPayrollCategoriesTable extends Migration
     {
         Schema::create('audit_payroll_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_type_id')->index();
-            $table->string('payment_title');
+            $table->string('payment_type_id');
+            $table->string('payment_title')->index();
             $table->unsignedBigInteger('total_net_pay')->nullable();
             $table->unsignedBigInteger('head_count')->nullable();
             $table->unsignedBigInteger('audit_payroll_id');
             $table->timestamps();
+
+            $table->foreign('payment_type_id')->references('id')->on('payment_types');
+            $table->foreign('audit_payroll_id')->references('id')->on('audit_payrolls');
         });
     }
 

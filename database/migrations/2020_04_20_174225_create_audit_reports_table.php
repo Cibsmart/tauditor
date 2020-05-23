@@ -22,6 +22,8 @@ class CreateAuditReportsTable extends Migration
             $table->text('current_value')->nullable();
             $table->text('previous_value')->nullable();
             $table->timestamps();
+
+            $table->foreign('audit_payroll_category_id')->references('id')->on('audit_payroll_categories');
         });
     }
 

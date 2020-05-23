@@ -14,9 +14,12 @@ class AuditMdaSchedule extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'uploaded' => 'boolean',
+        'analysed' => 'boolean',
         'has_sub'  => 'boolean',
         'pension'  => 'boolean',
+        'uploaded' => 'boolean',
+        'autopay_generated' => 'boolean',
+        'autopay_uploaded' => 'boolean',
     ];
 
     public function mda()

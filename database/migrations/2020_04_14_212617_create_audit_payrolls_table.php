@@ -18,12 +18,17 @@ class CreateAuditPayrollsTable extends Migration
             $table->unsignedSmallInteger('month');
             $table->string('month_name', 20);
             $table->unsignedBigInteger('year');
-            $table->boolean('analysed')->default(0);
-            $table->boolean('autopay_generated')->default(0);
+            $table->unsignedBigInteger('total_net_pay')->nullable();
+            $table->unsignedBigInteger('head_count')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('domain_id');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['year', 'month']);
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('domain_id')->references('id')->on('domains');
         });
     }
 

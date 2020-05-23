@@ -14,12 +14,9 @@ class AuditSubMdaSchedule extends Model
 
     protected $casts = [
         'uploaded' => 'boolean',
-
-    ];
-
-    protected $dates = [
-        'analysed',
-        'autopay_generated',
+        'analysed' => 'datetime',
+        'autopay_generated'  => 'datetime',
+        'autopay_uploaded'  => 'datetime',
     ];
 
     public function auditMdaSchedule()

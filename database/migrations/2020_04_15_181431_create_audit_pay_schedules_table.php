@@ -16,12 +16,12 @@ class CreateAuditPaySchedulesTable extends Migration
         Schema::create('audit_pay_schedules', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('audit_sub_mda_schedule_id');
-            $table->string('verification_number');
-            $table->string('beneficiary_name');
+            $table->string('verification_number')->index();
+            $table->string('beneficiary_name')->index();
             $table->string('beneficiary_cadre')->nullable();
             $table->string('designation');
             $table->unsignedBigInteger('basic_pay');
-            $table->string('bank_name');
+            $table->string('bank_name')->index();
             $table->string('account_number')->nullable();
             $table->string('bank_code');
             $table->unsignedBigInteger('total_allowance');
@@ -38,6 +38,8 @@ class CreateAuditPaySchedulesTable extends Migration
             $table->boolean('paid')->default(0);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('audit_sub_mda_schedule_id')->references('id')->on('audit_sub_mda_schedules');
         });
     }
 

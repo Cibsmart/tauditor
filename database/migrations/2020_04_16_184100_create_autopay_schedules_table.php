@@ -17,9 +17,9 @@ class CreateAutopaySchedulesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('audit_sub_mda_schedule_id');
             $table->string('payment_reference');
-            $table->string('beneficiary_code');
-            $table->string('beneficiary_name');
-            $table->string('account_number');
+            $table->string('beneficiary_code')->index();
+            $table->string('beneficiary_name')->index();
+            $table->string('account_number')->index();
             $table->string('account_type');
             $table->string('cbn_code');
             $table->string('is_cash_card');
@@ -28,6 +28,8 @@ class CreateAutopaySchedulesTable extends Migration
             $table->string('email');
             $table->string('currency');
             $table->timestamps();
+
+            $table->foreign('audit_sub_mda_schedule_id')->references('id')->on('audit_sub_mda_schedules');
         });
     }
 

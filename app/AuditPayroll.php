@@ -43,6 +43,16 @@ class AuditPayroll extends Model
         return $this->created_at->timezone('Africa/Lagos')->diffForHumans();
     }
 
+    public function setTotalNetPayAttribute(float $value) : int
+    {
+        return $this->attributes['total_net_pay'] = $value * 100;
+    }
+
+    public function getTotalNetPayAttribute(?int $value = 0) : float
+    {
+        return $value / 100;
+    }
+
     public function month($abbreviation = false)
     {
         if (! $abbreviation) {

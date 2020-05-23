@@ -15,7 +15,7 @@ class CreateMicroFinanceBanksTable extends Migration
     {
         Schema::create('micro_finance_banks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->index();
             $table->string('account_number');
             $table->unsignedBigInteger('bank_id');
             $table->string('domain_id');
