@@ -21,7 +21,7 @@
 
         <select-input v-model="form.domain_id" label="Domain" :errors="$page.errors.domain_id" class="mt-6">
           <option :value="null" />
-          <option v-for="domain in domains" :key="domain.id" :value="domain.id" v-text="domain.code" />
+          <option v-for="domain in domains" :key="domain.id" :value="domain.id" v-text="domain.name" />
         </select-input>
       </div>
 

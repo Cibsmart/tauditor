@@ -6,10 +6,13 @@ use App\User;
 use App\Domain;
 use Inertia\Inertia;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use function request;
+use function response;
+use function redirect;
+use function base64_encode;
 
 class RegisterController extends Controller
 {
@@ -53,10 +56,10 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'domain_id' => ['required', 'integer', 'exists:domains,id']
+            'last_name'  => ['required', 'string', 'max:255'],
+            'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'   => ['required', 'string', 'min:8', 'confirmed'],
+            'domain_id'  => ['required', 'integer', 'exists:domains,id'],
         ]);
     }
 
@@ -70,18 +73,23 @@ class RegisterController extends Controller
     {
         return User::create([
             'first_name' => $data['first_name'],
-            'last_name' => $data['last_name'],
-            'email' => $data['email'],
-            'password' => $data['password'],
-            'domain_id' => $data['domain_id'],
+            'last_name'  => $data['last_name'],
+            'email'      => $data['email'],
+            'password'   => $data['password'],
+            'domain_id'  => $data['domain_id'],
         ]);
     }
 
     public function showRegistrationForm()
     {
-        $domains = Domain::query()
-                        ->orderBy('code')
-                        ->get();
+        $registration_token = request()->query('registration_token');
+        $token = base64_encode(hash('sha1', 'anambra'));
+
+        if ($registration_token != $token) {
+            return redirect()->route('login');
+        }
+
+        $domains = Domain::all();
 
         return Inertia::render('Auth/Register', compact('domains'));
     }

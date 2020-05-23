@@ -15,6 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed last_name
  * @property mixed first_name
  * @property mixed email
+ * @method static create(array $array)
  */
 class User extends Authenticatable
 {
