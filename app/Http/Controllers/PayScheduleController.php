@@ -17,12 +17,12 @@ class PayScheduleController extends Controller
      *
      * @param  Payroll  $payroll
      * @param  Mda  $mda
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\RedirectResponse|\Inertia\Response
      */
     public function index(Payroll $payroll, Mda $mda)
     {
         if (! $payroll->generated) {
-            return back()->withError('Yet to Run Payroll for $date->monthName $date->year"');
+            return back()->with('error', 'Yet to Run Payroll for $date->monthName $date->year"');
         }
 
         $schedules = $payroll->schedules()
@@ -38,8 +38,6 @@ class PayScheduleController extends Controller
                                  'bank_name'        => $schedule->bank_name,
                                  'net_pay'          => number_format($schedule->net_pay, 2),
                              ]);
-
-//        dd($schedules);
 
         return Inertia::render('PaySchedules/Index', [
             'schedules' => $schedules,
