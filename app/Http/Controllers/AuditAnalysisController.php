@@ -22,7 +22,7 @@ class AuditAnalysisController extends Controller
 
     public function index()
     {
-        $payrolls = Auth::user()->auditPayrolls()->latest()
+        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
                         ->paginate()
                         ->transform(fn (AuditPayroll $payroll) => [
                             'id'                => $payroll->id,
