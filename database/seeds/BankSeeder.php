@@ -30,7 +30,7 @@ class BankSeeder extends Seeder
             '039' => 'STANBIC-IBTC BANK PLC',
             '232' => 'STERLING BANK PLC',
             '032' => 'UNION BANK OF NIGERIA PLC',
-            '033' => 'UNITED BANK FOR Africa PLC',
+            '033' => 'UNITED BANK FOR AFRICA PLC',
             '215' => 'UNITY BANK PLC',
             '035' => 'WEMA BANK PLC',
             '057' => 'ZENITH BANK PLC',
