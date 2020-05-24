@@ -10,6 +10,7 @@ use App\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use function throw_if;
 
 class PayScheduleImport implements OnEachRow
 {
@@ -42,10 +43,25 @@ class PayScheduleImport implements OnEachRow
             return null;
         }
 
-//        dd(Str::upper($this->month), Str::upper($this->audit_sub_mda_schedule->month()),
-//         Str::upper($this->year),  Str::upper($this->audit_sub_mda_schedule->year()),
-//         Str::upper($this->department), Str::upper($this->audit_sub_mda_schedule->sub_mda_name));
-        throw_if($this->notMatching(), WrongScheduleException::class);
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month().' '.$this->audit_sub_mda_schedule->year());
+        $file_date = $this->month.' '.$this->year;
+        $message = "Trying to Upload Schedule for $file_date into $app_date";
+
+        throw_if(
+            $this->monthAndYearNotMatching(),
+            WrongScheduleException::class,
+            $message
+        );
+
+        $app_mda = Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+        $file_mda = $this->department;
+        $message = "Trying to Upload Schedule for $file_mda into $app_mda";
+
+        throw_if(
+            $this->mdaNotMatching(),
+            WrongScheduleException::class,
+            $message
+        );
 
         if ($row_number === 2) {
             //set domain
@@ -81,7 +97,7 @@ class PayScheduleImport implements OnEachRow
 
         if ($mda_dept_month_year->count() === 3) {
             $this->mda = $mda_dept_month_year[0];
-            $this->department = $mda_dept_month_year[0];
+            $this->department = $this->mdaNameCheck($mda_dept_month_year[0]);
 
             $month_year = Str::of($mda_dept_month_year[1])->explode(' ');
 
@@ -148,11 +164,15 @@ class PayScheduleImport implements OnEachRow
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
     }
 
-    private function notMatching() : bool
+    private function monthAndYearNotMatching() : bool
     {
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
-            || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year())
-            || Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+            || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year());
+    }
+
+    private function mdaNotMatching() : bool
+    {
+        return Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
     }
 
     private function getBankableType($bank_name)
@@ -173,14 +193,24 @@ class PayScheduleImport implements OnEachRow
     private function checkBankExceptions($bank_name)
     {
         $exceptions = [
-            'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
             'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
+            'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA'              => 'UNITED BANK FOR AFRICA PLC',
             'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
+    }
+
+    private function mdaNameCheck($mda)
+    {
+        $exceptions = [
+            'POLITICAL APPOINTEES GOVT HOUSE' => 'POLITICAL APPOINTEES GOVERNMENT HOUSE',
+        ];
+
+        return $exceptions[$mda] ?? $mda;
     }
 }

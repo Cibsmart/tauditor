@@ -72,7 +72,7 @@ class AuditPayScheduleController extends Controller
                 (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
             }
         } catch (WrongScheduleException $e) {
-            return back()->with('error', 'Check the Pay Schedule File, If it is for this Month and for the MDA');
+            return back()->with('error', $e->getMessage());
         } catch (\ErrorException $e) {
             return back()->with('error', 'Attached File is not a valid Pay Schedule');
         } catch (\Exception $e) {
