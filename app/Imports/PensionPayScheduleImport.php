@@ -55,7 +55,25 @@ class PensionPayScheduleImport implements OnEachRow
             return null;
         }
 
-        throw_if($this->notMatching(), WrongScheduleException::class);
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month() . ' ' . $this->audit_sub_mda_schedule->year());
+        $file_date = $this->month . ' ' . $this->year;
+        $message = "Trying to Upload Schedule for $file_date into $app_date";
+
+        throw_if(
+            $this->monthAndYearNotMatching(),
+            WrongScheduleException::class,
+            $message
+        );
+
+        $app_mda = Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+        $file_mda = $this->department;
+        $message = "Trying to Upload Schedule for $file_mda into $app_mda";
+
+        throw_if(
+            $this->mdaNotMatching(),
+            WrongScheduleException::class,
+            $message
+        );
 
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
@@ -76,7 +94,7 @@ class PensionPayScheduleImport implements OnEachRow
         $mda_dept_month_year = Str::of($row_one)->after('ZONE: ')->upper()->replace(' PENSION', '')->explode(', ');
 
         $this->mda = $mda_dept_month_year[0];
-        $this->department = $mda_dept_month_year[0];
+        $this->department = $this->mdaNameCheck($mda_dept_month_year[0]);
 
         $month_year = Str::of($mda_dept_month_year[1])->explode(' ');
 
@@ -123,11 +141,15 @@ class PensionPayScheduleImport implements OnEachRow
         return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
     }
 
-    private function notMatching() : bool
+    private function monthAndYearNotMatching() : bool
     {
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
-            || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year())
-            || Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
+            || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year());
+    }
+
+    private function mdaNotMatching() : bool
+    {
+        return Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
     }
 
     private function getBankableType($bank_name)
@@ -150,11 +172,22 @@ class PensionPayScheduleImport implements OnEachRow
         $exceptions = [
             'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
+            'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA'              => 'UNITED BANK FOR AFRICA PLC',
             'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
+    }
+
+    private function mdaNameCheck($mda)
+    {
+        $exceptions = [
+
+        ];
+
+        return $exceptions[$mda] ?? $mda;
     }
 }
