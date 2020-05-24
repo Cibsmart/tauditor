@@ -101,7 +101,7 @@ class InterswitchController extends Controller
                     $data = [
                         'payment_reference' => $this->generatePaymentReference($schedule->id),
                         'amount'            => $schedule->amount * 100,
-                        'narration'         => $schedule->narration,
+                        'narration'         => $this->generateNarration($schedule->narration),
                         'beneficiary_code'  => $schedule->beneficiary_code,
                         'beneficiary_email' => 'test@test.com',
                         'cbn_code'          => $schedule->cbn_code,
@@ -142,6 +142,15 @@ class InterswitchController extends Controller
     private function formatContent($data)
     {
         return collect($data)->join(',');
+    }
+
+    private function generateNarration($narration)
+    {
+        $unique_id = Str::limit(uniqid(), 4, '');
+
+        return Str::upper(Str::of($narration)->append('_')
+                             ->append($unique_id)
+                             ->replace(' ', ''));
     }
 
     private function generateBatchReference($sub_mda)
