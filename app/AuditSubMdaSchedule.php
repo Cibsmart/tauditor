@@ -137,6 +137,8 @@ class AuditSubMdaSchedule extends Model
     {
         $this->autopay_generated = Carbon::now();
         $this->save();
+
+        $this->auditMdaSchedule->auditAutopayWasGenerated();
     }
 
     public function autopayUploaded()
@@ -144,7 +146,7 @@ class AuditSubMdaSchedule extends Model
         $this->autopay_uploaded = Carbon::now();
         $this->save();
 
-        $this->auditMdaSchedule->auditAutopayWasUpdated();
+        $this->auditMdaSchedule->auditAutopayWasUploaded();
     }
 
     public function autopayTotalAmount()
