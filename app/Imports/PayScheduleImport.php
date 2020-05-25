@@ -193,6 +193,7 @@ class PayScheduleImport implements OnEachRow
     private function checkBankExceptions($bank_name)
     {
         $exceptions = [
+            'FIDELITY'                            => 'FIDELITY BANK PLC',
             'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
@@ -201,6 +202,7 @@ class PayScheduleImport implements OnEachRow
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
             'NDIOLU MICROFINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
