@@ -128,7 +128,7 @@ class InterswitchController extends Controller
 
         $autopay_file_name = 'IN/' . basename($file_name);
 
-        $content = Storage::disk('local')->get($file_name);
+        $content = Storage::disk('local')->get($autopay_file_name);
 
         $disk = "sftp_$domain";
 
