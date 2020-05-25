@@ -58,7 +58,7 @@ class AuditAutopayController extends Controller
             return redirect(route('audit_autopay.index'));
         }
 
-        $schedules = $audit_payroll_category->auditMdaSchedules()
+        $schedules = $audit_payroll_category->auditMdaSchedules()->orderBy('mda_name')
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
                                             ->orderBy('mda_id')
                                             ->paginate()
@@ -90,7 +90,7 @@ class AuditAutopayController extends Controller
             return redirect(route('audit_autopay.index'));
         }
 
-        $schedules = $audit_mda_schedule->auditSubMdaSchedules()
+        $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
                                         ->transform(fn (AuditSubMdaSchedule $schedule) => [

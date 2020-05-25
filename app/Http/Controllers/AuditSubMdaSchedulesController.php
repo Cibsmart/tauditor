@@ -27,7 +27,7 @@ class AuditSubMdaSchedulesController extends Controller
             return redirect(route('audit_payroll.index'));
         }
 
-        $schedules = $audit_mda_schedule->auditSubMdaSchedules()
+        $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
                                         ->transform(fn (AuditSubMdaSchedule $schedule) => [
