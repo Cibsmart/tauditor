@@ -11,9 +11,12 @@ use App\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use function is_int;
 use function collect;
+use function str_pad;
 use function throw_if;
 use function array_combine;
+use const STR_PAD_LEFT;
 
 class PensionPayScheduleImport implements OnEachRow
 {
@@ -127,14 +130,20 @@ class PensionPayScheduleImport implements OnEachRow
 
         $deductions = ['tax' => $beneficiary['total_deduction']];
 
+        $bankable_type = $bankable->bankableType();
+
+        $account_number = $bankable_type === 'commercial'
+            ? $this->pad($beneficiary['account_no'], 10)
+            : $beneficiary['account_no'];
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name'    => $beneficiary['employee_name'],
             'designation'         => 'PENSIONER',
             'basic_pay'           => $beneficiary['basic_pay'],
             'bank_name'           => $beneficiary['bank_name'],
-            'account_number'      => $beneficiary['account_number'],
-            'bank_code'           => $beneficiary['bank_code'],
+            'account_number'      => $account_number,
+            'bank_code'           => $this->pad($beneficiary['bank_code'], 3),
             'total_allowance'     => 0,
             'gross_pay'           => $beneficiary['basic_pay'],
             'total_deduction'     => $beneficiary['total_deduction'],
@@ -142,7 +151,7 @@ class PensionPayScheduleImport implements OnEachRow
             'allowances'          => [],
             'deductions'          => $deductions,
             'month'               => $month,
-            'bankable_type'       => $bankable->bankableType(),
+            'bankable_type'       => $bankable_type,
             'bankable_id'         => $bankable->id,
             'pension'             => 1,
         ];
@@ -213,5 +222,10 @@ class PensionPayScheduleImport implements OnEachRow
         ];
 
         return $exceptions[$mda] ?? $mda;
+    }
+
+    public function pad($string, $padding)
+    {
+        return str_pad($string, $padding, '0', STR_PAD_LEFT);
     }
 }

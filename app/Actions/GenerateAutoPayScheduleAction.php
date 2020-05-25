@@ -263,7 +263,7 @@ class GenerateAutoPayScheduleAction
 
     protected static function pad($string, $padding)
     {
-        return is_int($string) ? str_pad($string, $padding, '0', STR_PAD_LEFT) : $string;
+        return str_pad($string, $padding, '0', STR_PAD_LEFT);
     }
 
     private function initializePayComms() : void
