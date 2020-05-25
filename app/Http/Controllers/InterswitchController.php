@@ -118,7 +118,7 @@ class InterswitchController extends Controller
                 'account_type'      => $schedule->account_type,
                 'is_prepaid_load'   => 'false',
                 'currency_code'     => $schedule->currency,
-                'beneficiary_name'  => $schedule->beneficiary_name,
+                'beneficiary_name'  => Str::of($schedule->beneficiary_name)->replace(',', ''),
                 'mobile_number'     => '08080808080',
             ];
 
