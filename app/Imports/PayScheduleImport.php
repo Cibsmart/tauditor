@@ -139,7 +139,11 @@ class PayScheduleImport implements OnEachRow
         try {
             $bankable = $this->getBankableType($beneficiary['bank_name']);
         } catch (Exception $e) {
-            throw_if(true, WrongScheduleException::class, $e->getMessage());
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+            );
         }
 
         $month = Carbon::parse("25 $this->month $this->year");
@@ -166,7 +170,19 @@ class PayScheduleImport implements OnEachRow
             'bankable_id'         => $bankable->id,
         ];
 
-        return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
+        $schedule = null;
+
+        try {
+            $schedule = $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
+        } catch (Exception $e) {
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                $e->getMessage()
+            );
+        }
+
+        return $schedule;
     }
 
     private function monthAndYearNotMatching() : bool
