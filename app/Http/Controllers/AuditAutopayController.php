@@ -86,7 +86,29 @@ class AuditAutopayController extends Controller
 
     public function detail(AuditMdaSchedule $audit_mda_schedule)
     {
-        dd($audit_mda_schedule);
+        if ($audit_mda_schedule->domain()->id !== auth()->user()->domain->id) {
+            return redirect(route('audit_autopay.index'));
+        }
+
+        $schedules = $audit_mda_schedule->auditSubMdaSchedules()
+                                        ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
+                                        ->paginate()
+                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
+                                            'id'           => $schedule->id,
+                                            'sub_mda_name' => $schedule->sub_mda_name,
+                                            'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
+                                            'item_count'   => number_format($schedule->autopayItemCount()),
+                                            'month'        => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
+                                            'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
+                                            'uploaded'     => $schedule->autopay_uploaded,
+                                            'generated'     => $schedule->autopay_generated,
+                                            'mda_name'     => $audit_mda_schedule->mda_name,
+                                        ]);
+
+        return Inertia::render('AuditAutoPay/Detail', [
+            'schedules'              => $schedules,
+            'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
+        ]);
     }
 
     public function generate(AuditPayrollCategory $audit_payroll_category)
