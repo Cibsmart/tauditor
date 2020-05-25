@@ -11,7 +11,10 @@ use App\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use function is_int;
+use function str_pad;
 use function throw_if;
+use const STR_PAD_LEFT;
 
 class PayScheduleImport implements OnEachRow
 {
@@ -150,6 +153,12 @@ class PayScheduleImport implements OnEachRow
 
         $designation = $beneficiary['designation'] == '' ? 'None' : $beneficiary['designation'];
 
+        $bankable_type = $bankable->bankableType();
+
+        $account_number = $bankable_type === 'commercial'
+            ? $this->pad($beneficiary['account_no'], 10)
+            : $beneficiary['account_no'];
+
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
             'beneficiary_name'    => $beneficiary['employee_name'],
@@ -157,8 +166,8 @@ class PayScheduleImport implements OnEachRow
             'designation'         => $designation,
             'basic_pay'           => $beneficiary['basic_salary'],
             'bank_name'           => $beneficiary['bank_name'],
-            'account_number'      => $beneficiary['account_no'],
-            'bank_code'           => $beneficiary['bank_code'],
+            'account_number'      => $account_number,
+            'bank_code'           => $this->pad($beneficiary['bank_code'], 3),
             'total_allowance'     => $beneficiary['total_allowance'],
             'gross_pay'           => $beneficiary['grosspay'],
             'total_deduction'     => $beneficiary['total_deduction'] + $beneficiary['total_dues'],
@@ -166,7 +175,7 @@ class PayScheduleImport implements OnEachRow
             'allowances'          => $allowances,
             'deductions'          => $deductions,
             'month'               => $month,
-            'bankable_type'       => $bankable->bankableType(),
+            'bankable_type'       => $bankable_type,
             'bankable_id'         => $bankable->id,
         ];
 
@@ -236,5 +245,10 @@ class PayScheduleImport implements OnEachRow
         ];
 
         return $exceptions[$mda] ?? $mda;
+    }
+
+    public function pad($string, $padding)
+    {
+        return str_pad($string, $padding, '0', STR_PAD_LEFT);
     }
 }

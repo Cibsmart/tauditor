@@ -57,12 +57,12 @@ class AuditPaySchedule extends Model
 
     public function setAccountNumberAttribute($value)
     {
-        return $this->attributes['account_number'] = $this->pad($value, 10);
+        return $this->attributes['account_number'] = self::pad($value, 10);
     }
 
     public function setBankCodeAttribute($value)
     {
-        return $this->attributes['bank_code'] = $this->pad($value, 3);
+        return $this->attributes['bank_code'] = self::pad($value, 3);
     }
 
     public function setBasicPayAttribute(float $value) : int
