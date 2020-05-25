@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Bank;
+use Exception;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -126,16 +127,20 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
                                  ->filter();
 
-        $bankable = $this->getBankableType($beneficiary['bank_name']);
+        try {
+            $bankable = $this->getBankableType($beneficiary['bank_name']);
+        } catch (Exception $e) {
+            throw_if(true, WrongScheduleException::class, $e->getMessage());
+        }
 
         $month = Carbon::parse("25 $this->month $this->year");
 

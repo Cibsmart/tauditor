@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Bank;
+use Exception;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
@@ -112,7 +113,11 @@ class PensionPayScheduleImport implements OnEachRow
      */
     private function createAuditPaySchedule($beneficiary)
     {
-        $bankable = $this->getBankableType($beneficiary['bank_name']);
+        try {
+            $bankable = $this->getBankableType($beneficiary['bank_name']);
+        } catch (Exception $e) {
+            throw_if(true, WrongScheduleException::class, $e->getMessage());
+        }
 
         $month = Carbon::parse("25 $this->month $this->year");
 
