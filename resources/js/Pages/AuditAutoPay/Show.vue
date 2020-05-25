@@ -83,21 +83,27 @@
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
                                 <!--                                View Sub MDA Details for MDA with Sub MDAs-->
-                                <inertia-link v-if="schedule.generated && schedule.uploaded && schedule.has_sub" href="route(#" class="px-5 py-3">
+                                <inertia-link v-if="schedule.generated && schedule.uploaded && schedule.has_sub" href="#" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else-if="schedule.generated && schedule.uploaded" href="#" class="px-5 py-3">
-                                    View Details
-                                </inertia-link>
+<!--                                <inertia-link v-else-if="schedule.generated && schedule.uploaded && ! schedule.has_sub" href="#" class="px-5 py-3">-->
+<!--                                    View Details-->
+<!--                                </inertia-link>-->
 
-                                <inertia-link v-else-if="schedule.generated && schedule.has_sub" href="#" class="px-5 py-3" >
+                                <inertia-link v-else-if="schedule.generated && schedule.has_sub" :href="route('audit_autopay.detail', {audit_mda_schedule: schedule.id})" class="px-5 py-3" >
                                     Upload
                                 </inertia-link>
 
-                                <form v-else-if="schedule.generated && ! schedule.uploaded" @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)" :key="schedule.id">
+                                <form v-else-if="schedule.generated && ! schedule.uploaded && ! schedule.has_sub" @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)" :key="schedule.id">
                                     <div class="px-5 flex items-center justify-end">
                                         <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
+                                    </div>
+                                </form>
+
+                                <form v-else-if="schedule.generated && schedule.uploaded && ! schedule.has_sub" @submit.prevent="reupload(schedule.sub_mda_id, schedule.mda_name)" :key="schedule.id">
+                                    <div class="px-5 flex items-center justify-end">
+                                        <button type="submit" class="px-4 py-1 h-1/2 bg-green-600 hover:bg-green-700 rounded-sm text-xs font-medium text-white focus:outline-none">Re-upload</button>
                                     </div>
                                 </form>
                             </td>
@@ -144,6 +150,20 @@
             upload(audit_sub_mda, mda_name){
 
                 let result = confirm('Confirm Autopay Upload for' + mda_name);
+
+                if(result) {
+                    let data = new FormData();
+                    data.append('audit_sub_mda', audit_sub_mda || '')
+
+                    this.$inertia.post(this.route('interswitch.process'), data, {
+                        preserveScroll: true,
+                    })
+                }
+            },
+
+            reupload(audit_sub_mda, mda_name){
+
+                let result = confirm('Confirm Autopay Re-Upload for' + mda_name);
 
                 if(result) {
                     let data = new FormData();
