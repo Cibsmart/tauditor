@@ -71,6 +71,11 @@ class AuditMdaSchedule extends Model
 
     public function autopayGenerationComplete()
     {
+        return $this->auditSubMdaSchedules()->whereNull('autopay_generated')->doesntExist();
+    }
+
+    public function autopayUploadComplete()
+    {
         return $this->auditSubMdaSchedules()->whereNull('autopay_uploaded')->doesntExist();
     }
 
@@ -83,9 +88,16 @@ class AuditMdaSchedule extends Model
         $this->save();
     }
 
-    public function auditAutopayWasUpdated()
+    public function auditAutopayWasUploaded()
     {
-        $this->autopay_uploaded = $this->autopayGenerationComplete();
+        $this->autopay_uploaded = $this->autopayUploadComplete();
+
+        $this->save();
+    }
+
+    public function auditAutopayWasGenerated()
+    {
+        $this->autopay_generated = $this->autopayGenerationComplete();
 
         $this->save();
     }
