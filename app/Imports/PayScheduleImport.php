@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Bank;
+use Exception;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
@@ -70,7 +71,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -126,16 +127,24 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
                                  ->filter();
 
-        $bankable = $this->getBankableType($beneficiary['bank_name']);
+        try {
+            $bankable = $this->getBankableType($beneficiary['bank_name']);
+        } catch (Exception $e) {
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+            );
+        }
 
         $month = Carbon::parse("25 $this->month $this->year");
 
@@ -161,7 +170,19 @@ class PayScheduleImport implements OnEachRow
             'bankable_id'         => $bankable->id,
         ];
 
-        return $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
+        $schedule = null;
+
+        try {
+            $schedule = $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
+        } catch (Exception $e) {
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                $e->getMessage()
+            );
+        }
+
+        return $schedule;
     }
 
     private function monthAndYearNotMatching() : bool
@@ -193,6 +214,7 @@ class PayScheduleImport implements OnEachRow
     private function checkBankExceptions($bank_name)
     {
         $exceptions = [
+            'FIDELITY'                            => 'FIDELITY BANK PLC',
             'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
             'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
@@ -201,6 +223,7 @@ class PayScheduleImport implements OnEachRow
             'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
             'NDIOLU MICROFINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Inertia\Inertia;
 use App\AuditPayroll;
+use App\AuditMdaSchedule;
 use Illuminate\Support\Str;
+use App\AuditSubMdaSchedule;
 use App\Classes\ZipDirectory;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,9 @@ use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
 use function back;
+use function auth;
+use function route;
+use function redirect;
 use function number_format;
 
 class AuditAutopayController extends Controller
@@ -45,6 +50,43 @@ class AuditAutopayController extends Controller
         return Inertia::render('AuditAutoPay/Index', [
             'payrolls' => $payrolls,
         ]);
+    }
+
+    public function show(AuditPayrollCategory $audit_payroll_category)
+    {
+        if ($audit_payroll_category->domain()->id !== auth()->user()->domain->id) {
+            return redirect(route('audit_autopay.index'));
+        }
+
+        $schedules = $audit_payroll_category->auditMdaSchedules()
+                                            ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
+                                            ->orderBy('mda_id')
+                                            ->paginate()
+                                            ->transform(fn (AuditMdaSchedule $schedule) => [
+                                                'id'           => $schedule->id,
+                                                'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
+                                                'payroll_id'   => $audit_payroll_category->id,
+                                                'mda_id'       => $schedule->mda_id,
+                                                'mda_name'     => $schedule->mda->name,
+                                                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
+                                                'head_count'   => number_format($schedule->autopayItemCount()),
+                                                'month'        => $audit_payroll_category->auditPayroll->month_name,
+                                                'year'         => $audit_payroll_category->auditPayroll->year,
+                                                'uploaded'     => $schedule->autopay_uploaded,
+                                                'generated'    => $schedule->autopay_generated,
+                                                'pension'      => $schedule->pension,
+                                                'has_sub'      => $schedule->has_sub,
+                                                'domain'       => $schedule->auditPayrollCategory->auditPayroll->domain->name,
+                                            ]);
+
+        return Inertia::render('AuditAutoPay/Show', [
+            'schedules' => $schedules,
+        ]);
+    }
+
+    public function detail(AuditMdaSchedule $audit_mda_schedule)
+    {
+        dd($audit_mda_schedule);
     }
 
     public function generate(AuditPayrollCategory $audit_payroll_category)
@@ -143,7 +185,6 @@ class AuditAutopayController extends Controller
 
         return $zipped_file;
     }
-
 
     public function downloadMfb(AuditPayrollCategory $audit_payroll_category)
     {

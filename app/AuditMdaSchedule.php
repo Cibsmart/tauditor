@@ -69,6 +69,11 @@ class AuditMdaSchedule extends Model
         return $this->auditSubMdaSchedules()->where('uploaded', 0)->doesntExist();
     }
 
+    public function autopayGenerationComplete()
+    {
+        return $this->auditSubMdaSchedules()->whereNull('autopay_uploaded')->doesntExist();
+    }
+
     public function auditSubMdaScheduleWasUpdated()
     {
         $this->total_net_pay = $this->auditSubMdaSchedules()->sum('total_net_pay') / 100;
@@ -76,5 +81,24 @@ class AuditMdaSchedule extends Model
         $this->uploaded = $this->uploadComplete();
 
         $this->save();
+    }
+
+    public function auditAutopayWasUpdated()
+    {
+        $this->autopay_uploaded = $this->autopayGenerationComplete();
+
+        $this->save();
+    }
+
+    public function autopayTotalAmount()
+    {
+        return $this->auditSubMdaSchedules()
+                    ->first()
+                    ->autopayTotalAmount();
+    }
+
+    public function autopayItemCount()
+    {
+        return $this->auditSubMdaSchedules()->first()->autopayItemCount();
     }
 }

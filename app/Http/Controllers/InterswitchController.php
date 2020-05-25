@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use App\AuditSubMdaSchedule;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\Storage;
+use function back;
 use function is_int;
 use function uniqid;
 use function hexdec;
@@ -23,8 +27,16 @@ class InterswitchController extends Controller
         return $this->middleware('auth');
     }
 
-    public function process(AuditPayrollCategory $audit_payroll_category)
+    public function process(Request $request)
     {
+        $data = $request->validate([
+            'audit_sub_mda' => ['required', 'integer', 'exists:audit_sub_mda_schedules,id'],
+        ]);
+
+        $sub_mda = AuditSubMdaSchedule::find($data['audit_sub_mda']);
+
+        $audit_payroll_category = $sub_mda->payrollCategory();
+
         $month = $audit_payroll_category->monthYear(true);
 
         $month_full = $audit_payroll_category->monthYear();
@@ -33,104 +45,108 @@ class InterswitchController extends Controller
 
         $domain = $audit_payroll_category->domain()->id;
 
-        $mdas = $audit_payroll_category->auditMdaSchedules()->autopayGenerated()->cursor();
+        $mda = $sub_mda->auditMdaSchedule;
 
-        foreach ($mdas as $mda) {
-            $payment_credential = $mda->paymentCredential();
+        $payment_credential = $mda->paymentCredential();
 
-            $is_single_debit = $payment_credential->is_single_debit ? 'true' : 'false';
-            $terminal_id = $payment_credential->terminal_id;
-            $account_number = $payment_credential->account_number;
-            $bank_code = $payment_credential->bank->code;
-            $account_type = $payment_credential->account_type;
-            $pan = $payment_credential->pan;
-            $beneficiary_type_id = $payment_credential->beneficiary_type_id;
+        $is_single_debit = $payment_credential->is_single_debit ? 'true' : 'false';
+        $terminal_id = $payment_credential->terminal_id;
+        $account_number = $payment_credential->account_number;
+        $bank_code = $payment_credential->bank->code;
+        $account_type = $payment_credential->account_type;
+        $pan = $payment_credential->pan;
+        $beneficiary_type_id = $payment_credential->beneficiary_type_id;
 
-            $directory = $domain === 'state'
-                ? "in_dir/$domain $payment_type $month_full"
-                : "in_dir/$domain $payment_type $month_full - $beneficiary_type_id";
+        $directory = $domain === 'state'
+            ? "in_dir/$domain $payment_type $month_full"
+            : "in_dir/$domain $payment_type $month_full - $beneficiary_type_id";
 
-            $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->cursor();
+        $sub_mda_name = $sub_mda->sub_mda_name;
 
-            foreach ($sub_mdas as $sub_mda) {
-                $sub_mda_name = $sub_mda->sub_mda_name;
+        $file_name = "$directory/$sub_mda_name.csv";
 
-                $file_name = "$directory/$sub_mda_name.csv";
+        $total_amount = $sub_mda->autopayTotalAmount();
+        $beneficiary_codes = $sub_mda->mdaBeneficiaryCodes();
+        $beneficiary_account_numbers = $sub_mda->mdaBeneficiaryAccountNumbers();
 
-                $total_amount = $sub_mda->mdaTotalAmount();
-                $beneficiary_codes = $sub_mda->mdaBeneficiaryCodes();
-                $beneficiary_account_numbers = $sub_mda->mdaBeneficiaryAccountNumbers();
+        $batch_reference = $this->generateBatchReference($sub_mda->id);
+        $batch_description = $this->getBatchDescription(
+            $payment_type,
+            $sub_mda_name,
+            $month
+        );
 
-                $batch_reference = $this->generateBatchReference($sub_mda->id);
-                $batch_description = $this->getBatchDescription(
-                    $payment_type,
-                    $sub_mda_name,
-                    $month
-                );
+        $mac_data = $this->macData(
+            $terminal_id,
+            $beneficiary_codes,
+            $total_amount,
+            $beneficiary_account_numbers
+        );
 
-                $mac_data = $this->macData(
-                    $terminal_id,
-                    $beneficiary_codes,
-                    $total_amount,
-                    $beneficiary_account_numbers
-                );
+        $row_one_data = [
+            'batch_reference'   => $batch_reference,
+            'batch_description' => $batch_description,
+            'is_single_debit'   => $is_single_debit,
+            'terminal_id'       => $terminal_id,
+        ];
 
-                $row_one_data = [
-                    'batch_reference'   => $batch_reference,
-                    'batch_description' => $batch_description,
-                    'is_single_debit'   => $is_single_debit,
-                    'terminal_id'       => $terminal_id,
-                ];
-                $row_one_content = $this->formatContent($row_one_data);
-                Storage::disk('local')->put($file_name, $row_one_content);
+        $row_one_content = $this->formatContent($row_one_data);
+        Storage::disk('local')->put($file_name, $row_one_content);
 
-                $row_two_data = [
-                    'secure_data'           => '',
-                    'source_account_number' => $account_number,
-                    'source_account_type'   => $account_type,
-                    'bank_cbn_code'         => $bank_code,
-                    'encrypted_pin'         => '',
-                    'mac_data'              => $mac_data,
-                ];
-                $row_two_content = $this->formatContent($row_two_data);
-                Storage::disk('local')->append($file_name, $row_two_content);
+        $row_two_data = [
+            'secure_data'           => '',
+            'source_account_number' => $account_number,
+            'source_account_type'   => $account_type,
+            'bank_cbn_code'         => $bank_code,
+            'encrypted_pin'         => '',
+            'mac_data'              => $mac_data,
+        ];
+        $row_two_content = $this->formatContent($row_two_data);
+        Storage::disk('local')->append($file_name, $row_two_content);
 
-                $schedules = $sub_mda->autopaySchedules()->cursor();
+        $schedules = $sub_mda->autopaySchedules()->cursor();
 
-                foreach ($schedules as $schedule) {
-                    $data = [
-                        'payment_reference' => $this->generatePaymentReference($schedule->id),
-                        'amount'            => $schedule->amount * 100,
-                        'narration'         => $this->generateNarration($schedule->narration),
-                        'beneficiary_code'  => $schedule->beneficiary_code,
-                        'beneficiary_email' => 'test@test.com',
-                        'cbn_code'          => $schedule->cbn_code,
-                        'account_number'    => $schedule->account_number,
-                        'account_type'      => $schedule->account_type,
-                        'is_prepaid_load'   => 'false',
-                        'currency_code'     => $schedule->currency,
-                        'beneficiary_name'  => $schedule->beneficiary_name,
-                        'mobile_number'     => '08080808080',
-                    ];
-                    $content = $this->formatContent($data);
-                    Storage::disk('local')->append($file_name, $content);
-                }
-            }
+        foreach ($schedules as $schedule) {
+            $data = [
+                'payment_reference' => $this->generatePaymentReference($schedule->id),
+                'amount'            => $schedule->amount * 100,
+                'narration'         => $this->generateNarration($schedule->narration),
+                'beneficiary_code'  => $schedule->beneficiary_code,
+                'beneficiary_email' => 'test@test.com',
+                'cbn_code'          => $schedule->cbn_code,
+                'account_number'    => $schedule->account_number,
+                'account_type'      => $schedule->account_type,
+                'is_prepaid_load'   => 'false',
+                'currency_code'     => $schedule->currency,
+                'beneficiary_name'  => $schedule->beneficiary_name,
+                'mobile_number'     => '08080808080',
+            ];
 
-            $files = Storage::allFiles($directory);
-
-            foreach ($files as $file) {
-                $file_name = 'IN/'.basename($file);
-
-                $content = Storage::disk('local')->get($file);
-
-                $disk = "sftp_$domain";
-
-                $success = Storage::disk($disk)->put($file_name, $content);
-            }
+            $content = $this->formatContent($data);
+            Storage::disk('local')->append($file_name, $content);
         }
 
-        return back()->with('success', "Autopay Schedule for $month_full Created and Uploaded Successfully");
+        $autopay_file_name = 'IN/' . basename($file_name);
+
+        $content = Storage::disk('local')->get($file_name);
+
+        $disk = "sftp_$domain";
+
+        $success = true;
+
+        try {
+            $success = Storage::disk($disk)->put($file_name, $content);
+        } catch (Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        if (! $success) {
+            return back()->with('error', "Autopay Schedule for $month_full $sub_mda_name Failed");
+        }
+
+        $sub_mda->autopayUploaded();
+
+        return back()->with('success', "Autopay Schedule for $month_full $sub_mda_name Created and Uploaded Successfully");
     }
 
     private function macData($terminal_id, $beneficiary_codes, $total_amount, $beneficiary_account_numbers)
@@ -146,7 +162,7 @@ class InterswitchController extends Controller
 
     private function generateNarration($narration)
     {
-        $unique_id = Str::limit(uniqid(), 4, '');
+        $unique_id = uniqid();
 
         return Str::upper(Str::of($narration)->append('_')
                              ->append($unique_id)

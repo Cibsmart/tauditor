@@ -104,9 +104,9 @@
                                         </td>
 
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <inertia-link :href="route('interswitch.process', {audit_payroll_category: category.id})"
-                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
-                                                Upload
+                                            <inertia-link :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
+                                                          class="px-5 py-3" preserve-state preserve-scroll>
+                                                View MDAs
                                             </inertia-link>
                                         </td>
                                     </tr>

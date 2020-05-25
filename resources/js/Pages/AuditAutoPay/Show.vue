@@ -1,10 +1,10 @@
 <template>
     <div>
         <h1 class="mb-4 font-bold text-3xl">
-            <inertia-link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
-                Audit Payroll
+            <inertia-link :href="route('audit_autopay.index')" class="text-indigo-500 hover:text-indigo-700">
+                Audit Autopay
             </inertia-link>
-            <span class="text-indigo-500 font-medium">/</span> MDA Schedules
+            <span class="text-indigo-500 font-medium">/</span> Autopay Schedules
         </h1>
 
         <div class="mb-6 flex justify-between items-center">
@@ -32,7 +32,7 @@
                                 Uploaded
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-
+                                Actions
                             </th>
                         </tr>
                         </thead>
@@ -66,7 +66,7 @@
                                     {{ schedule.total_amount }}
                                 </div>
                                 <div class="text-sm leading-5 text-gray-600">
-                                    <span>Head Count: </span>
+                                    <span>Item Count: </span>
                                     {{ schedule.head_count }}
                                 </div>
                             </td>
@@ -82,22 +82,21 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-<!--                                View Sub MDA Details for MDA with Sub MDAs-->
-                                <inertia-link v-if="schedule.uploaded && schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
+                                <!--                                View Sub MDA Details for MDA with Sub MDAs-->
+                                <inertia-link v-if="schedule.generated && schedule.uploaded && schedule.has_sub" href="route(#" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else-if="schedule.uploaded" :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.sub_mda_id})" class="px-5 py-3">
+                                <inertia-link v-else-if="schedule.generated && schedule.uploaded" href="#" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
 
-                                <inertia-link v-else-if="schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3" >
+                                <inertia-link v-else-if="schedule.generated && schedule.has_sub" href="#" class="px-5 py-3" >
                                     Upload
                                 </inertia-link>
 
-                                <form v-else @submit.prevent="upload(schedule.sub_mda_id)" :key="schedule.id">
-                                    <div class="flex items-center">
-                                        <file-input v-model="schedule_form.schedule_file[schedule.sub_mda_id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
+                                <form v-else-if="schedule.generated && ! schedule.uploaded" @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)" :key="schedule.id">
+                                    <div class="px-5 flex items-center justify-end">
                                         <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
                                     </div>
                                 </form>
@@ -121,11 +120,10 @@
 <script>
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
-    import FileInput from "@/Shared/FileInput";
     import Pagination from '@/Shared/Pagination'
 
     export default {
-        metaInfo: { title: 'Audit MDA Schedules' },
+        metaInfo: { title: 'Autopay MDA Schedules' },
         layout: Layout,
 
         props: {
@@ -134,28 +132,27 @@
 
         components: {
             Icon,
-            FileInput,
             Pagination,
         },
 
         data(){
             return {
-                schedule_form: {
-                    schedule_file: [],
-                }
             }
         },
 
         methods: {
-            upload(audit_sub_mda){
+            upload(audit_sub_mda, mda_name){
 
-                var data = new FormData()
-                data.append('audit_sub_mda', audit_sub_mda || '')
-                data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '')
+                let result = confirm('Confirm Autopay Upload for' + mda_name);
 
-                this.$inertia.post(this.route('audit_pay_schedules.store'), data, {
-                    preserveScroll: true,
-                })
+                if(result) {
+                    let data = new FormData();
+                    data.append('audit_sub_mda', audit_sub_mda || '')
+
+                    this.$inertia.post(this.route('interswitch.process'), data, {
+                        preserveScroll: true,
+                    })
+                }
             },
         }
     }
