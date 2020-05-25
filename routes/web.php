@@ -53,10 +53,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_mda_schedules.')->group(function () {
-        Route::get(
-            'audit_mda_schedules/{audit_payroll_category}/index',
-            [AuditMdaScheduleController::class, 'index']
-        )->name('index');
+        Route::get('audit_mda_schedules/{audit_payroll_category}/index', [AuditMdaScheduleController::class, 'index'])->name('index');
     });
 });
 
@@ -67,10 +64,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_sub_mda_schedules.')->group(function () {
-        Route::get(
-            'audit_sub_mda_schedules/{audit_mda_schedule}/index',
-            [AuditSubMdaSchedulesController::class, 'index']
-        )->name('index');
+        Route::get('audit_sub_mda_schedules/{audit_mda_schedule}/index', [AuditSubMdaSchedulesController::class, 'index'])->name('index');
     });
 });
 
@@ -82,10 +76,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_pay_schedules.')->group(function () {
-        Route::get(
-            'audit_pay_schedules/{audit_sub_mda_schedule}/index',
-            [AuditPayScheduleController::class, 'index']
-        )->name('index');
+        Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });
@@ -99,18 +90,12 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
         Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
-        Route::post(
-            'audit_autopay/{audit_payroll_category}/generate',
-            [AuditAutopayController::class, 'generate']
-        )->name('generate');
-        Route::get(
-            'audit_autopay/{audit_payroll_category}/download',
-            [AuditAutopayController::class, 'download']
-        )->name('download');
-        Route::get(
-            'audit_autopay/{audit_payroll_category}/downloadMfb',
-            [AuditAutopayController::class, 'downloadMfb']
-        )->name('downloadMfb');
+        Route::get('audit_autopay/{audit_payroll_category}/show', [AuditAutopayController::class, 'show'])->name('show');
+        Route::get('audit_autopay/{audit_mda_schedule}/detail', [AuditAutopayController::class, 'detail'])->name('detail');
+
+        Route::post('audit_autopay/{audit_payroll_category}/generate', [AuditAutopayController::class, 'generate'])->name('generate');
+        Route::get('audit_autopay/{audit_payroll_category}/download', [AuditAutopayController::class, 'download'])->name('download');
+        Route::get('audit_autopay/{audit_payroll_category}/downloadMfb', [AuditAutopayController::class, 'downloadMfb'])->name('downloadMfb');
     });
 });
 
@@ -122,15 +107,8 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
-        Route::get(
-            'audit_analysis/{audit_payroll_category}/show',
-            [AuditAnalysisController::class, 'show']
-        )->name('show');
-
-        Route::post(
-            'audit_analysis/{audit_payroll_category}/analyse',
-            [AuditAnalysisController::class, 'analyse']
-        )->name('analyse');
+        Route::get('audit_analysis/{audit_payroll_category}/show', [AuditAnalysisController::class, 'show'])->name('show');
+        Route::post('audit_analysis/{audit_payroll_category}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
     });
 });
 
@@ -142,9 +120,6 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('interswitch.')->group(function () {
-        Route::post(
-            'interswitch/{audit_payroll_category}/process',
-            [InterswitchController::class, 'process']
-        )->name('process');
+        Route::post('interswitch/process_autopay_upload', [InterswitchController::class, 'process'])->name('process');
     });
 });

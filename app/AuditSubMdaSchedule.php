@@ -6,6 +6,9 @@ use App\Traits\CanBeReported;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static find($audit_sub_mda)
+ */
 class AuditSubMdaSchedule extends Model
 {
     use CanBeReported;
@@ -62,6 +65,11 @@ class AuditSubMdaSchedule extends Model
     public function domain()
     {
         return $this->auditMdaSchedule->auditPayrollCategory->auditPayroll->domain;
+    }
+
+    public function payrollCategory()
+    {
+        return $this->auditMdaSchedule->auditPayrollCategory;
     }
 
     public function mdaBeneficiaryCodes()
@@ -129,5 +137,23 @@ class AuditSubMdaSchedule extends Model
     {
         $this->autopay_generated = Carbon::now();
         $this->save();
+    }
+
+    public function autopayUploaded()
+    {
+        $this->autopay_uploaded = Carbon::now();
+        $this->save();
+
+        $this->auditMdaSchedule->auditAutopayWasUpdated();
+    }
+
+    public function autopayTotalAmount()
+    {
+        return $this->autopaySchedules()->sum('amount');
+    }
+
+    public function autopayItemCount()
+    {
+        return $this->autopaySchedules()->count();
     }
 }

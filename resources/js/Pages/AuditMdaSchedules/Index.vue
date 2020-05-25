@@ -101,8 +101,6 @@
                                         <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
                                     </div>
                                 </form>
-
-
                             </td>
                         </tr>
 
