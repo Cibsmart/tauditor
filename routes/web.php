@@ -108,6 +108,7 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
         Route::get('audit_analysis/{audit_payroll_category}/show', [AuditAnalysisController::class, 'show'])->name('show');
+        Route::get('audit_analysis/{audit_payroll_category}/report', [AuditAnalysisController::class, 'pdfReport'])->name('pdf_report');
         Route::post('audit_analysis/{audit_payroll_category}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
     });
 });
