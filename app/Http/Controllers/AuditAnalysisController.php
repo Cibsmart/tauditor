@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditReport;
 use App\AuditPayroll;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Str;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\AuditPayScheduleAction;
 use function back;
@@ -42,6 +44,21 @@ class AuditAnalysisController extends Controller
         return Inertia::render('AuditAnalysis/Index', [
             'payrolls' => $payrolls,
         ]);
+    }
+
+    public function pdfReport(AuditPayrollCategory $audit_payroll_category)
+    {
+        $reports = $audit_payroll_category->auditReports()
+                                          ->select(DB::raw('reportable_type, reportable_id'))
+                                          ->groupBy('reportable_type', 'reportable_id')
+                                          ->where('reportable_type', 'audit_pay_schedule')
+                                          ->paginate();
+
+        $data = ['reports' => $reports];
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('analysis_report', $data)->setPaper('a4', 'landscape');
+
+        return $pdf->download('report.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
@@ -97,6 +114,7 @@ class AuditAnalysisController extends Controller
 
         return Inertia::render('AuditAnalysis/Show', [
             'reports' => $reports,
+            'audit_payroll_category' => $audit_payroll_category->id,
         ]);
     }
 }
