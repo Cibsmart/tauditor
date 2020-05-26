@@ -11,7 +11,7 @@ class BeneficiaryController extends Controller
 
     public function index()
     {
-        $schedules = AuditPaySchedule::query()->limit(10)->get();
+        $schedules = AuditPaySchedule::query();
 
         return $schedules;
     }
