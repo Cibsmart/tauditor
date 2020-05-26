@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BeneficiaryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +19,4 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-//Route::get('beneficiaries', );
+Route::get('beneficiaries', [BeneficiaryController::class, 'index']);
