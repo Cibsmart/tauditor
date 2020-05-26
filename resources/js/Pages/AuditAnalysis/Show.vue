@@ -6,9 +6,9 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <!--            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
-            <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
-            <!--            </inertia-link>-->
+            <a :href="route('audit_analysis.pdf_report', {audit_payroll_category: audit_payroll_category})" class="btn btn-big btn-indigo">
+                <span class="hidden md:inline">Download PDF</span>
+            </a>
         </div>
 
         <div class="flex flex-col">
@@ -82,6 +82,7 @@
 
         props: {
             reports: Object,
+            audit_payroll_category: Number,
         },
 
         components: {
