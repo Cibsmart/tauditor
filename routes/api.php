@@ -19,4 +19,6 @@ use App\Http\Controllers\Api\BeneficiaryController;
 //    return $request->user();
 //});
 
-Route::get('beneficiaries', [BeneficiaryController::class, 'index']);
+Route::get('beneficiaries/{domain}/{year}/{month}', [BeneficiaryController::class, 'index']);
+
+Route::fallback([BeneficiaryController::class, 'invalid']);
