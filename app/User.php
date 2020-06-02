@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -16,10 +17,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed first_name
  * @property mixed email
  * @method static create(array $array)
+ * @method static find(int $int)
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens, Notifiable, HasRoles, SoftDeletes;
 
     protected $guarded = [];
 
