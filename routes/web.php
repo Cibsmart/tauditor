@@ -8,6 +8,7 @@ use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuditAnalysisController;
+use App\Http\Controllers\CreateUserTokenController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
@@ -121,5 +122,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('interswitch.')->group(function () {
         Route::post('interswitch/process_autopay_upload', [InterswitchController::class, 'process'])->name('process');
+    });
+});
+
+Route::middleware('auth')->group(function () {
+    Route::name('token.')->group(function () {
+        Route::get('users/token', [CreateUserTokenController::class, 'create'])->name('token');
     });
 });
