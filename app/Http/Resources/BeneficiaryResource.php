@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function number_format;
 use function array_key_exists;
@@ -17,9 +19,7 @@ class BeneficiaryResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'surname' => $this->beneficiary_name,
-            'first_name' => '',
-            'middle_name' => '',
+            'name' => $this->beneficiary_name,
             'designation' => $this->designation,
             'mobile_phone' => '',
             'email' => '',
