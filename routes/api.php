@@ -22,7 +22,7 @@ use App\Http\Controllers\CreateUserTokenController;
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('beneficiaries/{domain}/{year}/{month}/', [BeneficiaryController::class, 'index']);
+    Route::get('beneficiaries/{domain}/{year}/{month}/{type}', [BeneficiaryController::class, 'index']);
     Route::fallback([BeneficiaryController::class, 'invalid']);
 });
 

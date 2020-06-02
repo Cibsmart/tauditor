@@ -13,13 +13,19 @@ use App\Http\Resources\PayloadCollection;
 use App\Http\Resources\BeneficiaryResource;
 use Symfony\Component\HttpFoundation\Response;
 use function response;
+use function in_array;
 
 class BeneficiaryController extends Controller
 {
 
-    public function index($domain, $year, $month)
+    public function index($domain, $year, $month, $type)
     {
         $domain = Domain::find($domain);
+
+        $staff_types = [
+            'state' => ['staff', 'pension',],
+            'jaac' => ['lgea', 'lgsc', 'pension']
+        ];
 
         if (! $domain) {
             return response()->json([
@@ -42,6 +48,13 @@ class BeneficiaryController extends Controller
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
+        if (! in_array($type, $staff_types[$domain->id])) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid Staff Type'
+            ])->setStatusCode(Response::HTTP_NOT_FOUND);
+        }
+
         $payroll = AuditPayroll::query()
                                 ->where('domain_id', '=', $domain->id)
                                 ->where('year', '=', $year)
@@ -55,7 +68,7 @@ class BeneficiaryController extends Controller
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
-        $schedules = AuditPaySchedule::schedules($payroll)->limit(2)->get();
+        $schedules = AuditPaySchedule::schedules($payroll, $type)->limit(2)->get();
 
         if ($schedules->count() < 1) {
             return response()->json([

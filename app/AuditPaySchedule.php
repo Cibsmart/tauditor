@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
- * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll)
+ * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
  */
 class AuditPaySchedule extends Model
 {
@@ -58,13 +58,14 @@ class AuditPaySchedule extends Model
         return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory->auditPayroll->domain;
     }
 
-    public static function scopeSchedules($query, $payroll)
+    public static function scopeSchedules($query, $payroll, $staff_type)
     {
         return $query->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
                       ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
                       ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
                       ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id')
-                      ->where('audit_payrolls.id', '=', $payroll->id);
+                      ->where('audit_payrolls.id', '=', $payroll->id)
+                      ->where('audit_payroll_categories.staff_type', '=', $staff_type);
     }
 
     public function setAccountNumberAttribute($value)
