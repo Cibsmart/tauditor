@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property mixed code
  * @property mixed name
  * @property mixed allowables
+ * @method static find($domain)
  */
 class Domain extends Model
 {

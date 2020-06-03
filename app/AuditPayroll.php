@@ -33,6 +33,11 @@ class AuditPayroll extends Model
         return $this->hasMany(AuditPayrollCategory::class);
     }
 
+    public function auditMdaSchedules()
+    {
+        return $this->hasManyThrough(AuditMdaSchedule::class, AuditPayrollCategory::class);
+    }
+
     public function createdBy()
     {
         return $this->user->name;

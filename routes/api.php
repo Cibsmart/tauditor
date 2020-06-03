@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BeneficiaryController;
+use App\Http\Controllers\CreateUserTokenController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,4 +20,9 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-//Route::get('beneficiaries', );
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('beneficiaries/{domain}/{year}/{month}/{type}', [BeneficiaryController::class, 'index']);
+    Route::fallback([BeneficiaryController::class, 'invalid']);
+});
+

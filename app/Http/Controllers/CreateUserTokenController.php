@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+use function hash;
+use function abort;
+use function request;
+use function redirect;
+use function base64_encode;
+
+class CreateUserTokenController extends Controller
+{
+    public function create()
+    {
+        $registration_token = request()->query('create_token');
+        $token = base64_encode(hash('sha1', 'anambra'));
+
+        if ($registration_token != $token) {
+            abort(Response::HTTP_FORBIDDEN);
+        }
+
+        $user = Auth::user();
+
+        $token = $user->createToken('state_airs');
+
+        return $token->plainTextToken;
+    }
+}

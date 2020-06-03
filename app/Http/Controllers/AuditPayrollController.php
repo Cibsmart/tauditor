@@ -91,6 +91,7 @@ class AuditPayrollController extends Controller
             $category = $payroll->auditPaymentCategories()->create([
                 'payment_type_id' => $salary,
                 'payment_title'   => $title,
+                'staff_type' => 'staff'
             ]);
 
             foreach ($salary_beneficiary_types as $beneficiary_type) {
@@ -106,6 +107,7 @@ class AuditPayrollController extends Controller
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
                     'payment_title'   => $title,
+                    'staff_type' => $beneficiary_type->id,
                 ]);
 
                 $this->createAuditMdaSchedules($beneficiary_type, $category);
@@ -121,6 +123,7 @@ class AuditPayrollController extends Controller
         $category = $payroll->auditPaymentCategories()->create([
             'payment_type_id' => $pension,
             'payment_title'   => $title,
+            'staff_type' => 'pensioners'
         ]);
 
         foreach ($pension_beneficiary_types as $beneficiary_type) {
