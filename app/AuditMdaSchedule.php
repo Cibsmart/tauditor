@@ -37,6 +37,11 @@ class AuditMdaSchedule extends Model
         return $this->hasMany(AuditSubMdaSchedule::class);
     }
 
+    public function auditPaySchedules()
+    {
+        return $this->hasManyThrough(AuditPaySchedule::class, AuditSubMdaSchedule::class);
+    }
+
     public function domain()
     {
         return $this->auditPayrollCategory->auditPayroll->domain;
