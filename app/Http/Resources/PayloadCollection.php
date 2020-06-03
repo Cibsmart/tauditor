@@ -10,7 +10,7 @@ class PayloadCollection extends ResourceCollection
     {
         return [
             'status' => true,
-            'message' => 'Successfull',
+            'message' => 'Beneficiaries Retrieved Successfully',
         ];
     }
 

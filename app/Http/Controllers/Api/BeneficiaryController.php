@@ -68,7 +68,7 @@ class BeneficiaryController extends Controller
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
-        $schedules = AuditPaySchedule::schedules($payroll, $type)->limit(2)->get();
+        $schedules = AuditPaySchedule::schedules($payroll, $type)->get();
 
         if ($schedules->count() < 1) {
             return response()->json([
