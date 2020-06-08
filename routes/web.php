@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_pay_schedules.')->group(function () {
         Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
+        Route::post('audit_pay_schedules/{audit_sub_mda_schedule}/destroy', [AuditPayScheduleController::class, 'destroy'])->name('destroy');
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });

@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
+ *
  * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
+ * @method static where(string $string, $verification_number)
  */
 class AuditPaySchedule extends Model
 {
@@ -132,4 +134,6 @@ class AuditPaySchedule extends Model
     {
         return is_int($string) ? str_pad($string, $padding, '0', STR_PAD_LEFT) : $string;
     }
+
+
 }
