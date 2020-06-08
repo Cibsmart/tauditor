@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
+use function dd;
+use function redirect;
 
 class AuditPayScheduleController extends Controller
 {
@@ -95,6 +97,24 @@ class AuditPayScheduleController extends Controller
         $schedule->save();
 
         $schedule->auditMdaSchedule->auditSubMdaScheduleWasUpdated();
-        $schedule->auditMdaSchedule->auditPayrollCategory->auditMdaScheduleWasUpdated();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  AuditSubMdaSchedule  $audit_sub_mda_schedule
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
+    public function destroy(AuditSubMdaSchedule $audit_sub_mda_schedule)
+    {
+        //Delete Pay Schedules, Autopay and Analysis Report
+        $audit_sub_mda_schedule->auditPaySchedules()->delete();
+        $audit_sub_mda_schedule->autopaySchedules()->delete();
+        $audit_sub_mda_schedule->auditReports()->delete();
+
+        //Notify Sub MDA Schedule that there is an update
+        $audit_sub_mda_schedule->payScheduleWasCleared();
+
+        return redirect()->back()->with('success', 'Pay Schedule Successfully Cleared and Ready for Re-Upload');
     }
 }
