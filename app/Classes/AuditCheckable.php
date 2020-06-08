@@ -11,8 +11,8 @@ abstract class AuditCheckable
 {
     protected $month;
     protected $domain;
-//    protected $payroll;
     protected $payroll_category;
+    protected $audit_sub_mda_schedule;
 
     protected string $category = '';
     protected string $message = '';
@@ -50,7 +50,7 @@ abstract class AuditCheckable
 
         $this->month = $schedule->month;
 
-//        $this->payroll = $schedule->auditPayroll();
+        $this->audit_sub_mda_schedule = $schedule->auditSubMdaSchedule;
 
         $this->payroll_category = $schedule->auditPayrollCategory();
 
@@ -78,6 +78,7 @@ abstract class AuditCheckable
     {
         $this->schedule->report(
             $this->payroll_category->id,
+            $this->audit_sub_mda_schedule->id,
             $this->category,
             $this->message,
             $this->current_value,
