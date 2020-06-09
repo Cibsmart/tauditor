@@ -54,11 +54,15 @@ class AuditAnalysisController extends Controller
                                           ->where('reportable_type', 'audit_pay_schedule')
                                           ->paginate();
 
-        $data = ['reports' => $reports];
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('analysis_report', $data)->setPaper('a4', 'landscape');
+        $data = ['reports' => $reports, 'category' => $audit_payroll_category];
 
-        return $pdf->download('report.pdf');
+        $pdf = App::make('dompdf.wrapper');
+
+        $pdf->loadView('reports.analysis_report', $data)
+            ->setPaper('a4', 'landscape')
+            ->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isPhpEnabled' => true]);
+
+        return $pdf->stream();
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
