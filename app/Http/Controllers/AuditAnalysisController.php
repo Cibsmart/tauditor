@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\AuditPayScheduleAction;
+use App\Jobs\GenerateReportBeneficiaries;
 use function back;
+use function public_path;
 use function number_format;
 
 class AuditAnalysisController extends Controller
@@ -52,17 +54,24 @@ class AuditAnalysisController extends Controller
                                           ->select(DB::raw('reportable_type, reportable_id'))
                                           ->groupBy('reportable_type', 'reportable_id')
                                           ->where('reportable_type', 'audit_pay_schedule')
-                                          ->paginate();
+                                          ->orderBy('reportable_id')
+                                          ->get();
 
         $data = ['reports' => $reports, 'category' => $audit_payroll_category];
 
-        $pdf = App::make('dompdf.wrapper');
+        $pdf = App::make('snappy.pdf.wrapper');
 
         $pdf->loadView('reports.analysis_report', $data)
-            ->setPaper('a4', 'landscape')
-            ->setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif', 'isPhpEnabled' => true]);
+            ->setPaper('a4')
+            ->setOrientation('landscape')
+            ->setOption('dpi', 150)
+            ->setOption('footer-center', 'Page [page] of [toPage]')
+            ->setOption('footer-font-name', 'san-serif')
+            ->setOption('footer-font-size', 8)
+            ->setOption('footer-right', '[isodate] [time]')
+            ->setOption('footer-left', $audit_payroll_category->payment_title);
 
-        return $pdf->stream();
+        return $pdf->download('ANALYSIS REPORT - ' . $audit_payroll_category->payment_title . '.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
