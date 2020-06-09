@@ -57,24 +57,16 @@
                 </td>
                 <td class="">
                     <div class="" >
-                        @if(collect($rep->current_value)->count() < 2)
-                            {{ $rep->current_value }}
-                        @else
-                            { @foreach(collect($rep->current_value) as $key => $value)
-                                {{ $key . ':' . $value . ' ' }}
-                            @endforeach }
-                        @endif
+                        { @foreach(collect($rep->current_value) as $key => $value)
+                            {{ $key . ':' . $value . ' ' }}
+                        @endforeach }
                     </div>
                 </td>
                 <td class="">
                     <div class="" >
-                        @if(collect($rep->previous_value)->count() < 2)
-                            {{ $rep->previous_value }}
-                        @else
-                            { @foreach(collect($rep->previous_value) as $key => $value)
-                                {{ $key . ':' . $value . ' ' }}
-                            @endforeach }
-                        @endif
+                        { @foreach(collect($rep->previous_value) as $key => $value)
+                            {{ $key . ':' . $value . ' ' }}
+                        @endforeach }
                     </div>
                 </td>
             </tr>
@@ -85,24 +77,16 @@
                     </td>
                     <td class="">
                         <div class="" >
-                            @if(collect($rep->current_value)->count() < 2)
-                                {{ $rep->current_value }}
-                            @else
                             { @foreach(collect($rep->current_value) as $key => $value)
                                 {{ $key . ':' . $value . ' ' }}
                             @endforeach }
-                            @endif
                         </div>
                     </td>
                     <td class="">
                         <div class="" >
-                            @if(collect($rep->previous_value)->count() < 2)
-                                {{ $rep->previous_value }}
-                            @else
-                                { @foreach(collect($rep->previous_value) as $key => $value)
-                                    {{ $key . ':' . $value . ' ' }}
-                                @endforeach }
-                            @endif
+                            { @foreach(collect($rep->previous_value) as $key => $value)
+                                {{ $key . ':' . $value . ' ' }}
+                            @endforeach }
                         </div>
                     </td>
                 </tr>
