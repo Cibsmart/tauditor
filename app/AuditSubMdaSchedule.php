@@ -37,6 +37,11 @@ class AuditSubMdaSchedule extends Model
         return $this->hasMany(AutopaySchedule::class);
     }
 
+    public function auditReports()
+    {
+        return $this->hasMany(AuditReport::class);
+    }
+
     public function microfinanceSchedules()
     {
         return $this->hasMany(MicrofinanceBankSchedule::class);
@@ -157,5 +162,21 @@ class AuditSubMdaSchedule extends Model
     public function autopayItemCount()
     {
         return $this->autopaySchedules()->count();
+    }
+
+    public function payScheduleWasCleared()
+    {
+        $this->uploaded = false;
+        $this->analysed = null;
+        $this->autopay_generated = null;
+        $this->autopay_uploaded = null;
+        $this->total_net_pay = 0;
+        $this->head_count = 0;
+        $this->user_id = null;
+        $this->file_path = null;
+
+        $this->save();
+
+        $this->auditMdaSchedule->payScheduleWasCleared();
     }
 }

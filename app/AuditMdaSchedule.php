@@ -91,6 +91,8 @@ class AuditMdaSchedule extends Model
         $this->uploaded = $this->uploadComplete();
 
         $this->save();
+
+        $this->auditPayrollCategory->auditMdaScheduleWasUpdated();
     }
 
     public function auditAutopayWasUploaded()
@@ -117,5 +119,15 @@ class AuditMdaSchedule extends Model
     public function autopayItemCount()
     {
         return $this->auditSubMdaSchedules()->first()->autopayItemCount();
+    }
+
+    public function payScheduleWasCleared()
+    {
+        $this->analysed = false;
+        $this->autopay_generated = false;
+        $this->autopay_uploaded = false;
+
+        $this->save();
+        $this->auditSubMdaScheduleWasUpdated();
     }
 }

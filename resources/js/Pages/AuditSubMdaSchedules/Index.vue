@@ -81,6 +81,12 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
+                                <form v-show="schedule.uploaded"
+                                      @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
+                                      class="inline" :key="schedule.id">
+                                    <button type="submit" class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">Re-upload</button>
+                                </form>
+
                                 <inertia-link v-if="schedule.uploaded" :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})" class="px-5 py-3">
                                     View Details
                                 </inertia-link>
@@ -147,6 +153,17 @@
 
                 this.$inertia.post(this.route('audit_pay_schedules.store'), data)
             },
+
+            reupload(audit_sub_mda, mda_name){
+
+                let result = confirm('Confirm Re-Upload for' + mda_name);
+
+                if(result) {
+                    var data = new FormData();
+                    this.$inertia.post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}),
+                        data, {preserveScroll: true,})
+                }
+            }
         }
     }
 </script>

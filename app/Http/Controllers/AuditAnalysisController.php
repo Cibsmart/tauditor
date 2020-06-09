@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditReport;
 use App\AuditPayroll;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Str;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\Actions\AuditPayScheduleAction;
+use App\Jobs\GenerateReportBeneficiaries;
 use function back;
+use function public_path;
 use function number_format;
 
 class AuditAnalysisController extends Controller
@@ -42,6 +46,32 @@ class AuditAnalysisController extends Controller
         return Inertia::render('AuditAnalysis/Index', [
             'payrolls' => $payrolls,
         ]);
+    }
+
+    public function pdfReport(AuditPayrollCategory $audit_payroll_category)
+    {
+        $reports = $audit_payroll_category->auditReports()
+                                          ->select(DB::raw('reportable_type, reportable_id'))
+                                          ->groupBy('reportable_type', 'reportable_id')
+                                          ->where('reportable_type', 'audit_pay_schedule')
+                                          ->orderBy('reportable_id')
+                                          ->get();
+
+        $data = ['reports' => $reports, 'category' => $audit_payroll_category];
+
+        $pdf = App::make('snappy.pdf.wrapper');
+
+        $pdf->loadView('reports.analysis_report', $data)
+            ->setPaper('a4')
+            ->setOrientation('landscape')
+            ->setOption('dpi', 150)
+            ->setOption('footer-center', 'Page [page] of [toPage]')
+            ->setOption('footer-font-name', 'san-serif')
+            ->setOption('footer-font-size', 8)
+            ->setOption('footer-right', '[isodate] [time]')
+            ->setOption('footer-left', $audit_payroll_category->payment_title);
+
+        return $pdf->download('ANALYSIS REPORT - ' . $audit_payroll_category->payment_title . '.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
@@ -97,6 +127,7 @@ class AuditAnalysisController extends Controller
 
         return Inertia::render('AuditAnalysis/Show', [
             'reports' => $reports,
+            'audit_payroll_category' => $audit_payroll_category->id,
         ]);
     }
 }
