@@ -78,6 +78,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_pay_schedules.')->group(function () {
         Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
+        Route::post('audit_pay_schedules/{audit_sub_mda_schedule}/destroy', [AuditPayScheduleController::class, 'destroy'])->name('destroy');
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });
@@ -109,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
         Route::get('audit_analysis/{audit_payroll_category}/show', [AuditAnalysisController::class, 'show'])->name('show');
+        Route::get('audit_analysis/{audit_payroll_category}/report', [AuditAnalysisController::class, 'pdfReport'])->name('pdf_report');
         Route::post('audit_analysis/{audit_payroll_category}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
     });
 });

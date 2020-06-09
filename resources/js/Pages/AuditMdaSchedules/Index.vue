@@ -82,6 +82,13 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
+                                <form v-show="schedule.uploaded && ! schedule.has_sub"
+                                      @submit.prevent="reupload(schedule.sub_mda_id, schedule.mda_name)"
+                                      class="inline"
+                                      :key="schedule.id + schedule.sub_mda_id">
+                                    <button type="submit" class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">Re-upload</button>
+                                </form>
+
 <!--                                View Sub MDA Details for MDA with Sub MDAs-->
                                 <inertia-link v-if="schedule.uploaded && schedule.has_sub" :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule: schedule.id})" class="px-5 py-3">
                                     View Details
@@ -149,14 +156,25 @@
         methods: {
             upload(audit_sub_mda){
 
-                var data = new FormData()
-                data.append('audit_sub_mda', audit_sub_mda || '')
-                data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '')
+                var data = new FormData();
+                data.append('audit_sub_mda', audit_sub_mda || '');
+                data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '');
 
                 this.$inertia.post(this.route('audit_pay_schedules.store'), data, {
                     preserveScroll: true,
                 })
             },
+
+            reupload(audit_sub_mda, mda_name){
+
+                let result = confirm('Confirm Re-Upload for' + mda_name);
+
+                if(result) {
+                    var data = new FormData();
+                    this.$inertia.post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}),
+                        data, {preserveScroll: true,})
+                }
+            }
         }
     }
 </script>
