@@ -21,7 +21,7 @@
             <h4>Payment Title: {{ $category->payment_title }}</h4>
         </div>
         <hr style="" />
-        <table class="table table-striped table-condensed">
+        <table class="table table-striped table-condensed" style="font-family: sans-serif; font-size: 12px">
             <thead>
             <tr class="">
                 <th class="">
@@ -118,11 +118,5 @@
             </tbody>
         </table>
     </div>
-    <script type="text/php">
-        if ( isset($pdf) ) {
-            $pdf->page_text(30, ($pdf->get_height() - 26.89), "Date Printed: " . date('d M Y H:i:s'), null, 8);
-            $pdf->page_text(($pdf->get_width() - 84), ($pdf->get_height() - 26.89), "Page {PAGE_NUM} of {PAGE_COUNT}", null, 8);
-        }
-</script>
 </body>
 </html>

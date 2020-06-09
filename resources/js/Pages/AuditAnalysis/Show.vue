@@ -6,8 +6,9 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <a :href="route('audit_analysis.pdf_report', {audit_payroll_category: audit_payroll_category})" class="btn btn-big btn-indigo">
-                <span class="hidden md:inline">Download PDF</span>
+            <a :href="route('audit_analysis.pdf_report', {audit_payroll_category: audit_payroll_category})"
+               class="btn btn-big btn-indigo">
+                Download<span class="hidden md:inline">&nbsp; PDF</span>
             </a>
         </div>
 
