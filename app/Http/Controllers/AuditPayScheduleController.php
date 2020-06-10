@@ -119,6 +119,7 @@ class AuditPayScheduleController extends Controller
         //Delete Pay Schedules, Autopay and Analysis Report
         $audit_sub_mda_schedule->auditPaySchedules()->delete();
         $audit_sub_mda_schedule->autopaySchedules()->delete();
+        $audit_sub_mda_schedule->microfinanceSchedules()->delete();
         $audit_sub_mda_schedule->auditReports()->delete();
 
         //Notify Sub MDA Schedule that there is an update
