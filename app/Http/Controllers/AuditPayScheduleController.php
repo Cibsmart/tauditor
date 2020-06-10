@@ -107,6 +107,15 @@ class AuditPayScheduleController extends Controller
      */
     public function destroy(AuditSubMdaSchedule $audit_sub_mda_schedule)
     {
+        $archived = $audit_sub_mda_schedule->auditMdaSchedule
+                                            ->auditPayrollCategory
+                                            ->auditPayroll
+                                            ->month !== now()->month;
+
+        if ($archived) {
+            return redirect()->back()->with('error', 'You Cannot Re-Upload Archived Pay Schedules');
+        }
+
         //Delete Pay Schedules, Autopay and Analysis Report
         $audit_sub_mda_schedule->auditPaySchedules()->delete();
         $audit_sub_mda_schedule->autopaySchedules()->delete();

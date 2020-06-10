@@ -82,7 +82,7 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <form v-show="schedule.uploaded && ! schedule.has_sub"
+                                <form v-show="schedule.uploaded && ! schedule.has_sub && ! schedule.archived"
                                       @submit.prevent="reupload(schedule.sub_mda_id, schedule.mda_name)"
                                       class="inline"
                                       :key="schedule.id + schedule.sub_mda_id">

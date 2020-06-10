@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditMdaSchedule;
 use App\AuditPayrollCategory;
+use function now;
 use function auth;
 use function redirect;
 use function number_format;
@@ -22,6 +23,8 @@ class AuditMdaScheduleController extends Controller
         if ($audit_payroll_category->domain()->id !== auth()->user()->domain->id) {
             return redirect(route('audit_payroll.index'));
         }
+
+        $archived = $audit_payroll_category->auditPayroll->month !== now()->month;
 
         $schedules = $audit_payroll_category->auditMdaSchedules()->orderBy('mda_name')
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
@@ -41,6 +44,7 @@ class AuditMdaScheduleController extends Controller
                                                 'pension'      => $schedule->pension,
                                                 'has_sub'      => $schedule->has_sub,
                                                 'domain'       => $schedule->auditPayrollCategory->auditPayroll->domain->name,
+                                                'archived'     => $archived,
                                             ]);
 
         return Inertia::render('AuditMdaSchedules/Index', [
