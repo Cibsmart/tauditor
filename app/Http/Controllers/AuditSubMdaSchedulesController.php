@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditMdaSchedule;
 use App\AuditSubMdaSchedule;
+use function now;
 use function auth;
 use function route;
 use function redirect;
@@ -27,6 +28,8 @@ class AuditSubMdaSchedulesController extends Controller
             return redirect(route('audit_payroll.index'));
         }
 
+        $archived = $audit_mda_schedule->auditPayrollCategory->auditPayroll->month !== now()->month;
+
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
@@ -39,6 +42,7 @@ class AuditSubMdaSchedulesController extends Controller
                                             'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
                                             'uploaded'     => $schedule->uploaded,
                                             'mda_name'     => $audit_mda_schedule->mda_name,
+                                            'archived'     => $archived,
                                         ]);
 
         return Inertia::render('AuditSubMdaSchedules/Index', [
