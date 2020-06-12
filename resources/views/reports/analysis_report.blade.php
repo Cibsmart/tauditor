@@ -40,28 +40,23 @@
 
     @foreach($report->reportable->auditReports as $rep)
         @if($loop->index == 0)
-            @php
-                $current = collect($rep->current_value);
-                $previous = collect($rep->previous_value);
-            @endphp
         <td class="" style="width:250px">
             <div class="" >{{ $rep->message }}</div>
         </td>
         <td class="">
             <div class="" >
-                @if(count($current) > 0)
-                    { @foreach($current as $key => $value)
-                        {{ $key . ':' . $value . ' ' }}
-                    @endforeach }
+                @if(collect($rep->current_value)->isNotEmpty())
+                    { @foreach(collect($rep->current_value) as $key => $value)
+                            {{ $key . ':' . $value . ', ' }}
+                        @endforeach }
                 @endif
-            </div>
         </td>
         <td class="">
             <div class="" >
-                @if(count($previous) > 0)
-                    { @foreach($previous as $key => $value)
-                        {{ $key . ':' . $value . ' ' }}
-                    @endforeach }
+                @if(collect($rep->previous_value)->isNotEmpty())
+                    { @foreach(collect($rep->previous_value) as $key => $value)
+                            {{ $key . ':' . $value . ', ' }}
+                        @endforeach }
                 @endif
             </div>
         </td>
@@ -73,19 +68,19 @@
             </td>
             <td class="">
                 <div class="" >
-                    @if(count($current) > 0)
-                        { @foreach($current as $key => $value)
-                            {{ $key . ':' . $value . ' ' }}
-                        @endforeach }
+                    @if(collect($rep->current_value)->isNotEmpty())
+                        { @foreach(collect($rep->current_value) as $key => $value)
+                                {{ $key . ':' . $value . ', ' }}
+                            @endforeach }
                     @endif
                 </div>
             </td>
             <td class="">
                 <div class="" >
-                    @if(count($previous) > 0)
-                        { @foreach($previous as $key => $value)
-                            {{ $key . ':' . $value . ' ' }}
-                        @endforeach }
+                    @if(collect($rep->previous_value)->isNotEmpty())
+                        { @foreach(collect($rep->previous_value) as $key => $value)
+                                {{ $key . ':' . $value . ', ' }}
+                            @endforeach }
                     @endif
                 </div>
             </td>
