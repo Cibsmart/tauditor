@@ -85,7 +85,7 @@ class AuditAnalysisController extends Controller
             ->setOption('footer-right', '[isodate] [time]')
             ->setOption('footer-left', $audit_payroll_category->payment_title);
 
-        return $pdf->download('ANALYSIS REPORT - '.$audit_payroll_category->payment_title.'.pdf');
+        return $pdf->stream('ANALYSIS REPORT - '.$audit_payroll_category->payment_title.'.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
