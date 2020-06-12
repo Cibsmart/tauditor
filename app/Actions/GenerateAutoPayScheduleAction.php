@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\MicroFinanceBank;
 use Illuminate\Support\Str;
 use App\AuditSubMdaSchedule;
+use Illuminate\Support\Facades\DB;
 use function dd;
 use function uniqid;
 
@@ -39,7 +40,11 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        $this->generateAutoPaySchedule();
+        DB::transaction(function () use ($sub_mda) {
+            $this->generateAutoPaySchedule();
+        });
+
+        $this->sub_mda->autopayGenerated();
     }
 
     private function generateAutoPaySchedule()

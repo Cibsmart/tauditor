@@ -43,6 +43,32 @@ class AuditPayrollCategory extends Model
         return $this->auditPayroll->domain;
     }
 
+    public function mdaCount()
+    {
+        return $this->auditMdaSchedules->count();
+    }
+
+    public function countOfMdasSchedulesUploaded()
+    {
+        return $this->auditMdaSchedules()
+                    ->where('uploaded', '=', 1)
+                    ->count();
+    }
+
+    public function countOfMdasAnalysed()
+    {
+        return $this->auditMdaSchedules()
+                    ->where('analysed', '=', 1)
+                    ->count();
+    }
+
+    public function countOfMdasAutopayGenerated()
+    {
+        return $this->auditMdaSchedules()
+                    ->where('autopay_generated', '=', 1)
+                    ->count();
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
@@ -57,6 +83,70 @@ class AuditPayrollCategory extends Model
     {
         $this->total_net_pay = $this->auditMdaSchedules()->sum('total_net_pay') / 100;
         $this->head_count = $this->auditMdaSchedules()->sum('head_count');
+        $this->setAnalysisStatus('pending');
+        $this->setAutopayStatus('pending');
+
+        $this->save();
+    }
+
+    public function analysisIsComplete()
+    {
+        return $this->auditMdaSchedules()->where('analysed', 0)->doesntExist();
+    }
+
+    public function autopayGenerationIsComplete()
+    {
+        return $this->auditMdaSchedules()->where('autopay_generated', 0)->doesntExist();
+    }
+
+    public function analysisIsRunning()
+    {
+        return $this->auditMdaSchedules()
+                    ->where('analysed', 0)
+                    ->where('uploaded', 1)
+                    ->exists();
+    }
+
+    public function autopayGenerationIsRunning()
+    {
+        return $this->auditMdaSchedules()
+                    ->where('autopay_generated', 0)
+                    ->where('uploaded', 1)
+                    ->exists();
+    }
+
+    public function analysisStatusWasUpdated()
+    {
+        if ($this->analysisIsRunning()) {
+            return;
+        }
+
+        $status = $this->analysisIsComplete() ? 'completed' : 'incomplete';
+
+        $this->setAnalysisStatus($status);
+    }
+
+    public function autopayStatusWasUpdated()
+    {
+        if ($this->autopayGenerationIsRunning()) {
+            return;
+        }
+
+        $status = $this->autopayGenerationIsComplete() ? 'completed' : 'incomplete';
+
+        $this->setAutopayStatus($status);
+    }
+
+    public function setAnalysisStatus($status)
+    {
+        $this->analysis_status =  $status;
+
+        $this->save();
+    }
+
+    public function setAutopayStatus($status)
+    {
+        $this->autopay_status  =  $status;
 
         $this->save();
     }
