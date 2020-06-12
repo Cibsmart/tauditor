@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\AuditMdaSchedule;
 use App\AuditSubMdaSchedule;
+use App\AuditPayrollCategory;
 use function now;
 use function auth;
 use function route;
@@ -28,8 +29,6 @@ class AuditSubMdaSchedulesController extends Controller
             return redirect(route('audit_payroll.index'));
         }
 
-        $archived = $audit_mda_schedule->auditPayrollCategory->auditPayroll->month !== now()->month;
-
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
@@ -42,12 +41,20 @@ class AuditSubMdaSchedulesController extends Controller
                                             'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
                                             'uploaded'     => $schedule->uploaded,
                                             'mda_name'     => $audit_mda_schedule->mda_name,
-                                            'archived'     => $archived,
+                                            'archived'     => $this->isArchived($audit_mda_schedule),
                                         ]);
 
         return Inertia::render('AuditSubMdaSchedules/Index', [
             'schedules'              => $schedules,
             'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
+    }
+
+    protected function isArchived(AuditMdaSchedule $audit_mda_schedule)
+    {
+        $now = now();
+        $payroll = $audit_mda_schedule->auditPayrollCategory->auditPayroll;
+
+        return $payroll->month !== $now->month || $payroll->year !== $now->year;
     }
 }

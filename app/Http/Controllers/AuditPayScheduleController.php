@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
 use function dd;
+use function now;
 use function redirect;
 
 class AuditPayScheduleController extends Controller
@@ -107,23 +108,27 @@ class AuditPayScheduleController extends Controller
      */
     public function destroy(AuditSubMdaSchedule $audit_sub_mda_schedule)
     {
-        $archived = $audit_sub_mda_schedule->auditMdaSchedule
-                                            ->auditPayrollCategory
-                                            ->auditPayroll
-                                            ->month !== now()->month;
-
-        if ($archived) {
+        if ($this->isArchived($audit_sub_mda_schedule)) {
             return redirect()->back()->with('error', 'You Cannot Re-Upload Archived Pay Schedules');
         }
 
         //Delete Pay Schedules, Autopay and Analysis Report
         $audit_sub_mda_schedule->auditPaySchedules()->delete();
         $audit_sub_mda_schedule->autopaySchedules()->delete();
+        $audit_sub_mda_schedule->microfinanceSchedules()->delete();
         $audit_sub_mda_schedule->auditReports()->delete();
 
         //Notify Sub MDA Schedule that there is an update
         $audit_sub_mda_schedule->payScheduleWasCleared();
 
         return redirect()->back()->with('success', 'Pay Schedule Successfully Cleared and Ready for Re-Upload');
+    }
+
+    protected function isArchived(AuditSubMdaSchedule $audit_sub_mda_schedule)
+    {
+        $now = now();
+        $payroll = $audit_sub_mda_schedule->auditMdaSchedule->auditPayrollCategory->auditPayroll;
+
+        return $payroll->month !== $now->month || $payroll->year !== $now->year;
     }
 }

@@ -59,20 +59,51 @@
                                     <tr v-for="category in payroll.categories" :key="category.id">
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
                                             {{ category.payment_title }}
-                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full"
+                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full uppercase"
                                                   :class="category.payment_type_id === 'sal' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'">
                                              {{ category.payment_type }}
                                            </span>
                                         </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            MDA Count:
+                                            <span class="font-bold">
+                                                {{ category.mda_count }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            Uploaded:
+                                            <span class="font-bold">
+                                                {{ category.uploaded_count }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            Analysed:
+                                            <span class="font-bold">
+                                                {{ category.analysed_count }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full uppercase"
+                                                  :class="status[category.analysis_status]">
+                                             {{ category.analysis_status }}
+                                           </span>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <inertia-link :href="route('audit_analysis.analyse', { audit_payroll_category: category.id })"
-                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                            <inertia-link v-show="category.analysable"
+                                                :href="route('audit_analysis.analyse', { audit_payroll_category: category.id })"
+                                                method="post" class="px-5 py-3" preserve-state preserve-scroll>
                                                 Analyse
                                             </inertia-link>
 
-                                            <span> | </span>
+                                            <inertia-link v-show="category.refreshable"
+                                                          :href="route('audit_analysis.index')"
+                                                          class="px-5 py-3" preserve-state preserve-scroll>
+                                                Refresh
+                                            </inertia-link>
 
-                                            <inertia-link :href="route('audit_analysis.show', { audit_payroll_category: category.id })"
+                                            <span v-show="category.analysable && category.viewable"> | </span>
+
+                                            <inertia-link v-show="category.viewable" :href="route('audit_analysis.show', { audit_payroll_category: category.id })"
                                                           class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Reports
                                             </inertia-link>
@@ -118,6 +149,12 @@
 
         data(){
             return {
+                status: {
+                    pending: 'bg-yellow-100 text-yellow-800',
+                    running: 'bg-pink-100 text-pink-800',
+                    completed: 'bg-green-100 text-green-800',
+                    incomplete: 'bg-blue-100 text-blue-800',
+                },
                 show_detail: [],
             }
         },
@@ -125,7 +162,7 @@
         methods: {
             show(payroll){
                 this.show_detail[payroll] = !this.show_detail[payroll]
-            }
+            },
         },
     }
 </script>

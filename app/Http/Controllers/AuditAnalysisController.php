@@ -8,14 +8,11 @@ use App\AuditPayroll;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Str;
 use App\AuditPayrollCategory;
+use App\Jobs\AnalysePaySchedules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\AuditPayScheduleAction;
-use App\Jobs\GenerateReportBeneficiaries;
 use function back;
-use function public_path;
-use function number_format;
 
 class AuditAnalysisController extends Controller
 {
@@ -26,7 +23,9 @@ class AuditAnalysisController extends Controller
 
     public function index()
     {
-        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
+        $payrolls = Auth::user()->auditPayrolls()
+                        ->orderBy('year', 'desc')
+                        ->orderBy('month', 'desc')
                         ->paginate()
                         ->transform(fn (AuditPayroll $payroll) => [
                             'id'                => $payroll->id,
@@ -35,12 +34,27 @@ class AuditAnalysisController extends Controller
                             'created_by'        => $payroll->createdBy(),
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
-                            'categories'        => $payroll->auditPaymentCategories->transform(fn ($category) => [
-                                'id'              => $category->id,
-                                'payment_type_id' => $category->payment_type_id,
-                                'payment_type'    => $category->paymentTypeName(),
-                                'payment_title'   => $category->payment_title,
-                            ]),
+                            'categories'        => $payroll->auditPaymentCategories
+                                ->transform(function ($category) {
+                                    $uploaded_count = $category->countOfMdasSchedulesUploaded();
+                                    $analysed_count = $category->countOfMdasAnalysed();
+                                    $status = $category->analysis_status;
+                                    $available = $uploaded_count - $analysed_count > 0;
+
+                                    return [
+                                        'id'              => $category->id,
+                                        'payment_type_id' => $category->payment_type_id,
+                                        'payment_type'    => $category->paymentTypeName(),
+                                        'payment_title'   => $category->payment_title,
+                                        'analysis_status' => $status,
+                                        'mda_count'       => $category->mdaCount(),
+                                        'uploaded_count'  => $uploaded_count,
+                                        'analysed_count'  => $analysed_count,
+                                        'analysable'      => $available && $status !== 'running',
+                                        'viewable'        => $analysed_count > 0,
+                                        'refreshable'     => $available && $status === 'running',
+                                    ];
+                                }),
                         ]);
 
         return Inertia::render('AuditAnalysis/Index', [
@@ -71,35 +85,34 @@ class AuditAnalysisController extends Controller
             ->setOption('footer-right', '[isodate] [time]')
             ->setOption('footer-left', $audit_payroll_category->payment_title);
 
-        return $pdf->download('ANALYSIS REPORT - ' . $audit_payroll_category->payment_title . '.pdf');
+        return $pdf->download('ANALYSIS REPORT - '.$audit_payroll_category->payment_title.'.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
     {
         $mdas = $audit_payroll_category->auditMdaSchedules;
         $title = $audit_payroll_category->payment_title;
-        $message = "Analysis Report Generated for $title ";
         $count = 0;
+
+        if ($audit_payroll_category->analysis_status !== 'pending') {
+            $message = "No [New] Schedule Has Been Uploaded for $title";
+            return back()->with('error', $message);
+        }
+
+        $audit_payroll_category->setAnalysisStatus('running');
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
 
-
             foreach ($sub_mdas as $sub_mda) {
-                (new AuditPayScheduleAction)->execute($sub_mda);
-
+                AnalysePaySchedules::dispatch($sub_mda);
                 $count++;
             }
         }
 
-        if ($count === 0) {
-            $message = "No New Schedule Has Been Uploaded for $title";
-            return back()->with('error', $message);
-        }
-
         $mda_string = Str::plural('MDA', $count);
 
-        $message = "$message, $count $mda_string Affected, View Report for Details";
+        $message = "Analysis Report for $count $mda_string in $title is Running, Refresh for Update";
 
         return back()->with('success', $message);
     }
@@ -107,26 +120,28 @@ class AuditAnalysisController extends Controller
     public function show(AuditPayrollCategory $audit_payroll_category)
     {
         $reports = $audit_payroll_category->auditReports()
-                                 ->select(DB::raw('reportable_type, reportable_id'))
-                                 ->groupBy('reportable_type', 'reportable_id')
-                                 ->where('reportable_type', 'audit_pay_schedule')
-                                 ->paginate()
-                                 ->transform(fn (AuditReport $report) => [
-                                     'schedule' => $report->reportable->only(
-                                         'beneficiary_name',
-                                         'verification_number',
-                                         'pension'
-                                     ),
-                                     'reports'  => $report->reportable->auditReports->map(fn ($rep) => $rep->only(
-                                         'id',
-                                         'message',
-                                         'current_value',
-                                         'previous_value'
-                                     )),
-                                 ]);
+                                          ->select(DB::raw('reportable_type, reportable_id'))
+                                          ->groupBy('reportable_type', 'reportable_id')
+                                          ->where('reportable_type', 'audit_pay_schedule')
+                                          ->paginate()
+                                          ->transform(fn (AuditReport $report) => [
+                                              'schedule' => $report->reportable->only(
+                                                  'beneficiary_name',
+                                                  'verification_number',
+                                                  'pension'
+                                              ),
+                                              'reports'  => $report->reportable->auditReports->map(fn (
+                                                  $rep
+                                              ) => $rep->only(
+                                                  'id',
+                                                  'message',
+                                                  'current_value',
+                                                  'previous_value'
+                                              )),
+                                          ]);
 
         return Inertia::render('AuditAnalysis/Show', [
-            'reports' => $reports,
+            'reports'                => $reports,
             'audit_payroll_category' => $audit_payroll_category->id,
         ]);
     }
