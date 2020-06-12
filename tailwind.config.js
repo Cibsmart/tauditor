@@ -29,7 +29,7 @@ module.exports = {
         },
     },
     variants: {
-        textColor: ['responsive', 'hover', 'focus'],
+        textColor: ['responsive', 'hover', 'focus', 'group-hover'],
         borderColor: ['responsive', 'hover', 'focus'],
     },
     plugins: [

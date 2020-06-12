@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
+use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
 use function back;
@@ -39,12 +40,27 @@ class AuditAutopayController extends Controller
                             'created_by'        => $payroll->createdBy(),
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
-                            'categories'        => $payroll->auditPaymentCategories->transform(fn ($category) => [
-                                'id'              => $category->id,
-                                'payment_type_id' => $category->payment_type_id,
-                                'payment_type'    => $category->paymentTypeName(),
-                                'payment_title'   => $category->payment_title,
-                            ]),
+                            'categories'        => $payroll->auditPaymentCategories
+                                ->transform(function ($category) {
+                                    $uploaded_count = $category->countOfMdasSchedulesUploaded();
+                                    $autopay_count = $category->countOfMdasAutopayGenerated();
+                                    $status = $category->autopay_status;
+                                    $available = $uploaded_count - $autopay_count > 0;
+
+                                    return [
+                                        'id'              => $category->id,
+                                        'payment_type_id' => $category->payment_type_id,
+                                        'payment_type'    => $category->paymentTypeName(),
+                                        'payment_title'   => $category->payment_title,
+                                        'autopay_status'  => $category->autopay_status,
+                                        'mda_count'       => $category->mdaCount(),
+                                        'uploaded_count'  => $uploaded_count,
+                                        'autopay_count'   => $autopay_count,
+                                        'can_generate'     => $available && $status !== 'running',
+                                        'viewable'        => $autopay_count > 0,
+                                        'refreshable'     => $available && $status === 'running',
+                                    ];
+                                }),
                         ]);
 
         return Inertia::render('AuditAutoPay/Index', [
@@ -101,7 +117,7 @@ class AuditAutopayController extends Controller
                                             'month'        => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
                                             'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
                                             'uploaded'     => $schedule->autopay_uploaded,
-                                            'generated'     => $schedule->autopay_generated,
+                                            'generated'    => $schedule->autopay_generated,
                                             'mda_name'     => $audit_mda_schedule->mda_name,
                                         ]);
 
@@ -115,30 +131,27 @@ class AuditAutopayController extends Controller
     {
         $mdas = $audit_payroll_category->auditMdaSchedules;
         $title = $audit_payroll_category->payment_title;
-        $message = "Autopay Schedules Generated for $title ";
         $count = 0;
+
+        if ($audit_payroll_category->autopay_status !== 'pending') {
+            $message = "No [New] Schedule Has Been Uploaded for $title";
+            return back()->with('error', $message);
+        }
+
+        $audit_payroll_category->setAutopayStatus('running');
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->autopayNotGenerated()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-                DB::transaction(function () use ($sub_mda) {
-                    (new GenerateAutoPayScheduleAction())->execute($sub_mda);
-                });
-
-                $sub_mda->autopayGenerated();
+                GenerateAutopaySchedules::dispatch($sub_mda);
                 $count++;
             }
         }
 
-        if ($count === 0) {
-            $message = "No New Schedule Has Been Uploaded for $title";
-            return back()->with('error', $message);
-        }
-
         $mda_string = Str::plural('MDA', $count);
 
-        $message = "$message, $count $mda_string Affected, View MDAs for Details";
+        $message = "Autopay Schedule Generation for $count $mda_string in $title is Running, Refresh for Update";
 
         return back()->with('success', $message);
     }
