@@ -117,10 +117,10 @@ abstract class AuditCheckable
     private function previousSchedules()
     {
         return AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
-                               ->where('month', '<', $this->month)
-                               ->latest('month')
-                               ->take(12)
-                               ->get();
+                                ->whereMonthLessThan($this->month)
+                                ->orderByMonth()
+                                ->take(12)
+                                ->get();
     }
 
     protected function hasNoPreviousSchedule()
