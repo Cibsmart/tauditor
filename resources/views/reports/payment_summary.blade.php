@@ -2,10 +2,10 @@
 
 @section('title', 'Payment Summary Report')
 
-@section('heading', 'Payment Summary Report')
+@section('heading', 'HRMEdge Payment Summary Report')
 
 @section('sub_heading')
-    {{ 'Summary Report for: ' . $category->payment_title }}
+    {{ $filename }}
 @endsection
 
 @section('body')
@@ -16,89 +16,59 @@
                 SN
             </th>
             <th class="">
-                Beneficiary
+                Payment Category
             </th>
             <th class="">
-                Report
+                Total Net Pay
             </th>
             <th class="">
-                Current Value
-            </th>
-            <th class="">
-                Previous Value
+                Head Count
             </th>
         </tr>
         </thead>
         <tbody class="">
-        @forelse($reports as $report)
+        @forelse($categories as $category)
             <tr>
-                <td style="width:50px" rowspan="{{ $report->reportable->auditReports->count() }}">{{ $loop->index + 1 }}</td>
-                <td class="" style="width:250px" rowspan="{{ $report->reportable->auditReports->count() }}">
-                    <div class="" >{{ $report->reportable->beneficiary_name }}</div>
-                    <div class="">{{ $report->reportable->verification_number }}</div>
+                <td style="width:50px">{{ $loop->index + 1 }}</td>
+
+                <td class="" style="">
+                    <div class="" >{{ $category->payment_title }}</div>
                 </td>
 
-                @foreach($report->reportable->auditReports as $rep)
-                    @if($loop->index == 0)
-                        @php
-                            $current = collect($rep->current_value);
-                            $previous = collect($rep->previous_value);
-                        @endphp
-                        <td class="" style="width:250px">
-                            <div class="" >{{ $rep->message }}</div>
-                        </td>
-                        <td class="">
-                            <div class="" >
-                                @if(count($current) > 0)
-                                    { @foreach($current as $key => $value)
-                                        {{ $key . ':' . $value . ' ' }}
-                                    @endforeach }
-                                @endif
-                            </div>
-                        </td>
-                        <td class="">
-                            <div class="" >
-                                @if(count($previous) > 0)
-                                    { @foreach($previous as $key => $value)
-                                        {{ $key . ':' . $value . ' ' }}
-                                    @endforeach }
-                                @endif
-                            </div>
-                        </td>
+                <td class="" style="">
+                    <div class="" >
+                        <span class="line-through">N</span>
+                        {{ number_format($category->total_net_pay, 2) }}
+                    </div>
+                </td>
+
+                <td class="" style="">
+                    <div class="" >{{ number_format($category->head_count) }}</div>
+                </td>
             </tr>
-            @else
-                <tr>
-                    <td class="">
-                        <div class="" style="width:250px">{{ $rep->message }}</div>
-                    </td>
-                    <td class="">
-                        <div class="" >
-                            @if(count($current) > 0)
-                                { @foreach($current as $key => $value)
-                                    {{ $key . ':' . $value . ' ' }}
-                                @endforeach }
-                            @endif
-                        </div>
-                    </td>
-                    <td class="">
-                        <div class="" >
-                            @if(count($previous) > 0)
-                                { @foreach($previous as $key => $value)
-                                    {{ $key . ':' . $value . ' ' }}
-                                @endforeach }
-                            @endif
-                        </div>
-                    </td>
-                </tr>
-            @endif
-            @endforeach
         @empty
             <tr>
-                <td colspan="6" class="">
-                    No Audit Report
+                <td colspan="4" class="">
+                    No Payment Summary
                 </td>
             </tr>
         @endforelse
+        <tr>
+            <td class="" style="font-weight: bolder" colspan="2">
+                <div class="" >{{ 'Total' }}</div>
+            </td>
+
+            <td class="" style="font-weight: bolder">
+                <div class="" >
+                    <span class="line-through">N</span>
+                    {{ number_format($payroll->totalNetPay(), 2) }}
+                </div>
+            </td>
+
+            <td class="" style="font-weight: bolder">
+                <div class="" >{{ number_format($payroll->headCount()) }}</div>
+            </td>
+        </tr>
         </tbody>
     </table>
 @endsection

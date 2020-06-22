@@ -47,10 +47,14 @@ class AuditPayrollController extends Controller
 
         $user = Auth::user();
 
+        $month_name = Str::upper($date->monthName);
+        $year = $date->year;
+
         $attributes = [
             'month'      => $date->month,
-            'month_name' => $date->monthName,
-            'year'       => $date->year,
+            'month_name' => $month_name,
+            'year'       => $year,
+            'timestamp'  => Carbon::parse("25 $month_name $year"),
         ];
 
         $payroll = $user->auditPayrolls()->where($attributes)->first();

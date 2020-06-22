@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\InterswitchController;
@@ -127,6 +128,30 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+
+/*
+|-------------------------------------------------------------------------------
+| Report Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('reports.')->group(function () {
+        Route::get('report/summary_report', [ReportsController::class, 'summaryView'])->name('summary_view');
+        Route::post('report/summary_report', [ReportsController::class, 'summaryView'])->name('summary_post');
+        Route::get('report/{payroll}/summary_report_pdf', [ReportsController::class, 'summaryPrint'])->name('summary_print');
+
+        Route::get('report/mda_report', [ReportsController::class, 'mdaView'])->name('mda_view');
+        Route::post('report/mda_report', [ReportsController::class, 'mdaView'])->name('mda_post');
+        Route::get('report/{category}/mda_report_pdf', [ReportsController::class, 'mdaPrint'])->name('mda_print');
+    });
+});
+
+
+/*
+|-------------------------------------------------------------------------------
+| API Token Routes
+|-------------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function () {
     Route::name('token.')->group(function () {
         Route::get('users/token', [CreateUserTokenController::class, 'create'])->name('token');

@@ -99,9 +99,9 @@ export default{
 
           reports: { id: 7, name: 'reports',  label: 'Reports', icon: 'printer', active: false,
               subs: {
-                  summary: { id: 1, label: 'Payment Summary', uri: this.uri('audit_payroll.index'), },
+                  summary: { id: 1, label: 'Payment Summary', uri: this.uri('reports.summary_view'), },
                   category: { id: 2, label: 'Category Report', uri: this.uri('audit_payroll.index'), },
-                  mda: { id: 3, label: 'MDA Report', uri: this.uri('audit_payroll.index'), },
+                  mda: { id: 3, label: 'MDA Report', uri: this.uri('reports.mda_view'), },
                   beneficiary: { id: 4, label: 'Beneficiary Report', uri: this.uri('audit_payroll.index'), },
               }
           },

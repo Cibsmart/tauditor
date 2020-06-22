@@ -2,11 +2,18 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @method static first($payroll)
+ * @method static find($payroll)
+ * @method whereRaw(string $string, array $array)
+ * @method where(string $string, string $string1, string $string2)
+ */
 class AuditPayroll extends Model
 {
     use SoftDeletes;
@@ -14,6 +21,7 @@ class AuditPayroll extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'timestamp'         => 'datetime',
         'analysed'          => 'boolean',
         'autopay_generated' => 'boolean',
     ];
@@ -56,6 +64,33 @@ class AuditPayroll extends Model
     public function getTotalNetPayAttribute(?int $value = 0) : float
     {
         return $value / 100;
+    }
+
+    public function totalNetPay()
+    {
+        return $this->auditPaymentCategories->sum('total_net_pay');
+    }
+
+    public function headCount()
+    {
+        return $this->auditPaymentCategories->sum('head_count');
+    }
+
+    public function scopeOrderByTimestamp($query)
+    {
+        return $query->orderByRaw('date_format(timestamp, "%Y-%m") DESC');
+    }
+
+    public function scopeWhereTimestampLessThan($query, $date, $domain_id)
+    {
+        return $query->where('domain_id', '=', $domain_id)
+                     ->whereRaw('date_format(timestamp, "%Y-%m") < ?', [$date->format('Y-m')]);
+    }
+
+    public function previousPayroll($domain_id)
+    {
+        return $this->where('domain_id', '=', $domain_id)
+                    ->whereRaw('date_format(timestamp, "%Y-%m") = ?', [$this->timestamp->subMonth()->format('Y-m')])->first();
     }
 
     public function month($abbreviation = false)

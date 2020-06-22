@@ -4,6 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @method static find($category)
+ * @method static where(string $string, string $string1, $prev_payroll)
+ */
 class AuditPayrollCategory extends Model
 {
     protected $guarded = [];
@@ -163,5 +167,19 @@ class AuditPayrollCategory extends Model
         return $this->auditMdaSchedules()->whereHas('auditSubMdaSchedules', function ($query) {
             return $query->whereHas('microfinanceSchedules');
         })->doesntExist();
+    }
+
+    public function previousCategory($domain_id)
+    {
+        $prev_payroll = $this->auditPayroll->previousPayroll($domain_id);
+
+        if (!$prev_payroll) {
+            return null;
+        }
+
+        return AuditPayrollCategory::where('audit_payroll_id', '=', $prev_payroll->id)
+                            ->where('payment_type_id', '=', $this->payment_type_id)
+                            ->where('staff_type', '=', $this->staff_type)
+                            ->first();
     }
 }
