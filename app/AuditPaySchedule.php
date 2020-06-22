@@ -23,10 +23,7 @@ class AuditPaySchedule extends Model
         'pension'    => 'boolean',
         'allowances' => 'array',
         'deductions' => 'array',
-    ];
-
-    protected $dates = [
-        'month',
+        'month'      => 'datetime'
     ];
 
     //A polymorphic relationship to either Bank or Microfinance
@@ -68,6 +65,16 @@ class AuditPaySchedule extends Model
                       ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id')
                       ->where('audit_payrolls.id', '=', $payroll->id)
                       ->where('audit_payroll_categories.staff_type', '=', $staff_type);
+    }
+
+    public function scopeOrderByMonth($query)
+    {
+        return $query->orderByRaw('date_format(month, "%Y-%m") DESC');
+    }
+
+    public function scopeWhereMonthLessThan($query, $date)
+    {
+        return $query->whereRaw('date_format(month, "%Y-%m") < ?', [$date->format('Y-m')]);
     }
 
     public function setAccountNumberAttribute($value)
