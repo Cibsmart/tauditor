@@ -13,7 +13,7 @@
             </select-input>
 
             <select-input v-model="form.category" class="pb-8 w-full"
-                          label="Payroll Month" :errors="$page.errors.category"
+                          label="Payment Category" :errors="$page.errors.category"
                           @input="categoryChanged">
                 <option disabled value="" class="text-gray-100">Select Category</option>
                 <option v-for="category in categories" :key="category.id" :value="category.id">
