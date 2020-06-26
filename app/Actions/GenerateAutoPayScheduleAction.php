@@ -252,18 +252,9 @@ class GenerateAutoPayScheduleAction
 
     private function createNarration($department_name)
     {
-        $domain = $this->domain->code == 'STATE' ? 'ANSG' : 'ANLG';
-
-        $sub_mda_abbr = Str::of($department_name)->explode(' ')
-                           ->map(fn ($word) => Str::limit($word, 1, ''))
-                           ->join('');
-
         return Str::of($this->reference)
                   ->limit(8, '')
-                  ->append('_')
-                  ->append($domain)
-                  ->append('_')
-                  ->append($sub_mda_abbr);
+                  ->append($department_name);
     }
 
     protected static function pad($string, $padding)
