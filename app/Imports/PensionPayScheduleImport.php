@@ -133,8 +133,8 @@ class PensionPayScheduleImport implements OnEachRow
         $bankable_type = $bankable->bankableType();
 
         $account_number = $bankable_type === 'commercial'
-            ? $this->pad($beneficiary['account_no'], 10)
-            : $beneficiary['account_no'];
+            ? $this->pad($beneficiary['account_number'], 10)
+            : $beneficiary['account_number'];
 
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],

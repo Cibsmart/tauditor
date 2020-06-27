@@ -164,7 +164,7 @@ class InterswitchController extends Controller
     {
         $unique_id = uniqid();
 
-        return Str::upper(Str::of($narration)->append('_')
+        return Str::upper(Str::of($narration)
                              ->append($unique_id)
                              ->replace(' ', ''));
     }

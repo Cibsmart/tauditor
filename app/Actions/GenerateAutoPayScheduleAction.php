@@ -254,7 +254,8 @@ class GenerateAutoPayScheduleAction
     {
         return Str::of($this->reference)
                   ->limit(8, '')
-                  ->append($department_name);
+                  ->append($department_name)
+                  ->replace(' ', '');
     }
 
     protected static function pad($string, $padding)
