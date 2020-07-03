@@ -102,6 +102,7 @@ class BeneficiaryController extends Controller
         $schedules = AuditPaySchedule::allSchedules()
                                      ->where('verification_number', $vno)
                                      ->where('year', $year)
+                                     ->orderBY('audit_payrolls.month')
                                      ->get();
 
         if ($schedules->isEmpty()) {
