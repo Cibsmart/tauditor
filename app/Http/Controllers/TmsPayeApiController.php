@@ -23,22 +23,22 @@ class TmsPayeApiController extends Controller
         return $this->middleware('auth');
     }
 
-    public function upload(Request $request)
+    public function upload($category)
     {
-        $category = AuditPayrollCategory::find(6);
+        $category = AuditPayrollCategory::find($category);
 
         $file_name = $this->prepareFile($category);
 
         $response = $this->uploadToApi($category, $file_name);
 
-        dump(
-            $response->status(),
-            $response->json(),
-            $response->successful(),
-            $response->failed(),
-            $response->clientError(),
-            $response->serverError()
-        );
+        dump([
+            'status' => $response->status(),
+            'response' => $response->json(),
+            'successful' => $response->successful(),
+            'failed' => $response->failed(),
+            'client' => $response->clientError(),
+            'server' => $response->serverError()
+        ]);
 
         return 'Done: ';
     }
