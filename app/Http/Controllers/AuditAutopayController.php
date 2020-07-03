@@ -199,9 +199,9 @@ class AuditAutopayController extends Controller
 
                 $autopay_file_exists = Storage::disk('local')->exists($path);
 
-                if ($autopay_file_exists) {
-                    continue;
-                }
+//                if ($autopay_file_exists) {
+//                    continue;
+//                }
 
                 (new AutoPayScheduleExport)->forSubMda($sub_mda)->store($path);
             }
@@ -281,9 +281,9 @@ class AuditAutopayController extends Controller
 
                     $mfb_file_exists = Storage::disk('local')->exists($path);
 
-                    if ($mfb_file_exists) {
-                        continue;
-                    }
+//                    if ($mfb_file_exists) {
+//                        continue;
+//                    }
 
                     (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->store($path);
                 }

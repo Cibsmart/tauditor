@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TmsPayeApiController;
 use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
@@ -125,6 +126,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('interswitch.')->group(function () {
         Route::post('interswitch/process_autopay_upload', [InterswitchController::class, 'process'])->name('process');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| TMS PAYE API Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('paye.')->group(function () {
+        Route::get('paye/data', [TmsPayeApiController::class, 'upload'])->name('upload');
     });
 });
 

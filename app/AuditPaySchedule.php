@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  *
  * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
  * @method static where(string $string, $verification_number)
+ * @method static allSchedules()
  */
 class AuditPaySchedule extends Model
 {
@@ -52,9 +53,22 @@ class AuditPaySchedule extends Model
         return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory;
     }
 
+    public function auditMdaSchedule()
+    {
+        return $this->auditSubMdaSchedule->auditMdaSchedule;
+    }
+
     public function domain()
     {
         return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory->auditPayroll->domain;
+    }
+
+    public function scopeAllSchedules($query)
+    {
+        return $query->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
+                     ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+                     ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
+                     ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id');
     }
 
     public static function scopeSchedules($query, $payroll, $staff_type)

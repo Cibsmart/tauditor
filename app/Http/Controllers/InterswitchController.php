@@ -20,8 +20,6 @@ use const STR_PAD_LEFT;
 
 class InterswitchController extends Controller
 {
-    private int $reference_id = 1;
-
     public function __construct()
     {
         return $this->middleware('auth');
@@ -29,11 +27,11 @@ class InterswitchController extends Controller
 
     public function process(Request $request)
     {
-        $data = $request->validate([
+        $request->validate([
             'audit_sub_mda' => ['required', 'integer', 'exists:audit_sub_mda_schedules,id'],
         ]);
 
-        $sub_mda = AuditSubMdaSchedule::find($data['audit_sub_mda']);
+        $sub_mda = AuditSubMdaSchedule::find($request->audit_sub_mda);
 
         $audit_payroll_category = $sub_mda->payrollCategory();
 
