@@ -11,7 +11,6 @@ use App\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use function is_int;
 use function collect;
 use function str_pad;
 use function throw_if;
@@ -55,12 +54,12 @@ class PensionPayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
-        $app_date = Str::upper($this->audit_sub_mda_schedule->month() . ' ' . $this->audit_sub_mda_schedule->year());
-        $file_date = $this->month . ' ' . $this->year;
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month().' '.$this->audit_sub_mda_schedule->year());
+        $file_date = $this->month.' '.$this->year;
         $message = "Trying to Upload Schedule for $file_date into $app_date";
 
         throw_if(
@@ -116,20 +115,34 @@ class PensionPayScheduleImport implements OnEachRow
      */
     private function createAuditPaySchedule($beneficiary)
     {
-        try {
+        $all = collect($beneficiary);
+        $part_a = $all->takeUntil(fn($item, $key) => $key == 'basic_pay'); //Gets all the beneficiary info part
+
+        $deductions = $all->diffKeys($part_a)
+                          ->except('basic_pay', 'total_deduction', 'net_pay')
+                          ->filter();
+
+        try{
             $bankable = $this->getBankableType($beneficiary['bank_name']);
-        } catch (Exception $e) {
+        } catch (Exception $e){
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+                'Bank Name: '.$beneficiary['bank_name'].' '.$e->getMessage()
             );
         }
 
         $month = Carbon::parse("25 $this->month $this->year");
 
-        $deductions = ['tax' => $beneficiary['total_deduction']];
+        $deductions = $deductions->isEmpty() ? ['tax' => $beneficiary['total_deduction']] : $deductions;
 
+        if ($bankable === null) {
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                'Bank Named: ' . $beneficiary['bank_name'] . ' Does Not Exist'
+            );
+        }
         $bankable_type = $bankable->bankableType();
 
         $account_number = $bankable_type === 'commercial'
@@ -158,9 +171,9 @@ class PensionPayScheduleImport implements OnEachRow
 
         $schedule = null;
 
-        try {
+        try{
             $schedule = $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
-        } catch (Exception $e) {
+        } catch (Exception $e){
             throw_if(
                 true,
                 WrongScheduleException::class,
@@ -200,16 +213,18 @@ class PensionPayScheduleImport implements OnEachRow
     private function checkBankExceptions($bank_name)
     {
         $exceptions = [
-            'FIDELITY'                            => 'FIDELITY BANK PLC',
-            'POLARIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
-            'POLORIS BANK OF NIGERIA PLC'         => 'SKYE BANK PLC',
-            'FIRST BANK PLC.'                     => 'FIRST BANK OF NIGERIA PLC',
-            'UNITED BANK FOR AFRICA'              => 'UNITED BANK FOR AFRICA PLC',
-            'NDIOLU MICRO FINANCE BANK'           => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD'        => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
-            'NDIOLU MICROFINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'FIDELITY'                             => 'FIDELITY BANK PLC',
+            'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
+            'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
+            'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
+            'NDIOLU MICROFINANCE BANK'             => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
+            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

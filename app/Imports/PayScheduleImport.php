@@ -145,7 +145,7 @@ class PayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
             );
         }
 
@@ -233,6 +233,8 @@ class PayScheduleImport implements OnEachRow
             'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
             'NDIOLU MICROFINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
+            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
