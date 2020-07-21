@@ -151,7 +151,7 @@ class PensionPayScheduleImport implements OnEachRow
 
         $attributes = [
             'verification_number' => $beneficiary['employee_id'],
-            'beneficiary_name'    => $beneficiary['employee_name'],
+            'beneficiary_name'    => Str::upper($beneficiary['employee_name']),
             'designation'         => 'PENSIONER',
             'basic_pay'           => $beneficiary['basic_pay'],
             'bank_name'           => $beneficiary['bank_name'],
