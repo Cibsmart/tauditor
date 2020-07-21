@@ -116,13 +116,22 @@ class PensionPayScheduleImport implements OnEachRow
      */
     private function createAuditPaySchedule($beneficiary)
     {
+        $all = collect($beneficiary);
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'basic_pay'); //Gets all the beneficiary info part
+
+        $deductions = $all->diffKeys($part_a)
+                                 ->except('basic_pay', 'total_deduction', 'net_pay')
+                                 ->filter();
+
+        dd($deductions);
+
         try {
             $bankable = $this->getBankableType($beneficiary['bank_name']);
         } catch (Exception $e) {
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
             );
         }
 

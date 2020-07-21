@@ -145,7 +145,7 @@ class PayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' .$e->getMessage()
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
             );
         }
 
