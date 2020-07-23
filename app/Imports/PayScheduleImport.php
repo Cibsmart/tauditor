@@ -242,6 +242,11 @@ class PayScheduleImport implements OnEachRow
             'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
             'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
             'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK'                          => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

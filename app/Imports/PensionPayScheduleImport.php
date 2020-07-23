@@ -140,7 +140,7 @@ class PensionPayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: ' . $beneficiary['bank_name'] . ' Does Not Exist'
+                'Bank Named: '.$beneficiary['bank_name'].' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();
@@ -212,7 +212,7 @@ class PensionPayScheduleImport implements OnEachRow
 
     private function checkBankExceptions($bank_name)
     {
-        $bank_name = Str::upper($bank_name);
+        $bank_name = Str::upper(Str::of($bank_name)->replace('?', ''));
 
         $exceptions = [
             'FIDELITY'                             => 'FIDELITY BANK PLC',
@@ -233,6 +233,11 @@ class PensionPayScheduleImport implements OnEachRow
             'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
             'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
             'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK'                          => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
