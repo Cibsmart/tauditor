@@ -238,6 +238,9 @@ class PensionPayScheduleImport implements OnEachRow
             'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
             'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
             'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
+            'ACCESS BANK'                          => 'ACCESS BANK PLC',
+            'STANBIC IBTC'                         => 'STANBIC-IBTC BANK PLC',
+            'FIRST CITY MONOMENT BANK PLC'         => 'FIRST CITY MONUMENT BANK PLC',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
