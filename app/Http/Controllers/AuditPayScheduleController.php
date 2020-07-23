@@ -77,9 +77,9 @@ class AuditPayScheduleController extends Controller
         } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
         } catch (\ErrorException $e) {
-            return back()->with('error', 'Attached File is not a valid Pay Schedule' . $e->getMessage());
+            return back()->with('error', 'Attached File is not a valid Pay Schedule ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator' . $e->getMessage());
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
         }
 
         $this->auditPayScheduleUploaded($audit_sub_mda, $file_path);
