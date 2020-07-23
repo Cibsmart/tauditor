@@ -212,6 +212,8 @@ class PensionPayScheduleImport implements OnEachRow
 
     private function checkBankExceptions($bank_name)
     {
+        $bank_name = Str::upper($bank_name);
+
         $exceptions = [
             'FIDELITY'                             => 'FIDELITY BANK PLC',
             'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
@@ -225,6 +227,12 @@ class PensionPayScheduleImport implements OnEachRow
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
             'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
             'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
+            'UNION BANK'                           => 'UNION BANK OF NIGERIA PLC',
+            'FIRST BANK'                           => 'FIRST BANK OF NIGERIA PLC',
+            'UNITY BANK'                           => 'UNITY BANK PLC',
+            'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
+            'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
+            'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
