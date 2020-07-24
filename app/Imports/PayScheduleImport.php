@@ -73,7 +73,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
             return null;
         }
 
@@ -129,18 +129,18 @@ class PayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn($item, $key) => $key == 'total_allowance')->filter();
+        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
 
         $deductions = $other_part->diffKeys($allowances)
                                  ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
                                  ->filter();
 
-        try{
+        try {
             $bankable = $this->getBankableType($beneficiary['bank_name']);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             throw_if(
                 true,
                 WrongScheduleException::class,
@@ -151,6 +151,14 @@ class PayScheduleImport implements OnEachRow
         $month = Carbon::parse("25 $this->month $this->year");
 
         $designation = $beneficiary['designation'] == '' ? 'None' : $beneficiary['designation'];
+
+        if ($bankable === null) {
+            throw_if(
+                true,
+                WrongScheduleException::class,
+                'Bank Named: '.$beneficiary['bank_name'].' Does Not Exist'
+            );
+        }
 
         $bankable_type = $bankable->bankableType();
 
@@ -180,9 +188,9 @@ class PayScheduleImport implements OnEachRow
 
         $schedule = null;
 
-        try{
+        try {
             $schedule = $this->audit_sub_mda_schedule->auditPaySchedules()->create($attributes);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             throw_if(
                 true,
                 WrongScheduleException::class,
