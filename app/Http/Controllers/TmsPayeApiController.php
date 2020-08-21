@@ -54,7 +54,7 @@ class TmsPayeApiController extends Controller
 
         $staff_type = $category->staff_type;
 
-        $key = 'paye.'.$staff_type;
+        $key = 'paye.' . $staff_type;
 
         $config = config($key);
 
@@ -63,7 +63,7 @@ class TmsPayeApiController extends Controller
             $content,
             $filename
         )->withHeaders([
-            'Authorization'   => base64_encode($config['id']) . ':' .$config['secret'],
+            'Authorization'   => base64_encode($config['id'] . ':' .$config['secret']),
             'ProjectID'       => $config['project_id'],
             'ProjectName'     => $config['project_name'],
             'ProjectCategory' => $config['project_category'],
