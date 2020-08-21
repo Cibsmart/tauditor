@@ -8,11 +8,14 @@ use Illuminate\Http\Request;
 use App\AuditPayrollCategory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use function dd;
 use function dump;
+use function config;
 use function collect;
 use function basename;
 use function array_diff;
 use function number_format;
+use function base64_encode;
 use function array_key_exists;
 use const PHP_EOL;
 
@@ -51,7 +54,7 @@ class TmsPayeApiController extends Controller
 
         $staff_type = $category->staff_type;
 
-        $key = 'paye.'.$staff_type;
+        $key = 'paye.' . $staff_type;
 
         $config = config($key);
 
@@ -60,7 +63,7 @@ class TmsPayeApiController extends Controller
             $content,
             $filename
         )->withHeaders([
-            'Authorization'   => $config['secret'],
+            'Authorization'   => base64_encode($config['id'] . ':' .$config['secret']),
             'ProjectID'       => $config['project_id'],
             'ProjectName'     => $config['project_name'],
             'ProjectCategory' => $config['project_category'],
