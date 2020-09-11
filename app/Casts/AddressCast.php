@@ -3,7 +3,8 @@
 
 namespace App\Casts;
 
-use App\Address;
+
+use App\Classes\Address;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
 class AddressCast implements CastsAttributes
