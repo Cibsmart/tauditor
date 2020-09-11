@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LoanDataController;
 use App\Http\Controllers\Api\BeneficiaryController;
 use App\Http\Controllers\CreateUserTokenController;
 
@@ -21,10 +22,17 @@ use App\Http\Controllers\CreateUserTokenController;
 //});
 
 
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('beneficiary/paye/month', [BeneficiaryController::class, 'payeMonth']);
     Route::post('beneficiary/paye/year', [BeneficiaryController::class, 'payeYear']);
+
+    Route::get('beneficiary/{domain}/{verification_number}/{account_number}', [LoanDataController::class, 'index']);
 //    Route::get('beneficiaries/{domain}/{year}/{month}/{type}', [BeneficiaryController::class, 'index']);
+
     Route::fallback([BeneficiaryController::class, 'invalid']);
 });
+
 

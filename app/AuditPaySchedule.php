@@ -83,7 +83,7 @@ class AuditPaySchedule extends Model
 
     public function scopeOrderByMonth($query)
     {
-        return $query->orderByRaw('date_format(month, "%Y-%m") DESC');
+        return $query->orderByRaw('date_format(audit_pay_schedules.month, "%Y-%m") DESC');
     }
 
     public function scopeWhereMonthLessThan($query, $date)
