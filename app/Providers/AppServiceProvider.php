@@ -31,6 +31,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use function in_array;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,22 +55,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::$morphMap = [
-            'cadre' => Cadre::class,
-            'domain' => Domain::class,
-            'commercial' => Bank::class,
-            'cadre_step' => CadreStep::class,
-            'fixed_value' => FixedValue::class,
-            'mda_structure' => MdaStructure::class,
-            'salary_structure' => Structure::class,
-            'audit_payroll' => AuditPayroll::class,
-            'structured' => StructuredSalary::class,
-            'computed_value' => ComputedValue::class,
-            'micro_finance' => MicroFinanceBank::class,
-            'personalized' => PersonalizedSalary::class,
-            'percentage_value' => PercentageValue::class,
-            'beneficiary_type' => BeneficiaryType::class,
-            'audit_pay_schedule' => AuditPaySchedule::class,
-            'audit_mda_schedule' => AuditMdaSchedule::class,
+            'cadre'                  => Cadre::class,
+            'domain'                 => Domain::class,
+            'commercial'             => Bank::class,
+            'cadre_step'             => CadreStep::class,
+            'fixed_value'            => FixedValue::class,
+            'mda_structure'          => MdaStructure::class,
+            'salary_structure'       => Structure::class,
+            'audit_payroll'          => AuditPayroll::class,
+            'structured'             => StructuredSalary::class,
+            'computed_value'         => ComputedValue::class,
+            'micro_finance'          => MicroFinanceBank::class,
+            'personalized'           => PersonalizedSalary::class,
+            'percentage_value'       => PercentageValue::class,
+            'beneficiary_type'       => BeneficiaryType::class,
+            'audit_pay_schedule'     => AuditPaySchedule::class,
+            'audit_mda_schedule'     => AuditMdaSchedule::class,
             'audit_sub_mda_schedule' => AuditSubMdaSchedule::class,
         ];
 
@@ -91,30 +92,47 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Inertia::share([
-            'auth' => function () {
+            'auth'        => function () {
                 return [
                     'user' => Auth::user() ? [
-                        'id' => Auth::user()->id,
+                        'id'         => Auth::user()->id,
                         'first_name' => Auth::user()->first_name,
-                        'last_name' => Auth::user()->last_name,
-                        'email' => Auth::user()->email,
-                        'domain' => [
-                            'id' => Auth::user()->domain->id,
+                        'last_name'  => Auth::user()->last_name,
+                        'email'      => Auth::user()->email,
+                        'domain'     => [
+                            'id'   => Auth::user()->domain->id,
                             'name' => Auth::user()->domain->name,
-                        ]
+                        ],
                     ] : null,
                 ];
             },
-            'flash' => function () {
+            'flash'       => function () {
                 return [
                     'success' => Session::get('success'),
-                    'error' => Session::get('error'),
+                    'error'   => Session::get('error'),
                 ];
             },
-            'errors' => function () {
+            'errors'      => function () {
                 return Session::get('errors')
                     ? Session::get('errors')->getBag('default')->getMessages()
                     : (object) [];
+            },
+            'permissions' => function () {
+                return Auth::user()
+                    ? [
+                        'canViewDashboard' => Auth::user()->can('view_dashboard'),
+                        'canViewMfbSchedule' => Auth::user()->can('view_mfb_schedule'),
+                        'canViewAnalysis' => Auth::user()->can('view_analysis'),
+                        'canViewAutopay' => Auth::user()->can('view_autopay'),
+                        'canViewReports' => Auth::user()->can('view_report'),
+                        'canViewSchedule' => Auth::user()->can('view_schedule'),
+                        'canViewPaymentSummary' => Auth::user()->can('view_payment_summary'),
+                        'canViewCategoryReport' => Auth::user()->can('view_category_report'),
+                        'canViewMdaReport' => Auth::user()->can('view_mda_report'),
+                        'canViewBeneficiaryReport' => Auth::user()->can('view_beneficiary_report'),
+                        'canViewUsers' => Auth::user()->can('view_users'),
+                        'canCreateUsers' => Auth::user()->can('create_users'),
+                    ] : null;
             },
         ]);
     }
@@ -140,7 +158,7 @@ class AppServiceProvider extends ServiceProvider
                 public function toArray()
                 {
                     return [
-                        'data' => $this->items->toArray(),
+                        'data'  => $this->items->toArray(),
                         'links' => $this->links(),
                     ];
                 }
@@ -163,27 +181,27 @@ class AppServiceProvider extends ServiceProvider
                         if (is_array($item)) {
                             return Collection::make($item)->map(function ($url, $page) {
                                 return [
-                                    'url' => $url,
-                                    'label' => $page,
+                                    'url'    => $url,
+                                    'label'  => $page,
                                     'active' => $this->currentPage() === $page,
                                 ];
                             });
                         } else {
                             return [
                                 [
-                                    'url' => null,
-                                    'label' => '...',
+                                    'url'    => null,
+                                    'label'  => '...',
                                     'active' => false,
                                 ],
                             ];
                         }
                     })->prepend([
-                        'url' => $this->previousPageUrl(),
-                        'label' => 'Previous',
+                        'url'    => $this->previousPageUrl(),
+                        'label'  => 'Previous',
                         'active' => false,
                     ])->push([
-                        'url' => $this->nextPageUrl(),
-                        'label' => 'Next',
+                        'url'    => $this->nextPageUrl(),
+                        'label'  => 'Next',
                         'active' => false,
                     ]);
                 }

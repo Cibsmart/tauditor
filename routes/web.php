@@ -5,6 +5,7 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TmsPayeApiController;
+use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
@@ -56,7 +57,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_mda_schedules.')->group(function () {
-        Route::get('audit_mda_schedules/{audit_payroll_category}/index', [AuditMdaScheduleController::class, 'index'])->name('index');
+        Route::get(
+            'audit_mda_schedules/{audit_payroll_category}/index',
+            [AuditMdaScheduleController::class, 'index']
+        )->name('index');
     });
 });
 
@@ -67,7 +71,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_sub_mda_schedules.')->group(function () {
-        Route::get('audit_sub_mda_schedules/{audit_mda_schedule}/index', [AuditSubMdaSchedulesController::class, 'index'])->name('index');
+        Route::get(
+            'audit_sub_mda_schedules/{audit_mda_schedule}/index',
+            [AuditSubMdaSchedulesController::class, 'index']
+        )->name('index');
     });
 });
 
@@ -79,8 +86,14 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('audit_pay_schedules.')->group(function () {
-        Route::get('audit_pay_schedules/{audit_sub_mda_schedule}/index', [AuditPayScheduleController::class, 'index'])->name('index');
-        Route::post('audit_pay_schedules/{audit_sub_mda_schedule}/destroy', [AuditPayScheduleController::class, 'destroy'])->name('destroy');
+        Route::get(
+            'audit_pay_schedules/{audit_sub_mda_schedule}/index',
+            [AuditPayScheduleController::class, 'index']
+        )->name('index');
+        Route::post(
+            'audit_pay_schedules/{audit_sub_mda_schedule}/destroy',
+            [AuditPayScheduleController::class, 'destroy']
+        )->name('destroy');
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });
@@ -94,12 +107,27 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_autopay.')->group(function () {
         Route::get('audit_autopay', [AuditAutopayController::class, 'index'])->name('index');
-        Route::get('audit_autopay/{audit_payroll_category}/show', [AuditAutopayController::class, 'show'])->name('show');
-        Route::get('audit_autopay/{audit_mda_schedule}/detail', [AuditAutopayController::class, 'detail'])->name('detail');
+        Route::get(
+            'audit_autopay/{audit_payroll_category}/show',
+            [AuditAutopayController::class, 'show']
+        )->name('show');
+        Route::get(
+            'audit_autopay/{audit_mda_schedule}/detail',
+            [AuditAutopayController::class, 'detail']
+        )->name('detail');
 
-        Route::post('audit_autopay/{audit_payroll_category}/generate', [AuditAutopayController::class, 'generate'])->name('generate');
-        Route::get('audit_autopay/{audit_payroll_category}/download', [AuditAutopayController::class, 'download'])->name('download');
-        Route::get('audit_autopay/{audit_payroll_category}/downloadMfb', [AuditAutopayController::class, 'downloadMfb'])->name('downloadMfb');
+        Route::post(
+            'audit_autopay/{audit_payroll_category}/generate',
+            [AuditAutopayController::class, 'generate']
+        )->name('generate');
+        Route::get(
+            'audit_autopay/{audit_payroll_category}/download',
+            [AuditAutopayController::class, 'download']
+        )->name('download');
+        Route::get(
+            'audit_autopay/{audit_payroll_category}/downloadMfb',
+            [AuditAutopayController::class, 'downloadMfb']
+        )->name('downloadMfb');
     });
 });
 
@@ -111,9 +139,18 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::name('audit_analysis.')->group(function () {
         Route::get('audit_analysis', [AuditAnalysisController::class, 'index'])->name('index');
-        Route::get('audit_analysis/{audit_payroll_category}/show', [AuditAnalysisController::class, 'show'])->name('show');
-        Route::get('audit_analysis/{audit_payroll_category}/report', [AuditAnalysisController::class, 'pdfReport'])->name('pdf_report');
-        Route::post('audit_analysis/{audit_payroll_category}/analyse', [AuditAnalysisController::class, 'analyse'])->name('analyse');
+        Route::get(
+            'audit_analysis/{audit_payroll_category}/show',
+            [AuditAnalysisController::class, 'show']
+        )->name('show');
+        Route::get(
+            'audit_analysis/{audit_payroll_category}/report',
+            [AuditAnalysisController::class, 'pdfReport']
+        )->name('pdf_report');
+        Route::post(
+            'audit_analysis/{audit_payroll_category}/analyse',
+            [AuditAnalysisController::class, 'analyse']
+        )->name('analyse');
     });
 });
 
@@ -150,11 +187,28 @@ Route::middleware('auth')->group(function () {
     Route::name('reports.')->group(function () {
         Route::get('report/summary_report', [ReportsController::class, 'summaryView'])->name('summary_view');
         Route::post('report/summary_report', [ReportsController::class, 'summaryView'])->name('summary_post');
-        Route::get('report/{payroll}/summary_report_pdf', [ReportsController::class, 'summaryPrint'])->name('summary_print');
+        Route::get(
+            'report/{payroll}/summary_report_pdf',
+            [ReportsController::class, 'summaryPrint']
+        )->name('summary_print');
 
         Route::get('report/mda_report', [ReportsController::class, 'mdaView'])->name('mda_view');
         Route::post('report/mda_report', [ReportsController::class, 'mdaView'])->name('mda_post');
         Route::get('report/{category}/mda_report_pdf', [ReportsController::class, 'mdaPrint'])->name('mda_print');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| Manage Users Routes
+|-------------------------------------------------------------------------------
+*/
+Route::group(['middleware' => ['auth', 'can:manage_users']], function () {
+    Route::name('manage_users.')->group(function () {
+        Route::get('manage_users', [ManageUserController::class, 'index'])->name('index');
+        Route::post('manage_users', [ManageUserController::class, 'index'])->name('index_post');
+        Route::get('manage_users/create', [ManageUserController::class, 'create'])->name('create');
+        Route::post('manage_users/store', [ManageUserController::class, 'store'])->name('store');
     });
 });
 
