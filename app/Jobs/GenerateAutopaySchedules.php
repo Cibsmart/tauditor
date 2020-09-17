@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\AuditSubMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

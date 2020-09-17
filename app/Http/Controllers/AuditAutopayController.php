@@ -3,24 +3,18 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditPayroll;
-use App\AuditMdaSchedule;
 use Illuminate\Support\Str;
-use App\AuditSubMdaSchedule;
+use App\Models\AuditPayroll;
 use App\Classes\ZipDirectory;
-use App\AuditPayrollCategory;
+use App\Models\AuditMdaSchedule;
 use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
-use App\Actions\GenerateAutoPayScheduleAction;
-use function back;
-use function auth;
-use function route;
-use function redirect;
-use function number_format;
 
 class AuditAutopayController extends Controller
 {
@@ -33,7 +27,7 @@ class AuditAutopayController extends Controller
     {
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
                         ->paginate()
-                        ->transform(fn (AuditPayroll $payroll) => [
+                        ->transform(fn(AuditPayroll $payroll) => [
                             'id'                => $payroll->id,
                             'month'             => $payroll->month_name,
                             'year'              => $payroll->year,
@@ -41,7 +35,7 @@ class AuditAutopayController extends Controller
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
                             'categories'        => $payroll->auditPaymentCategories
-                                ->transform(function ($category) {
+                                ->transform(function ($category){
                                     $uploaded_count = $category->countOfMdasSchedulesUploaded();
                                     $autopay_count = $category->countOfMdasAutopayGenerated();
                                     $status = $category->autopay_status;
@@ -56,7 +50,7 @@ class AuditAutopayController extends Controller
                                         'mda_count'       => $category->mdaCount(),
                                         'uploaded_count'  => $uploaded_count,
                                         'autopay_count'   => $autopay_count,
-                                        'can_generate'     => $available && $status !== 'running',
+                                        'can_generate'    => $available && $status !== 'running',
                                         'viewable'        => $autopay_count > 0,
                                         'refreshable'     => $available && $status === 'running',
                                     ];
@@ -78,7 +72,7 @@ class AuditAutopayController extends Controller
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
                                             ->orderBy('mda_id')
                                             ->paginate()
-                                            ->transform(fn (AuditMdaSchedule $schedule) => [
+                                            ->transform(fn(AuditMdaSchedule $schedule) => [
                                                 'id'           => $schedule->id,
                                                 'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
                                                 'payroll_id'   => $audit_payroll_category->id,
@@ -109,7 +103,7 @@ class AuditAutopayController extends Controller
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
-                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
+                                        ->transform(fn(AuditSubMdaSchedule $schedule) => [
                                             'id'           => $schedule->id,
                                             'sub_mda_name' => $schedule->sub_mda_name,
                                             'total_amount' => number_format($schedule->autopayTotalAmount(), 2),

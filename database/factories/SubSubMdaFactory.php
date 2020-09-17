@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\SubMda;
-use App\SubSubMda;
+use App\Models\SubMda;
+use App\Models\SubSubMda;
 use Faker\Generator as Faker;
 
 $factory->define(SubSubMda::class, function (Faker $faker) {

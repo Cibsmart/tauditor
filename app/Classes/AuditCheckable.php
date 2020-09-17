@@ -4,7 +4,7 @@
 namespace App\Classes;
 
 use Carbon\Carbon;
-use App\AuditPaySchedule;
+use App\Models\AuditPaySchedule;
 use Illuminate\Support\Str;
 
 abstract class AuditCheckable

@@ -3,13 +3,10 @@
 
 namespace App\Actions;
 
-use Carbon\Carbon;
-use App\MicroFinanceBank;
 use Illuminate\Support\Str;
-use App\AuditSubMdaSchedule;
+use App\Models\MicroFinanceBank;
 use Illuminate\Support\Facades\DB;
-use function dd;
-use function uniqid;
+use App\Models\AuditSubMdaSchedule;
 
 class GenerateAutoPayScheduleAction
 {
@@ -40,7 +37,7 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        DB::transaction(function () use ($sub_mda) {
+        DB::transaction(function () use ($sub_mda){
             $this->generateAutoPaySchedule();
         });
 
@@ -57,7 +54,7 @@ class GenerateAutoPayScheduleAction
         $this->month = $schedule->month->monthName;
         $this->payment = $schedule->pension ? 'PEN' : 'SAL';
 
-        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn (
+        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn(
             $schedule
         ) => $schedule->bankable_type == 'commercial');
 

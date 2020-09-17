@@ -1,6 +1,6 @@
 <?php
 
-use App\Structure;
+use App\Models\Structure;
 use Illuminate\Database\Seeder;
 
 class StructureSeeder extends Seeder

@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\AssignableType;
+use App\Models\AssignableType;
 use Faker\Generator as Faker;
 
 $factory->define(AssignableType::class, function (Faker $faker) {

@@ -1,14 +1,14 @@
 <?php
 
-use App\Step;
-use App\Cadre;
-use App\Structure;
-use App\CadreStep;
-use App\Allowance;
-use App\GradeLevel;
-use App\FixedValue;
-use App\AllowanceName;
-use App\PercentageValue;
+use App\Models\Step;
+use App\Models\Cadre;
+use App\Models\Structure;
+use App\Models\CadreStep;
+use App\Models\Allowance;
+use App\Models\GradeLevel;
+use App\Models\FixedValue;
+use App\Models\AllowanceName;
+use App\Models\PercentageValue;
 use Illuminate\Database\Seeder;
 
 class AllowanceSeeder extends Seeder

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Payroll;
+use App\Models\Payroll;
 use App\Actions\RunPayrollAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;

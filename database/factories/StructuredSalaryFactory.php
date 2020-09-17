@@ -2,15 +2,12 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Step;
-use App\CadreStep;
-use App\GradeLevel;
-use App\SalaryDetail;
-use App\SalaryStructure;
-use App\StructuredSalary;
+use App\Models\CadreStep;
 use Faker\Generator as Faker;
+use App\Models\SalaryStructure;
+use App\Models\StructuredSalary;
 
-$factory->define(StructuredSalary::class, function (Faker $faker) {
+$factory->define(StructuredSalary::class, function (Faker $faker){
     return [
         'cadre_step_id' => factory(CadreStep::class),
     ];

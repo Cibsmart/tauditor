@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Cadre;
-use App\Structure;
-use App\GradeLevel;
+use App\Models\Cadre;
+use App\Models\Structure;
+use App\Models\GradeLevel;
 use Faker\Generator as Faker;
 
 $factory->define(Cadre::class, function (Faker $faker) {

@@ -1,7 +1,6 @@
 <?php
 
-use App\GradeLevel;
-use Illuminate\Support\Str;
+use App\Models\GradeLevel;
 use Illuminate\Database\Seeder;
 
 class GradeLevelSeeder extends Seeder
@@ -13,10 +12,10 @@ class GradeLevelSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 17; $i++){
+        for ($i = 1; $i <= 17; $i++) {
             $code = str_pad($i, 2, '0', STR_PAD_LEFT);
 
-            factory(GradeLevel::class)->create(['code' => $code, 'name' => 'GL ' . $code]);
+            factory(GradeLevel::class)->create(['code' => $code, 'name' => 'GL '.$code]);
         }
     }
 }

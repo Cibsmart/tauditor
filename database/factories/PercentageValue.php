@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\PercentageValue;
+use App\Models\PercentageValue;
 use Faker\Generator as Faker;
 
 $factory->define(PercentageValue::class, function (Faker $faker) {

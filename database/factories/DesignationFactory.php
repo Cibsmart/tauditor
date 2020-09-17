@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\BeneficiaryType;
-use App\Designation;
+use App\Models\BeneficiaryType;
+use App\Models\Designation;
 use Faker\Generator as Faker;
 
 $factory->define(Designation::class, function (Faker $faker) {

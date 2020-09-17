@@ -1,7 +1,7 @@
 <?php
 
-use App\BankType;
-use App\QualificationType;
+use App\Models\BankType;
+use App\Models\QualificationType;
 use Illuminate\Database\Seeder;
 
 class BankTypeSeeder extends Seeder

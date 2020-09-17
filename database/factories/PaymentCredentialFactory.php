@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Bank;
-use App\Domain;
-use App\PaymentType;
-use App\BeneficiaryType;
-use App\PaymentCredential;
+use App\Models\Bank;
+use App\Models\Domain;
+use App\Models\PaymentType;
+use App\Models\BeneficiaryType;
+use App\Models\PaymentCredential;
 use Faker\Generator as Faker;
 
 $factory->define(PaymentCredential::class, function (Faker $faker) {

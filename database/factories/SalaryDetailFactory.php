@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Beneficiary;
-use App\SalaryDetail;
+use App\Models\Beneficiary;
+use App\Models\SalaryDetail;
 use Faker\Generator as Faker;
 
 $factory->define(SalaryDetail::class, function (Faker $faker) {
