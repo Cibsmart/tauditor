@@ -2,27 +2,27 @@
 
 namespace App\Providers;
 
-use App\Bank;
-use App\Cadre;
-use App\Domain;
-use App\Structure;
-use App\CadreStep;
-use App\FixedValue;
+use App\Models\Bank;
 use Inertia\Inertia;
 use App\Compute\Tax;
-use App\MdaStructure;
-use App\AuditPayroll;
-use App\ComputedValue;
-use App\PercentageValue;
-use App\BeneficiaryType;
+use App\Models\Cadre;
+use App\Models\Domain;
 use App\Compute\Prorate;
-use App\MicroFinanceBank;
-use App\StructuredSalary;
-use App\AuditPaySchedule;
-use App\AuditMdaSchedule;
-use App\PersonalizedSalary;
-use App\AuditSubMdaSchedule;
+use App\Models\Structure;
+use App\Models\CadreStep;
+use App\Models\FixedValue;
+use App\Models\MdaStructure;
+use App\Models\AuditPayroll;
+use App\Models\ComputedValue;
+use App\Models\PercentageValue;
+use App\Models\BeneficiaryType;
+use App\Models\MicroFinanceBank;
+use App\Models\StructuredSalary;
+use App\Models\AuditPaySchedule;
+use App\Models\AuditMdaSchedule;
+use App\Models\PersonalizedSalary;
 use Illuminate\Support\Collection;
+use App\Models\AuditSubMdaSchedule;
 use Illuminate\Pagination\UrlWindow;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
@@ -31,7 +31,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use function in_array;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -92,7 +91,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Inertia::share([
-            'auth'        => function () {
+            'auth'   => function () {
                 return [
                     'user' => Auth::user() ? [
                         'id'         => Auth::user()->id,
@@ -106,7 +105,7 @@ class AppServiceProvider extends ServiceProvider
                     ] : null,
                 ];
             },
-            'flash'       => function () {
+            'flash'  => function () {
                 return [
                     'success' => Session::get('success'),
                     'error'   => Session::get('error'),

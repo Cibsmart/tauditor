@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Relationship;
+use App\Models\Relationship;
 use Faker\Generator as Faker;
 
 $factory->define(Relationship::class, function (Faker $faker) {

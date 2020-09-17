@@ -1,9 +1,9 @@
 <?php
 
-use App\Deduction;
-use App\FixedValue;
-use App\DeductionName;
-use App\PercentageValue;
+use App\Models\Deduction;
+use App\Models\FixedValue;
+use App\Models\DeductionName;
+use App\Models\PercentageValue;
 use Illuminate\Database\Seeder;
 
 class DeductionSeeder extends Seeder

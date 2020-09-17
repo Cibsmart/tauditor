@@ -1,6 +1,6 @@
 <?php
 
-use App\Domain;
+use App\Models\Domain;
 use Illuminate\Database\Seeder;
 
 class DomainSeeder extends Seeder

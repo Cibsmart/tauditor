@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Payroll;
+use App\Models\Payroll;
 use Inertia\Inertia;
-use App\PaySchedule;
-use Illuminate\Http\Request;
+use App\Models\PaySchedule;
 use Illuminate\Support\Facades\DB;
-use function back;
-use function number_format;
 
 class MdaSchedulesController extends Controller
 {
@@ -19,7 +16,7 @@ class MdaSchedulesController extends Controller
 
     public function index(Payroll $payroll)
     {
-        if(! $payroll->generated){
+        if (! $payroll->generated) {
             return back()->with('error', 'Yet to Run Payroll for $date->monthName $date->year"');
         }
 
@@ -30,15 +27,15 @@ class MdaSchedulesController extends Controller
                              ->orderBy('mda_id')
                              ->paginate()
                              ->transform(fn(PaySchedule $schedule) => [
-                                 'payroll_id' => $payroll->id,
-                                 'mda_id' => $schedule->mda->id,
-                                 'mda_name' => $schedule->mda->name,
+                                 'payroll_id'   => $payroll->id,
+                                 'mda_id'       => $schedule->mda->id,
+                                 'mda_name'     => $schedule->mda->name,
                                  'total_amount' => number_format($schedule->total_amount, 2), // 12,000.00
-                                 'head_count' => number_format($schedule->head_count), //1,200
-                                 'month' => $payroll->month_name,
-                                 'year' => $payroll->year,
-                                 'domain' => $schedule->payroll->domain->name,
-                                 'pensioner' => $schedule->pensioner,
+                                 'head_count'   => number_format($schedule->head_count), //1,200
+                                 'month'        => $payroll->month_name,
+                                 'year'         => $payroll->year,
+                                 'domain'       => $schedule->payroll->domain->name,
+                                 'pensioner'    => $schedule->pensioner,
                              ]);
 
         return Inertia::render('MdaSchedules/Index', [

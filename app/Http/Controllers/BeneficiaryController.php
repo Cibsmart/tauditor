@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Beneficiary;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\StructuredSalary;
+use App\Models\Beneficiary;
 use Illuminate\Http\Request;
+use App\Models\StructuredSalary;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\ViewModels\BeneficiaryViewModel;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use function array_merge;
 
 class BeneficiaryController extends Controller
 {
@@ -33,7 +32,7 @@ class BeneficiaryController extends Controller
                              ->with($this->relationships())
                              ->filters(request()->only('search'))
                              ->paginate()
-                             ->transform(fn (Beneficiary $beneficiary) => [
+                             ->transform(fn(Beneficiary $beneficiary) => [
                                  'id'                  => $beneficiary->id,
                                  'name'                => $beneficiary->name,
                                  'verification_number' => $beneficiary->verification_number,
@@ -163,7 +162,7 @@ class BeneficiaryController extends Controller
             'mdaDetail.subMda',
             'mdaDetail.subSubMda',
             'workDetail.designation',
-            'salaryDetail.payable' => function (MorphTo $morphTo) {
+            'salaryDetail.payable' => function (MorphTo $morphTo){
                 $morphTo->morphWith([StructuredSalary::class => ['cadreStep.cadre.gradeLevel', 'cadreStep.step']]);
             },
         ];

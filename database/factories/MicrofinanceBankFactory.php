@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Bank;
-use App\Domain;
-use App\MicroFinanceBank;
+use App\Models\Bank;
+use App\Models\Domain;
+use App\Models\MicroFinanceBank;
 use Faker\Generator as Faker;
 
 $factory->define(MicroFinanceBank::class, function (Faker $faker) {

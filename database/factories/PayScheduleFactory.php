@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Payroll;
-use App\PaySchedule;
-use App\Beneficiary;
+use App\Models\Payroll;
+use App\Models\PaySchedule;
+use App\Models\Beneficiary;
 use Faker\Generator as Faker;
 use Facades\Tests\Setup\BeneficiaryTestFactory;
 

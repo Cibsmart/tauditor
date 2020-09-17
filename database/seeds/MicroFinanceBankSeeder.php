@@ -1,8 +1,8 @@
 <?php
 
-use App\Bank;
-use App\Domain;
-use App\MicroFinanceBank;
+use App\Models\Bank;
+use App\Models\Domain;
+use App\Models\MicroFinanceBank;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 

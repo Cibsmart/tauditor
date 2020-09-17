@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditPayroll;
+use App\Models\AuditPayroll;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\AuditPayrollCategory;
+use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;

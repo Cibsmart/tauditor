@@ -3,12 +3,12 @@
 
 namespace App\ViewModels;
 
-use App\User;
-use App\State;
-use App\Gender;
-use App\Beneficiary;
-use App\MaritalStatus;
-use App\LocalGovernment;
+use App\Models\User;
+use App\Models\State;
+use App\Models\Gender;
+use App\Models\Beneficiary;
+use App\Models\MaritalStatus;
+use App\Models\LocalGovernment;
 
 class BeneficiaryViewModel
 {

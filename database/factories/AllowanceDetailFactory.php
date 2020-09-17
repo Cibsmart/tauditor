@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Allowance;
-use App\Beneficiary;
-use App\AllowanceDetail;
+use App\Models\Allowance;
+use App\Models\Beneficiary;
+use App\Models\AllowanceDetail;
 use Faker\Generator as Faker;
 
 $factory->define(AllowanceDetail::class, function (Faker $faker) {

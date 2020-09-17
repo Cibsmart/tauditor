@@ -1,7 +1,7 @@
 <?php
 
-use App\PaymentType;
-use App\BeneficiaryType;
+use App\Models\PaymentType;
+use App\Models\BeneficiaryType;
 use Illuminate\Database\Seeder;
 
 class BeneficiaryTypeSeeder extends Seeder

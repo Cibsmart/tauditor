@@ -1,6 +1,6 @@
 <?php
 
-use App\DeductionDetail;
+use App\Models\DeductionDetail;
 use Illuminate\Database\Seeder;
 
 class DeductionDetailSeeder extends Seeder

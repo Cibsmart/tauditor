@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\FixedValue;
+use App\Models\FixedValue;
 use Faker\Generator as Faker;
 
 $factory->define(FixedValue::class, function (Faker $faker) {

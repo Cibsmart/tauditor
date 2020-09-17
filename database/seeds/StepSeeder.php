@@ -1,6 +1,6 @@
 <?php
 
-use App\Step;
+use App\Models\Step;
 use Illuminate\Database\Seeder;
 
 class StepSeeder extends Seeder

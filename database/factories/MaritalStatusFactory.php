@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\MaritalStatus;
+use App\Models\MaritalStatus;
 use Faker\Generator as Faker;
 
 $factory->define(MaritalStatus::class, function (Faker $faker) {

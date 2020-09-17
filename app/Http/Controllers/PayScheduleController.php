@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Mda;
-use App\Payroll;
-use App\PaySchedule;
+use App\Models\Mda;
+use App\Models\Payroll;
+use App\Models\PaySchedule;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use function back;

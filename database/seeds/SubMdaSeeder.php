@@ -1,8 +1,7 @@
 <?php
 
-use App\Mda;
-use App\SubMda;
-use Illuminate\Support\Str;
+use App\Models\Mda;
+use App\Models\SubMda;
 use Illuminate\Database\Seeder;
 
 class SubMdaSeeder extends Seeder

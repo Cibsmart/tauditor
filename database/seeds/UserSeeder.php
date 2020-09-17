@@ -1,11 +1,8 @@
 <?php
 
-use App\User;
+use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
 
 class UserSeeder extends Seeder
 {
@@ -17,25 +14,25 @@ class UserSeeder extends Seeder
     public function run()
     {
         $user = factory(User::class)->create([
-            'first_name' => 'State',
-            'last_name' => 'Admin',
-            'email' => 'ansgadmin@payroll.com',
+            'first_name'        => 'State',
+            'last_name'         => 'Admin',
+            'email'             => 'ansgadmin@payroll.com',
             'email_verified_at' => now(),
-            'password' => 'password',
-            'domain_id' => 'state',
-            'remember_token' => Str::random(10),
+            'password'          => 'password',
+            'domain_id'         => 'state',
+            'remember_token'    => Str::random(10),
         ]);
 
         $user->assignRole('super_admin');
 
         $user = factory(User::class)->create([
-            'first_name' => 'Jaac',
-            'last_name' => 'Admin',
-            'email' => 'jaacadmin@payroll.com',
+            'first_name'        => 'Jaac',
+            'last_name'         => 'Admin',
+            'email'             => 'jaacadmin@payroll.com',
             'email_verified_at' => now(),
-            'password' => 'password',
-            'domain_id' => 'jaac',
-            'remember_token' => Str::random(10),
+            'password'          => 'password',
+            'domain_id'         => 'jaac',
+            'remember_token'    => Str::random(10),
         ]);
 
         $user->assignRole('super_admin');

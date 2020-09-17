@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Domain;
-use App\Structure;
+use App\Models\Domain;
+use App\Models\Structure;
 use Faker\Generator as Faker;
 
 $factory->define(Structure::class, function (Faker $faker) {

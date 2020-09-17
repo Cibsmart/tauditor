@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Deduction;
-use App\DeductionDetail;
+use App\Models\Deduction;
+use App\Models\DeductionDetail;
 use Faker\Generator as Faker;
 
 

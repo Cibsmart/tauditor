@@ -1,7 +1,7 @@
 <?php
 
-use App\Bank;
-use App\PayComm;
+use App\Models\Bank;
+use App\Models\PayComm;
 use Illuminate\Database\Seeder;
 
 class PayCommSeeder extends Seeder

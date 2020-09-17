@@ -1,6 +1,6 @@
 <?php
 
-use App\QualificationType;
+use App\Models\QualificationType;
 use Illuminate\Database\Seeder;
 
 class QualificationTypeSeeder extends Seeder

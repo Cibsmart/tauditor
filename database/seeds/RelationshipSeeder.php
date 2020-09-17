@@ -1,6 +1,6 @@
 <?php
 
-use App\Relationship;
+use App\Models\Relationship;
 use Illuminate\Database\Seeder;
 
 class RelationshipSeeder extends Seeder

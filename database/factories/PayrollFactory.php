@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
-use App\Domain;
-use App\Payroll;
+use App\Models\User;
+use App\Models\Domain;
+use App\Models\Payroll;
 use Faker\Generator as Faker;
 
 $factory->define(Payroll::class, function (Faker $faker) {

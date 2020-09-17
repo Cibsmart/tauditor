@@ -3,7 +3,7 @@
 
 namespace App\Traits;
 
-use App\AuditReport;
+use App\Models\AuditReport;
 
 trait CanBeReported
 {

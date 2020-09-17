@@ -1,6 +1,6 @@
 <?php
 
-use App\MaritalStatus;
+use App\Models\MaritalStatus;
 use Illuminate\Database\Seeder;
 
 class MaritalStatusSeeder extends Seeder

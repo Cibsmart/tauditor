@@ -2,12 +2,12 @@
 
 namespace App\Imports;
 
-use App\Bank;
+use App\Models\Bank;
 use Exception;
 use Carbon\Carbon;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
-use App\AuditSubMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;

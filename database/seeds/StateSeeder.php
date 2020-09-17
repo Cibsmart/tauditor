@@ -1,7 +1,7 @@
 <?php
 
-use App\State;
-use App\LocalGovernment;
+use App\Models\State;
+use App\Models\LocalGovernment;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 

@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Domain;
-use App\Deduction;
-use App\FixedValue;
-use App\DeductionName;
+use App\Models\Domain;
+use App\Models\Deduction;
+use App\Models\FixedValue;
+use App\Models\DeductionName;
 use Illuminate\Support\Str;
 use Faker\Generator as Faker;
 

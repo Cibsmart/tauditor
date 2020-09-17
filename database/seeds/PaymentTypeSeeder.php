@@ -1,7 +1,6 @@
 <?php
 
-use App\SalaryType;
-use App\PaymentType;
+use App\Models\PaymentType;
 use Illuminate\Database\Seeder;
 
 class PaymentTypeSeeder extends Seeder
@@ -20,7 +19,7 @@ class PaymentTypeSeeder extends Seeder
 
         foreach ($types as $key => $value) {
             factory(PaymentType::class)->create([
-                'id' => $key,
+                'id'   => $key,
                 'name' => $value,
             ]);
         }

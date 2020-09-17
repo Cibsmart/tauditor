@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\GradeLevel;
+use App\Models\GradeLevel;
 use Faker\Generator as Faker;
 
 $factory->define(GradeLevel::class, function (Faker $faker) {
