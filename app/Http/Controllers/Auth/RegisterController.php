@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\User;
-use App\Domain;
+use Carbon\Carbon;
+use App\Models\User;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
+use App\Models\PotentialUser;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use function request;
-use function response;
+use function is_null;
 use function redirect;
-use function base64_encode;
 
 class RegisterController extends Controller
 {
@@ -57,9 +58,13 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name'  => ['required', 'string', 'max:255'],
-            'email'      => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password'   => ['required', 'string', 'min:8', 'confirmed'],
+            'password'   => ['required', 'string', 'min:6', 'confirmed'],
             'domain_id'  => ['required', 'string', 'exists:domains,id'],
+            'email'      => [
+                'required', 'string', 'email', 'max:255',
+                Rule::unique('users')
+                    ->where(fn ($query) => $query->where('domain_id', $data['domain_id'])),
+            ],
         ]);
     }
 
@@ -79,20 +84,51 @@ class RegisterController extends Controller
             'domain_id'  => $data['domain_id'],
         ]);
 
+        $this->assignRoleAndDisableUserRegistrationLink($user);
+
         return $user;
     }
 
     public function showRegistrationForm()
     {
         $registration_token = request()->query('registration_token');
-        $token = base64_encode(hash('sha1', 'anambra'));
 
-        if ($registration_token != $token) {
-            return redirect()->route('login');
+        if (! Str::isUuid($registration_token)) {
+            return redirect()->back()->with('error', 'Invalid Link');
         }
 
-        $domains = Domain::all();
+        $user = PotentialUser::query()->firstWhere('uuid', $registration_token);
 
-        return Inertia::render('Auth/Register', compact('domains'));
+        if (is_null($user)) {
+            return redirect()->back()->with('error', 'Invalid Link');
+        }
+
+        $domain = $user->domain;
+
+        return Inertia::render('Auth/Register', [
+            'domain' => ['id' => $domain->id, 'name' => $domain->name],
+            'user'   => [
+                'id'         => $user->id,
+                'first_name' => $user->first_name,
+                'last_name'  => $user->last_name,
+                'email'      => $user->email,
+            ],
+        ]);
+    }
+
+    protected function assignRoleAndDisableUserRegistrationLink(User $user)
+    {
+        $p_user = PotentialUser::query()
+                             ->where('email', $user->email)
+                             ->where('domain_id', $user->domain_id)
+                             ->first();
+
+        $user->assignRole($p_user->role_id);
+
+        $p_user->registered = Carbon::now();
+
+        $p_user->save();
+
+        $p_user->delete();
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TmsPayeApiController;
@@ -27,13 +29,24 @@ use App\Http\Controllers\AuditSubMdaSchedulesController;
 |
 */
 
-Route::get('/', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+Route::get('/', [WelcomeController::class, 'index'])
+    ->middleware('guest')
+    ->name('welcome');
 
-Route::get('login', [LoginController::class, 'showLoginForm'])->middleware('guest')->name('login');
+Route::prefix('{domain}')->group(function () {
+    Route::get('login', [LoginController::class, 'showLoginForm'])
+         ->middleware('guest')
+         ->name('login');
+
+});
+
+Route::get(
+    'register',
+    [RegisterController::class, 'showRegistrationForm']
+)->middleware('guest')->name('register.form');
+Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::post('login', [LoginController::class, 'login'])->middleware('guest')->name('login.attempt');
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
-
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->middleware('guest')->name('register.form');
 Route::post('register', [RegisterController::class, 'register'])->middleware('guest')->name('register.store');
 
 
@@ -162,7 +175,10 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('interswitch.')->group(function () {
-        Route::post('interswitch/process_autopay_upload', [InterswitchController::class, 'process'])->name('process');
+        Route::post(
+            'interswitch/process_autopay_upload',
+            [InterswitchController::class, 'process']
+        )->name('process');
     });
 });
 
@@ -203,7 +219,7 @@ Route::middleware('auth')->group(function () {
 | Manage Users Routes
 |-------------------------------------------------------------------------------
 */
-Route::group(['middleware' => ['auth', 'can:manage_users']], function () {
+Route::group(['middleware' => ['auth', 'can:view_users']], function () {
     Route::name('manage_users.')->group(function () {
         Route::get('manage_users', [ManageUserController::class, 'index'])->name('index');
         Route::post('manage_users', [ManageUserController::class, 'index'])->name('index_post');

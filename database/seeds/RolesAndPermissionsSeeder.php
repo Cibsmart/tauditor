@@ -43,6 +43,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_dashboard',
             'view_mfb_schedule',
             'view_pay_schedule',
+            'view_schedule',
             'view_beneficiaries',
             'view_mda_report',
             'view_payment_summary',

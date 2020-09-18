@@ -9,6 +9,7 @@
 
 <script>
 import Logo from '@/Shared/Logo'
+
 export default{
   components: {
     Logo,

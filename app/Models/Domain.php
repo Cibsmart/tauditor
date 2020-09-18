@@ -81,6 +81,11 @@ class Domain extends Model
         return $this->hasMany(PayComm::class);
     }
 
+    public function potentialUser()
+    {
+        return $this->hasMany(PotentialUser::class);
+    }
+
     /**
      * Synchronize all Domain Allowances to a Beneficiary
      * @param  Beneficiary  $beneficiary
