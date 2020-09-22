@@ -58,7 +58,7 @@ class AuditPayScheduleController extends Controller
         $audit_sub_mda = AuditSubMdaSchedule::find($request->audit_sub_mda);
 
         if ($audit_sub_mda->uploaded) {
-            return back() - with('error', 'Pay Schedule Already Uploaded for Sub Mda');
+            return back()->with('error', 'Pay Schedule Already Uploaded for Sub Mda');
         }
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);

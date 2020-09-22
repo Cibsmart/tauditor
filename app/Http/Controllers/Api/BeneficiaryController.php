@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Domain;
-use App\AuditPayroll;
-use App\AuditPaySchedule;
+use App\Models\Domain;
+use App\Models\AuditPayroll;
+use App\Models\AuditPaySchedule;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

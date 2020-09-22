@@ -25,9 +25,11 @@ class AuditAutopayController extends Controller
 
     public function index()
     {
-        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
+        $payrolls = Auth::user()->auditPayrolls()
+                        ->orderBy('year', 'desc')
+                        ->orderBy('month', 'desc')
                         ->paginate()
-                        ->transform(fn(AuditPayroll $payroll) => [
+                        ->transform(fn (AuditPayroll $payroll) => [
                             'id'                => $payroll->id,
                             'month'             => $payroll->month_name,
                             'year'              => $payroll->year,
@@ -35,7 +37,7 @@ class AuditAutopayController extends Controller
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
                             'categories'        => $payroll->auditPaymentCategories
-                                ->transform(function ($category){
+                                ->transform(function ($category) {
                                     $uploaded_count = $category->countOfMdasSchedulesUploaded();
                                     $autopay_count = $category->countOfMdasAutopayGenerated();
                                     $status = $category->autopay_status;
@@ -72,7 +74,7 @@ class AuditAutopayController extends Controller
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
                                             ->orderBy('mda_id')
                                             ->paginate()
-                                            ->transform(fn(AuditMdaSchedule $schedule) => [
+                                            ->transform(fn (AuditMdaSchedule $schedule) => [
                                                 'id'           => $schedule->id,
                                                 'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
                                                 'payroll_id'   => $audit_payroll_category->id,
@@ -103,7 +105,7 @@ class AuditAutopayController extends Controller
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
-                                        ->transform(fn(AuditSubMdaSchedule $schedule) => [
+                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
                                             'id'           => $schedule->id,
                                             'sub_mda_name' => $schedule->sub_mda_name,
                                             'total_amount' => number_format($schedule->autopayTotalAmount(), 2),

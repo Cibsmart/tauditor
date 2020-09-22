@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->belongsTo(Domain::class);
     }
 
+    public function microfinanceBank()
+    {
+        return $this->hasOne(UserMicroFinanceBank::class);
+    }
+
     public function setPasswordAttribute(string $value) : string
     {
         return $this->attributes['password'] = Hash::make($value);

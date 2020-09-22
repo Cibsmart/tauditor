@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use Illuminate\Support\Str;
 use App\Models\PotentialUser;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
@@ -76,6 +77,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+
         $user = User::create([
             'first_name' => $data['first_name'],
             'last_name'  => $data['last_name'],
@@ -124,6 +126,12 @@ class RegisterController extends Controller
                              ->first();
 
         $user->assignRole($p_user->role_id);
+
+        if ($p_user->has('microfinanceBank')) {
+            $user->microfinanceBank()->create([
+                'micro_finance_bank_id' => $p_user->microfinanceBank->micro_finance_bank_id,
+            ]);
+        }
 
         $p_user->registered = Carbon::now();
 

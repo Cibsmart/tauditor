@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\WelcomeController;
@@ -9,6 +8,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\TmsPayeApiController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\InterswitchController;
+use App\Http\Controllers\MfbScheduleController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -30,20 +30,20 @@ use App\Http\Controllers\AuditSubMdaSchedulesController;
 */
 
 Route::get('/', [WelcomeController::class, 'index'])
-    ->middleware('guest')
-    ->name('welcome');
+     ->middleware('guest')
+     ->name('welcome');
 
 Route::prefix('{domain}')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])
          ->middleware('guest')
          ->name('login');
-
 });
 
 Route::get(
     'register',
     [RegisterController::class, 'showRegistrationForm']
 )->middleware('guest')->name('register.form');
+
 Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::post('login', [LoginController::class, 'login'])->middleware('guest')->name('login.attempt');
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
@@ -227,6 +227,37 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
         Route::post('manage_users/store', [ManageUserController::class, 'store'])->name('store');
     });
 });
+
+
+
+/*
+|-------------------------------------------------------------------------------
+| MFB Schedule Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
+    Route::name('mfb_schedule.')->group(function () {
+        Route::prefix('microfinance_bank_schedule')->group(function () {
+            Route::get('', [MfbScheduleController::class, 'index'])->name('index');
+
+            Route::get(
+                'audit_autopay/{audit_payroll_category}/show',
+                [AuditAutopayController::class, 'show']
+            )->name('show');
+
+            Route::get(
+                'audit_autopay/{audit_mda_schedule}/detail',
+                [AuditAutopayController::class, 'detail']
+            )->name('detail');
+
+            Route::get(
+                'audit_autopay/{audit_payroll_category}/download',
+                [AuditAutopayController::class, 'download']
+            )->name('download');
+        });
+    });
+});
+
 
 
 /*

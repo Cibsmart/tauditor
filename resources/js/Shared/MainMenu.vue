@@ -105,7 +105,7 @@
                         id: 1,
                         name: 'mfb_schedule',
                         label: 'MFB Schedule',
-                        url: route('audit_payroll.index'),
+                        url: route('mfb_schedule.index'),
                         icon: 'office',
                         active: false,
                         permission: 'canViewMfbSchedule'
