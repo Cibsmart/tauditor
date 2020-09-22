@@ -9,6 +9,7 @@ use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\LoanResourceCollection;
+use function is_null;
 use function response;
 
 class PaymentHistoryController extends Controller
@@ -56,6 +57,21 @@ class PaymentHistoryController extends Controller
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
+        $check = AuditPaySchedule::allSchedules()
+                                     ->orderByMonth()
+                                     ->where('verification_number', Str::of($verification_number)->trim())
+                                     ->where('account_number', Str::of($account_number)->trim())
+                                     ->where('domain_id', Str::of($domain->id)->trim())
+                                     ->first();
+
+        if (is_null($check)) {
+            return response()->json([
+                'is_staff_valid' => false,
+                'data'           => [],
+                'message'        => 'No Matching Record',
+            ])->setStatusCode(Response::HTTP_NOT_FOUND);
+        }
+
 
         $schedules = AuditPaySchedule::allSchedules()
                                      ->orderByMonth()
@@ -63,14 +79,6 @@ class PaymentHistoryController extends Controller
                                      ->where('domain_id', Str::of($domain->id)->trim())
                                      ->limit(3)
                                      ->get();
-
-        if ($schedules->isEmpty()) {
-            return response()->json([
-                'is_staff_valid' => false,
-                'data'           => [],
-                'message'        => 'No Matching Record',
-            ])->setStatusCode(Response::HTTP_NOT_FOUND);
-        }
 
         $mda_name = $schedules[0]->mda_name;
         $sub_name = $schedules[0]->sub_mda_name;

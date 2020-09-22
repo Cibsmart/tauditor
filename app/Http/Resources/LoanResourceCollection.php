@@ -32,7 +32,7 @@ class LoanResourceCollection extends ResourceCollection
                  'staff_mda' => $this->getData('staff_mda'),
                  'bank_name' => $this->getData('bank_name'),
                  'account_number' => $this->getData('account_number'),
-                 'last_three_payments' => $this->getdata('schedules')
+                 'payment_history' => $this->getdata('schedules')
             ]
         ];
     }
