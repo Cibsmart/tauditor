@@ -3,7 +3,7 @@
 
 namespace App\Contracts;
 
-use App\Beneficiary;
+use App\Models\Beneficiary;
 
 interface Computable
 {

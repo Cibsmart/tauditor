@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\BankType;
+use App\Models\BankType;
 use Faker\Generator as Faker;
 
 $factory->define(BankType::class, function (Faker $faker) {

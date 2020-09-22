@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\NextOfKin;
-use App\Relationship;
+use App\Models\NextOfKin;
+use App\Models\Relationship;
 use Faker\Generator as Faker;
 
 $factory->define(NextOfKin::class, function (Faker $faker) {

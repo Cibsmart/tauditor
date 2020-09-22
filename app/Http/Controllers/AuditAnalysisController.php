@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditReport;
-use App\AuditPayroll;
+use App\Models\AuditReport;
+use App\Models\AuditPayroll;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Str;
-use App\AuditPayrollCategory;
+use App\Models\AuditPayrollCategory;
 use App\Jobs\AnalysePaySchedules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;

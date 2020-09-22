@@ -3,13 +3,8 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditMdaSchedule;
-use App\AuditSubMdaSchedule;
-use App\AuditPayrollCategory;
-use function now;
-use function auth;
-use function route;
-use function redirect;
+use App\Models\AuditMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 
 class AuditSubMdaSchedulesController extends Controller
 {
@@ -32,7 +27,7 @@ class AuditSubMdaSchedulesController extends Controller
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
                                         ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
                                         ->paginate()
-                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
+                                        ->transform(fn(AuditSubMdaSchedule $schedule) => [
                                             'id'           => $schedule->id,
                                             'sub_mda_name' => $schedule->sub_mda_name,
                                             'total_amount' => number_format($schedule->total_net_pay, 2), // 12,000.00

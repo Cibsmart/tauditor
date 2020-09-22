@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\AuditSubMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\WithMapping;

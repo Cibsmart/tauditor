@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BasicPay;
+use App\Models\BasicPay;
 use Illuminate\Http\Request;
 
 class BasicPayController extends Controller

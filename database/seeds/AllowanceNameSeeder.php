@@ -1,7 +1,7 @@
 <?php
 
-use App\AllowanceName;
-use App\AllowanceType;
+use App\Models\AllowanceName;
+use App\Models\AllowanceType;
 use Illuminate\Database\Seeder;
 
 class AllowanceNameSeeder extends Seeder

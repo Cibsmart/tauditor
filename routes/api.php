@@ -1,10 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoanDataController;
 use App\Http\Controllers\Api\BeneficiaryController;
-use App\Http\Controllers\CreateUserTokenController;
+use App\Http\Controllers\Api\PaymentHistoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,17 +20,18 @@ use App\Http\Controllers\CreateUserTokenController;
 //});
 
 
-
-
-
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('beneficiary/paye/month', [BeneficiaryController::class, 'payeMonth']);
-    Route::post('beneficiary/paye/year', [BeneficiaryController::class, 'payeYear']);
 
-    Route::get('beneficiary/{domain}/{verification_number}/{account_number}', [LoanDataController::class, 'index']);
-//    Route::get('beneficiaries/{domain}/{year}/{month}/{type}', [BeneficiaryController::class, 'index']);
+    Route::prefix('beneficiary/paye')->group(function () {
+        Route::post('month', [BeneficiaryController::class, 'payeMonth']);
+        Route::post('year', [BeneficiaryController::class, 'payeYear']);
+        Route::fallback([BeneficiaryController::class, 'invalid']);
+    });
 
-    Route::fallback([BeneficiaryController::class, 'invalid']);
+    Route::prefix('beneficiary/payment_history')->group(function () {
+        Route::get('', [PaymentHistoryController::class, 'index']);
+        Route::fallback([PaymentHistoryController::class, 'invalid']);
+    });
 });
 
 

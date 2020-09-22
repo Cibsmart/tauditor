@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\CadreStep;
-use App\Allowance;
-use App\CadreStepAllowance;
+use App\Models\CadreStep;
+use App\Models\Allowance;
+use App\Models\CadreStepAllowance;
 use Faker\Generator as Faker;
 
 $factory->define(CadreStepAllowance::class, function (Faker $faker) {

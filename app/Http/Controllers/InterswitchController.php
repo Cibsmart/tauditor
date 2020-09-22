@@ -5,18 +5,8 @@ namespace App\Http\Controllers;
 use Exception;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use App\AuditSubMdaSchedule;
-use App\AuditPayrollCategory;
+use App\Models\AuditSubMdaSchedule;
 use Illuminate\Support\Facades\Storage;
-use function back;
-use function is_int;
-use function uniqid;
-use function hexdec;
-use function collect;
-use function str_pad;
-use function basename;
-use function random_int;
-use const STR_PAD_LEFT;
 
 class InterswitchController extends Controller
 {
@@ -124,7 +114,7 @@ class InterswitchController extends Controller
             Storage::disk('local')->append($file_name, $content);
         }
 
-        $autopay_file_name = 'IN/' . basename($file_name);
+        $autopay_file_name = 'IN/'.basename($file_name);
 
         $content = Storage::disk('local')->get($file_name);
 
@@ -132,9 +122,9 @@ class InterswitchController extends Controller
 
         $success = true;
 
-        try {
+        try{
             $success = Storage::disk($disk)->put($autopay_file_name, $content);
-        } catch (Exception $e) {
+        } catch (Exception $e){
             return back()->with('error', $e->getMessage());
         }
 
@@ -144,7 +134,8 @@ class InterswitchController extends Controller
 
         $sub_mda->autopayUploaded();
 
-        return back()->with('success', "Autopay Schedule for $month_full $sub_mda_name Created and Uploaded Successfully");
+        return back()->with('success',
+            "Autopay Schedule for $month_full $sub_mda_name Created and Uploaded Successfully");
     }
 
     private function macData($terminal_id, $beneficiary_codes, $total_amount, $beneficiary_account_numbers)

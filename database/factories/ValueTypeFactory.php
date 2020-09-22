@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\ValueType;
+use App\Models\ValueType;
 use Faker\Generator as Faker;
 
 $factory->define(ValueType::class, function (Faker $faker) {

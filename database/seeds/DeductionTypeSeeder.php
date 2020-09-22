@@ -1,6 +1,6 @@
 <?php
 
-use App\DeductionType;
+use App\Models\DeductionType;
 use Illuminate\Database\Seeder;
 
 class DeductionTypeSeeder extends Seeder

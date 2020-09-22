@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Step;
-use App\Cadre;
-use App\CadreStep;
+use App\Models\Step;
+use App\Models\Cadre;
+use App\Models\CadreStep;
 use Faker\Generator as Faker;
 
 $factory->define(CadreStep::class, function (Faker $faker) {

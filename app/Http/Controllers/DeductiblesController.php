@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mda;
-use App\Cadre;
-use App\Deduction;
-use App\Structure;
-use App\CadreStep;
-use App\Deductible;
+use App\Models\Mda;
+use App\Models\Cadre;
+use App\Models\Deduction;
+use App\Models\Structure;
+use App\Models\CadreStep;
+use App\Models\Deductible;
 use Inertia\Inertia;
-use App\MdaStructure;
-use App\BeneficiaryType;
+use App\Models\MdaStructure;
+use App\Models\BeneficiaryType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

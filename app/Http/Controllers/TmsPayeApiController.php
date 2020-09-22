@@ -2,22 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\AuditPaySchedule;
 use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\AuditPayrollCategory;
+use App\Models\AuditPaySchedule;
+use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use function dd;
-use function dump;
-use function config;
-use function collect;
-use function basename;
-use function array_diff;
-use function number_format;
-use function base64_encode;
-use function array_key_exists;
-use const PHP_EOL;
 
 class TmsPayeApiController extends Controller
 {
@@ -35,12 +24,12 @@ class TmsPayeApiController extends Controller
         $response = $this->uploadToApi($category, $file_name);
 
         dump([
-            'status' => $response->status(),
-            'response' => $response->json(),
+            'status'     => $response->status(),
+            'response'   => $response->json(),
             'successful' => $response->successful(),
-            'failed' => $response->failed(),
-            'client' => $response->clientError(),
-            'server' => $response->serverError()
+            'failed'     => $response->failed(),
+            'client'     => $response->clientError(),
+            'server'     => $response->serverError(),
         ]);
 
         return 'Done: ';
@@ -54,7 +43,7 @@ class TmsPayeApiController extends Controller
 
         $staff_type = $category->staff_type;
 
-        $key = 'paye.' . $staff_type;
+        $key = 'paye.'.$staff_type;
 
         $config = config($key);
 
@@ -63,7 +52,7 @@ class TmsPayeApiController extends Controller
             $content,
             $filename
         )->withHeaders([
-            'Authorization'   => base64_encode($config['id'] . ':' .$config['secret']),
+            'Authorization'   => base64_encode($config['id'].':'.$config['secret']),
             'ProjectID'       => $config['project_id'],
             'ProjectName'     => $config['project_name'],
             'ProjectCategory' => $config['project_category'],
@@ -99,7 +88,7 @@ class TmsPayeApiController extends Controller
                         ->orderBy('audit_mda_schedule_id')
                         ->orderBy('audit_sub_mda_schedule_id')
                         ->orderBy('verification_number')
-                        ->chunk(10, function ($schedules) use ($month, $year, $file_name) {
+                        ->chunk(10, function ($schedules) use ($month, $year, $file_name){
                             $data = '';
 
                             foreach ($schedules as $schedule) {

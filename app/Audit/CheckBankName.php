@@ -2,7 +2,7 @@
 
 namespace App\Audit;
 
-use App\AuditPaySchedule;
+use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
 
 class CheckBankName extends AuditCheckable

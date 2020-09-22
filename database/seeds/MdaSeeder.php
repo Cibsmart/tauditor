@@ -1,7 +1,7 @@
 <?php
 
-use App\Mda;
-use App\BeneficiaryType;
+use App\Models\Mda;
+use App\Models\BeneficiaryType;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 

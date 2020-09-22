@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Qualification;
-use App\QualificationType;
+use App\Models\Qualification;
+use App\Models\QualificationType;
 use Faker\Generator as Faker;
 
 $factory->define(Qualification::class, function (Faker $faker) {

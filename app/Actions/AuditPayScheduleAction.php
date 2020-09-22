@@ -4,7 +4,7 @@
 namespace App\Actions;
 
 use App\Audit\Analyse;
-use App\AuditSubMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 
 class AuditPayScheduleAction
 {

@@ -3,17 +3,14 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditPaySchedule;
+use App\Models\AuditPaySchedule;
 use Illuminate\Http\Request;
-use App\AuditSubMdaSchedule;
+use App\Models\AuditSubMdaSchedule;
 use App\Imports\PayScheduleImport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
-use function dd;
-use function now;
-use function redirect;
 
 class AuditPayScheduleController extends Controller
 {
@@ -61,7 +58,7 @@ class AuditPayScheduleController extends Controller
         $audit_sub_mda = AuditSubMdaSchedule::find($request->audit_sub_mda);
 
         if ($audit_sub_mda->uploaded) {
-            return back() - with('error', 'Pay Schedule Already Uploaded for Sub Mda');
+            return back()->with('error', 'Pay Schedule Already Uploaded for Sub Mda');
         }
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);

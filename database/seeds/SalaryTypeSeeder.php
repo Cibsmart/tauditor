@@ -1,7 +1,6 @@
 <?php
 
-use App\ValueType;
-use App\SalaryType;
+use App\Models\SalaryType;
 use Illuminate\Database\Seeder;
 
 class SalaryTypeSeeder extends Seeder
@@ -15,12 +14,12 @@ class SalaryTypeSeeder extends Seeder
     {
         $types = [
             'personalized' => 'PERSONALIZED SALARY',
-            'structured' => 'STRUCTURED SALARY',
+            'structured'   => 'STRUCTURED SALARY',
         ];
 
         foreach ($types as $key => $value) {
             factory(SalaryType::class)->create([
-                'id' => $key,
+                'id'   => $key,
                 'name' => $value,
             ]);
         }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Payroll;
+use App\Models\Payroll;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use Illuminate\Http\Request;

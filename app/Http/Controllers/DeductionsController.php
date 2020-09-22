@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Deduction;
-use App\ValueType;
-use App\FixedValue;
-use App\BlankValue;
+use App\Models\Deduction;
+use App\Models\ValueType;
+use App\Models\FixedValue;
+use App\Models\BlankValue;
 use Inertia\Inertia;
-use App\ComputedValue;
-use App\PercentageValue;
+use App\Models\ComputedValue;
+use App\Models\PercentageValue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\DeductionRequest;

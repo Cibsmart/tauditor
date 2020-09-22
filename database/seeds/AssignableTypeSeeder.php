@@ -1,6 +1,6 @@
 <?php
 
-use App\AssignableType;
+use App\Models\AssignableType;
 use Illuminate\Database\Seeder;
 
 class AssignableTypeSeeder extends Seeder

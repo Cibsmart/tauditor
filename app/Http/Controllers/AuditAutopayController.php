@@ -3,24 +3,18 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
-use App\AuditPayroll;
-use App\AuditMdaSchedule;
 use Illuminate\Support\Str;
-use App\AuditSubMdaSchedule;
+use App\Models\AuditPayroll;
 use App\Classes\ZipDirectory;
-use App\AuditPayrollCategory;
+use App\Models\AuditMdaSchedule;
 use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
-use App\Actions\GenerateAutoPayScheduleAction;
-use function back;
-use function auth;
-use function route;
-use function redirect;
-use function number_format;
 
 class AuditAutopayController extends Controller
 {
@@ -31,7 +25,9 @@ class AuditAutopayController extends Controller
 
     public function index()
     {
-        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
+        $payrolls = Auth::user()->auditPayrolls()
+                        ->orderBy('year', 'desc')
+                        ->orderBy('month', 'desc')
                         ->paginate()
                         ->transform(fn (AuditPayroll $payroll) => [
                             'id'                => $payroll->id,
@@ -56,7 +52,7 @@ class AuditAutopayController extends Controller
                                         'mda_count'       => $category->mdaCount(),
                                         'uploaded_count'  => $uploaded_count,
                                         'autopay_count'   => $autopay_count,
-                                        'can_generate'     => $available && $status !== 'running',
+                                        'can_generate'    => $available && $status !== 'running',
                                         'viewable'        => $autopay_count > 0,
                                         'refreshable'     => $available && $status === 'running',
                                     ];

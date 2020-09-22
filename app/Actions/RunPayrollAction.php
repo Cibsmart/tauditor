@@ -4,7 +4,7 @@
 namespace App\Actions;
 
 
-use App\Payroll;
+use App\Models\Payroll;
 
 class RunPayrollAction
 {

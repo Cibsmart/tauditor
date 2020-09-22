@@ -1,7 +1,7 @@
 <?php
 
-use App\ValueType;
-use App\MaritalStatus;
+use App\Models\ValueType;
+use App\Models\MaritalStatus;
 use Illuminate\Database\Seeder;
 
 class ValueTypeSeeder extends Seeder

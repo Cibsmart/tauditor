@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\BankDetail;
-use App\Beneficiary;
+use App\Models\BankDetail;
+use App\Models\Beneficiary;
 use Faker\Generator as Faker;
 
 $factory->define(BankDetail::class, function (Faker $faker) {

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Allowance;
-use App\FixedValue;
+use App\Models\Allowance;
+use App\Models\FixedValue;
 use Inertia\Inertia;
-use App\AllowanceName;
-use App\PercentageValue;
+use App\Models\AllowanceName;
+use App\Models\PercentageValue;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
