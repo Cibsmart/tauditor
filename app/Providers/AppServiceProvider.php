@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\Bank;
 use Inertia\Inertia;
 use App\Compute\Tax;
+use App\Models\User;
 use App\Models\Cadre;
 use App\Models\Domain;
 use App\Compute\Prorate;
@@ -57,6 +58,7 @@ class AppServiceProvider extends ServiceProvider
             'cadre'                  => Cadre::class,
             'domain'                 => Domain::class,
             'commercial'             => Bank::class,
+            'user'                   => User::class,
             'cadre_step'             => CadreStep::class,
             'fixed_value'            => FixedValue::class,
             'mda_structure'          => MdaStructure::class,
@@ -91,7 +93,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Inertia::share([
-            'auth'   => function () {
+            'auth'        => function () {
                 return [
                     'user' => Auth::user() ? [
                         'id'         => Auth::user()->id,
@@ -105,7 +107,7 @@ class AppServiceProvider extends ServiceProvider
                     ] : null,
                 ];
             },
-            'flash'  => function () {
+            'flash'       => function () {
                 return [
                     'success' => Session::get('success'),
                     'error'   => Session::get('error'),
@@ -117,20 +119,21 @@ class AppServiceProvider extends ServiceProvider
                     : (object) [];
             },
             'permissions' => function () {
-                return Auth::user()
+                $user = Auth::user();
+                return $user
                     ? [
-                        'canViewDashboard' => Auth::user()->can('view_dashboard'),
-                        'canViewMfbSchedule' => Auth::user()->can('view_mfb_schedule'),
-                        'canViewAnalysis' => Auth::user()->can('view_analysis'),
-                        'canViewAutopay' => Auth::user()->can('view_autopay'),
-                        'canViewReports' => Auth::user()->can('view_report'),
-                        'canViewSchedule' => Auth::user()->can('view_schedule'),
-                        'canViewPaymentSummary' => Auth::user()->can('view_payment_summary'),
-                        'canViewCategoryReport' => Auth::user()->can('view_category_report'),
-                        'canViewMdaReport' => Auth::user()->can('view_mda_report'),
-                        'canViewBeneficiaryReport' => Auth::user()->can('view_beneficiary_report'),
-                        'canViewUsers' => Auth::user()->can('view_users'),
-                        'canCreateUsers' => Auth::user()->can('create_users'),
+                        'canViewDashboard'         => $user->can('view_dashboard'),
+                        'canViewMfbSchedule'       => $user->can('view_mfb_schedule'),
+                        'canViewAnalysis'          => $user->can('view_analysis'),
+                        'canViewAutopay'           => $user->can('view_autopay'),
+                        'canViewReports'           => $user->can('view_report'),
+                        'canViewSchedule'          => $user->can('view_schedule'),
+                        'canViewPaymentSummary'    => $user->can('view_payment_summary'),
+                        'canViewCategoryReport'    => $user->can('view_category_report'),
+                        'canViewMdaReport'         => $user->can('view_mda_report'),
+                        'canViewBeneficiaryReport' => $user->can('view_beneficiary_report'),
+                        'canViewUsers'             => $user->can('view_users'),
+                        'canCreateUsers'           => $user->can('create_users'),
                     ] : null;
             },
         ]);
