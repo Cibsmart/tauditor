@@ -127,7 +127,7 @@ class RegisterController extends Controller
 
         $user->assignRole($p_user->role_id);
 
-        if ($p_user->has('microfinanceBank')) {
+        if ($p_user->microfinanceBank) {
             $user->microfinanceBank()->create([
                 'micro_finance_bank_id' => $p_user->microfinanceBank->micro_finance_bank_id,
             ]);
