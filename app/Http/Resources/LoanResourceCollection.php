@@ -3,15 +3,14 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use function number_format;
 
 class LoanResourceCollection extends ResourceCollection
 {
     public function with($request)
     {
         return [
-            'is_staff_valid'  => 'true',
-            'message' => 'Successfully',
+            'is_staff_valid' => 'true',
+            'message'        => 'Successfully',
         ];
     }
 
@@ -26,14 +25,12 @@ class LoanResourceCollection extends ResourceCollection
     {
         return [
             'data' => [
-                'staff_id' => $this->getData('staff_id'),
-                 'staff_name' => $this->getData('staff_name'),
-                 'staff_cadre' => $this->getData('staff_cadre'),
-                 'staff_mda' => $this->getData('staff_mda'),
-                 'bank_name' => $this->getData('bank_name'),
-                 'account_number' => $this->getData('account_number'),
-                 'payment_history' => $this->getdata('schedules')
-            ]
+                'staff_id'        => $this->getData('staff_id'),
+                'staff_name'      => $this->getData('staff_name'),
+                'staff_cadre'     => $this->getData('staff_cadre'),
+                'staff_mda'       => $this->getData('staff_mda'),
+                'payment_history' => $this->getdata('schedules'),
+            ],
         ];
     }
 
