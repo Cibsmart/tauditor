@@ -74,18 +74,18 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-50 text-sm leading-5 font-medium">
-                                            <a :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })"
+                                            <a :href="route('mfb_schedule.download', { category: category.id,  mfb: category.mfb_id})"
                                                class="px-5 py-3">
                                                 Download Schedules
                                             </a>
 
-                                            <span> | </span>
+<!--                                            <span> | </span>-->
 
-                                            <inertia-link
-                                                :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
-                                                class="px-5 py-3" preserve-state preserve-scroll>
-                                                View MDAs
-                                            </inertia-link>
+<!--                                            <inertia-link-->
+<!--                                                :href="route('mfb_schedule.show', { category: category.id, mfb: category.mfb_id })"-->
+<!--                                                class="px-5 py-3" preserve-state preserve-scroll>-->
+<!--                                                View MDAs-->
+<!--                                            </inertia-link>-->
                                         </td>
                                     </tr>
                                     </tbody>

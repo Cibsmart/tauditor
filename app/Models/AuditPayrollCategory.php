@@ -62,6 +62,22 @@ class AuditPayrollCategory extends Model
         return $this->auditMdaSchedules->count();
     }
 
+    public function scopeCategories($query)
+    {
+        return $query->join('audit_mda_schedules', 'audit_payroll_categories.id', '=', 'audit_mda_schedules.audit_payroll_category_id')
+                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+    }
+
+    public function mfbMdaCount($micro_finance_bank_id)
+    {
+        return $this->categories()
+                    ->select('audit_mda_schedules.*')
+                    ->where('micro_finance_bank_id', $micro_finance_bank_id)
+                    ->distinct()
+                    ->get()->count();
+    }
+
     public function countOfMdasSchedulesUploaded()
     {
         return $this->auditMdaSchedules()

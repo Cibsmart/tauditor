@@ -52,6 +52,12 @@ class AuditMdaSchedule extends Model
         return $this->mda->beneficiaryType->paymentCredential;
     }
 
+    public function scopeMfbSchedules($query)
+    {
+        return $query->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;

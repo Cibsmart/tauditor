@@ -132,6 +132,11 @@ class AuditSubMdaSchedule extends Model
         return $query->whereHas('microfinanceSchedules');
     }
 
+    public function scopeMfbSchedules($query)
+    {
+        return $query->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+    }
+
     public function analysisCompleted()
     {
         $this->analysed = Carbon::now();
