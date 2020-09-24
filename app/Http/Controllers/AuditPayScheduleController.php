@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
+use function back;
 
 class AuditPayScheduleController extends Controller
 {
@@ -77,6 +78,14 @@ class AuditPayScheduleController extends Controller
             return back()->with('error', 'Attached File is not a valid Pay Schedule ' . $e->getMessage());
         } catch (\Exception $e) {
             return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
+        }
+
+        $confirm_upload = $audit_sub_mda->auditPaySchedules;
+
+        if ($confirm_upload->isEmpty()) {
+            $headers = 'ID | NAME | GRADE | DESIGNATION | B/S | BANK | ACCT | CODE | ALLOWANCES | TOTAL ALLW | GROSS PAY | DUES | TOTAL DUES | DEDUCTION | TOTAL DED | NET PAY';
+            $message = "Uploaded Failed: Ensure Heading has {$headers}";
+            return back()->with('error', $message);
         }
 
         $this->auditPayScheduleUploaded($audit_sub_mda, $file_path);
