@@ -238,11 +238,12 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
 Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
     Route::name('mfb_schedule.')->group(function () {
         Route::prefix('microfinance_bank_schedule')->group(function () {
+
             Route::get('', [MfbScheduleController::class, 'index'])->name('index');
 
             Route::get(
-                'audit_autopay/{audit_payroll_category}/show',
-                [AuditAutopayController::class, 'show']
+                '{category}/{mfb}/show',
+                [MfbScheduleController::class, 'show']
             )->name('show');
 
             Route::get(
@@ -251,8 +252,8 @@ Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
             )->name('detail');
 
             Route::get(
-                'audit_autopay/{audit_payroll_category}/download',
-                [AuditAutopayController::class, 'download']
+                '{category}/{mfb}/download',
+                [MfbScheduleController::class, 'download']
             )->name('download');
         });
     });

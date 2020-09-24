@@ -89,10 +89,15 @@ class AuditPayroll extends Model
 
     public function scopePayrolls($query)
     {
-        return $query->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
-                     ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id')
-                     ->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-                     ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id');
+        return $query->join('audit_payroll_categories', 'audit_payrolls.id', '=', 'audit_payroll_categories.audit_payroll_id')
+                     ->join('audit_mda_schedules', 'audit_payroll_categories.id', '=', 'audit_mda_schedules.audit_payroll_category_id')
+                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+    }
+
+    public function scopeOrderByMonth($query)
+    {
+        return $query->orderByRaw('date_format(audit_payrolls.timestamp, "%Y-%m") DESC');
     }
 
     public function previousPayroll($domain_id)
