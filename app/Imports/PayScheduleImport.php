@@ -143,7 +143,7 @@ class PayScheduleImport implements OnEachRow
         $part_a = $all->takeUntil(fn (
             $item,
             $key
-        ) => $key === $this->headers['bank_code']); //Gets all the beneficiary info part
+        ) => $key == $this->headers['bank_code']); //Gets all the beneficiary info part
 
         $other_part = $all->diffKeys($part_a)->except($this->headers['bank_code']); //Remove part_a from all
         $allowances = $other_part->takeUntil(fn ($item, $key) => $key == $this->headers['total_allowance'])->filter();
@@ -169,13 +169,11 @@ class PayScheduleImport implements OnEachRow
 
         $month = Carbon::parse("25 $this->month $this->year");
 
-        $designation = $beneficiary[$this->headers['designation']] === ''
+        $designation = $beneficiary[$this->headers['designation']] == ''
             ? 'None'
             : $beneficiary[$this->headers['designation']];
 
-//        dump($this->headers['bank_name'], $this->headers['employee_id']);
-
-        if ($bankable === null) {
+        if (is_null($bankable)) {
             throw_if(
                 true,
                 WrongScheduleException::class,
