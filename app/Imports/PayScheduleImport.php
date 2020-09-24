@@ -2,17 +2,20 @@
 
 namespace App\Imports;
 
-use App\Models\Bank;
 use Exception;
 use Carbon\Carbon;
+use App\Models\Bank;
 use Maatwebsite\Excel\Row;
 use Illuminate\Support\Str;
 use App\Models\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use function dump;
 use function str_pad;
+use function collect;
 use function throw_if;
+use function in_array;
 use const STR_PAD_LEFT;
 
 class PayScheduleImport implements OnEachRow
@@ -25,6 +28,7 @@ class PayScheduleImport implements OnEachRow
     protected $domain;
     protected $heading;
     protected $department;
+    protected $headers = [];
 
     public AuditSubMdaSchedule $audit_sub_mda_schedule;
     public string $file_path;
@@ -74,6 +78,9 @@ class PayScheduleImport implements OnEachRow
 
         if ($row_number === 3) {
             $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+
+            $this->setHeaders();
+
             return null;
         }
 
@@ -81,7 +88,10 @@ class PayScheduleImport implements OnEachRow
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
 
-        if (! isset($beneficiary['employee_id'])) {
+        if (
+            ! isset($beneficiary[$this->headers['employee_id']]) ||
+            ! isset($beneficiary[$this->headers['employee_name']])
+        ) {
             return null;
         }
 
@@ -92,7 +102,7 @@ class PayScheduleImport implements OnEachRow
      * Extracts the MDA Name, Payment Month & Year from the First Row
      * @param  string  $row_one
      */
-    private function processRowOne(string $row_one)
+    protected function processRowOne(string $row_one)
     {
         $mda_dept_month_year = Str::of($row_one)->contains('MDA/PARASTATAL')
             ? Str::of($row_one)->after('MDA/PARASTATAL: ')->upper()->explode(', ')
@@ -126,59 +136,72 @@ class PayScheduleImport implements OnEachRow
      * @param $beneficiary
      * @return \Illuminate\Database\Eloquent\Model
      */
-    private function createAuditPaySchedule($beneficiary)
+    protected function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'bank_code'); //Gets all the beneficiary info part
 
-        $other_part = $all->diffKeys($part_a)->except('bank_code'); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == 'total_allowance')->filter();
+        $part_a = $all->takeUntil(fn (
+            $item,
+            $key
+        ) => $key === $this->headers['bank_code']); //Gets all the beneficiary info part
+
+        $other_part = $all->diffKeys($part_a)->except($this->headers['bank_code']); //Remove part_a from all
+        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == $this->headers['total_allowance'])->filter();
 
         $deductions = $other_part->diffKeys($allowances)
-                                 ->except('total_allowance', 'grosspay', 'total_dues', 'total_deduction', 'net_pay')
-                                 ->filter();
+                                 ->except(
+                                     $this->headers['total_allowance'],
+                                     $this->headers['gross_pay'],
+                                     $this->headers['total_dues'],
+                                     $this->headers['total_deduction'],
+                                     $this->headers['net_pay']
+                                 )->filter();
 
         try {
-            $bankable = $this->getBankableType($beneficiary['bank_name']);
+            $bankable = $this->getBankableType($beneficiary[$this->headers['bank_name']]);
         } catch (Exception $e) {
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: '.$beneficiary['bank_name'].' '.$e->getMessage()
+                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
             );
         }
 
         $month = Carbon::parse("25 $this->month $this->year");
 
-        $designation = $beneficiary['designation'] == '' ? 'None' : $beneficiary['designation'];
+        $designation = $beneficiary[$this->headers['designation']] === ''
+            ? 'None'
+            : $beneficiary[$this->headers['designation']];
+
+//        dump($this->headers['bank_name'], $this->headers['employee_id']);
 
         if ($bankable === null) {
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: '.$beneficiary['bank_name'].' Does Not Exist'
+                "Bank Named: {$beneficiary[$this->headers['bank_name']]} for {$beneficiary[$this->headers['employee_id']]} Does Not Exist"
             );
         }
 
         $bankable_type = $bankable->bankableType();
 
         $account_number = $bankable_type === 'commercial'
-            ? $this->pad($beneficiary['account_no'], 10)
-            : $beneficiary['account_no'];
+            ? $this->pad($beneficiary[$this->headers['account_number']], 10)
+            : $beneficiary[$this->headers['account_number']];
 
         $attributes = [
-            'verification_number' => $beneficiary['employee_id'],
-            'beneficiary_name'    => $beneficiary['employee_name'],
-            'beneficiary_cadre'   => $beneficiary['employee_grade'],
+            'verification_number' => $beneficiary[$this->headers['employee_id']],
+            'beneficiary_name'    => $beneficiary[$this->headers['employee_name']],
+            'beneficiary_cadre'   => $beneficiary[$this->headers['employee_grade']],
             'designation'         => $designation,
-            'basic_pay'           => $beneficiary['basic_salary'],
-            'bank_name'           => $beneficiary['bank_name'],
+            'basic_pay'           => $beneficiary[$this->headers['basic_salary']],
+            'bank_name'           => $beneficiary[$this->headers['bank_name']],
             'account_number'      => $account_number,
-            'bank_code'           => $this->pad($beneficiary['bank_code'], 3),
-            'total_allowance'     => $beneficiary['total_allowance'],
-            'gross_pay'           => $beneficiary['grosspay'],
-            'total_deduction'     => $beneficiary['total_deduction'] + $beneficiary['total_dues'],
-            'net_pay'             => $beneficiary['net_pay'],
+            'bank_code'           => $this->pad($beneficiary[$this->headers['bank_code']], 3),
+            'total_allowance'     => $beneficiary[$this->headers['total_allowance']],
+            'gross_pay'           => $beneficiary[$this->headers['gross_pay']],
+            'total_deduction'     => $beneficiary[$this->headers['total_deduction']] + $beneficiary[$this->headers['total_dues']],
+            'net_pay'             => $beneficiary[$this->headers['net_pay']],
             'allowances'          => $allowances,
             'deductions'          => $deductions,
             'month'               => $month,
@@ -201,18 +224,18 @@ class PayScheduleImport implements OnEachRow
         return $schedule;
     }
 
-    private function monthAndYearNotMatching() : bool
+    protected function monthAndYearNotMatching() : bool
     {
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
             || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year());
     }
 
-    private function mdaNotMatching() : bool
+    protected function mdaNotMatching() : bool
     {
         return Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
     }
 
-    private function getBankableType($bank_name)
+    protected function getBankableType($bank_name)
     {
         Str::of($bank_name)->upper()->trim();
 
@@ -227,7 +250,7 @@ class PayScheduleImport implements OnEachRow
         return $this->domain->microFinanceBanks->where('name', $bank_name)->first();
     }
 
-    private function checkBankExceptions($bank_name)
+    protected function checkBankExceptions($bank_name)
     {
         $bank_name = Str::upper($bank_name);
 
@@ -260,7 +283,7 @@ class PayScheduleImport implements OnEachRow
         return $exceptions[$bank_name] ?? $bank_name;
     }
 
-    private function mdaNameCheck($mda)
+    protected function mdaNameCheck($mda)
     {
         $exceptions = [
             'POLITICAL APPOINTEES GOVT HOUSE' => 'POLITICAL APPOINTEES GOVERNMENT HOUSE',
@@ -269,8 +292,38 @@ class PayScheduleImport implements OnEachRow
         return $exceptions[$mda] ?? $mda;
     }
 
-    public function pad($string, $padding)
+    protected function pad($string, $padding)
     {
         return str_pad($string, $padding, '0', STR_PAD_LEFT);
+    }
+
+    protected function setHeaders()
+    {
+        $items = [
+            'employee_id'     => ['id', 'employee_id'],
+            'employee_name'   => ['name', 'employee_name'],
+            'employee_grade'  => ['grade', 'employee_grade'],
+            'designation'     => ['designation', 'employee_designation'],
+            'basic_salary'    => ['bs', 'basic_salary'],
+            'bank_name'       => ['bank', 'bank_name'],
+            'account_number'  => ['acct', 'account_number'],
+            'bank_code'       => ['code', 'bank_code'],
+            'total_allowance' => ['total_allw', 'total_allowance'],
+            'gross_pay'       => ['gross', 'grosspay', 'gross_pay'],
+            'total_dues'      => ['total_dues'],
+            'total_deduction' => ['total_ded', 'total_deduction'],
+            'net_pay'         => ['net', 'netpay', 'net_pay'],
+        ];
+
+        foreach ($items as $key => $value) {
+            $this->headers[$key] = $this->heading[$this->getKeyFor($value)];
+        }
+    }
+
+    protected function getKeyFor($array)
+    {
+        $heading = collect($this->heading);
+
+        return $heading->search(fn ($item, $key) => in_array($item, $array));
     }
 }
