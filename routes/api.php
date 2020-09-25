@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('beneficiary/payment_history')->group(function () {
-        Route::get('', [PaymentHistoryController::class, 'index']);
+        Route::post('', [PaymentHistoryController::class, 'index']);
         Route::fallback([PaymentHistoryController::class, 'invalid']);
     });
 });
