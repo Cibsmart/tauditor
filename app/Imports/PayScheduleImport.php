@@ -304,7 +304,7 @@ class PayScheduleImport implements OnEachRow
             'designation'     => ['designation', 'employee_designation'],
             'basic_salary'    => ['bs', 'basic_salary'],
             'bank_name'       => ['bank', 'bank_name'],
-            'account_number'  => ['acct', 'account_number'],
+            'account_number'  => ['acct', 'account_number', 'account_no'],
             'bank_code'       => ['code', 'bank_code'],
             'total_allowance' => ['total_allw', 'total_allowance'],
             'gross_pay'       => ['gross', 'grosspay', 'gross_pay'],
