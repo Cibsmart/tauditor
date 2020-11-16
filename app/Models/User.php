@@ -43,6 +43,11 @@ class User extends Authenticatable
         return $this->hasOne(UserMicroFinanceBank::class);
     }
 
+    public function requests()
+    {
+        return $this->hasMany(RequestLog::class);
+    }
+
     public function setPasswordAttribute(string $value) : string
     {
         return $this->attributes['password'] = Hash::make($value);
