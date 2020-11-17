@@ -7,9 +7,10 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\LoanResourceCollection;
-use function is_null;
+use function collect;
 use function response;
 
 class PaymentHistoryController extends Controller
@@ -19,6 +20,8 @@ class PaymentHistoryController extends Controller
     {
         $domain = $request->domain;
         $verification_number = $request->staff_id;
+
+        $this->logRequest($domain, $verification_number);
 
         $domain = Domain::find(Str::of($domain)->trim());
 
@@ -51,11 +54,11 @@ class PaymentHistoryController extends Controller
         $mda_name = $mda_name === $sub_name ? $mda_name : "{$mda_name} ({$sub_name})";
 
         $data = [
-            'staff_id'       => $schedules[0]->verification_number,
-            'staff_name'     => $schedules[0]->beneficiary_name,
-            'staff_cadre'    => $schedules[0]->beneficiary_cadre,
-            'staff_mda'      => $mda_name,
-            'schedules'      => $schedules->map(fn ($schedule) => [
+            'staff_id'    => $schedules[0]->verification_number,
+            'staff_name'  => $schedules[0]->beneficiary_name,
+            'staff_cadre' => $schedules[0]->beneficiary_cadre,
+            'staff_mda'   => $mda_name,
+            'schedules'   => $schedules->map(fn($schedule) => [
                 'net_pay'        => number_format($schedule->net_pay, 2, '.', ','),
                 'month'          => "{$schedule->month_name} {$schedule->year}",
                 'bank_name'      => $schedule->bank_name,
@@ -73,5 +76,16 @@ class PaymentHistoryController extends Controller
             'data'           => [],
             'message'        => 'Invalid Request',
         ])->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    protected function logRequest($domain, $verification_number)
+    {
+        $log = [
+            'endpoint' => 'payment_history',
+            'data'     => collect(['domain' => $domain, 'verification_number' => $verification_number]),
+            'ip'       => request()->ip(),
+        ];
+
+        Auth::user()->requests()->create($log);
     }
 }
