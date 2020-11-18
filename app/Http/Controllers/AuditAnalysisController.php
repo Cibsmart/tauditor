@@ -12,6 +12,7 @@ use App\Jobs\AnalysePaySchedules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use App\Actions\AuditPayScheduleAction;
 use function back;
 
 class AuditAnalysisController extends Controller
@@ -106,6 +107,7 @@ class AuditAnalysisController extends Controller
 
             foreach ($sub_mdas as $sub_mda) {
                 AnalysePaySchedules::dispatch($sub_mda);
+//                (new AuditPayScheduleAction)->execute($sub_mda); //Run Synchronously
                 $count++;
             }
         }
