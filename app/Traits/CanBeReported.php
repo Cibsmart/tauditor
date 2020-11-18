@@ -30,7 +30,7 @@ trait CanBeReported
                              ->where('audit_payroll_category_id', $payroll_category_id)
                              ->where('audit_sub_mda_schedule_id', $audit_sub_mad_schedule_id)
                              ->where('category', $category)
-                             ->get();
+                             ->first();
 
         if (is_null($report)) {
             $this->reportable()->create($attributes);
