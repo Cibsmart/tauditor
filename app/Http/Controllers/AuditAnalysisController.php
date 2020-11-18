@@ -100,14 +100,14 @@ class AuditAnalysisController extends Controller
             return back()->with('error', $message);
         }
 
-//        $audit_payroll_category->setAnalysisStatus('running');
+        $audit_payroll_category->setAnalysisStatus('running');
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-//                AnalysePaySchedules::dispatch($sub_mda);
-                (new AuditPayScheduleAction)->execute($sub_mda);
+                AnalysePaySchedules::dispatch($sub_mda);
+//                (new AuditPayScheduleAction)->execute($sub_mda); //Run Synchronously
                 $count++;
             }
         }
