@@ -12,6 +12,7 @@ use App\Jobs\AnalysePaySchedules;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use App\Actions\AuditPayScheduleAction;
 use function back;
 
 class AuditAnalysisController extends Controller
@@ -99,13 +100,14 @@ class AuditAnalysisController extends Controller
             return back()->with('error', $message);
         }
 
-        $audit_payroll_category->setAnalysisStatus('running');
+//        $audit_payroll_category->setAnalysisStatus('running');
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-                AnalysePaySchedules::dispatch($sub_mda);
+//                AnalysePaySchedules::dispatch($sub_mda);
+                (new AuditPayScheduleAction)->execute($sub_mda);
                 $count++;
             }
         }
