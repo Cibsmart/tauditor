@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\AuditSubMdaSchedule;
 use App\Imports\PayScheduleImport;
 use Illuminate\Support\Facades\Auth;
+use App\Imports\LeaveScheduleImport;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
@@ -64,13 +65,20 @@ class AuditPayScheduleController extends Controller
 
         $file_path = Storage::putFile('schedules', $request->schedule_file);
 
-        $pension = $audit_sub_mda->auditMdaSchedule->pension;
+        $payment_type = $audit_sub_mda->auditMdaSchedule->auditPayrollCategory->payment_type_id;
 
         try {
-            if ($pension) {
-                (new PensionPayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
-            } else {
-                (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+
+            switch ($payment_type) {
+                case 'pen':
+                    (new PensionPayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+                    break;
+                case 'lev':
+                    (new LeaveScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+                    break;
+                case 'sal':
+                    (new PayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
+                    break;
             }
         } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
@@ -84,7 +92,7 @@ class AuditPayScheduleController extends Controller
 
         if ($confirm_upload->isEmpty()) {
             $headers = 'ID | NAME | GRADE | DESIGNATION | B/S | BANK | ACCT | CODE | ALLOWANCES | TOTAL ALLW | GROSS PAY | DUES | TOTAL DUES | DEDUCTION | TOTAL DED | NET PAY';
-            $message = "Uploaded Failed: Ensure Heading has {$headers}";
+            $message = "Upload Failed: Ensure Heading has {$headers}";
             return back()->with('error', $message);
         }
 

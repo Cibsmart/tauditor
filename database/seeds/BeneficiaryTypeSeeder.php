@@ -40,6 +40,7 @@ class BeneficiaryTypeSeeder extends Seeder
 
             $beneficiary_type = factory(BeneficiaryType::class)->create($attributes);
             $beneficiary_type->paymentTypes()->attach($payment_types->where('id', 'sal'));
+            $beneficiary_type->paymentTypes()->attach($payment_types->where('id', 'lev'));
         }
 
         foreach ($staff_types_jaac as $code => $name) {
@@ -54,6 +55,7 @@ class BeneficiaryTypeSeeder extends Seeder
 
             $beneficiary_type = factory(BeneficiaryType::class)->create($attributes);
             $beneficiary_type->paymentTypes()->attach($payment_types->where('id', 'sal'));
+            $beneficiary_type->paymentTypes()->attach($payment_types->where('id', 'lev'));
         }
     }
 }

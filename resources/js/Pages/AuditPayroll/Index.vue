@@ -4,7 +4,7 @@
         <div class="mb-6 flex justify-between items-center">
             <div></div>
             <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo" preserve-state>
-                Add <span class="hidden md:inline"> &nbsp Payroll</span>
+                Add <span class="hidden md:inline"> &nbsp; Payroll</span>
             </inertia-link>
         </div>
 
@@ -20,6 +20,11 @@
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 Created By
                             </th>
+
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                &nbsp;
+                            </th>
+
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 Details
                             </th>
@@ -43,6 +48,14 @@
                                     </div>
                                 </inertia-link>
                             </td>
+
+                            <td class="w-px whitespace-no-wrap border-b border-gray-200">
+                                <inertia-link v-if="payroll.is_current && payroll.can_add_leave"
+                                              :href="route('audit_payroll.leave', {audit_payroll: payroll.id})" class="px-5 py-3" preserve-state>
+                                    Add Annual Leave Allowance
+                                </inertia-link>
+                            </td>
+
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
                                 <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
                                     <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400" />

@@ -29,7 +29,7 @@ class PotentialUser extends Model
         return $this->hasOne(PotentialUserMfb::class);
     }
 
-    public function getNameAttribute() : string
+    public function getNameAttribute()
     {
         return "{$this->first_name} {$this->last_name}";
     }

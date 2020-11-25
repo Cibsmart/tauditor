@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
+use App\Actions\GenerateAutoPayScheduleAction;
 
 class AuditAutopayController extends Controller
 {

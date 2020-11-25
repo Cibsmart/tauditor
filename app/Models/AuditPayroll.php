@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use function in_array;
 
 /**
  * @method static first($payroll)
@@ -116,5 +117,19 @@ class AuditPayroll extends Model
         $year = Str::of($this->year)->substr(2, 2);
 
         return "$month $year";
+    }
+
+    public function currentMonth()
+    {
+        return $this->timestamp->format('Y-m') === now()->format('Y-m');
+    }
+
+    public function canAddLeaveAllowance()
+    {
+        return
+            in_array($this->month, [11, 12])
+            && $this->auditPaymentCategories()
+                    ->where('payment_type_id', 'lev')
+                    ->doesntExist() ;
     }
 }
