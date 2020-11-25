@@ -52,7 +52,7 @@ class GenerateAutoPayScheduleAction
 
         $this->year = $schedule->month->year;
         $this->month = $schedule->month->monthName;
-        $this->payment = $schedule->pension ? 'PEN' : 'SAL';
+        $this->payment = Str::upper($schedule->auditPayrollCategory()->payment_type_id);
 
         [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn(
             $schedule

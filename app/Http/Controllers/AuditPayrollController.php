@@ -8,6 +8,8 @@ use App\Models\AuditPayroll;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use function now;
+use function redirect;
 
 class AuditPayrollController extends Controller
 {
@@ -26,6 +28,8 @@ class AuditPayrollController extends Controller
                             'year'         => $payroll->year,
                             'created_by'   => $payroll->createdBy(),
                             'date_created' => $payroll->dateCreated(),
+                            'is_current' => $payroll->currentMonth(),
+                            'can_add_leave' => $payroll->canAddLeaveAllowance(),
                             'categories'   => $payroll->auditPaymentCategories->transform(fn ($category) => [
                                 'id'              => $category->id,
                                 'payment_type_id' => $category->payment_type_id,
@@ -36,14 +40,12 @@ class AuditPayrollController extends Controller
                             ]),
                         ]);
 
-        return Inertia::render('AuditPayroll/Index', [
-            'payrolls' => $payrolls,
-        ]);
+        return Inertia::render('AuditPayroll/Index', ['payrolls' => $payrolls,]);
     }
 
     public function store()
     {
-        $date = Carbon::now();
+        $date = now();
 
         $user = Auth::user();
 
@@ -74,6 +76,16 @@ class AuditPayrollController extends Controller
         });
 
         $message = "Payroll for $date->monthName $date->year Created Successfully";
+
+        return redirect()->route('audit_payroll.index')
+                         ->with('success', $message);
+    }
+
+    public function leave(AuditPayroll $audit_payroll)
+    {
+        $this->createLeaveCategories($audit_payroll);
+
+        $message = "Annual Leave Allowance Category Added for $audit_payroll->monthName $audit_payroll->year Successfully";
 
         return redirect()->route('audit_payroll.index')
                          ->with('success', $message);
@@ -132,6 +144,46 @@ class AuditPayrollController extends Controller
 
         foreach ($pension_beneficiary_types as $beneficiary_type) {
             $this->createAuditMdaSchedules($beneficiary_type, $category);
+        }
+    }
+
+    private function createLeaveCategories(AuditPayroll $payroll)
+    {
+        $domains = ['state' => 'ANSG', 'jaac' => 'ANLG'];
+        $salary_beneficiary_types = $payroll->domain->beneficiaryTypes()
+                                                    ->thatReceives($salary = 'lev')
+                                                    ->get();
+
+        $domain = $domains[$payroll->domain->id];
+        $year = $payroll->year;
+
+        if ($payroll->domain->id === 'state') {
+            $title = Str::upper("$domain $year Annual Leave Allowance");
+
+            $category = $payroll->auditPaymentCategories()->create([
+                'payment_type_id' => $salary,
+                'payment_title'   => $title,
+                'staff_type' => 'staff'
+            ]);
+
+            foreach ($salary_beneficiary_types as $beneficiary_type) {
+                $this->createAuditMdaSchedules($beneficiary_type, $category);
+            }
+        }
+
+        if ($payroll->domain->id === 'jaac') {
+            foreach ($salary_beneficiary_types as $beneficiary_type) {
+                $beneficiary_type_id = $beneficiary_type->id;
+                $title = Str::upper("$domain $beneficiary_type_id $year Annual Leave Allowance");
+
+                $category = $payroll->auditPaymentCategories()->create([
+                    'payment_type_id' => $salary,
+                    'payment_title'   => $title,
+                    'staff_type' => $beneficiary_type->id,
+                ]);
+
+                $this->createAuditMdaSchedules($beneficiary_type, $category);
+            }
         }
     }
 

@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
     Route::name('audit_payroll.')->group(function () {
         Route::get('audit_payroll', [AuditPayrollController::class, 'index'])->name('index');
         Route::post('audit_payroll/store', [AuditPayrollController::class, 'store'])->name('store');
+        Route::get(
+            'audit_payroll/{audit_payroll}/leave_allowance',
+            [AuditPayrollController::class, 'leave']
+        )->name('leave');
     });
 });
 
@@ -229,7 +233,6 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
 });
 
 
-
 /*
 |-------------------------------------------------------------------------------
 | MFB Schedule Routes
@@ -238,7 +241,6 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
 Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
     Route::name('mfb_schedule.')->group(function () {
         Route::prefix('microfinance_bank_schedule')->group(function () {
-
             Route::get('', [MfbScheduleController::class, 'index'])->name('index');
 
             Route::get(
@@ -258,7 +260,6 @@ Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
         });
     });
 });
-
 
 
 /*
