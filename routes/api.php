@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\SalaryHistoryController;
 use App\Http\Controllers\Api\BeneficiaryController;
 use App\Http\Controllers\Api\PaymentHistoryController;
 
@@ -32,6 +33,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [PaymentHistoryController::class, 'index']);
         Route::fallback([PaymentHistoryController::class, 'invalid']);
     });
+
+    Route::prefix('beneficiary/salary_history')->group(function () {
+        Route::post('', [SalaryHistoryController::class, 'index']);
+        Route::fallback([SalaryHistoryController::class, 'invalid']);
+    });
 });
+
 
 

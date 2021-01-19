@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +21,8 @@ class CreateUserTokenController extends Controller
         $user = Auth::user();
 
 //        $token = $user->createToken('state_airs');
-        $token = $user->createToken('loans');
+//        $token = $user->createToken('loans');
+        $token = $user->createToken('fidelity');
 
         return $token->plainTextToken;
     }
