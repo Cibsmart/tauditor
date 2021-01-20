@@ -9,14 +9,27 @@ use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use function now;
+use function response;
 
 class SalaryHistoryController extends Controller
 {
     public function index(Request $request)
     {
         $bvn = Str::of($request->bvn)->trim();
+        $auth = $request->authorizationCode;
 
         $this->logRequest(Str::upper($bvn));
+
+        if (! $this->authorized($auth)) {
+            return response()->json([
+                'hasData'      => false,
+                'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
+                'responseCode' => '04',
+                'responseMsg'  => 'UNAUTHORIZED',
+                'data'         => [],
+            ])->setStatusCode(Response::HTTP_FORBIDDEN);
+        }
 
         if ($bvn->length() !== 11) {
             return response()->json([
@@ -114,5 +127,16 @@ class SalaryHistoryController extends Controller
                 "status" => "false",
             ],
         ])->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+
+    protected function authorized($auth)
+    {
+        $authorize = Auth::user()->authorization;
+
+        if (! $authorize) {
+            return false;
+        }
+
+        return Str::lower($authorize->code) === Str::lower($auth);
     }
 }

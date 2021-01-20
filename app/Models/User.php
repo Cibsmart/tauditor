@@ -38,6 +38,11 @@ class User extends Authenticatable
         return $this->belongsTo(Domain::class);
     }
 
+    public function authorization()
+    {
+        return $this->hasOne(AuthorizationCode::class);
+    }
+
     public function microfinanceBank()
     {
         return $this->hasOne(UserMicroFinanceBank::class);
