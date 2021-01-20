@@ -50,10 +50,21 @@ class Beneficiary extends Model
         return $this->hasOne(StaffInfo::class);
     }
 
-
     public function bankDetail() : HasOne
     {
         return $this->hasOne(BankDetail::class);
+    }
+
+    public function getAddressAttribute()
+    {
+        return $this->address_line_1
+            ? "{$this->address_line_1} {$this->address_line_2}, {$this->address_city}, {$this->address_state}"
+            : null;
+    }
+
+    public function getDobAttribute()
+    {
+        return $this->date_of_birth->format('d-m-Y H:i:s+0000');
     }
 
     public function status()

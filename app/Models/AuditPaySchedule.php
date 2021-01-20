@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Traits\CanBeReported;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use function number_format;
 
 /**
  *
@@ -149,6 +151,16 @@ class AuditPaySchedule extends Model
     public function getNetPayAttribute(int $value) : float
     {
         return $value / 100;
+    }
+
+    public function getFormattedNetPayAttribute()
+    {
+        return number_format($this->net_pay, 2, '.', ',');
+    }
+
+    public function getPaymentDateAttribute()
+    {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->timestamp)->format('d-m-Y H:i:s+0000');
     }
 
     protected static function pad($string, $padding)

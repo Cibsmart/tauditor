@@ -17,6 +17,8 @@ class ModifyBankDetails extends Migration
             $table->string('account_name')
                   ->after('beneficiary_id')
                   ->nullable();
+
+            $table->index('bank_verification_number');
         });
     }
 
