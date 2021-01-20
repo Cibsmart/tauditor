@@ -72,6 +72,12 @@ class Beneficiary extends Model
         return $this->date_of_birth->format('d-m-Y H:i:s+0000');
     }
 
+    public function bvn()
+    {
+        return $this->bankDetail->bvn;
+    }
+
+
     public function status()
     {
         return $this->hasOne(BeneficiaryStatus::class);

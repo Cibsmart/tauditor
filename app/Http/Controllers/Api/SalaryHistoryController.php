@@ -12,18 +12,18 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SalaryHistoryController extends Controller
 {
-    public function index(Request $request)
+    public function show(Request $request)
     {
         $bvn = Str::of($request->bvn)->trim();
         $auth = $request->authorizationCode;
 
         $this->logRequest(['bvn' => Str::upper($bvn), 'authorization_code' => $auth]);
 
-        if (! $auth || empty($auth)) {
+        if (! $auth) {
             return response()->json([
                 'hasData'      => false,
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
-                'responseCode' => '04',
+                'responseCode' => '07',
                 'responseMsg'  => 'UNAUTHORIZED',
                 'data'         => [],
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
@@ -47,7 +47,7 @@ class SalaryHistoryController extends Controller
             return response()->json([
                 'hasData'      => false,
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
-                'responseCode' => '06',
+                'responseCode' => '07',
                 'responseMsg'  => 'BVN NOT FOUND',
                 'data'         => [],
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
@@ -68,7 +68,7 @@ class SalaryHistoryController extends Controller
             return response()->json([
                 'hasData'      => false,
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
-                'responseCode' => '05',
+                'responseCode' => '07',
                 'responseMsg'  => 'NO SALARY DATA',
                 'data'         => [],
             ])->setStatusCode(Response::HTTP_NOT_FOUND);

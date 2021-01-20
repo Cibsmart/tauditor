@@ -20,6 +20,7 @@ class CreateLoanMandatesTable extends Migration
             $table->string('staff_id');
             $table->string('bvn');
             $table->string('account_number');
+            $table->string('phone_number');
             $table->string('currency');
             $table->integer('loan_amount');
             $table->integer('collection_amount');
