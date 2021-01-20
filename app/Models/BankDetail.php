@@ -25,4 +25,9 @@ class BankDetail extends Model
     {
         return $this->belongsTo(Beneficiary::class);
     }
+
+    public function getBvnAttribute()
+    {
+        return $this->bank_verification_number;
+    }
 }

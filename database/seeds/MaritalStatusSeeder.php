@@ -17,6 +17,7 @@ class MaritalStatusSeeder extends Seeder
           'M' => 'MARRIED',
           'D' => 'DIVORCED',
           'W' => 'WIDOW(ER)',
+          'P' => 'SEPARATED',
         ];
 
         foreach ($status as $key => $value) {

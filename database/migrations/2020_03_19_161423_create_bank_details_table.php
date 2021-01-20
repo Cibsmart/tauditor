@@ -15,14 +15,12 @@ class CreateBankDetailsTable extends Migration
     {
         Schema::create('bank_details', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('beneficiary_id');
+            $table->foreignId('beneficiary_id')->constrained();
             $table->string('account_number', 20);
             $table->string('bank_verification_number', 20)->nullable();
             $table->morphs('bankable');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('beneficiary_id')->references('id')->on('beneficiaries');
         });
     }
 
