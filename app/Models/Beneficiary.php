@@ -39,27 +39,30 @@ class Beneficiary extends Model
         'address'       => AddressCast::class,
     ];
 
-    protected $with = ['status'];
-
     /*
     |-------------------------------------------------------------------------------
     | Relationships
     |-------------------------------------------------------------------------------
     */
 
-    public function status()
+    public function info()
     {
-        return $this->hasOne(BeneficiaryStatus::class);
+        return $this->hasOne(StaffInfo::class);
     }
 
-    public function gender() : BelongsTo
-    {
-        return $this->belongsTo(Gender::class);
-    }
 
     public function bankDetail() : HasOne
     {
         return $this->hasOne(BankDetail::class);
+    }
+
+    public function status()
+    {
+        return $this->hasOne(BeneficiaryStatus::class);
+    }
+    public function gender() : BelongsTo
+    {
+        return $this->belongsTo(Gender::class);
     }
 
     public function mdaDetail() : HasOne

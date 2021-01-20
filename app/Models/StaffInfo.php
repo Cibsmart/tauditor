@@ -10,4 +10,5 @@ class StaffInfo extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $guarded = [];
 }

@@ -15,6 +15,7 @@ class CreateStaffInfosTable extends Migration
     {
         Schema::create('staff_infos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('beneficiary_id')->constrained();
             $table->string('staff_id');
             $table->string('staff_type')->nullable();
             $table->string('grade')->nullable();

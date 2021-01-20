@@ -9,6 +9,7 @@ use App\Http\Controllers\TmsPayeApiController;
 use App\Http\Controllers\ManageUserController;
 use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\MfbScheduleController;
+use App\Http\Controllers\BeneficiaryController;
 use App\Http\Controllers\AuditPayrollController;
 use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -48,6 +49,18 @@ Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth
 Route::post('login', [LoginController::class, 'login'])->middleware('guest')->name('login.attempt');
 Route::post('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
 Route::post('register', [RegisterController::class, 'register'])->middleware('guest')->name('register.store');
+
+/*
+|-------------------------------------------------------------------------------
+| Beneficiaries Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('beneficiaries.')->group(function () {
+        Route::get('upload/beneficiaries_profile', [BeneficiaryController::class, 'create'])->name('create');
+        Route::post('upload/beneficiaries_profile', [BeneficiaryController::class, 'upload'])->name('upload');
+    });
+});
 
 
 /*

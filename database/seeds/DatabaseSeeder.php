@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\NationalitySeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,10 +19,11 @@ class DatabaseSeeder extends Seeder
             PaymentTypeSeeder::class,
             BeneficiaryTypeSeeder::class,
             UserSeeder::class,
-//            GenderSeeder::class,
-//            MaritalStatusSeeder::class,
-//            RelationshipSeeder::class,
-//            StateSeeder::class,
+            GenderSeeder::class,
+            MaritalStatusSeeder::class,
+            RelationshipSeeder::class,
+            NationalitySeeder::class,
+            StateSeeder::class,
             BankTypeSeeder::class,
             BankSeeder::class,
             MicroFinanceBankSeeder::class,
