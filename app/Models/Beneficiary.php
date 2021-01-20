@@ -55,6 +55,11 @@ class Beneficiary extends Model
         return $this->hasOne(BankDetail::class);
     }
 
+    public function mandate()
+    {
+        return $this->hasMany(LoanMandate::class);
+    }
+
     public function getAddressAttribute()
     {
         return $this->address_line_1
