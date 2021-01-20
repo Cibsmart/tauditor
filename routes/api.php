@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::fallback([PaymentHistoryController::class, 'invalid']);
     });
 
+
+    //Fidelity Loan Management APIs
     Route::prefix('beneficiary/salary_history')->group(function () {
         Route::post('', [SalaryHistoryController::class, 'show']);
         Route::fallback([SalaryHistoryController::class, 'invalid']);
