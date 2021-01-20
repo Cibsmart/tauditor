@@ -30,12 +30,12 @@ class CreateLoanMandatesTable extends Migration
             $table->dateTime('collection_date');
             $table->string('authorization_code');
             $table->string('authorization_channel');
-            $table->string('loan_status_id');
+            $table->string('status');
             $table->timestamps();
             $table->softDeletes();
 
             $table->index('reference');
-            $table->foreign('loan_status_id')->references('id')->on('loan_statuses');
+            $table->foreign('status')->references('id')->on('loan_statuses');
         });
     }
 

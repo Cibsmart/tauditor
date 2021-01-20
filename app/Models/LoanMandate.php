@@ -51,4 +51,11 @@ class LoanMandate extends Model
     {
         return $value / 100;
     }
+
+    public function cancel()
+    {
+        $this->status = 'C';
+
+        $this->save();
+    }
 }

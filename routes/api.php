@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoanMandateController;
 use App\Http\Controllers\Api\SalaryHistoryController;
 use App\Http\Controllers\Api\BeneficiaryController;
+use App\Http\Controllers\CancelLoanMandateController;
 use App\Http\Controllers\Api\PaymentHistoryController;
 
 /*
@@ -42,6 +43,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('beneficiary/loan_mandate')->group(function () {
         Route::post('', [LoanMandateController::class, 'create']);
+    });
+
+    Route::prefix('beneficiary/cancel_mandate')->group(function () {
+        Route::post('', [CancelLoanMandateController::class, 'create']);
     });
 });
 

@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
 use Illuminate\Support\Str;
-use App\Http\Controllers\Controller;
+use App\Models\LoanMandate;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use function now;
 use function uniqid;
 use function response;
 
-class LoanMandateController extends Controller
+class CancelLoanMandateController extends Controller
 {
     //
     public function create(Request $request)
@@ -20,7 +20,7 @@ class LoanMandateController extends Controller
 
         $staff_id = $request->customerId;
         $auth = $request->authorisationCode;
-        $bvn = $request->bvn;
+        $reference = $request->mandateReference;
 
         if (! $auth) {
             return response()->json([
@@ -48,38 +48,33 @@ class LoanMandateController extends Controller
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
-        if ($beneficiary->bvn() !== $bvn) {
+        $mandate = LoanMandate::query()
+                              ->where('reference', $reference)
+                              ->first();
+
+        if (! $mandate) {
             return response()->json([
                 'hasData'      => false,
                 'responseDate' => now()->format('d-m-Y H:i:s+0000'),
                 'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
-                'responseMsg'  => 'BVN MISMATCH',
+                'responseMsg'  => 'INVALID MANDATE REFERENCE',
                 'data'         => [],
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
-        $attributes = [
-            'reference' => Str::upper(uniqid()),
-            'staff_id' => $beneficiary->verification_number,
-            'bvn' => $beneficiary->bvn(),
-            'account_number' => $request->accountNumber,
-            'phone_number' => $request->phoneNumber,
-            'currency' => $request->currency,
-            'loan_amount' => $request->loanAmount,
-            'collection_amount' => $request->collectionAmount,
-            'total_collection_amount' => $request->totalCollectionAmount,
-            'number_of_repayments' => $request->numberOfRepayments,
-            'disbursement_date' => $request->dateOfDisbursement,
-            'collection_date' => $request->dateOfCollection,
-            'authorization_code' => $auth,
-            'authorization_channel' => $request->authorisationChannel,
-            'status' => 'A',
-        ];
+        if ($mandate->staff_id !== $beneficiary->verification_number) {
+            return response()->json([
+                'hasData'      => false,
+                'responseDate' => now()->format('d-m-Y H:i:s+0000'),
+                'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
+                'responseCode' => '07',
+                'responseMsg'  => 'MANDATE REFERENCE MISMATCH',
+                'data'         => [],
+            ])->setStatusCode(Response::HTTP_FORBIDDEN);
+        }
 
-        $mandate = $beneficiary->mandate()->create($attributes);
-
-        $bank = $beneficiary->bankDetail;
+        $y = $mandate->cancel();
 
         return response()->json([
             'hasData'      => true,
@@ -88,12 +83,9 @@ class LoanMandateController extends Controller
             'responseCode' => '00',
             'responseMsg'  => 'SUCCESS',
             'data'         => [
-                'authorisationCode' => $auth,
-                'accountNumber' => $bank->account_number,
-                'bankCode' => $bank->bankable->code,
-                'amount' => $mandate->loan_amount,
                 'customerId' => $beneficiary->verification_number,
                 'mandateReference' => $mandate->reference,
+                'status' => 'false'
             ],
         ])->setStatusCode(Response::HTTP_FOUND);
     }
