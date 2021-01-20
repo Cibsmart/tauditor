@@ -187,7 +187,7 @@ class AuditPayrollController extends Controller
         }
     }
 
-    private function createAuditMdaSchedules($beneficiary_type, $category)
+    protected function createAuditMdaSchedules($beneficiary_type, $category)
     {
         $mdas = $beneficiary_type->mdas()->isActive()->get();
 
@@ -206,7 +206,7 @@ class AuditPayrollController extends Controller
         }
     }
 
-    private function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
+    protected function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
     {
         //Only State Education Commission should have add subs
         if ($mda->code !== 'SEC') {

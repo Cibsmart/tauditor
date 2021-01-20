@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\LoanMandateController;
+use App\Http\Controllers\Api\SalaryHistoryController;
 use App\Http\Controllers\Api\BeneficiaryController;
+use App\Http\Controllers\CancelLoanMandateController;
 use App\Http\Controllers\Api\PaymentHistoryController;
 
 /*
@@ -32,6 +35,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [PaymentHistoryController::class, 'index']);
         Route::fallback([PaymentHistoryController::class, 'invalid']);
     });
+
+
+    //Fidelity Loan Management APIs
+    Route::prefix('beneficiary/salary_history')->group(function () {
+        Route::post('', [SalaryHistoryController::class, 'show']);
+        Route::fallback([SalaryHistoryController::class, 'invalid']);
+    });
+
+    Route::prefix('beneficiary/loan_mandate')->group(function () {
+        Route::post('', [LoanMandateController::class, 'create']);
+    });
+
+    Route::prefix('beneficiary/cancel_mandate')->group(function () {
+        Route::post('', [CancelLoanMandateController::class, 'create']);
+    });
 });
+
 
 
