@@ -2,10 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LoanMandateController;
-use App\Http\Controllers\Api\SalaryHistoryController;
 use App\Http\Controllers\Api\BeneficiaryController;
-use App\Http\Controllers\CancelLoanMandateController;
+use App\Http\Controllers\Api\SalaryHistoryController;
 use App\Http\Controllers\Api\PaymentHistoryController;
+use App\Http\Controllers\Api\CancelLoanMandateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,7 +24,6 @@ use App\Http\Controllers\Api\PaymentHistoryController;
 
 
 Route::middleware('auth:sanctum')->group(function () {
-
     Route::prefix('beneficiary/paye')->group(function () {
         Route::post('month', [BeneficiaryController::class, 'payeMonth']);
         Route::post('year', [BeneficiaryController::class, 'payeYear']);
@@ -51,6 +50,3 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [CancelLoanMandateController::class, 'create']);
     });
 });
-
-
-

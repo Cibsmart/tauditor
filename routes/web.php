@@ -18,6 +18,7 @@ use App\Http\Controllers\CreateUserTokenController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
+use App\Http\Controllers\DeductionConfirmationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -273,6 +274,12 @@ Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
         });
     });
 });
+
+
+Route::get(
+    'beneficiary/deduction_confirmation',
+    [DeductionConfirmationController::class, 'send']
+);
 
 
 /*
