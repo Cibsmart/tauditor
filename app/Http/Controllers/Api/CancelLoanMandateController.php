@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\Models\Beneficiary;
-use Illuminate\Support\Str;
 use App\Models\LoanMandate;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use function now;
-use function uniqid;
-use function response;
 
 class CancelLoanMandateController extends Controller
 {

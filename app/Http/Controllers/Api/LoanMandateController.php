@@ -7,9 +7,6 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use function now;
-use function uniqid;
-use function response;
 
 class LoanMandateController extends Controller
 {
