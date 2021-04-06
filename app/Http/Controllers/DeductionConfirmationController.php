@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Actions\SendDeductionConfirmation;
 use function config;
+use function array_sum;
 
 class DeductionConfirmationController extends Controller
 {
 
     public function send(Request $request)
     {
-        $account = $request->account;
+
         $narration = $request->narration;
-        $amount = $request->amount;
         $date = $request->date;
+        $data = collect($request->data);
+        $total = $data->sum('amount');
 
         $url = config('fidelity.url');
         $user = config('fidelity.user');
@@ -25,10 +27,10 @@ class DeductionConfirmationController extends Controller
             'APIUser' => $user,
             'APIToken' => $token
         ])->post($url, [
-            'LoanAccount' => $account,
             'Narration' => $narration,
             'TransactionDate' => $date,
-            'Amount' => $amount
+            'TotalAmount' => $total,
+            'data' => $data
         ]);
 
         return $response->json();
