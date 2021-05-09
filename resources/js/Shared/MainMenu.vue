@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="mt-12 hover:bg-gray-100" :class="isActive('') ? 'bg-indigo-800' : ''" v-if="$page.permissions.canViewDashboard">
+        <div class="mt-12 hover:bg-gray-100" :class="isActive('') ? 'bg-indigo-800' : ''" v-if="$page.props.permissions.canViewDashboard">
             <inertia-link class="px-12 py-6 flex items-center group" :href="route('dashboard')">
                 <icon name="dashboard" class="w-4 h-4 mr-2"
                       :class="isActive('') ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
@@ -13,7 +13,7 @@
 
         <template v-for="menu in menus">
             <div v-if="menu.subs">
-                <div v-if="$page.permissions[menu.permission]">
+                <div v-if="$page.props.permissions[menu.permission]">
                 <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id">
                     <inertia-link class="px-12 py-6 flex items-center group"
                                   href="#" @click="menu.active = !menu.active" preserve-scroll>
@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     <template v-for="sub in menu.subs">
-                        <sub-menu v-if="menu.active && $page.permissions[sub.permission]" :url="url" :label="sub.label" :uri="sub.uri" :icon="sub.icon"
+                        <sub-menu v-if="menu.active && $page.props.permissions[sub.permission]" :url="url" :label="sub.label" :uri="sub.uri" :icon="sub.icon"
                                   :key="sub.id"></sub-menu>
                     </template>
                 </div>
@@ -40,7 +40,7 @@
             </div>
 
             <div v-else>
-                <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id" v-if="$page.permissions[menu.permission]">
+                <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id" v-if="$page.props.permissions[menu.permission]">
                     <inertia-link class="px-12 py-6 flex items-center group"
                                   :href="menu.url" @click="menu.active = !menu.active" preserve-scroll>
                         <icon :name="menu.icon" class="w-4 h-4 mr-2"

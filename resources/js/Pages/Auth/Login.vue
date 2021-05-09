@@ -5,10 +5,10 @@
             <div class="mx-auto mt-6 w-24 border-b-2"/>
 
             <text-input v-model="form.email" label="Email" type="email" class="mt-10"
-                        :errors="$page.errors.email"/>
+                        :errors="form.errors.email"/>
 
             <text-input v-model="form.password" label="Password" type="password" class="mt-6"
-                        :errors="$page.errors.password"/>
+                        :errors="form.errors.password"/>
 
             <label class="mt-6 select-none flex items-center" for="remember">
                 <input v-model="form.remember" id="remember" type="checkbox" class="mr-1">
@@ -17,7 +17,7 @@
         </div>
 
         <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
-            <inertia-link href="#" class="hover:underline">Forget password</inertia-link>
+            <inertia-link href="#" class="hover:underline">Forgot password</inertia-link>
             <button type="submit"
                     class="px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap hover:bg-orange-600 focus:bg-orange-500">
                 Login
@@ -27,43 +27,44 @@
 </template>
 
 <script>
-    import AuthLayout from '@/Shared/AuthLayout'
-    import TextInput from '@/Shared/TextInput'
-    import Logo from '@/Shared/Logo'
+import AuthLayout from '@/Shared/AuthLayout'
+import TextInput from '@/Shared/TextInput'
+import Logo from '@/Shared/Logo'
 
-    export default {
-        metaInfo: {title: 'Login'},
-        layout: AuthLayout,
+export default {
+    metaInfo: {title: 'Login'},
+    layout: AuthLayout,
 
-        components: {
-            TextInput,
-            Logo,
-        },
+    components: {
+        TextInput,
+        Logo,
+    },
 
-        props: {
-            errors: Object,
-            domain: Object,
-        },
+    props: {
+        errors: Object,
+        domain: Object,
+    },
 
-        data() {
-            return {
-                form: {
-                    email: '',
-                    password: '',
-                    remember: null,
-                },
-            }
-        },
+    data() {
+        return {
+            form: this.$inertia.form({
+                email: '',
+                password: '',
+                remember: false,
+            }),
+        }
+    },
 
-        methods: {
-            submit() {
-                this.$inertia.post(this.route('login.attempt'), {
-                    email: this.form.email,
-                    password: this.form.password,
-                    domain_id: this.domain.id,
-                    remember: this.form.remember,
-                })
-            }
-        },
-    }
+    methods: {
+        submit() {
+            this.form
+                .transform(data => ({
+                    ...data,
+                    remember: data.remember ? 'on' : '',
+                    domain_id: this.domain.id
+                }))
+                .post(this.route('login.attempt'))
+        }
+    },
+}
 </script>

@@ -3,7 +3,11 @@
         <h1 class="mb-8 font-bold text-3xl">Audit Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <div></div>
-            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo" preserve-state>
+            <inertia-link :href="route('audit_payroll.store')"
+                          method="post"
+                          class="btn btn-big btn-indigo"
+                          as="button"
+                          preserve-state>
                 Add <span class="hidden md:inline"> &nbsp; Payroll</span>
             </inertia-link>
         </div>
