@@ -1,6 +1,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
+    mode: 'jit',
     purge: [
         './resources/js/Pages/**/*.vue',
         './resources/js/Pages/**/**/*.vue',
@@ -28,13 +29,10 @@ module.exports = {
             fill: theme => theme ('colors'),
         },
     },
-    variants: {
-        textColor: ['responsive', 'hover', 'focus', 'group-hover'],
-        borderColor: ['responsive', 'hover', 'focus'],
-    },
+    variants: {},
     plugins: [
-        require('@tailwindcss/ui')({
-            layout: 'sidebar',
-        }),
+        require('@tailwindcss/forms'),
+        require('@tailwindcss/typography'),
+        require('@tailwindcss/aspect-ratio'),
     ],
 }
