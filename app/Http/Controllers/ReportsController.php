@@ -24,6 +24,7 @@ class ReportsController extends Controller
     public function summaryView(Request $request)
     {
         $categories = (object) [];
+
         $payroll = [
             'id'            => '',
             'total_net_pay' => 0,

@@ -4,7 +4,7 @@
 
         <div>
             <select-input v-model="form.payroll" class="pb-8 w-full"
-                          label="Payroll Month" :errors="$page.errors.payroll"
+                          label="Payroll Month" :errors="$page.props.errors.payroll"
                           @input="payrollChanged">
                 <option disabled value="" class="text-gray-100">Select Payroll Month</option>
                 <option v-for="payroll in payrolls" :key="payroll.id" :value="payroll.id">
@@ -90,6 +90,8 @@
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
+    import { Inertia } from '@inertiajs/inertia'
+
     export default {
         metaInfo: { title: 'Payment Summary Report' },
         layout: Layout,
@@ -108,19 +110,19 @@
 
         data() {
             return {
-                form: {
+                form: this.$inertia.form({
                     payroll: this.payroll.id,
-                }
+                })
             }
         },
 
         methods: {
             payrollChanged() {
-                this.$inertia.reload({
+                Inertia.reload({
                     method: 'post', data: this.form,
                     preserveState: true, preserveScroll: true,
                     only: ['categories', 'payroll']
-                });
+                })
             },
         },
     }

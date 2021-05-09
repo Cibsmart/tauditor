@@ -4,7 +4,7 @@
 
         <div>
             <select-input v-model="form.payroll" class="pb-8 w-full"
-                          label="Payroll Month" :errors="$page.errors.payroll"
+                          label="Payroll Month" :errors="$page.props.errors.payroll"
                           @input="payrollChanged">
                 <option disabled value="" class="text-gray-100">Select Payroll Month</option>
                 <option v-for="payroll in payrolls" :key="payroll.id" :value="payroll.id">
@@ -13,7 +13,7 @@
             </select-input>
 
             <select-input v-model="form.category" class="pb-8 w-full"
-                          label="Payment Category" :errors="$page.errors.category"
+                          label="Payment Category" :errors="$page.props.errors.category"
                           @input="categoryChanged">
                 <option disabled value="" class="text-gray-100">Select Category</option>
                 <option v-for="category in categories" :key="category.id" :value="category.id">
@@ -212,6 +212,8 @@
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
+    import { Inertia } from '@inertiajs/inertia'
+
     export default {
         metaInfo: { title: 'MDA Payment Analysis Report' },
         layout: Layout,
@@ -262,11 +264,11 @@
             },
 
             categoryChanged() {
-                this.$inertia.reload({
+                Inertia.reload({
                     method: 'post', data: this.form,
                     preserveState: true, preserveScroll: true,
                     only: ['reports', 'category']
-                });
+                })
             },
         },
     }
