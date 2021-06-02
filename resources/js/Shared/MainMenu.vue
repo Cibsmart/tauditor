@@ -102,13 +102,22 @@
                         permission: 'canViewAutopay'
                     },
                     mfb_schedule: {
-                        id: 1,
+                        id: 4,
                         name: 'mfb_schedule',
                         label: 'MFB Schedule',
                         url: route('mfb_schedule.index'),
                         icon: 'office',
                         active: false,
                         permission: 'canViewMfbSchedule'
+                    },
+                    fidelity: {
+                        id: 5,
+                        name: 'fidelity',
+                        label: 'Fidelity',
+                        url: route('fidelity.mandate'),
+                        icon: 'office',
+                        active: false,
+                        permission: 'canViewFidelityMandate'
                     },
                     reports: {
                         id: 7, name: 'reports', label: 'Reports', icon: 'printer', active: false, permission: 'canViewReports',
