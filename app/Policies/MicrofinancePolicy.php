@@ -30,7 +30,6 @@ class MicrofinancePolicy
      */
     public function view(User $user, MicroFinanceBank $mfb)
     {
-        dd($user, $mfb);
         return $user->microfinanceBank->micro_finance_bank_id === $micro_finance_bank->id;
     }
 

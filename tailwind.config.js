@@ -2,11 +2,16 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
     mode: 'jit',
-    purge: [
-        './resources/js/Pages/**/*.vue',
-        './resources/js/Pages/**/**/*.vue',
-        './resources/js/Shared/*.vue',
-    ],
+    purge: {
+        content: [
+            './resources/js/Pages/**/*.vue',
+            './resources/js/Pages/**/**/*.vue',
+            './resources/js/Shared/*.vue',
+        ],
+        options: {
+            safelist: []
+        },
+    },
     theme: {
         extend: {
             fontFamily: {
