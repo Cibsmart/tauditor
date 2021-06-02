@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div v-if="$page.flash.success && show" class="mb-8 rounded-md bg-green-50 p-4">
+      <div v-if="$page.props.flash.success && show" class="mb-8 rounded-md bg-green-50 p-4">
           <div class="flex">
               <div class="flex-shrink-0">
                   <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -9,7 +9,7 @@
               </div>
               <div class="ml-3">
                   <p class="text-sm leading-5 font-medium text-green-800">
-                      {{ $page.flash.success }}
+                      {{ $page.props.flash.success }}
                   </p>
               </div>
               <div class="ml-auto pl-3">
@@ -24,7 +24,7 @@
           </div>
       </div>
 
-      <div v-if="($page.flash.error || Object.keys($page.errors).length > 0) && show" class="mb-8 rounded-md bg-red-50 p-4">
+      <div v-if="($page.props.flash.error || Object.keys($page.props.errors).length > 0) && show" class="mb-8 rounded-md bg-red-50 p-4">
           <div class="flex">
               <div class="flex-shrink-0">
                   <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
@@ -33,10 +33,10 @@
               </div>
               <div class="ml-3">
                   <div class="text-sm leading-5 font-medium text-red-800">
-                      <span v-if="$page.flash.error" class="py-4 text-sm">{{ $page.flash.error }}</span>
+                      <span v-if="$page.props.flash.error" class="py-4 text-sm">{{ $page.props.flash.error }}</span>
                       <span v-else class="py-4 text-sm">
-                          <span v-if="Object.keys($page.errors).length === 1">There is one form error</span>
-                          <span v-else>There are {{ Object.keys($page.errors).length }} form errors</span>
+                          <span v-if="Object.keys($page.props.errors).length === 1">There is one form error</span>
+                          <span v-else>There are {{ Object.keys($page.props.errors).length }} form errors</span>
                       </span>
                   </div>
               </div>
@@ -62,7 +62,7 @@ export default {
     }
   },
   watch: {
-    '$page.flash': {
+    '$page.props.flash': {
       handler() {
         this.show = true
       },

@@ -90,8 +90,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
                                             <inertia-link v-show="category.analysable"
-                                                :href="route('audit_analysis.analyse', { audit_payroll_category: category.id })"
-                                                method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                                          :href="route('audit_analysis.analyse', { audit_payroll_category: category.id })"
+                                                          method="post" class="px-5 py-3" as="button"
+                                                          preserve-state preserve-scroll>
                                                 Analyse
                                             </inertia-link>
 
@@ -103,7 +104,8 @@
 
                                             <span v-show="category.analysable && category.viewable"> | </span>
 
-                                            <inertia-link v-show="category.viewable" :href="route('audit_analysis.show', { audit_payroll_category: category.id })"
+                                            <inertia-link v-show="category.viewable"
+                                                          :href="route('audit_analysis.show', { audit_payroll_category: category.id })"
                                                           class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Reports
                                             </inertia-link>
