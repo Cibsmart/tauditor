@@ -15,6 +15,7 @@ use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuditAnalysisController;
 use App\Http\Controllers\CreateUserTokenController;
+use App\Http\Controllers\FidelityMandateController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
@@ -275,11 +276,24 @@ Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
     });
 });
 
+/*
+|-------------------------------------------------------------------------------
+| Fidelity Bank Loan Management Routes
+|-------------------------------------------------------------------------------
+*/
 
-Route::get(
-    'beneficiary/deduction_confirmation',
-    [DeductionConfirmationController::class, 'send']
-);
+Route::middleware(['auth'])->group(function () {
+    Route::name('fidelity.')->group(function () {
+        Route::prefix('fidelity')->group(function () {
+            Route::get('mandate', [FidelityMandateController::class, 'mandate'])->name('mandate');
+
+            Route::get(
+                'beneficiary/deduction_confirmation',
+                [DeductionConfirmationController::class, 'send']
+            );
+        });
+    });
+});
 
 
 /*

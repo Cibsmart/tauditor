@@ -134,6 +134,7 @@ class AppServiceProvider extends ServiceProvider
                         'canViewBeneficiaryReport' => $user->can('view_beneficiary_report'),
                         'canViewUsers'             => $user->can('view_users'),
                         'canCreateUsers'           => $user->can('create_users'),
+                        'canViewFidelityMandate'   => $user->can('view_fidelity_mandate'),
                     ] : null;
             },
         ]);

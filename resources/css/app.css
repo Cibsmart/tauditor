@@ -1,9 +1,54 @@
 @import "tailwindcss/base";
-
 @import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-@import "buttons";
-@import "forms";
 @import "nprogress";
 
-@import "tailwindcss/utilities";
+
+@layer components {
+    .btn-indigo { @apply px-6 py-3 rounded bg-indigo-600 text-white text-sm font-bold whitespace-nowrap;}
+
+    .btn { @apply flex items-center rounded text-sm font-bold whitespace-nowrap; }
+
+    .btn-big{ @apply px-6 py-3; }
+
+    .btn-small{ @apply px-2 py-1; }
+
+    .btn-green { @apply bg-green-800 text-white; }
+
+    .btn-indigo { @apply bg-indigo-800 text-white; }
+
+    .btn-red { @apply bg-red-800 text-white; }
+
+    .error{ @apply border-red-500; }
+
+    .error:focus{ @apply border-red-700; }
+
+    /* .btn-indigo:hover { @apply bg-orange-500; }
+
+    .btn-indigo:focus { @apply bg-orange-500; } */
+
+    .btn-spinner,
+    .btn-spinner:after {
+        border-radius: 50%;
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .btn-spinner {
+        font-size: 10px;
+        position: relative;
+        text-indent: -9999em;
+        border-top: .2em solid white;
+        border-right: .2em solid white;
+        border-bottom: .2em solid white;
+        border-left: .2em solid transparent;
+        transform: translateZ(0);
+        animation: spinning 1s infinite linear;
+    }
+
+    @keyframes spinning {
+        0% { transform: rotate(0deg) }
+        100% { transform: rotate(360deg) }
+    }
+}

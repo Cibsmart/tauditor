@@ -96,9 +96,9 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <inertia-link v-show="category.can_generate"
-                                                :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
-                                                method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                            <inertia-link v-show="category.can_generate" as="button"
+                                                          :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
+                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
                                                 Generate
                                             </inertia-link>
 

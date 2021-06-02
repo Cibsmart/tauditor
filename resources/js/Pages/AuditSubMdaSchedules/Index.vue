@@ -83,7 +83,7 @@
 
                                 <form v-show="schedule.uploaded && ! schedule.archived"
                                       @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
-                                      class="inline" :key="schedule.id">
+                                      class="inline" :key="schedule.sub_mda_name">
                                     <button type="submit" class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">Re-upload</button>
                                 </form>
 
@@ -93,7 +93,7 @@
 
                                 <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
                                     <div class="flex items-center">
-                                        <file-input v-model="schedule_form.schedule_file[schedule.id]" :errors="$page.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
+                                        <file-input v-model="form.schedule_file[schedule.id]" :errors="form.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
                                         <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
                                     </div>
                                 </form>
@@ -138,20 +138,23 @@
 
         data(){
             return {
-                schedule_form: {
+                form: this.$inertia.form({
                     schedule_file: [],
-                }
+                })
             }
         },
 
         methods: {
             upload(audit_sub_mda){
 
-                var data = new FormData()
-                data.append('audit_sub_mda', audit_sub_mda || '')
-                data.append('schedule_file', this.schedule_form.schedule_file[audit_sub_mda] || '')
-
-                this.$inertia.post(this.route('audit_pay_schedules.store'), data)
+                this.form
+                    .transform((data) => ({
+                        audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
+                        schedule_file: data.schedule_file[audit_sub_mda]
+                    }))
+                    .post(this.route('audit_pay_schedules.store'), {
+                        preserveScroll: true
+                    })
             },
 
             reupload(audit_sub_mda, mda_name){
@@ -159,9 +162,10 @@
                 let result = confirm('Confirm Re-Upload for' + mda_name);
 
                 if(result) {
-                    var data = new FormData();
-                    this.$inertia.post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}),
-                        data, {preserveScroll: true,})
+                    this.form
+                        .post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}), {
+                            preserveScroll: true,
+                        })
                 }
             }
         }

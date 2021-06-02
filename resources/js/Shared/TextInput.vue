@@ -6,7 +6,7 @@
 
       <input :id="id" :type="type" v-bind="$attrs" :value="value" ref="input"
             :class="{ error: errors.length }" @input="$emit('input', $event.target.value)"
-            class="form-input block w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-indigo-500 focus:shadow">
+            class="form-input block w-full rounded sm:text-sm sm:leading-5 focus:outline-none focus:border-indigo-500 focus:shadow">
 
       <div v-if="errors.length" class="text-red-800 mt-2 text-sm">
         {{ errors[0] }}
