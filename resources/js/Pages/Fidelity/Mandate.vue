@@ -82,7 +82,7 @@
                         </tr>
 
                         <tr v-if="mandates.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Beneficiary</td>
+                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">No Mandate</td>
                         </tr>
                         </tbody>
                     </table>

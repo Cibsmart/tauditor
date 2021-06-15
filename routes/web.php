@@ -208,6 +208,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('paye.')->group(function () {
+        Route::get('paye/data', [TmsPayeApiController::class, 'index'])->name('index');
         Route::get('paye/data/{category}', [TmsPayeApiController::class, 'upload'])->name('upload');
     });
 });

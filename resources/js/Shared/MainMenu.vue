@@ -119,6 +119,15 @@
                         active: false,
                         permission: 'canViewFidelityMandate'
                     },
+                    paye: {
+                        id: 6,
+                        name: 'paye',
+                        label: 'Paye Data',
+                        url: route('paye.index'),
+                        icon: 'office',
+                        active: false,
+                        permission: 'canUploadPayeData'
+                    },
                     reports: {
                         id: 7, name: 'reports', label: 'Reports', icon: 'printer', active: false, permission: 'canViewReports',
                         subs: {
