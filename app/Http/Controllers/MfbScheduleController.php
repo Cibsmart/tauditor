@@ -7,16 +7,10 @@ use Illuminate\Support\Str;
 use App\Models\AuditPayroll;
 use App\Classes\ZipDirectory;
 use App\Models\MicroFinanceBank;
-use Illuminate\Support\Facades\DB;
 use App\Exports\MfbScheduleExport;
 use Illuminate\Support\Facades\Auth;
 use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Storage;
-use function auth;
-use function route;
-use function redirect;
-use function response;
-use function public_path;
 
 class MfbScheduleController extends Controller
 {

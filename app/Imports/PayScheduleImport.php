@@ -42,6 +42,7 @@ class PayScheduleImport implements OnEachRow
 
     public function onRow(Row $row)
     {
+
         $row_number = $row->getIndex();
         $columns = $row->toArray();
 

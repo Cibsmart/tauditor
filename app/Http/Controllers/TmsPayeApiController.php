@@ -2,17 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use Illuminate\Support\Str;
+use App\Models\AuditPayroll;
 use App\Models\AuditPaySchedule;
 use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use function number_format;
 
 class TmsPayeApiController extends Controller
 {
     public function __construct()
     {
         return $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
+                        ->paginate()
+                        ->transform(fn(AuditPayroll $payroll) => [
+                            'id'           => $payroll->id,
+                            'month'        => $payroll->month_name,
+                            'year'         => $payroll->year,
+                            'created_by'   => $payroll->createdBy(),
+                            'date_created' => $payroll->dateCreated(),
+                            'is_current'   => $payroll->currentMonth(),
+                            'categories'   => $payroll->auditPaymentCategories
+                                                      ->transform(fn($category) => [
+                                                          'id'              => $category->id,
+                                                          'payment_type_id' => $category->payment_type_id,
+                                                          'payment_type'    => $category->paymentTypeName(),
+                                                          'payment_title'   => $category->payment_title,
+                                                          'head_count'      => number_format($category->head_count),
+                                                          'uploaded'        => $category->payeData()->firstWhere('successful',
+                                                              1)?->successful,
+                                                          'failed'          => $category->payeData()->firstWhere('failed',
+                                                              1)?->failed,
+                                                      ]),
+                        ]);
+
+        return Inertia::render('TmsPayeData/Index', ['payrolls' => $payrolls]);
     }
 
     public function upload($category)
@@ -23,16 +55,17 @@ class TmsPayeApiController extends Controller
 
         $response = $this->uploadToApi($category, $file_name);
 
-        dump([
+        $category->payeData()->create([
+            'user_id'    => Auth::id(),
             'status'     => $response->status(),
-            'response'   => $response->json(),
+            'response'   => collect($response->json()),
             'successful' => $response->successful(),
             'failed'     => $response->failed(),
             'client'     => $response->clientError(),
             'server'     => $response->serverError(),
         ]);
 
-        return 'Done: ';
+        return back();
     }
 
     protected function uploadToApi($category, $path)
@@ -73,9 +106,9 @@ class TmsPayeApiController extends Controller
 
         $file_exists = Storage::disk('local')->exists($file_name);
 
-//        if ($file_exists) {
-//            return $file_name;
-//        }
+        if ($file_exists) {
+            return $file_name;
+        }
 
         $header = $this->formatContent($this->getHeader());
 

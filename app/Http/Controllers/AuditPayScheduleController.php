@@ -52,7 +52,7 @@ class AuditPayScheduleController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'audit_sub_mda' => ['required', 'numeric', 'exists:audit_sub_mda_schedules,id'],
             'schedule_file' => ['required', 'mimes:xlsx,xls'],
         ]);

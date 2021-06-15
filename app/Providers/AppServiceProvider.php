@@ -75,7 +75,7 @@ class AppServiceProvider extends ServiceProvider
             'audit_sub_mda_schedule' => AuditSubMdaSchedule::class,
         ];
 
-        Validator::extend('positive', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('positive', function ($attribute, $value, $parameters, $validator){
             return $value > 0;
         });
     }
@@ -88,12 +88,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function registerInertia()
     {
-        Inertia::version(function () {
+        Inertia::version(function (){
             return md5_file(public_path('mix-manifest.json'));
         });
 
         Inertia::share([
-            'auth'        => function () {
+            'auth'        => function (){
                 return [
                     'user' => Auth::user() ? [
                         'id'         => Auth::user()->id,
@@ -107,18 +107,18 @@ class AppServiceProvider extends ServiceProvider
                     ] : null,
                 ];
             },
-            'flash'       => function () {
+            'flash'       => function (){
                 return [
                     'success' => Session::get('success'),
                     'error'   => Session::get('error'),
                 ];
             },
-            'errors'      => function () {
+            'errors'      => function (){
                 return Session::get('errors')
                     ? Session::get('errors')->getBag('default')->getMessages()
                     : (object) [];
             },
-            'permissions' => function () {
+            'permissions' => function (){
                 $user = Auth::user();
                 return $user
                     ? [
@@ -134,6 +134,8 @@ class AppServiceProvider extends ServiceProvider
                         'canViewBeneficiaryReport' => $user->can('view_beneficiary_report'),
                         'canViewUsers'             => $user->can('view_users'),
                         'canCreateUsers'           => $user->can('create_users'),
+                        'canViewFidelityMandate'   => $user->can('view_fidelity_mandate'),
+                        'canUploadPayeData'        => $user->can('upload_paye_data'),
                     ] : null;
             },
         ]);
@@ -141,11 +143,11 @@ class AppServiceProvider extends ServiceProvider
 
     protected function registerLengthAwarePaginator()
     {
-        $this->app->bind(LengthAwarePaginator::class, function ($app, $values) {
-            return new class(...array_values($values)) extends LengthAwarePaginator {
+        $this->app->bind(LengthAwarePaginator::class, function ($app, $values){
+            return new class(...array_values($values)) extends LengthAwarePaginator{
                 public function only(...$attributes)
                 {
-                    return $this->transform(function ($item) use ($attributes) {
+                    return $this->transform(function ($item) use ($attributes){
                         return $item->only($attributes);
                     });
                 }
@@ -179,9 +181,9 @@ class AppServiceProvider extends ServiceProvider
                         $window['last'],
                     ]);
 
-                    return Collection::make($elements)->flatMap(function ($item) {
+                    return Collection::make($elements)->flatMap(function ($item){
                         if (is_array($item)) {
-                            return Collection::make($item)->map(function ($url, $page) {
+                            return Collection::make($item)->map(function ($url, $page){
                                 return [
                                     'url'    => $url,
                                     'label'  => $page,
