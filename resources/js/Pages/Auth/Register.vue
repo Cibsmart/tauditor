@@ -4,23 +4,19 @@
             <h1 class="text-center font-bold text-3xl">Account Registration</h1>
             <div class="mx-auto mt-6 w-24 border-b-2"/>
 
-            <label-input :value="user.first_name" label="First Name" class="mt-10"
-                        :errors="$page.errors.first_name" />
+            <label-input :value="user.first_name" label="First Name" class="mt-10" />
 
-            <label-input :value="user.last_name" label="Last Name" class="mt-10"
-                         :errors="$page.errors.last_name" />
+            <label-input :value="user.last_name" label="Last Name" class="mt-10" />
 
-            <label-input :value="user.email" label="Email" class="mt-10"
-                         :errors="$page.errors.email" />
+            <label-input :value="user.email" label="Email" class="mt-10" />
 
             <text-input v-model="form.password" label="Password" type="password" class="mt-6"
-                        :errors="$page.errors.password"/>
+                        :errors="form.errors.password"/>
 
             <text-input v-model="form.password_confirmation" label="Confirm Password" type="password"
-                        class="mt-6" :errors="$page.errors.password_confirmation"/>
+                        class="mt-6" :errors="form.errors.password_confirmation"/>
 
-            <label-input :value="domain.name" label="Domain" class="mt-10"
-                         :errors="$page.errors.domain" />
+            <label-input :value="domain.name" label="Domain" class="mt-10" />
         </div>
 
         <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
@@ -59,23 +55,24 @@
 
         data() {
             return {
-                form: {
+                form: this.$inertia.form({
                     password: null,
                     password_confirmation: null,
-                },
+                }),
             }
         },
 
         methods: {
             submit() {
-                this.$inertia.post(this.route('register.store'), {
-                    first_name: this.user.first_name,
-                    last_name: this.user.last_name,
-                    email: this.user.email,
-                    password: this.form.password,
-                    password_confirmation: this.form.password_confirmation,
-                    domain_id: this.domain.id,
-                })
+                this.form
+                    .transform( (data) => ({
+                        ...data,
+                        email: this.user.email,
+                        domain_id: this.domain.id,
+                        last_name: this.user.last_name,
+                        first_name: this.user.first_name,
+                    }))
+                    .post(this.route('register.store'))
             }
         },
     }
