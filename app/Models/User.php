@@ -92,4 +92,14 @@ class User extends Authenticatable
     {
         return $this->domain->auditPayrolls();
     }
+
+    public function metas()
+    {
+        return $this->morphMany(Meta::class, 'metable');
+    }
+
+    public function getMetas($key)
+    {
+        return $this->metas()->where('name', $key)->get();
+    }
 }
