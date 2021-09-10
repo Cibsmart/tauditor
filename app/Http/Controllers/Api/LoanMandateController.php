@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Meta;
 use App\Models\Beneficiary;
 use Illuminate\Support\Str;
+use App\Models\LoanMandate;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Notifications\MandateReceived;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoanMandateController extends Controller
@@ -76,6 +79,8 @@ class LoanMandateController extends Controller
 
         $mandate = $beneficiary->mandate()->create($attributes);
 
+        $this->notifyAdmins($mandate);
+
         $bank = $beneficiary->bankDetail;
 
         return response()->json([
@@ -93,5 +98,14 @@ class LoanMandateController extends Controller
                 'mandateReference' => $mandate->reference,
             ],
         ])->setStatusCode(Response::HTTP_FOUND);
+    }
+
+    private function notifyAdmins(LoanMandate $mandate)
+    {
+        $admins = Meta::isActive('admins.receive_mandate_email')->get();
+
+        foreach ($admins as $admin) {
+            $admin->metable->notify(new MandateReceived($mandate));
+        }
     }
 }

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Request;
 
 class FidelityMandateController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,7 +21,7 @@ class FidelityMandateController extends Controller
                                ->orderBy('status')
                                ->search(Request::query('search'))
                                ->paginate()
-                               ->transform(fn($m) => [
+                               ->transform(fn ($m) => [
                                    'id'                      => $m->id,
                                    'name'                    => $m->beneficiary->name,
                                    'verification_number'     => $m->staff_id,
