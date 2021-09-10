@@ -242,7 +242,6 @@ Route::middleware('auth')->group(function () {
 Route::group(['middleware' => ['auth', 'can:view_users']], function () {
     Route::name('manage_users.')->group(function () {
         Route::get('manage_users', [ManageUserController::class, 'index'])->name('index');
-        Route::post('manage_users', [ManageUserController::class, 'index'])->name('index_post');
         Route::get('manage_users/create', [ManageUserController::class, 'create'])->name('create');
         Route::post('manage_users/store', [ManageUserController::class, 'store'])->name('store');
     });

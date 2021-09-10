@@ -5,19 +5,19 @@
             <span class="text-indigo-400 font-medium">/</span> Create
         </h1>
         <div class="bg-white rounded shadow overflow-hidden max-w-3xl">
-            <form @submit.prevent="submit">
+            <form @submit.prevent="form.post(route('manage_users.store'))">
                 <div class="p-8 -mr-6 -mb-8 flex flex-wrap">
-                    <text-input v-model="form.first_name" :errors="errors.first_name" class="pr-6 pb-8 w-full " label="First name" required />
-                    <text-input v-model="form.last_name" :errors="errors.last_name" class="pr-6 pb-8 w-full " label="Last name" required />
-                    <text-input v-model="form.email" :errors="errors.email" class="pr-6 pb-8 w-full " label="Email" required />
-                    <select-input v-model="form.role" :errors="errors.role"
+                    <text-input v-model="form.first_name" :errors="form.errors.first_name" class="pr-6 pb-8 w-full " label="First name" required />
+                    <text-input v-model="form.last_name" :errors="form.errors.last_name" class="pr-6 pb-8 w-full " label="Last name" required />
+                    <text-input v-model="form.email" :errors="form.errors.email" class="pr-6 pb-8 w-full " label="Email" required />
+                    <select-input v-model="form.role" :errors="form.errors.role"
                                   class="pr-6 pb-8 w-full " label="Role" required>
                         <option disabled value="" class="text-gray-100">Select Role</option>
                         <option v-for="role in roles" :key="role.id" :value="role.id">
                             {{ role.name }}
                         </option>
                     </select-input>
-                    <select-input v-model="form.mfb" :errors="errors.microfinance_bank"
+                    <select-input v-model="form.mfb" :errors="form.errors.microfinance_bank"
                                   class="pr-6 pb-8 w-full " label="Microfinance Bank"
                                   v-if="form.role === mfb_role_id">
                         <option disabled value="" class="text-gray-100">Select Microfinance Bank</option>
@@ -25,7 +25,7 @@
                             {{ mfb.name }}
                         </option>
                     </select-input>
-                    <label-input :value="domain" :error="errors.domain" class="pr-6 pb-8 w-full" label="Domain"  />
+                    <label-input :value="domain" :error="form.errors.domain" class="pr-6 pb-8 w-full" label="Domain"  />
                 </div>
                 <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
                     <loading-button :loading="sending" class="btn-indigo" type="submit">Create User</loading-button>
@@ -68,13 +68,13 @@
             return {
                 sending: false,
                 mfb_role_id: null,
-                form: {
+                form: this.$inertia.form({
                     first_name: null,
                     last_name: null,
                     email: null,
                     role: null,
                     mfb: null,
-                },
+                }),
             }
         },
 
@@ -84,21 +84,7 @@
 
         methods: {
             submit() {
-                this.sending = true
-
-                var data = new FormData()
-
-                data.append('first_name', this.form.first_name || '')
-                data.append('last_name', this.form.last_name || '')
-                data.append('email', this.form.email || '')
-                data.append('role', this.form.role || '')
-
-                if (this.form.role === this.mfb_role_id) {
-                    data.append('microfinance_bank', this.form.mfb || '')
-                }
-
-                this.$inertia.post(this.route('manage_users.store'), data)
-                    .then(() => this.sending = false)
+                this.form.post(this.route('manage_users.store'))
             },
         },
     }

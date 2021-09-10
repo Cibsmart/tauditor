@@ -37,6 +37,9 @@ class ManageUserController extends Controller
         }
 
         return Inertia::render('ManageUsers/Index', [
+            'can' => [
+                'create_user' => auth()->user()->can('create_users'),
+            ],
             'roles'     => $roles,
             'users'     => $users,
             'new_users' => $new_users,

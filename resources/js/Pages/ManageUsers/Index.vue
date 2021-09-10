@@ -4,7 +4,7 @@
 
         <div>
             <select-input v-model="form.role" class="pb-8 w-full"
-                          label="Payroll Month" :errors="$page.errors.role"
+                          label="Payroll Month"
                           @input="roleChanged">
                 <option disabled value="" class="text-gray-100">Select Role</option>
                 <option v-for="role in roles" :key="role.id" :value="role.id">
@@ -14,7 +14,7 @@
         </div>
 
         <div>
-            <div class="mb-6 flex justify-between items-center" v-if="$page.permissions.canCreateUsers">
+            <div class="mb-6 flex justify-between items-center" v-if="can.create_user" >
                 <div></div>
                 <a :href="route('manage_users.create')"
                    class="btn btn-big btn-indigo">
@@ -37,6 +37,7 @@
                                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                     Role
                                 </th>
+                                <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
                                 <th class="px-6 py-3 border-b border-gray-200 bg-gray-50"></th>
                             </tr>
                             </thead>
@@ -152,6 +153,7 @@
 <script>
     import Icon from '@/Shared/Icon';
     import Layout from '@/Shared/Layout';
+    import { Inertia } from '@inertiajs/inertia'
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
@@ -160,6 +162,7 @@
         layout: Layout,
 
         props: {
+            can: Object,
             roles: Array,
             users: Object,
             new_users: Array,
@@ -182,11 +185,7 @@
         methods: {
 
             roleChanged() {
-                this.$inertia.reload({
-                    method: 'post', data: this.form,
-                    preserveState: true, preserveScroll: true,
-                    only: ['users', 'new_users', 'role']
-                });
+                Inertia.reload({data: this.form, only: ['users', 'new_users', 'role']})
             },
         },
     }
