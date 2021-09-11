@@ -9,5 +9,9 @@ class LoanStatus extends Model
 {
     use HasFactory;
 
+    protected $keyType = 'string';
+
     protected $guarded = [];
+
+    public $incrementing = false;
 }
