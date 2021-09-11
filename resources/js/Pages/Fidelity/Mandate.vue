@@ -3,9 +3,13 @@
         <h1 class="mb-8 font-bold text-3xl">Mandates</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
-            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
+            <search-filter v-model="form.search" class="w-full max-w-lg mr-4" @reset="reset">
+                <label class="block text-gray-700">Mandate Status:</label>
+                <select v-model="form.status" class="mt-1 w-full form-select">
+                    <option :value="null" />
+                    <option v-for="status in statuses" :value="status.id">{{ status.name }}</option>
+                </select>
             </search-filter>
-            <div></div>
         </div>
 
         <div class="flex flex-col">
@@ -15,7 +19,7 @@
                         <thead>
                         <tr>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Name
+                                Name/Staff ID (Mandate Reference)
                             </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 Account Number/BVN
@@ -39,7 +43,9 @@
                         <tr v-for="(mandate, index) in mandates.data" :key="mandate.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ mandate.name }}</div>
-                                <div class="text-sm leading-5 text-gray-600">{{ mandate.verification_number }}</div>
+                                <div class="text-sm leading-5 text-gray-600">
+                                    {{ mandate.verification_number }} ({{ mandate.reference }})
+                                </div>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 text-gray-900">
@@ -95,8 +101,10 @@
 
 <script>
 import Icon from '@/Shared/Icon';
+import pickBy from 'lodash/pickBy'
 import Layout from '@/Shared/Layout';
 import throttle from 'lodash/throttle'
+import mapValues from 'lodash/mapValues'
 import Pagination from '@/Shared/Pagination'
 import { Inertia } from '@inertiajs/inertia'
 import SelectInput from "@/Shared/SelectInput"
@@ -108,8 +116,9 @@ export default {
     layout: Layout,
 
     props: {
-        search: String,
+        filters: Object,
         mandates: Object,
+        statuses: Array,
     },
 
     components: {
@@ -122,7 +131,8 @@ export default {
     data() {
         return {
             form: {
-                search: this.search,
+                search: this.filters.search,
+                status: this.filters.status,
             },
         }
     },
@@ -130,12 +140,16 @@ export default {
     watch: {
       form: {
           handler: throttle( function() {
-              Inertia.get(this.route('fidelity.mandate'), {search: this.form.search}, { preserveState: true })
+              Inertia.get(this.route('fidelity.mandate'), pickBy(this.form), { preserveState: true })
           }, 150),
           deep: true,
       }
     },
 
-    methods: {},
+    methods: {
+        reset() {
+            this.form = mapValues(this.form, () => null)
+        },
+    },
 }
 </script>

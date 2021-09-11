@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Inertia\Inertia;
+use App\Models\LoanStatus;
 use App\Models\LoanMandate;
 use Illuminate\Support\Facades\Request;
 
@@ -15,11 +16,11 @@ class FidelityMandateController extends Controller
 
     public function mandate()
     {
-        $search = Request::query('search');
+        $filters = Request::all('search', 'status');
 
         $mandates = LoanMandate::query()
                                ->orderBy('status')
-                               ->search(Request::query('search'))
+                               ->filter(Request::only('search', 'status'))
                                ->paginate()
                                ->transform(fn ($m) => [
                                    'id'                      => $m->id,
@@ -27,6 +28,7 @@ class FidelityMandateController extends Controller
                                    'verification_number'     => $m->staff_id,
                                    'bvn'                     => $m->bvn,
                                    'account_number'          => $m->account_number,
+                                   'reference'               => $m->reference,
                                    'loan_amount'             => $m->formatted_loan_amount,
                                    'collection_amount'       => $m->formatted_collection_amount,
                                    'total_collection_amount' => $m->total_collection_amount,
@@ -38,8 +40,9 @@ class FidelityMandateController extends Controller
                                ]);
 
         return Inertia::render('Fidelity/Mandate', [
-            'search'   => $search,
+            'filters'   => $filters,
             'mandates' => $mandates,
+            'statuses' => LoanStatus::all()
         ]);
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!--    <portal-target name="dropdown" slim/>-->
+        <portal-target name="dropdown" slim/>
         <div class="flex flex-col">
             <div class="h-screen flex flex-col" @click="hideDropdownMenus">
                 <!-- Uppder Part of the Screen containing Branding, Header and Profile -->
