@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Meta;
 use App\Models\Beneficiary;
 use App\Models\LoanMandate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Notifications\MandateReceived;
+use App\Notifications\MandateCancelled;
 use Symfony\Component\HttpFoundation\Response;
 
 class CancelLoanMandateController extends Controller
@@ -73,6 +76,8 @@ class CancelLoanMandateController extends Controller
 
         $mandate->cancel();
 
+        $this->notifyAdmins($mandate);
+
         return response()->json([
             'hasData'      => true,
             'responseDate'  => now()->format('d-m-Y H:i:s+0000'),
@@ -85,5 +90,14 @@ class CancelLoanMandateController extends Controller
                 'status' => 'false'
             ],
         ])->setStatusCode(Response::HTTP_FOUND);
+    }
+
+    private function notifyAdmins(LoanMandate $mandate)
+    {
+        $admins = Meta::isActive('admins.receive_mandate_email')->get();
+
+        foreach ($admins as $admin) {
+            $admin->metable->notify(new MandateCancelled($mandate));
+        }
     }
 }
