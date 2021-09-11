@@ -2,15 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
 use App\Models\LoanMandate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use function route;
 
-class MandateReceived extends Notification implements ShouldQueue
+class MandateCancelled extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -23,7 +21,6 @@ class MandateReceived extends Notification implements ShouldQueue
      * Create a new notification instance.
      *
      * @param  LoanMandate  $mandate
-     * @param  User  $user
      */
     public function __construct(LoanMandate $mandate)
     {
@@ -50,9 +47,9 @@ class MandateReceived extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("New Fidelity Loan Mandate Received - Mandate Reference: {$this->mandate->reference}")
+            ->subject("Fidelity Loan Mandate Cancelled - Mandate Reference: {$this->mandate->reference}")
             ->greeting("Hi Admin,")
-            ->line('There is a new loan mandate from Fidelity Bank awaiting your action.')
+            ->line('A loan mandate from Fidelity Bank has been cancelled and awaits your action.')
             ->line('Click on the button below to view the mandate or use the mandate reference to view the mandate')
             ->action('View Mandate', url(route('fidelity.show', $this->mandate->id)))
             ->line('Ensure to update the mandate status after processing');
