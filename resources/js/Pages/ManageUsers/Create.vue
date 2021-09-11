@@ -37,11 +37,11 @@
 
 <script>
     import Layout from '@/Shared/Layout'
-    import LoadingButton from '@/Shared/LoadingButton'
-    import SelectInput from '@/Shared/SelectInput'
+    import FileInput from '@/Shared/FileInput'
     import TextInput from '@/Shared/TextInput'
     import LabelInput from '@/Shared/LabelInput'
-    import FileInput from '@/Shared/FileInput'
+    import SelectInput from '@/Shared/SelectInput'
+    import LoadingButton from '@/Shared/LoadingButton'
 
     export default {
         metaInfo: { title: 'Create User' },
