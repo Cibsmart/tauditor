@@ -114,7 +114,7 @@
                         id: 5,
                         name: 'fidelity',
                         label: 'Fidelity',
-                        url: route('fidelity.mandate'),
+                        url: route('fidelity.index'),
                         icon: 'office',
                         active: false,
                         permission: 'canViewFidelityMandate'

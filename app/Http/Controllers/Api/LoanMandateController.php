@@ -74,7 +74,7 @@ class LoanMandateController extends Controller
             'collection_date' => $request->dateOfCollection,
             'authorization_code' => $auth,
             'authorization_channel' => $request->authorisationChannel,
-            'status' => 'A',
+            'status' => 'N',
         ];
 
         $mandate = $beneficiary->mandate()->create($attributes);
