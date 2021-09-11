@@ -109,6 +109,7 @@ class LoanMandate extends Model
                               ->join('beneficiaries as b', 'm.beneficiary_id', '=', 'b.id')
                               ->where('m.staff_id', 'like', $term)
                               ->orWhere('m.account_number', 'like', $term)
+                              ->orWhere('m.reference', 'like', $term)
                               ->orWhere('m.bvn', 'like', $term)
                               ->orWhere('m.phone_number', 'like', $term)
                               ->orWhere('b.last_name', 'like', $term)

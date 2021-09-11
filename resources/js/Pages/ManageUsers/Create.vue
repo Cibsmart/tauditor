@@ -81,11 +81,5 @@
         mounted() {
             this.mfb_role_id = this.roles.find(role => role.name === 'MFB').id
         },
-
-        methods: {
-            submit() {
-                this.form.post(this.route('manage_users.store'))
-            },
-        },
     }
 </script>
