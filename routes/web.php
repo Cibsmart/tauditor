@@ -285,7 +285,9 @@ Route::middleware(['auth', 'can:view_mfb_schedule'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::name('fidelity.')->group(function () {
         Route::prefix('fidelity')->group(function () {
-            Route::get('mandate', [FidelityMandateController::class, 'mandate'])->name('mandate');
+            Route::get('mandate', [FidelityMandateController::class, 'index'])->name('index');
+            Route::post('mandate', [FidelityMandateController::class, 'store'])->name('store');
+            Route::get('mandate/{mandate}', [FidelityMandateController::class, 'show'])->name('show');
 
             Route::get(
                 'beneficiary/deduction_confirmation',

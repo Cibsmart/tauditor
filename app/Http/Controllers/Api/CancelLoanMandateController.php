@@ -71,7 +71,7 @@ class CancelLoanMandateController extends Controller
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
-        $y = $mandate->cancel();
+        $mandate->cancel();
 
         return response()->json([
             'hasData'      => true,

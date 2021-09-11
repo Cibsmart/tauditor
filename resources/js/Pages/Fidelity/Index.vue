@@ -9,6 +9,12 @@
                     <option :value="null" />
                     <option v-for="status in statuses" :value="status.id">{{ status.name }}</option>
                 </select>
+                <label class="block text-gray-700 mt-5">Processed</label>
+                <select v-model="form.processed" class="mt-1 w-full form-select">
+                    <option :value="null" />
+                    <option value="true">Processed</option>
+                    <option value="false">Pending</option>
+                </select>
             </search-filter>
         </div>
 
@@ -18,6 +24,9 @@
                     <table class="min-w-full">
                         <thead>
                         <tr>
+                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                SN
+                            </th>
                             <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 Name/Staff ID (Mandate Reference)
                             </th>
@@ -42,9 +51,17 @@
                         <tbody class="bg-white">
                         <tr v-for="(mandate, index) in mandates.data" :key="mandate.id">
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                                <div class="text-sm leading-5 text-gray-900">
+                                    {{ index + 1 }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ mandate.name }}</div>
                                 <div class="text-sm leading-5 text-gray-600">
                                     {{ mandate.verification_number }} ({{ mandate.reference }})
+                                    <span v-if="! mandate.processed" class="px-2 inline-flex text-xs lowercase leading-5 font-semibold bg-red-100 text-red-800 rounded-full">
+                                        pending
+                                    </span>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
@@ -83,7 +100,7 @@
                               </span>
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                                <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">View</a>
+                                <Link :href="route('fidelity.show', {mandate: mandate.id })" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">view</Link>
                             </td>
                         </tr>
 
@@ -107,6 +124,7 @@ import throttle from 'lodash/throttle'
 import mapValues from 'lodash/mapValues'
 import Pagination from '@/Shared/Pagination'
 import { Inertia } from '@inertiajs/inertia'
+import { Link } from '@inertiajs/inertia-vue'
 import SelectInput from "@/Shared/SelectInput"
 import SearchFilter from '@/Shared/SearchFilter'
 
@@ -123,6 +141,7 @@ export default {
 
     components: {
         Icon,
+        Link,
         Pagination,
         SelectInput,
         SearchFilter,
@@ -133,6 +152,7 @@ export default {
             form: {
                 search: this.filters.search,
                 status: this.filters.status,
+                processed: this.filters.processed,
             },
         }
     },
@@ -140,7 +160,7 @@ export default {
     watch: {
       form: {
           handler: throttle( function() {
-              Inertia.get(this.route('fidelity.mandate'), pickBy(this.form), { preserveState: true })
+              Inertia.get(this.route('fidelity.index'), pickBy(this.form), { preserveState: true })
           }, 150),
           deep: true,
       }
