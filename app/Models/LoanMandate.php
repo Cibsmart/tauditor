@@ -81,8 +81,35 @@ class LoanMandate extends Model
     public function cancel()
     {
         $this->status = 'C';
-
+        $this->processed = null;
         $this->save();
+    }
+
+    public function activate()
+    {
+        $this->status = 'A';
+        $this->save();
+    }
+
+    public function markAsProcessed()
+    {
+        $this->processed = now();
+        $this->save();
+    }
+
+    public function process()
+    {
+        switch ($this->status) {
+            case 'N':
+                $this->activate();
+                $this->markAsProcessed();
+                break;
+            case 'A':
+            case 'P':
+            case 'C':
+                $this->markAsProcessed();
+                break;
+        }
     }
 
     public function getColorAttribute()
@@ -123,6 +150,14 @@ class LoanMandate extends Model
                 });
         })->when($filters['status'] ?? null, function ($query, $status) {
             $query->where('status', $status);
+        })->when($filters['processed'] ?? null, function ($query, $processed) {
+            if ($processed === 'true') {
+                $query->whereNotNull('processed');
+            }
+
+            if ($processed === 'false') {
+                $query->whereNull('processed');
+            }
         });
     }
 }
