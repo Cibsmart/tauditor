@@ -66,14 +66,11 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
-                                            <inertia-link v-show="!category.uploaded" :href="route('paye.upload', {category: category.id})"
-                                                          class="px-5 py-3" preserve-state preserve-scroll>
-                                                upload
-                                            </inertia-link>
+                                            <Link  v-show="!category.uploaded" :href="route('paye.upload', {category: category.id})"
+                                                   class="px-5 py-3" preserve-state preserve-scroll>Upload</Link>
 
-                                            <div v-show="category.uploaded" class="text-green-600">
-                                                uploaded
-                                            </div>
+                                            <Link  v-show="category.uploaded" :href="route('paye.upload', {category: category.id})"
+                                                   class="px-5 py-3" preserve-state preserve-scroll>Re-Upload</Link>
 
                                             <div v-show="category.failed" class="px-5 py-1 text-red-600">
                                                 failed
@@ -105,6 +102,7 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
+    import { Link } from '@inertiajs/inertia-vue';
 
     export default {
         metaInfo: { title: 'Audit Payroll' },
@@ -116,6 +114,7 @@
 
         components: {
             Icon,
+            Link,
             Pagination,
         },
 
