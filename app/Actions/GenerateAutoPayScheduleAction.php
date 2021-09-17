@@ -37,7 +37,7 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        DB::transaction(function () use ($sub_mda){
+        DB::transaction(function () use ($sub_mda) {
             $this->generateAutoPaySchedule();
         });
 
@@ -54,12 +54,11 @@ class GenerateAutoPayScheduleAction
         $this->month = $schedule->month->monthName;
         $this->payment = Str::upper($schedule->auditPayrollCategory()->payment_type_id);
 
-        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn(
+        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn (
             $schedule
         ) => $schedule->bankable_type == 'commercial');
 
         /**
-         * ___________________________________________________
          * Commercial Bank Users
          * ___________________________________________________
          */
@@ -100,7 +99,6 @@ class GenerateAutoPayScheduleAction
         $ignore = MicroFinanceBank::where('name', '=', 'CASH PAYMENT')->first();
 
         /**
-         * ___________________________________________________
          * Microfinance Bank Users
          * ___________________________________________________
          */
@@ -182,9 +180,28 @@ class GenerateAutoPayScheduleAction
             $this->sub_mda->autopaySchedules()->create($attributes);
         }
 
+
+
+        /**
+         * Fidelity Loan
+         * ___________________________________________________
+         */
+        $paycom_i = [
+            'payment_reference' => $this->getReferenceFor($this->reference_id), //TODO: Get payment reference
+            'beneficiary_code'  => $this->pay_comm_i->account_number, //TODO: Get beneficiary code
+            'beneficiary_name'  => $this->pay_comm_i->code, //TODO: Get beneficiary name
+            'account_number'    => $this->pay_comm_i->account_number, //TODO: Get fidelity account number
+            'account_type'      => 10,
+            'cbn_code'          => $this->pay_comm_i->bankable->bankCode(), //TODO: Get Fidelity CBN Code
+            'is_cash_card'      => '0',
+            'narration'         => $this->narration, //TODO: Get narration
+            'amount'            => $this->pay_comm_i_amount, //TODO: Get amount
+            'email'             => ' ',
+            'currency'          => 'NGN',
+        ];
+
         if ($this->narration !== null) {
             /**
-             * ___________________________________________________
              * Paycom I
              * ___________________________________________________
              */
@@ -207,7 +224,6 @@ class GenerateAutoPayScheduleAction
 
 
             /**
-             * ___________________________________________________
              * Paycom II
              * ___________________________________________________
              */
