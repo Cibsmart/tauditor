@@ -23,7 +23,7 @@ class TmsPayeApiController extends Controller
     {
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
                         ->paginate()
-                        ->transform(fn(AuditPayroll $payroll) => [
+                        ->transform(fn (AuditPayroll $payroll) => [
                             'id'           => $payroll->id,
                             'month'        => $payroll->month_name,
                             'year'         => $payroll->year,
@@ -31,16 +31,20 @@ class TmsPayeApiController extends Controller
                             'date_created' => $payroll->dateCreated(),
                             'is_current'   => $payroll->currentMonth(),
                             'categories'   => $payroll->auditPaymentCategories
-                                                      ->transform(fn($category) => [
+                                                      ->transform(fn ($category) => [
                                                           'id'              => $category->id,
                                                           'payment_type_id' => $category->payment_type_id,
                                                           'payment_type'    => $category->paymentTypeName(),
                                                           'payment_title'   => $category->payment_title,
                                                           'head_count'      => number_format($category->head_count),
-                                                          'uploaded'        => $category->payeData()->firstWhere('successful',
-                                                              1)?->successful,
-                                                          'failed'          => $category->payeData()->firstWhere('failed',
-                                                              1)?->failed,
+                                                          'uploaded'        => $category->payeData()->firstWhere(
+                                                              'successful',
+                                                              1
+                                                          )?->successful,
+                                                          'failed'          => $category->payeData()->firstWhere(
+                                                              'failed',
+                                                              1
+                                                          )?->failed,
                                                       ]),
                         ]);
 
@@ -121,7 +125,7 @@ class TmsPayeApiController extends Controller
                         ->orderBy('audit_mda_schedule_id')
                         ->orderBy('audit_sub_mda_schedule_id')
                         ->orderBy('verification_number')
-                        ->chunk(10, function ($schedules) use ($month, $year, $file_name){
+                        ->chunk(10, function ($schedules) use ($month, $year, $file_name) {
                             $data = '';
 
                             foreach ($schedules as $schedule) {
