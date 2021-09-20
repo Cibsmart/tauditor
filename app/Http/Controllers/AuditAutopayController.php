@@ -16,6 +16,7 @@ use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
 use App\Actions\GenerateAutoPayScheduleAction;
+use function back;
 
 class AuditAutopayController extends Controller
 {
@@ -129,6 +130,8 @@ class AuditAutopayController extends Controller
         $mdas = $audit_payroll_category->auditMdaSchedules;
         $title = $audit_payroll_category->payment_title;
         $count = 0;
+
+        return back()->with('error', "Autopay Schedule not Generated for $title");
 
         if ($audit_payroll_category->autopay_status !== 'pending') {
             $message = "No [New] Schedule Has Been Uploaded for $title";
