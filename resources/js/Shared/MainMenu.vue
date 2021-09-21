@@ -161,14 +161,6 @@
                             beneficiary: {id: 4, label: 'Beneficiary Report', uri: this.uri('audit_payroll.index'), permission: 'canViewBeneficiaryReport'},
                         }
                     },
-                    upload_beneficiaries: {
-                        id: 8,
-                        name: 'upload_beneficiaries',
-                        label: 'Upload',
-                        url: route('beneficiaries.create'),
-                        icon: 'office',
-                        active: false
-                    },
                 },
             }
         },
