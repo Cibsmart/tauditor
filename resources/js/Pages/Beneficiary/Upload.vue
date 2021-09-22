@@ -7,7 +7,7 @@
                 <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                     <form @submit.prevent="upload()">
                         <div class="flex items-center">
-                            <file-input v-model="file" :errors="$page.errors.file" class="pr-6 w-full" type="file" accept="file/*" />
+                            <file-input v-model="form.file" :errors="form.errors.file" class="pr-6 w-full" type="file" accept="file/*" />
                             <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">
                                 Upload
                             </button>
@@ -37,16 +37,15 @@ export default {
 
     data(){
         return {
-            file: null,
+            form: this.$inertia.form({
+                file: null,
+            })
         }
     },
 
     methods: {
         upload(){
-            var data = new FormData()
-            data.append('file', this.file || '')
-
-            this.$inertia.post(this.route('beneficiaries.upload'), data)
+            this.form.post(this.route('beneficiaries.upload'))
         }
     }
 }

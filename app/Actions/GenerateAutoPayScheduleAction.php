@@ -1,12 +1,12 @@
 <?php
 
-
 namespace App\Actions;
 
 use Illuminate\Support\Str;
 use App\Models\MicroFinanceBank;
 use Illuminate\Support\Facades\DB;
 use App\Models\AuditSubMdaSchedule;
+use App\Models\FidelityLoanDeduction;
 
 class GenerateAutoPayScheduleAction
 {
@@ -20,6 +20,7 @@ class GenerateAutoPayScheduleAction
 
     protected $pay_comm_i;
     protected $pay_comm_ii;
+    protected $fidelityLoan;
 
     protected $pay_comm_i_amount;
     protected $pay_comm_ii_amount;
@@ -37,7 +38,7 @@ class GenerateAutoPayScheduleAction
 
         $this->initializePayComms();
 
-        DB::transaction(function () use ($sub_mda){
+        DB::transaction(function () use ($sub_mda) {
             $this->generateAutoPaySchedule();
         });
 
@@ -54,12 +55,11 @@ class GenerateAutoPayScheduleAction
         $this->month = $schedule->month->monthName;
         $this->payment = Str::upper($schedule->auditPayrollCategory()->payment_type_id);
 
-        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn(
+        [$commercial_schedules, $microfinance_schedules] = $schedules->partition(fn (
             $schedule
         ) => $schedule->bankable_type == 'commercial');
 
         /**
-         * ___________________________________________________
          * Commercial Bank Users
          * ___________________________________________________
          */
@@ -70,6 +70,29 @@ class GenerateAutoPayScheduleAction
 
         foreach ($commercial_schedules as $schedule) {
             $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
+
+            if ($schedule->has('loan')) {
+                $loans = $schedule->loan->where('status', 'A');
+
+                foreach ($loans as $loan) {
+                    if ($loan->isNotPaid()) {
+                        $loan_amount = $loan->collection_amount;
+
+                        $amount = $amount - $loan_amount - self::INTERSWITCH_CHARGE;
+                        $this->pay_comm_ii_amount += self::INTERSWITCH_CHARGE;
+
+                        $loan->deductions()->create([
+                            'amount'                    => $loan_amount,
+                            'loan_account'              => $loan->account_number,
+                            'audit_sub_mda_schedule_id' => $this->sub_mda->id,
+                        ]);
+                    }
+
+                    if ($loan->isPaid()) {
+                        $loan->markAsPaid();
+                    }
+                }
+            }
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
@@ -96,11 +119,9 @@ class GenerateAutoPayScheduleAction
             $schedule->save();
         }
 
-
         $ignore = MicroFinanceBank::where('name', '=', 'CASH PAYMENT')->first();
 
         /**
-         * ___________________________________________________
          * Microfinance Bank Users
          * ___________________________________________________
          */
@@ -152,7 +173,7 @@ class GenerateAutoPayScheduleAction
 
             $paycomm_i = $this->pay_comm_i_charge * $mfb_users;
             $paycomm_ii = ($this->pay_comm_ii_charge + self::INTERSWITCH_CHARGE) * $mfb_users
-                - self::INTERSWITCH_CHARGE;
+                - (self::INTERSWITCH_CHARGE * 2);
 
             $amount = $sum_net_pay - $paycomm_i - $paycomm_ii;
 
@@ -184,11 +205,43 @@ class GenerateAutoPayScheduleAction
 
         if ($this->narration !== null) {
             /**
+             * Fidelity Loan
              * ___________________________________________________
+             */
+            if ($this->sub_mda->has('fidelityDeductions')) {
+
+                $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount() + self::INTERSWITCH_CHARGE;
+                $this->pay_comm_ii_amount -= self::INTERSWITCH_CHARGE;
+
+                $fidelityLoan = [
+                    'payment_reference' => $this->getReferenceFor($this->reference_id),
+                    'beneficiary_code'  => $this->fidelityLoan->account_number,
+                    'beneficiary_name'  => $this->fidelityLoan->code,
+                    'account_number'    => $this->fidelityLoan->account_number,
+                    'account_type'      => 10,
+                    'cbn_code'          => $this->fidelityLoan->bankable->bankCode(),
+                    'is_cash_card'      => '0',
+                    'narration'         => $this->narration,
+                    'amount'            => $fidelityLoanAmount,
+                    'email'             => ' ',
+                    'currency'          => 'NGN',
+                ];
+
+                $this->sub_mda->autopaySchedules()->create($fidelityLoan);
+
+                $timestamp = now()->timestamp;
+                $fidelityLoan['narration'] = "Tenece | Bulk | InflightDeduction | $timestamp";
+
+                $fidelitySchedule = $this->sub_mda->fidelitySchedules()->create($fidelityLoan);
+
+                FidelityLoanDeduction::where('audit_sub_mda_schedule_id', $this->sub_mda->id)
+                                     ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
+            }
+
+            /**
              * Paycom I
              * ___________________________________________________
              */
-
             $paycom_i = [
                 'payment_reference' => $this->getReferenceFor($this->reference_id),
                 'beneficiary_code'  => $this->pay_comm_i->account_number,
@@ -207,7 +260,6 @@ class GenerateAutoPayScheduleAction
 
 
             /**
-             * ___________________________________________________
              * Paycom II
              * ___________________________________________________
              */
@@ -268,6 +320,7 @@ class GenerateAutoPayScheduleAction
 
         $this->pay_comm_i = $pay_comms->where('code', 'PayComm I')->first();
         $this->pay_comm_ii = $pay_comms->where('code', 'PayComm II')->first();
+        $this->fidelityLoan = $pay_comms->where('code', 'Fidelity Loan Collection')->first();
 
         $this->pay_comm_i_charge = $this->pay_comm_i->commission;
         $this->pay_comm_ii_charge = $this->pay_comm_ii->commission;

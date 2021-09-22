@@ -14,33 +14,57 @@
         <template v-for="menu in menus">
             <div v-if="menu.subs">
                 <div v-if="$page.props.permissions[menu.permission]">
-                <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id">
-                    <inertia-link class="px-12 py-6 flex items-center group"
-                                  href="#" @click="menu.active = !menu.active" preserve-scroll>
-                        <icon :name="menu.icon" class="w-4 h-4 mr-2"
-                              :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
-                        <div class="font-bold"
-                             :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"
-                             v-text="menu.label">
-                        </div>
+                    <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id">
+                        <inertia-link class="px-12 py-6 flex items-center group"
+                                      href="#" @click="menu.active = !menu.active" preserve-scroll>
+                            <icon :name="menu.icon" class="w-4 h-4 mr-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                            <div class="font-bold"
+                                 :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"
+                                 v-text="menu.label">
+                            </div>
 
-                        <icon v-if="menu.active" name="cheveron-down" class="ml-2"
-                              :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
-                        <icon v-else name="cheveron-right" class="ml-2"
-                              :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
-                    </inertia-link>
+                            <icon v-if="menu.active" name="cheveron-down" class="ml-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                            <icon v-else name="cheveron-right" class="ml-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                        </inertia-link>
+                    </div>
+                    <div>
+                        <template v-for="sub in menu.subs">
+                            <sub-menu v-if="menu.active && $page.props.permissions[sub.permission]" :url="url" :label="sub.label" :uri="sub.uri" :icon="sub.icon"
+                                      :key="sub.id"></sub-menu>
+                        </template>
+                    </div>
                 </div>
-                <div>
-                    <template v-for="sub in menu.subs">
-                        <sub-menu v-if="menu.active && $page.props.permissions[sub.permission]" :url="url" :label="sub.label" :uri="sub.uri" :icon="sub.icon"
-                                  :key="sub.id"></sub-menu>
-                    </template>
-                </div>
+                <div v-else>
+                    <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id">
+                        <inertia-link class="px-12 py-6 flex items-center group"
+                                      href="#" @click="menu.active = !menu.active" preserve-scroll>
+                            <icon :name="menu.icon" class="w-4 h-4 mr-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                            <div class="font-bold"
+                                 :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"
+                                 v-text="menu.label">
+                            </div>
+
+                            <icon v-if="menu.active" name="cheveron-down" class="ml-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                            <icon v-else name="cheveron-right" class="ml-2"
+                                  :class="isActive(menu.name) ? 'text-white group-hover:text-orange-800' : 'text-indigo-800 group-hover:text-orange-800'"/>
+                        </inertia-link>
+                    </div>
+                    <div>
+                        <template v-for="sub in menu.subs">
+                            <sub-menu v-if="menu.active && $page.props.permissions[sub.permission]" :url="url" :label="sub.label" :uri="sub.uri" :icon="sub.icon"
+                                      :key="sub.id"></sub-menu>
+                        </template>
+                    </div>
                 </div>
             </div>
 
             <div v-else>
-                <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id" v-if="$page.props.permissions[menu.permission]">
+                <div class="hover:bg-gray-100" :class="isActive(menu.name) ? 'bg-indigo-800' : ''" :key="menu.id">
                     <inertia-link class="px-12 py-6 flex items-center group"
                                   :href="menu.url" @click="menu.active = !menu.active" preserve-scroll>
                         <icon :name="menu.icon" class="w-4 h-4 mr-2"

@@ -47,6 +47,16 @@ class AuditSubMdaSchedule extends Model
         return $this->hasMany(MicrofinanceBankSchedule::class);
     }
 
+    public function fidelitySchedules()
+    {
+        return $this->hasOne(FidelityLoanSchedule::class);
+    }
+
+    public function fidelityDeductions()
+    {
+        return $this->hasMany(FidelityLoanDeduction::class);
+    }
+
     public function totalNetPay()
     {
         return $this->auditPaySchedules()->sum('net_pay') / 100;
@@ -55,6 +65,11 @@ class AuditSubMdaSchedule extends Model
     public function headCount()
     {
         return $this->auditPaySchedules()->count();
+    }
+
+    public function fidelityLoanAmount()
+    {
+        return $this->fidelityDeductions()->sum('amount') / 100;
     }
 
     public function month()
