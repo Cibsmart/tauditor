@@ -45,6 +45,11 @@ class AuditPaySchedule extends Model
         return $this->belongsTo(AuditSubMdaSchedule::class);
     }
 
+    public function loan()
+    {
+        return $this->hasMany(LoanMandate::class, 'staff_id', 'verification_number');
+    }
+
     public function auditPayroll()
     {
         return $this->auditSubMdaSchedule->auditMdaSchedule->auditPayrollCategory->auditPayroll;

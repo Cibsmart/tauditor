@@ -11,7 +11,6 @@ use App\Models\AuditSubMdaSchedule;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use function dump;
 use function str_pad;
 use function collect;
 use function throw_if;
@@ -78,7 +77,7 @@ class PayScheduleImport implements OnEachRow
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
 
             $this->setHeaders();
 
@@ -312,6 +311,7 @@ class PayScheduleImport implements OnEachRow
             'total_dues'      => ['total_dues'],
             'total_deduction' => ['total_ded', 'total_deduction'],
             'net_pay'         => ['net', 'netpay', 'net_pay'],
+            'fidelity_loan'   => ['fidelity', 'fidelityloan', 'fidelity_loan'],
         ];
 
         foreach ($items as $key => $value) {
