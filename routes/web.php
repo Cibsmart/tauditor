@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Actions\SendDeductionConfirmation;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\DashboardController;
@@ -288,14 +289,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('mandate', [FidelityMandateController::class, 'index'])->name('index');
             Route::post('mandate', [FidelityMandateController::class, 'store'])->name('store');
             Route::get('mandate/{mandate}', [FidelityMandateController::class, 'show'])->name('show');
-
-            Route::get(
-                'beneficiary/deduction_confirmation',
-                [DeductionConfirmationController::class, 'send']
-            );
         });
     });
 });
+
+Route::get(
+    'fidelity/beneficiary/deduction_confirmation',
+    SendDeductionConfirmation::class
+);
 
 
 /*
