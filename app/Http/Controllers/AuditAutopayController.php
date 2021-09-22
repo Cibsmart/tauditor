@@ -131,8 +131,6 @@ class AuditAutopayController extends Controller
         $title = $audit_payroll_category->payment_title;
         $count = 0;
 
-        return back()->with('error', "Autopay Schedule not Generated for $title");
-
         if ($audit_payroll_category->autopay_status !== 'pending') {
             $message = "No [New] Schedule Has Been Uploaded for $title";
             return back()->with('error', $message);
