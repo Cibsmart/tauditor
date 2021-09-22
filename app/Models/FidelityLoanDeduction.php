@@ -28,11 +28,6 @@ class FidelityLoanDeduction extends Model
 
     public function getAmountAttribute($value)
     {
-        return $value * 100;
-    }
-
-    public function getFormattedAmountAttribute()
-    {
-        return number_format($this->amount, 2);
+        return $value / 100;
     }
 }
