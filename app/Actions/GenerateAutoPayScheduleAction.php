@@ -1,12 +1,12 @@
 <?php
 
-
 namespace App\Actions;
 
 use Illuminate\Support\Str;
 use App\Models\MicroFinanceBank;
 use Illuminate\Support\Facades\DB;
 use App\Models\AuditSubMdaSchedule;
+use App\Models\FidelityLoanDeduction;
 
 class GenerateAutoPayScheduleAction
 {
@@ -20,6 +20,7 @@ class GenerateAutoPayScheduleAction
 
     protected $pay_comm_i;
     protected $pay_comm_ii;
+    protected $fidelityLoan;
 
     protected $pay_comm_i_amount;
     protected $pay_comm_ii_amount;
@@ -70,6 +71,26 @@ class GenerateAutoPayScheduleAction
         foreach ($commercial_schedules as $schedule) {
             $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
 
+            if ($schedule->has('loan')) {
+                $loans = $schedule->loan->where('status', 'A');
+
+                foreach ($loans as $loan) {
+                    if ($loan->isNotPaid()) {
+                        $loan_amount = $loan->collection_amount;
+                        $amount = $amount - $loan_amount;
+                        $loan->deductions()->create([
+                            'amount'                    => $loan_amount,
+                            'loan_account'              => $loan->account_number,
+                            'audit_sub_mda_schedule_id' => $this->sub_mda->id,
+                        ]);
+                    }
+
+                    if ($loan->isPaid()) {
+                        $loan->markAsPaid();
+                    }
+                }
+            }
+
             $this->reference = $this->getReferenceFor($schedule->id);
 
             if (! $this->narration) {
@@ -94,7 +115,6 @@ class GenerateAutoPayScheduleAction
             $schedule->autopay_schedule_id = $autopay_schedule->id;
             $schedule->save();
         }
-
 
         $ignore = MicroFinanceBank::where('name', '=', 'CASH PAYMENT')->first();
 
@@ -180,32 +200,42 @@ class GenerateAutoPayScheduleAction
             $this->sub_mda->autopaySchedules()->create($attributes);
         }
 
-
-
-        /**
-         * Fidelity Loan
-         * ___________________________________________________
-         */
-        $paycom_i = [
-            'payment_reference' => $this->getReferenceFor($this->reference_id), //TODO: Get payment reference
-            'beneficiary_code'  => $this->pay_comm_i->account_number, //TODO: Get beneficiary code
-            'beneficiary_name'  => $this->pay_comm_i->code, //TODO: Get beneficiary name
-            'account_number'    => $this->pay_comm_i->account_number, //TODO: Get fidelity account number
-            'account_type'      => 10,
-            'cbn_code'          => $this->pay_comm_i->bankable->bankCode(), //TODO: Get Fidelity CBN Code
-            'is_cash_card'      => '0',
-            'narration'         => $this->narration, //TODO: Get narration
-            'amount'            => $this->pay_comm_i_amount, //TODO: Get amount
-            'email'             => ' ',
-            'currency'          => 'NGN',
-        ];
-
         if ($this->narration !== null) {
+            /**
+             * Fidelity Loan
+             * ___________________________________________________
+             */
+            if ($this->sub_mda->has('fidelityDeductions')) {
+                $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount();
+                $fidelityLoan = [
+                    'payment_reference' => $this->getReferenceFor($this->reference_id),
+                    'beneficiary_code'  => $this->fidelityLoan->account_number,
+                    'beneficiary_name'  => $this->fidelityLoan->code,
+                    'account_number'    => $this->fidelityLoan->account_number,
+                    'account_type'      => 10,
+                    'cbn_code'          => $this->fidelityLoan->bankable->bankCode(),
+                    'is_cash_card'      => '0',
+                    'narration'         => $this->narration,
+                    'amount'            => $fidelityLoanAmount,
+                    'email'             => ' ',
+                    'currency'          => 'NGN',
+                ];
+
+                $this->sub_mda->autopaySchedules()->create($fidelityLoan);
+
+                $timestamp = now()->timestamp;
+                $fidelityLoan['narration'] = "Tenece | Bulk | InflightDeduction | $timestamp";
+
+                $fidelitySchedule = $this->sub_mda->fidelitySchedules()->create($fidelityLoan);
+
+                FidelityLoanDeduction::where('audit_sub_mda_schedule_id', $this->sub_mda->id)
+                                     ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
+            }
+
             /**
              * Paycom I
              * ___________________________________________________
              */
-
             $paycom_i = [
                 'payment_reference' => $this->getReferenceFor($this->reference_id),
                 'beneficiary_code'  => $this->pay_comm_i->account_number,
@@ -284,6 +314,7 @@ class GenerateAutoPayScheduleAction
 
         $this->pay_comm_i = $pay_comms->where('code', 'PayComm I')->first();
         $this->pay_comm_ii = $pay_comms->where('code', 'PayComm II')->first();
+        $this->fidelityLoan = $pay_comms->where('code', 'Fidelity Loan Collection')->first();
 
         $this->pay_comm_i_charge = $this->pay_comm_i->commission;
         $this->pay_comm_ii_charge = $this->pay_comm_ii->commission;
