@@ -7,10 +7,6 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use function collect;
-use function optional;
-use function str_getcsv;
-use function number_format;
 
 class LoanMandate extends Model
 {
@@ -33,6 +29,11 @@ class LoanMandate extends Model
     public function loan_status()
     {
         return $this->belongsTo(LoanStatus::class, 'status');
+    }
+
+    public function deductions()
+    {
+        return $this->hasMany(FidelityLoanDeduction::class);
     }
 
     public function setLoanAmountAttribute($value)
@@ -80,6 +81,22 @@ class LoanMandate extends Model
         return $this->disbursement_date->format('jS M Y');
     }
 
+    public function deductionCount()
+    {
+        return $this->deductions()->count();
+    }
+
+    public function isNotPaid()
+    {
+        return $this->number_of_repayments > $this->deductionCount();
+    }
+
+    public function isPaid()
+    {
+        return ($this->status === 'P') ||
+            ($this->number_of_repayments === $this->deductionCount());
+    }
+
     public function cancel()
     {
         $this->status = 'C';
@@ -90,6 +107,12 @@ class LoanMandate extends Model
     public function activate()
     {
         $this->status = 'A';
+        $this->save();
+    }
+
+    public function markAsPaid()
+    {
+        $this->status = 'P';
         $this->save();
     }
 
@@ -122,6 +145,11 @@ class LoanMandate extends Model
                 'P' => 'bg-green-100 text-green-800',
                 'N' => 'bg-pink-100 text-pink-800',
             ][$this->status] ?? 'bg-gray-200 text-gray-800';
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'A');
     }
 
     public function scopeFilter($query, array $filters)
