@@ -15,13 +15,23 @@ class FidelityLoanSchedule extends Model
         'confirmation_sent' => 'datetime'
     ];
 
-    public function setAmountAttribute(float $value) : int
+    public function deductions()
+    {
+        return $this->hasMany(FidelityLoanDeduction::class);
+    }
+
+    public function setAmountAttribute($value)
     {
         return $this->attributes['amount'] = $value * 100;
     }
 
-    public function getAmountAttribute(int $value) : float
+    public function getAmountAttribute($value)
     {
         return $value / 100;
+    }
+
+    public function totalAmount()
+    {
+        return $this->deductions()->sum('amount') / 100;
     }
 }
