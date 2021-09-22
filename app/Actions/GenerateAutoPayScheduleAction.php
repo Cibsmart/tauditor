@@ -77,7 +77,10 @@ class GenerateAutoPayScheduleAction
                 foreach ($loans as $loan) {
                     if ($loan->isNotPaid()) {
                         $loan_amount = $loan->collection_amount;
-                        $amount = $amount - $loan_amount;
+
+                        $amount = $amount - $loan_amount - self::INTERSWITCH_CHARGE;
+                        $this->pay_comm_ii_amount += self::INTERSWITCH_CHARGE;
+
                         $loan->deductions()->create([
                             'amount'                    => $loan_amount,
                             'loan_account'              => $loan->account_number,
@@ -170,7 +173,7 @@ class GenerateAutoPayScheduleAction
 
             $paycomm_i = $this->pay_comm_i_charge * $mfb_users;
             $paycomm_ii = ($this->pay_comm_ii_charge + self::INTERSWITCH_CHARGE) * $mfb_users
-                - self::INTERSWITCH_CHARGE;
+                - (self::INTERSWITCH_CHARGE * 2);
 
             $amount = $sum_net_pay - $paycomm_i - $paycomm_ii;
 
@@ -206,7 +209,10 @@ class GenerateAutoPayScheduleAction
              * ___________________________________________________
              */
             if ($this->sub_mda->has('fidelityDeductions')) {
-                $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount();
+
+                $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount() + self::INTERSWITCH_CHARGE;
+                $this->pay_comm_ii_amount -= self::INTERSWITCH_CHARGE;
+
                 $fidelityLoan = [
                     'payment_reference' => $this->getReferenceFor($this->reference_id),
                     'beneficiary_code'  => $this->fidelityLoan->account_number,
