@@ -9,6 +9,7 @@ use App\Models\FidelityLoanSchedule;
 use Illuminate\Support\Facades\Cache;
 use App\Models\FidelityLoanDeduction;
 use Lorisleiva\Actions\Concerns\AsAction;
+use function collect;
 
 class SendDeductionConfirmation
 {
@@ -55,9 +56,12 @@ class SendDeductionConfirmation
 
         $payload = $response->json();
 
+        $schedule->response_data = collect($payload);
+
         if ($response->successful() && $payload['Status'] === 'SUCCESS') {
             $schedule->confirmation_sent = now();
-            $schedule->save();
         }
+
+        $schedule->save();
     }
 }
