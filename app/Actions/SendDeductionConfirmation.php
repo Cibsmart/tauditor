@@ -51,7 +51,7 @@ class SendDeductionConfirmation
                             'Narration' => $narration,
                             'TransactionDate' => $date,
                             'TotalAmount' => $total,
-                            'data' => $data
+                            'Data' => $data
                         ]);
 
         $payload = $response->json();
