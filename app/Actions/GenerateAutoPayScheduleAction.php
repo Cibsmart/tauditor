@@ -71,7 +71,7 @@ class GenerateAutoPayScheduleAction
         foreach ($commercial_schedules as $schedule) {
             $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
 
-            if ($schedule->has('loan')) {
+            if ($schedule->loan->count() > 0) {
                 $loans = $schedule->loan->where('status', 'A');
 
                 foreach ($loans as $loan) {
@@ -208,7 +208,7 @@ class GenerateAutoPayScheduleAction
              * Fidelity Loan
              * ___________________________________________________
              */
-            if ($this->sub_mda->has('fidelityDeductions')) {
+            if ($this->sub_mda->fidelityDeductions->count() > 0) {
 
                 $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount() + self::INTERSWITCH_CHARGE;
                 $this->pay_comm_ii_amount -= self::INTERSWITCH_CHARGE;
@@ -221,16 +221,13 @@ class GenerateAutoPayScheduleAction
                     'account_type'      => 10,
                     'cbn_code'          => $this->fidelityLoan->bankable->bankCode(),
                     'is_cash_card'      => '0',
-                    'narration'         => $this->narration,
+                    'narration'         => substr($this->narration, 0, 16),
                     'amount'            => $fidelityLoanAmount,
                     'email'             => ' ',
                     'currency'          => 'NGN',
                 ];
 
                 $this->sub_mda->autopaySchedules()->create($fidelityLoan);
-
-                $timestamp = now()->timestamp;
-                $fidelityLoan['narration'] = "Tenece | Bulk | InflightDeduction | $timestamp";
 
                 $fidelitySchedule = $this->sub_mda->fidelitySchedules()->create($fidelityLoan);
 
