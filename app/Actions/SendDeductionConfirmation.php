@@ -59,7 +59,7 @@ class SendDeductionConfirmation
         $schedule->response_data = collect($payload);
 
         if ($response->successful()) {
-            if ($payload->contains('ResponseCode', '00')) {
+            if (array_key_exists('ResponseCode', $payload) && $payload['ResponseCode'] === '00') {
                 $schedule->confirmation_sent = now();
             }
         }
