@@ -19,7 +19,7 @@ class InitiateSendDeductionConfirmation
         $schedules = FidelityLoanSchedule::query()->whereNull('confirmation_sent')->get();
 
         foreach ($schedules as $schedule) {
-            SendDeductionConfirmation::dispatchNow($schedule);
+            SendDeductionConfirmation::dispatch($schedule);
         }
     }
 

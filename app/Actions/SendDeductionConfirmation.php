@@ -45,7 +45,7 @@ class SendDeductionConfirmation
             'Amount' => $deduction->amount
         ]);
 
-        $response = Http::withToken($token)->dd()
+        $response = Http::withToken($token)
                         ->post($bulkUrl, [
                             'Narration' => $schedule->narration,
                             'TransactionDate' => $date,
@@ -54,6 +54,8 @@ class SendDeductionConfirmation
                         ]);
 
         $payload = $response->json();
+
+        dump($payload);
 
         $schedule->response_data = collect($payload);
 
