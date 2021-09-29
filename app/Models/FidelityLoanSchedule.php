@@ -12,7 +12,8 @@ class FidelityLoanSchedule extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'confirmation_sent' => 'datetime'
+        'confirmation_sent' => 'datetime',
+        'response_data'     => 'array',
     ];
 
     public function deductions()
