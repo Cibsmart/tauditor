@@ -2,15 +2,11 @@
 
 namespace App\Actions;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
 use App\Models\FidelityLoanSchedule;
 use Illuminate\Support\Facades\Cache;
 use App\Models\FidelityLoanDeduction;
 use Lorisleiva\Actions\Concerns\AsAction;
-use function collect;
-use function array_key_exists;
 
 class SendDeductionConfirmation
 {
@@ -55,16 +51,16 @@ class SendDeductionConfirmation
                             'Data' => $data
                         ]);
 
-        $payload = collect($response->json());
+        $payload = $response->json();
 
-        $schedule->response_data = $payload;
+        $schedule->response_data = collect($payload);
+        $schedule->save();
 
         if ($response->successful()) {
-            if ($payload->contains('responseCode', '00')) {
+            if (array_key_exists('responseCode', $payload) && $payload['responseCode'] == '00') {
                 $schedule->confirmation_sent = now();
+                $schedule->save();
             }
         }
-
-        $schedule->save();
     }
 }
