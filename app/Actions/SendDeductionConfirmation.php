@@ -45,7 +45,7 @@ class SendDeductionConfirmation
             'Amount' => $deduction->amount
         ]);
 
-        $response = Http::withToken($token)
+        $response = Http::withToken($token)->dd()
                         ->post($bulkUrl, [
                             'Narration' => $schedule->narration,
                             'TransactionDate' => $date,
