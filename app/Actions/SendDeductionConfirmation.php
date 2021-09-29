@@ -9,6 +9,7 @@ use App\Models\FidelityLoanSchedule;
 use Illuminate\Support\Facades\Cache;
 use App\Models\FidelityLoanDeduction;
 use Lorisleiva\Actions\Concerns\AsAction;
+use function array_key_exists;
 
 class SendDeductionConfirmation
 {
@@ -55,12 +56,12 @@ class SendDeductionConfirmation
 
         $payload = $response->json();
 
-        dump($payload);
-
         $schedule->response_data = collect($payload);
 
-        if ($response->successful() && $payload['ResponseCode'] == '00') {
-            $schedule->confirmation_sent = now();
+        if ($response->successful()) {
+            if ($payload->contains('ResponseCode', '00')) {
+                $schedule->confirmation_sent = now();
+            }
         }
 
         $schedule->save();
