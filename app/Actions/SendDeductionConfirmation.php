@@ -9,7 +9,6 @@ use App\Models\FidelityLoanSchedule;
 use Illuminate\Support\Facades\Cache;
 use App\Models\FidelityLoanDeduction;
 use Lorisleiva\Actions\Concerns\AsAction;
-use function collect;
 
 class SendDeductionConfirmation
 {
@@ -33,13 +32,13 @@ class SendDeductionConfirmation
 
         $bulkUrl = config('fidelity.confirm_deduction_url_bulk');
 
-        $narration = $schedule->narration;
+        $scheduleDate = $schedule->created_at;
 
-        $timestamp = Str::afterLast($narration, '|');
-        $date = Carbon::createFromTimestamp($timestamp)
-                      ->setDay(25)
-                      ->setTime(23, 00)
-                      ->format('Y-m-d\TH:i:s+000Z');
+        $date = $schedule->created_at
+                        ->setDay(26)
+                        ->setTime(23, 00)
+                        ->format('Y-m-d\TH:i:s+000Z');
+
         $total = $schedule->totalAmount();
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
             'LoanAccount' => $deduction->loan_account,
@@ -48,7 +47,7 @@ class SendDeductionConfirmation
 
         $response = Http::withToken($token)
                         ->post($bulkUrl, [
-                            'Narration' => $narration,
+                            'Narration' => $schedule->narration,
                             'TransactionDate' => $date,
                             'TotalAmount' => $total,
                             'Data' => $data
@@ -58,7 +57,7 @@ class SendDeductionConfirmation
 
         $schedule->response_data = collect($payload);
 
-        if ($response->successful() && $payload['Status'] === 'SUCCESS') {
+        if ($response->successful() && $payload['ResponseCode'] == '00') {
             $schedule->confirmation_sent = now();
         }
 
