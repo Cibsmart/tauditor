@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
 
-        $schedule->command('fidelity:send-deduction-confirmation')->monthlyOn(26, '11:00');
+        $schedule->command('fidelity:send-deduction-confirmation')->dailyAt('23:00');
     }
 
     /**
