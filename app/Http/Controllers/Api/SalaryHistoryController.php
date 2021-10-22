@@ -9,6 +9,7 @@ use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+use function json_encode;
 
 class SalaryHistoryController extends Controller
 {
@@ -16,6 +17,7 @@ class SalaryHistoryController extends Controller
     {
         $bvn = Str::of($request->bvn)->trim();
         $auth = $request->authorizationCode;
+        $empty = (object) [];
 
         $this->logRequest(['bvn' => Str::upper($bvn), 'authorization_code' => $auth]);
 
@@ -25,7 +27,7 @@ class SalaryHistoryController extends Controller
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
                 'responseMsg'  => 'UNAUTHORIZED',
-                'data'         => [],
+                'data'         => $empty,
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
@@ -35,7 +37,7 @@ class SalaryHistoryController extends Controller
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
                 'responseMsg'  => 'INVALID BVN',
-                'data'         => [],
+                'data'         => $empty,
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
@@ -49,7 +51,7 @@ class SalaryHistoryController extends Controller
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
                 'responseMsg'  => 'BVN NOT FOUND',
-                'data'         => [],
+                'data'         => $empty,
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
@@ -70,7 +72,7 @@ class SalaryHistoryController extends Controller
                 'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
                 'responseMsg'  => 'NO SALARY DATA',
-                'data'         => [],
+                'data'         => $empty,
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
