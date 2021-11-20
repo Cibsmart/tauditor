@@ -25,26 +25,26 @@
                         <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
                         <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase" >{{ payroll.month }}</div>
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 text-gray-900">
                                         {{ payroll.created_by }}
                                     </div>
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">
                                         {{ payroll.date_created }}
                                     </div>
-                                </inertia-link>
+                                </Link>
                             </td>
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
                                     <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400" />
-                                </inertia-link>
+                                </Link>
                             </td>
                         </tr>
 

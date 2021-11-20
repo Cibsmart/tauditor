@@ -6,9 +6,9 @@
       <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
       </search-filter>
       <div></div>
-      <inertia-link :href="route('deductions.create')" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
+      <Link :href="route('deductions.create')" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
         <span class="hidden md:inline">New Deduction</span>
-      </inertia-link>
+      </Link>
     </div>
 
     <div class="flex flex-col">
@@ -52,10 +52,10 @@
                 </td>
 
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
-                 <inertia-link :href="route('deductibles.create', {deduction: deduction.id})"
+                 <Link :href="route('deductibles.create', {deduction: deduction.id})"
                                class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">
                  Assign
-                 </inertia-link>
+                 </Link>
                 </td>
 
                 <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">

@@ -1,17 +1,19 @@
 <template>
     <div>
         <h1 class="mb-4 font-bold text-3xl">
-            <inertia-link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
+            <Link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
                 Audit Payroll
-            </inertia-link>
+            </Link>
             <span class="text-indigo-500 font-medium">/</span>
-            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category})" class="text-indigo-500 hover:text-indigo-700">
+            <Link :href="route('audit_mda_schedules.index', {audit_payroll_category})"
+                  class="text-indigo-500 hover:text-indigo-700">
                 MDA Schedules
-            </inertia-link>
+            </Link>
             <span class="text-indigo-500 font-medium">/</span>
-            <inertia-link :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule})" class="text-indigo-500 hover:text-indigo-700">
+            <Link :href="route('audit_sub_mda_schedules.index', {audit_mda_schedule})"
+                  class="text-indigo-500 hover:text-indigo-700">
                 Sub MDA Schedules
-            </inertia-link>
+            </Link>
             <span class="text-indigo-500 font-medium">/</span> Pay Schedules
         </h1>
 
@@ -24,7 +26,8 @@
 
         <div class="flex flex-col">
             <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <div
+                    class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                     <table class="min-w-full">
                         <thead>
                         <tr>
@@ -53,8 +56,13 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">{{ schedule.beneficiary_name }}</div>
-                                        <div class="text-sm leading-5 text-gray-600">{{ schedule.verification_number }}</div>
+                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                            {{ schedule.beneficiary_name }}
+                                        </div>
+                                        <div class="text-sm leading-5 text-gray-600">{{
+                                                schedule.verification_number
+                                            }}
+                                        </div>
                                     </div>
                                 </div>
                             </td>
@@ -93,14 +101,15 @@
 
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-                                <inertia-link href="#" class="px-5 py-3">
+                                <Link href="#" class="px-5 py-3">
                                     View Details
-                                </inertia-link>
+                                </Link>
                             </td>
                         </tr>
 
                         <tr v-if="schedules.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                            <td colspan="6"
+                                class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 No Pay Schedule
                             </td>
                         </tr>
@@ -109,28 +118,30 @@
                 </div>
             </div>
         </div>
-        <pagination :links="schedules.links" />
+        <pagination :links="schedules.links"/>
     </div>
 </template>
 
 <script>
-    import Icon from '@/Shared/Icon'
-    import Layout from '@/Shared/Layout'
-    import Pagination from '@/Shared/Pagination'
+import Icon from '@/Shared/Icon'
+import Layout from '@/Shared/Layout'
+import Pagination from '@/Shared/Pagination'
+import {Link} from '@inertiajs/inertia-vue'
 
-    export default {
-        metaInfo: { title: 'Pay Schedules' },
-        layout: Layout,
+export default {
+    metaInfo: {title: 'Pay Schedules'},
+    layout: Layout,
 
-        props: {
-            schedules: Object,
-            audit_payroll_category: Number,
-            audit_mda_schedule: Number,
-        },
+    props: {
+        schedules: Object,
+        audit_payroll_category: Number,
+        audit_mda_schedule: Number,
+    },
 
-        components: {
-            Icon,
-            Pagination,
-        },
-    }
+    components: {
+        Icon,
+        Link,
+        Pagination,
+    },
+}
 </script>

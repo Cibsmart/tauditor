@@ -3,13 +3,13 @@
         <h1 class="mb-8 font-bold text-3xl">Audit Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <div></div>
-            <inertia-link :href="route('audit_payroll.store')"
+            <Link :href="route('audit_payroll.store')"
                           method="post"
                           class="btn btn-big btn-indigo"
                           as="button"
                           preserve-state>
                 Add <span class="hidden md:inline"> &nbsp; Payroll</span>
-            </inertia-link>
+            </Link>
         </div>
 
         <div class="flex flex-col">
@@ -37,33 +37,33 @@
                         <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
                         <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase" >{{ payroll.month }}</div>
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 text-gray-900">
                                         {{ payroll.created_by }}
                                     </div>
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">
                                         {{ payroll.date_created }}
                                     </div>
-                                </inertia-link>
+                                </Link>
                             </td>
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link v-if="payroll.is_current && payroll.can_add_leave"
+                                <Link v-if="payroll.is_current && payroll.can_add_leave"
                                               :href="route('audit_payroll.leave', {audit_payroll: payroll.id})" class="px-5 py-3" preserve-state>
                                     Add Annual Leave Allowance
-                                </inertia-link>
+                                </Link>
                             </td>
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
                                     <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400" />
-                                </inertia-link>
+                                </Link>
                             </td>
                         </tr>
 
@@ -91,10 +91,10 @@
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
-                                            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})"
+                                            <Link :href="route('audit_mda_schedules.index', {audit_payroll_category: category.id})"
                                                           class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Mdas
-                                            </inertia-link>
+                                            </Link>
                                         </td>
                                     </tr>
                                 </table>
@@ -121,6 +121,7 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
+    import { Link } from '@inertiajs/inertia-vue'
 
     export default {
         metaInfo: { title: 'Audit Payroll' },
@@ -132,6 +133,7 @@
 
         components: {
             Icon,
+            Link,
             Pagination,
         },
 

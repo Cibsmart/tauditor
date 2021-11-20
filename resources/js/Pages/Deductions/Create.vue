@@ -1,9 +1,9 @@
 <template>
   <div>
       <h1 class="mb-4 font-bold text-3xl">
-          <inertia-link :href="route('deductions.index')" class="text-indigo-500 hover:text-indigo-700">
+          <Link :href="route('deductions.index')" class="text-indigo-500 hover:text-indigo-700">
               Deductions
-          </inertia-link>
+          </Link>
           <span class="text-indigo-500 font-medium">/</span> New
       </h1>
 

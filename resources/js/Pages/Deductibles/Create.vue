@@ -3,10 +3,10 @@
 
         <div class="mb-6 flex justify-between items-center">
             <h1 class="mb-8 font-bold text-3xl">Deductions</h1>
-            <inertia-link href="#"
+            <Link href="#"
                           class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
                 <span class="hidden md:inline">New Deduction</span>
-            </inertia-link>
+            </Link>
         </div>
 
         <hr/>

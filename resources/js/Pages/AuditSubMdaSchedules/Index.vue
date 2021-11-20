@@ -1,13 +1,14 @@
 <template>
     <div>
         <h1 class="mb-4 font-bold text-3xl">
-            <inertia-link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
+            <Link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
                 Audit Payroll
-            </inertia-link>
+            </Link>
             <span class="text-indigo-500 font-medium">/</span>
-            <inertia-link :href="route('audit_mda_schedules.index', {audit_payroll_category})" class="text-indigo-500 hover:text-indigo-700">
+            <Link :href="route('audit_mda_schedules.index', {audit_payroll_category})"
+                  class="text-indigo-500 hover:text-indigo-700">
                 MDA Schedules
-            </inertia-link>
+            </Link>
             <span class="text-indigo-500 font-medium">/</span> Sub MDA Schedules
         </h1>
 
@@ -20,7 +21,8 @@
 
         <div class="flex flex-col">
             <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <div
+                    class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                     <table class="min-w-full">
                         <thead>
                         <tr>
@@ -46,7 +48,9 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">{{ schedule.sub_mda_name }}</div>
+                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                            {{ schedule.sub_mda_name }}
+                                        </div>
                                         <div class="text-sm leading-5 text-gray-600">{{ schedule.mda_name }}</div>
                                     </div>
                                 </div>
@@ -84,17 +88,27 @@
                                 <form v-show="schedule.uploaded && ! schedule.archived"
                                       @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
                                       class="inline" :key="schedule.sub_mda_name">
-                                    <button type="submit" class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">Re-upload</button>
+                                    <button type="submit"
+                                            class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">
+                                        Re-upload
+                                    </button>
                                 </form>
 
-                                <inertia-link v-if="schedule.uploaded" :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})" class="px-5 py-3">
+                                <Link v-if="schedule.uploaded"
+                                      :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})"
+                                      class="px-5 py-3">
                                     View Details
-                                </inertia-link>
+                                </Link>
 
                                 <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
                                     <div class="flex items-center">
-                                        <file-input v-model="form.schedule_file[schedule.id]" :errors="form.errors.schedule_file" class="pr-6 w-full" type="file" accept="file/*" />
-                                        <button type="submit" class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">Upload</button>
+                                        <file-input v-model="form.schedule_file[schedule.id]"
+                                                    :errors="form.errors.schedule_file" class="pr-6 w-full" type="file"
+                                                    accept="file/*"/>
+                                        <button type="submit"
+                                                class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">
+                                            Upload
+                                        </button>
                                     </div>
                                 </form>
 
@@ -102,7 +116,8 @@
                         </tr>
 
                         <tr v-if="schedules.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                            <td colspan="6"
+                                class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 No Pay Schedule
                             </td>
                         </tr>
@@ -111,63 +126,65 @@
                 </div>
             </div>
         </div>
-        <pagination :links="schedules.links" />
+        <pagination :links="schedules.links"/>
     </div>
 </template>
 
 <script>
-    import Icon from '@/Shared/Icon'
-    import Layout from '@/Shared/Layout'
-    import FileInput from "@/Shared/FileInput";
-    import Pagination from '@/Shared/Pagination'
+import Icon from '@/Shared/Icon'
+import Layout from '@/Shared/Layout'
+import FileInput from "@/Shared/FileInput";
+import Pagination from '@/Shared/Pagination'
+import { Link } from '@inertiajs/inertia-vue'
 
-    export default {
-        metaInfo: { title: 'Audit Sub MDA Schedules' },
-        layout: Layout,
+export default {
+    metaInfo: {title: 'Audit Sub MDA Schedules'},
+    layout: Layout,
 
-        props: {
-            schedules: Object,
-            audit_payroll_category: Number,
-        },
+    props: {
+        schedules: Object,
+        audit_payroll_category: Number,
+    },
 
-        components: {
-            Icon,
-            FileInput,
-            Pagination,
-        },
+    components: {
+        Icon,
+        Link,
+        FileInput,
+        Pagination,
+    },
 
-        data(){
-            return {
-                form: this.$inertia.form({
-                    schedule_file: [],
+    data() {
+        return {
+            form: this.$inertia.form({
+                schedule_file: [],
+            })
+        }
+    },
+
+    methods: {
+        upload(audit_sub_mda) {
+
+            this.form
+                .transform((data) => ({
+                    audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
+                    schedule_file: data.schedule_file[audit_sub_mda]
+                }))
+                .post(this.route('audit_pay_schedules.store'), {
+                    preserveScroll: true
                 })
-            }
         },
 
-        methods: {
-            upload(audit_sub_mda){
+        reupload(audit_sub_mda, mda_name) {
 
+            let result = confirm('Confirm Re-Upload for' + mda_name);
+
+            if (result) {
                 this.form
-                    .transform((data) => ({
-                        audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
-                        schedule_file: data.schedule_file[audit_sub_mda]
-                    }))
-                    .post(this.route('audit_pay_schedules.store'), {
-                        preserveScroll: true
+                    .post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}), {
+                        preserveScroll: true,
                     })
-            },
-
-            reupload(audit_sub_mda, mda_name){
-
-                let result = confirm('Confirm Re-Upload for' + mda_name);
-
-                if(result) {
-                    this.form
-                        .post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}), {
-                            preserveScroll: true,
-                        })
-                }
             }
         }
     }
+}
 </script>
