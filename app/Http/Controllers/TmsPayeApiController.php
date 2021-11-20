@@ -31,21 +31,21 @@ class TmsPayeApiController extends Controller
                             'date_created' => $payroll->dateCreated(),
                             'is_current'   => $payroll->currentMonth(),
                             'categories'   => $payroll->auditPaymentCategories
-                                                      ->transform(fn ($category) => [
-                                                          'id'              => $category->id,
-                                                          'payment_type_id' => $category->payment_type_id,
-                                                          'payment_type'    => $category->paymentTypeName(),
-                                                          'payment_title'   => $category->payment_title,
-                                                          'head_count'      => number_format($category->head_count),
-                                                          'uploaded'        => $category->payeData()->firstWhere(
-                                                              'successful',
-                                                              1
-                                                          )?->successful,
-                                                          'failed'          => $category->payeData()->firstWhere(
-                                                              'failed',
-                                                              1
-                                                          )?->failed,
-                                                      ]),
+                                ->transform(fn ($category) => [
+                                    'id'              => $category->id,
+                                    'payment_type_id' => $category->payment_type_id,
+                                    'payment_type'    => $category->paymentTypeName(),
+                                    'payment_title'   => $category->payment_title,
+                                    'head_count'      => number_format($category->head_count),
+                                    'uploaded'        => $category->payeData()->firstWhere(
+                                        'successful',
+                                        1
+                                    )?->successful,
+                                    'failed'          => $category->payeData()->firstWhere(
+                                        'failed',
+                                        1
+                                    )?->failed,
+                                ]),
                         ]);
 
         return Inertia::render('TmsPayeData/Index', ['payrolls' => $payrolls]);
@@ -69,7 +69,7 @@ class TmsPayeApiController extends Controller
 //            'server'     => $response->serverError(),
 //        ]);
 
-        return back();
+        return back()->with('success', 'CSV File Generated Successfully, but not Sent to API');
     }
 
     protected function uploadToApi($category, $path)
@@ -125,18 +125,11 @@ class TmsPayeApiController extends Controller
                         ->orderBy('audit_mda_schedule_id')
                         ->orderBy('audit_sub_mda_schedule_id')
                         ->orderBy('verification_number')
-                        ->chunk(10, function ($schedules) use ($month, $year, $file_name) {
-                            $data = '';
+                        ->lazy()
+                        ->each(function ($schedule) use ($month, $year, $file_name) {
+                            $content = $this->formatContent($this->getContent($schedule, $month, $year));
 
-                            foreach ($schedules as $schedule) {
-                                $content = $this->formatContent(
-                                    $this->getContent($schedule, $month, $year)
-                                );
-
-                                $data .= $content.PHP_EOL;
-                            }
-
-                            Storage::disk('local')->append($file_name, $data);
+                            Storage::disk('local')->append($file_name, $content);
                         });
 
         return $file_name;
