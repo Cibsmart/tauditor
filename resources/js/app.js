@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueMeta from 'vue-meta'
+import VModal from 'vue-js-modal'
 import PortalVue from 'portal-vue'
 import {App, plugin} from '@inertiajs/inertia-vue'
 
@@ -13,6 +14,7 @@ Vue.use(plugin)
 Vue.use(PortalVue)
 Vue.use(VueMeta)
 Vue.use(Vuex)
+Vue.use(VModal)
 
 const app = document.getElementById('app')
 

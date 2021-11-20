@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Inertia\Inertia;
-use Illuminate\Support\Str;
+use App\Models\PaymentType;
 use Illuminate\Http\Request;
 use App\Models\AuditPayroll;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use function now;
+use App\Imports\OtherScheduleImport;
+use Illuminate\Support\Facades\Storage;
+use App\Models\OtherAuditPayrollCategory;
+use App\Exceptions\WrongScheduleException;
 use function back;
 use function redirect;
-use function array_merge;
-use function number_format;
 
 class OtherAuditPayrollController extends Controller
 {
@@ -26,62 +25,93 @@ class OtherAuditPayrollController extends Controller
     {
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
                         ->paginate()
-                        ->transform(fn (AuditPayroll $payroll) => [
+                        ->transform(fn(AuditPayroll $payroll) => [
                             'id'           => $payroll->id,
                             'month'        => $payroll->month_name,
                             'year'         => $payroll->year,
                             'created_by'   => $payroll->createdBy(),
                             'date_created' => $payroll->dateCreated(),
-                            'is_current' => $payroll->currentMonth(),
-                            'can_add_leave' => $payroll->canAddLeaveAllowance(),
-                            'categories'   => $payroll->auditPaymentCategories->transform(fn ($category) => [
+                            'is_current'   => $payroll->currentMonth(),
+                            'categories'   => $payroll->otherPaymentCategories->transform(fn($category) => [
                                 'id'              => $category->id,
                                 'payment_type_id' => $category->payment_type_id,
                                 'payment_type'    => $category->paymentTypeName(),
                                 'payment_title'   => $category->payment_title,
                                 'total_amount'    => number_format($category->total_net_pay, 2),
                                 'head_count'      => number_format($category->head_count),
+                                'uploaded'        => $category->uploaded,
+                                'tenece'          => $category->paycomm_tenece,
+                                'fidelity'        => $category->paycomm_fidelity,
+                                'color'           => $category->color,
                             ]),
                         ]);
 
-        return Inertia::render('OtherAuditPayroll/Index', ['payrolls' => $payrolls,]);
+        $payment_types = PaymentType::query()
+                                    ->select('id', 'name')
+                                    ->where('category', 'others')
+                                    ->get();
+
+        return Inertia::render('OtherAuditPayroll/Index', [
+            'payrolls'      => $payrolls,
+            'payment_types' => $payment_types,
+        ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $date = now();
+        $data = $request->validate([
+            'payment_title'    => ['required', 'string'],
+            'paycomm_tenece'   => ['required', 'boolean'],
+            'paycomm_fidelity' => ['required', 'boolean'],
+            'payment_type_id'  => ['required', 'exists:payment_types,id'],
+            'audit_payroll_id' => ['required', 'exists:audit_payrolls,id'],
+        ]);
 
-        $user = Auth::user();
 
-        $month_name = Str::upper($date->monthName);
-        $year = $date->year;
+        OtherAuditPayrollCategory::create($data);
 
-        $attributes = [
-            'month'      => $date->month,
-            'month_name' => $month_name,
-            'year'       => $year,
-            'timestamp'  => Carbon::parse("25 $month_name $year"),
-        ];
+        $message = "Other Payroll Category for $request->payment_title Created Successfully";
 
-        $payroll = $user->auditPayrolls()->where($attributes)->first();
+        return redirect()
+            ->route('other_audit_payroll.index')
+            ->with('success', $message);
+    }
 
-        $message = "You Cannot Create Another Audit Payroll for $date->monthName $date->year";
+    public function storeSchedule(Request $request)
+    {
+        $data = $request->validate([
+            'other_audit_payroll_category_id' => ['required', 'numeric', 'exists:other_audit_payroll_categories,id'],
+            'schedule_file'                   => ['required', 'mimes:xlsx,xls'],
+        ]);
 
-        if ($payroll) {
+        $other_payroll_category = OtherAuditPayrollCategory::find($data['other_audit_payroll_category_id']);
+
+        if ($other_payroll_category->uploaded) {
+            return back()->with('error', "Schedule Already Uploaded for $other_payroll_category->payment_title");
+        }
+
+        $file_path = Storage::putFile('other_schedules', $data['schedule_file']);
+
+        try{
+            (new OtherScheduleImport($other_payroll_category, $file_path))->import($file_path);
+        } catch (WrongScheduleException $e){
+            return back()->with('error', $e->getMessage());
+        } catch (\ErrorException $e){
+            return back()->with('error', 'Attached File is not a valid Other Pay Schedule '.$e->getMessage());
+        } catch (\Exception $e){
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
+        }
+
+        $confirm_upload = $other_payroll_category->auditOtherPaySchedules;
+
+        if ($confirm_upload->isEmpty()) {
+            $headers = 'SN | NAME | DESCRIPTION | AMOUNT | ACCOUNT NUMBER | BANK ';
+            $message = "Upload Failed: Ensure Heading has {$headers}";
             return back()->with('error', $message);
         }
 
-        $attributes = array_merge($attributes, ['user_id' => $user->id]);
+        $other_payroll_category->scheduleUploaded($file_path);
 
-        DB::transaction(function () use ($user, $attributes) {
-            $payroll = $user->auditPayrolls()->create($attributes);
-
-            $this->createPaymentCategories($payroll);
-        });
-
-        $message = "Payroll for $date->monthName $date->year Created Successfully";
-
-        return redirect()->route('audit_payroll.index')
-                         ->with('success', $message);
+        return redirect()->back()->with('success', 'Other Payment Schedule Successfully Uploaded');
     }
 }

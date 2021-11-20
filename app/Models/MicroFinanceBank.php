@@ -21,6 +21,11 @@ class MicroFinanceBank extends Model
         return $this->morphMany(BankDetail::class, 'bankable');
     }
 
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class);
+    }
+
     public function bank() : BelongsTo
     {
         return $this->belongsTo(Bank::class);

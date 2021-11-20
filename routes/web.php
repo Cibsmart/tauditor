@@ -21,7 +21,6 @@ use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\OtherAuditPayrollController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
-use App\Http\Controllers\DeductionConfirmationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,6 +91,10 @@ Route::middleware('auth')->group(function () {
     Route::name('other_audit_payroll.')->group(function () {
         Route::get('other_audit_payroll', [OtherAuditPayrollController::class, 'index'])->name('index');
         Route::post('other_audit_payroll/store', [OtherAuditPayrollController::class, 'store'])->name('store');
+        Route::post(
+            'other_audit_schedule/store',
+            [OtherAuditPayrollController::class, 'storeSchedule']
+        )->name('store.schedule');
     });
 });
 

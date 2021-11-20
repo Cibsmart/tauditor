@@ -55,7 +55,8 @@
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200">
                                 <Link v-if="payroll.is_current && payroll.can_add_leave"
-                                              :href="route('audit_payroll.leave', {audit_payroll: payroll.id})" class="px-5 py-3" preserve-state>
+                                      :href="route('audit_payroll.leave', {audit_payroll: payroll.id})"
+                                      class="btn btn-small text-white bg-indigo-600" preserve-state>
                                     Add Annual Leave Allowance
                                 </Link>
                             </td>

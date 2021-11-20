@@ -12,17 +12,27 @@ class PaymentTypeSeeder extends Seeder
      */
     public function run()
     {
-        $types = [
-            'sal' => 'SALARY',
-            'pen' => 'PENSION',
-            'lev' => 'ANNUAL LEAVE ALLOWANCE'
+        $payment_types = [
+            'main' => [
+                'sal' => 'SALARY',
+                'pen' => 'PENSION',
+                'lev' => 'ANNUAL LEAVE ALLOWANCE'
+              ],
+            'other' => [
+                'nys' => 'NYSC',
+                'all' => 'ALLOWANCE',
+                'arr' => 'ARREARS'
+            ]
         ];
 
-        foreach ($types as $key => $value) {
-            factory(PaymentType::class)->create([
-                'id'   => $key,
-                'name' => $value,
-            ]);
+        foreach ($payment_types as $category => $types) {
+            foreach ($types as $key => $value) {
+                factory(PaymentType::class)->create([
+                    'id'       => $key,
+                    'category' => $category,
+                    'name'     => $value,
+                ]);
+            }
         }
     }
 }
