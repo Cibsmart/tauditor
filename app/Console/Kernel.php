@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
 
         $schedule->command('fidelity:send-deduction-confirmation')->dailyAt('23:00');
+        $schedule->command('horizon:snapshot')->everyFiveMinutes();
     }
 
     /**

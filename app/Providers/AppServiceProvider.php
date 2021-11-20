@@ -136,6 +136,7 @@ class AppServiceProvider extends ServiceProvider
                         'canCreateUsers'           => $user->can('create_users'),
                         'canViewFidelityMandate'   => $user->can('view_fidelity_mandate'),
                         'canUploadPayeData'        => $user->can('upload_paye_data'),
+                        'canManageOtherSchedule'   => $user->can('manage_other_schedule'),
                     ] : null;
             },
         ]);

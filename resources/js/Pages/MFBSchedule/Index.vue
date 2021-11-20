@@ -6,9 +6,9 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <!--            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
+            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
             <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
-            <!--            </inertia-link>-->
+            <!--            </Link>-->
         </div>
 
         <div class="flex flex-col">
@@ -32,26 +32,28 @@
                         <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
                         <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state
-                                              preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
+                                      preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase">{{
-                                        payroll.month }}
+                                            payroll.month
+                                        }}
                                     </div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state
-                                              preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
+                                      preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase">{{
-                                        payroll.year }}
+                                            payroll.year
+                                        }}
                                     </div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state
-                                              preserve-scroll>
+                                <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state
+                                      preserve-scroll>
                                     <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400"/>
-                                </inertia-link>
+                                </Link>
                             </td>
                         </tr>
                         <tr v-if="show_detail[payroll.id]">
@@ -79,13 +81,13 @@
                                                 Download Schedules
                                             </a>
 
-<!--                                            <span> | </span>-->
+                                            <!--                                            <span> | </span>-->
 
-<!--                                            <inertia-link-->
-<!--                                                :href="route('mfb_schedule.show', { category: category.id, mfb: category.mfb_id })"-->
-<!--                                                class="px-5 py-3" preserve-state preserve-scroll>-->
-<!--                                                View MDAs-->
-<!--                                            </inertia-link>-->
+                                            <!--                                            <Link-->
+                                            <!--                                                :href="route('mfb_schedule.show', { category: category.id, mfb: category.mfb_id })"-->
+                                            <!--                                                class="px-5 py-3" preserve-state preserve-scroll>-->
+                                            <!--                                                View MDAs-->
+                                            <!--                                            </Link>-->
                                         </td>
                                     </tr>
                                     </tbody>
@@ -111,39 +113,41 @@
 </template>
 
 <script>
-    import Icon from '@/Shared/Icon'
-    import Layout from '@/Shared/Layout'
-    import Pagination from '@/Shared/Pagination'
+import Icon from '@/Shared/Icon'
+import Layout from '@/Shared/Layout'
+import {Link} from '@inertiajs/inertia-vue'
+import Pagination from '@/Shared/Pagination'
 
-    export default {
-        metaInfo: {title: 'Microfinance Bank Schedule'},
-        layout: Layout,
+export default {
+    metaInfo: {title: 'Microfinance Bank Schedule'},
+    layout: Layout,
 
-        props: {
-            payrolls: Object,
-        },
+    props: {
+        payrolls: Object,
+    },
 
-        components: {
-            Icon,
-            Pagination,
-        },
+    components: {
+        Icon,
+        Link,
+        Pagination,
+    },
 
-        data() {
-            return {
-                status: {
-                    pending: 'bg-yellow-100 text-yellow-800',
-                    running: 'bg-pink-100 text-pink-800',
-                    completed: 'bg-green-100 text-green-800',
-                    incomplete: 'bg-blue-100 text-blue-800',
-                },
-                show_detail: [],
-            }
-        },
+    data() {
+        return {
+            status: {
+                pending: 'bg-yellow-100 text-yellow-800',
+                running: 'bg-pink-100 text-pink-800',
+                completed: 'bg-green-100 text-green-800',
+                incomplete: 'bg-blue-100 text-blue-800',
+            },
+            show_detail: [],
+        }
+    },
 
-        methods: {
-            show(payroll) {
-                this.show_detail[payroll] = !this.show_detail[payroll]
-            }
-        },
-    }
+    methods: {
+        show(payroll) {
+            this.show_detail[payroll] = !this.show_detail[payroll]
+        }
+    },
+}
 </script>

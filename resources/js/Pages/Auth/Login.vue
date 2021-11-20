@@ -17,7 +17,7 @@
         </div>
 
         <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
-            <inertia-link href="#" class="hover:underline">Forgot password</inertia-link>
+            <Link href="#" class="hover:underline">Forgot password</Link>
             <button type="submit"
                     class="px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap hover:bg-orange-600 focus:bg-orange-500">
                 Login
@@ -27,17 +27,20 @@
 </template>
 
 <script>
-import AuthLayout from '@/Shared/AuthLayout'
-import TextInput from '@/Shared/TextInput'
 import Logo from '@/Shared/Logo'
+import TextInput from '@/Shared/TextInput'
+import AuthLayout from '@/Shared/AuthLayout'
+import {Link} from '@inertiajs/inertia-vue'
+
 
 export default {
     metaInfo: {title: 'Login'},
     layout: AuthLayout,
 
     components: {
-        TextInput,
         Logo,
+        Link,
+        TextInput,
     },
 
     props: {

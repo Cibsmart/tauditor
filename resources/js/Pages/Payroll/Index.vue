@@ -3,17 +3,18 @@
         <h1 class="mb-8 font-bold text-3xl">Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
-<!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
-<!--            </search-filter>-->
+            <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
+            <!--            </search-filter>-->
             <div></div>
-            <inertia-link :href="route('payroll.store')" method="post" class="btn btn-big btn-indigo">
+            <Link :href="route('payroll.store')" method="post" class="btn btn-big btn-indigo">
                 <span class="hidden md:inline">New Payroll</span>
-            </inertia-link>
+            </Link>
         </div>
 
         <div class="flex flex-col">
             <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
+                <div
+                    class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
                     <table class="min-w-full">
                         <thead>
                         <tr>
@@ -36,7 +37,9 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="flex items-center">
                                     <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase" >{{ payroll.month }}</div>
+                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                            {{ payroll.month }}
+                                        </div>
                                         <div class="text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
                                     </div>
                                 </div>
@@ -59,33 +62,37 @@
                             </td>
                             <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
 
-<!--                                Payroll Generated but Yet to be Approved -->
-                                <inertia-link v-if="payroll.generated && ! payroll.approved" href="#" class="px-5 py-3 text-green-800">
+                                <!--                                Payroll Generated but Yet to be Approved -->
+                                <Link v-if="payroll.generated && ! payroll.approved" href="#"
+                                      class="px-5 py-3 text-green-800">
                                     Approve
-                                </inertia-link>
+                                </Link>
                                 <span v-if="payroll.generated && ! payroll.approved"> | </span>
 
-<!--                                Payroll Generated but Yet to be Archived -->
-                                <inertia-link v-if="payroll.generated && ! payroll.archived" href="#" class="px-5 py-3 text-red-800">
+                                <!--                                Payroll Generated but Yet to be Archived -->
+                                <Link v-if="payroll.generated && ! payroll.archived" href="#"
+                                      class="px-5 py-3 text-red-800">
                                     Rerun Payroll
-                                </inertia-link>
+                                </Link>
                                 <span v-if="payroll.generated && ! payroll.archived"> | </span>
 
-                                <inertia-link v-if="payroll.generated" :href="route('mda_schedules.index', {payroll: payroll.id})" class="px-5 py-3">
+                                <Link v-if="payroll.generated"
+                                      :href="route('mda_schedules.index', {payroll: payroll.id})" class="px-5 py-3">
                                     View Mdas
-                                </inertia-link>
+                                </Link>
 
-                                <inertia-link v-else class="px-5 py-3 text-green-800" method="post"
-                                              :href="route('actions.run_payroll', {payroll: payroll.id})">
+                                <Link v-else class="px-5 py-3 text-green-800" method="post"
+                                      :href="route('actions.run_payroll', {payroll: payroll.id})">
                                     Run Payroll
-                                </inertia-link>
+                                </Link>
 
-<!--                                <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">Edit</a>-->
+                                <!--                                <a href="#" class="text-indigo-600 hover:text-indigo-900 focus:outline-none focus:underline">Edit</a>-->
                             </td>
                         </tr>
 
                         <tr v-if="payrolls.data.length === 0">
-                            <td colspan="6" class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                            <td colspan="6"
+                                class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
                                 No Payroll
                             </td>
                         </tr>
@@ -94,26 +101,28 @@
                 </div>
             </div>
         </div>
-        <pagination :links="payrolls.links" />
+        <pagination :links="payrolls.links"/>
     </div>
 </template>
 
 <script>
-    import Icon from '@/Shared/Icon'
-    import Layout from '@/Shared/Layout'
-    import Pagination from '@/Shared/Pagination'
+import Icon from '@/Shared/Icon'
+import Layout from '@/Shared/Layout'
+import {Link} from '@inertiajs/inertia-vue'
+import Pagination from '@/Shared/Pagination'
 
-    export default {
-        metaInfo: { title: 'Payroll' },
-        layout: Layout,
+export default {
+    metaInfo: {title: 'Payroll'},
+    layout: Layout,
 
-        props: {
-            payrolls: Object,
-        },
+    props: {
+        payrolls: Object,
+    },
 
-        components: {
-            Icon,
-            Pagination,
-        },
-    }
+    components: {
+        Icon,
+        Link,
+        Pagination,
+    },
+}
 </script>

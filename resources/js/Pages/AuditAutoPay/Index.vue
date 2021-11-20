@@ -6,9 +6,9 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <!--            <inertia-link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
+            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
             <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
-            <!--            </inertia-link>-->
+            <!--            </Link>-->
         </div>
 
         <div class="flex flex-col">
@@ -32,16 +32,16 @@
                         <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
                         <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
                                               preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase">{{
                                         payroll.month }}
                                     </div>
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="whitespace-no-wrap border-b border-gray-200">
-                                <inertia-link href="#" @click="show(payroll.id)" class="" preserve-state
+                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
                                               preserve-scroll>
                                     <div class="px-6 pt-4 text-sm leading-5 text-gray-900">
                                         {{ payroll.created_by }}
@@ -49,13 +49,13 @@
                                     <div class="px-6 pb-4 text-sm leading-5 text-gray-600">
                                         {{ payroll.date_created }}
                                     </div>
-                                </inertia-link>
+                                </Link>
                             </td>
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
-                                <inertia-link href="#" @click="show(payroll.id)" class="px-6" preserve-state
+                                <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state
                                               preserve-scroll>
                                     <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400"/>
-                                </inertia-link>
+                                </Link>
                             </td>
                         </tr>
                         <tr v-if="show_detail[payroll.id]">
@@ -96,17 +96,17 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <inertia-link v-show="category.can_generate" as="button"
+                                            <Link v-show="category.can_generate" as="button"
                                                           :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
                                                           method="post" class="px-5 py-3" preserve-state preserve-scroll>
                                                 Generate
-                                            </inertia-link>
+                                            </Link>
 
-                                            <inertia-link v-show="category.refreshable"
+                                            <Link v-show="category.refreshable"
                                                           :href="route('audit_autopay.index')"
                                                           class="px-5 py-3" preserve-state preserve-scroll>
                                                 Refresh
-                                            </inertia-link>
+                                            </Link>
 
                                             <a v-show="category.viewable"
                                                :href="route('audit_autopay.download', { audit_payroll_category: category.id })"
@@ -124,11 +124,11 @@
 
                                             <span v-show="category.viewable"> | </span>
 
-                                            <inertia-link v-show="category.viewable"
+                                            <Link v-show="category.viewable"
                                                 :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
                                                 class="px-5 py-3" preserve-state preserve-scroll>
                                                 View MDAs
-                                            </inertia-link>
+                                            </Link>
                                         </td>
                                     </tr>
                                     </tbody>
@@ -157,6 +157,7 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
+    import { Link } from '@inertiajs/inertia-vue'
 
     export default {
         metaInfo: {title: 'Audit Autopay'},
@@ -168,6 +169,7 @@
 
         components: {
             Icon,
+            Link,
             Pagination,
         },
 

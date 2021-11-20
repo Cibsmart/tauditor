@@ -235,7 +235,7 @@ class PayScheduleImport implements OnEachRow
 
     protected function getBankableType($bank_name)
     {
-        Str::of($bank_name)->upper()->trim();
+        $bank_name = Str::of($bank_name)->upper()->trim();
 
         $bank_name = $this->checkBankExceptions($bank_name);
 

@@ -42,6 +42,11 @@ class AuditPayroll extends Model
         return $this->hasMany(AuditPayrollCategory::class);
     }
 
+    public function otherPaymentCategories()
+    {
+        return $this->hasMany(OtherAuditPayrollCategory::class);
+    }
+
     public function auditMdaSchedules()
     {
         return $this->hasManyThrough(AuditMdaSchedule::class, AuditPayrollCategory::class);

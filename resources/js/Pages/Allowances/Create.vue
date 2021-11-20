@@ -6,9 +6,9 @@
         <!-- <search-filter v-model="search_form.search" class="w-full max-w-lg mr-4">
         </search-filter>
         <div></div>
-        <inertia-link href="/allowance" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
+        <Link href="/allowance" class="@apply px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap ">
             <span class="hidden md:inline">View Beneficiaries </span>
-        </inertia-link> -->
+        </Link> -->
     </div>
 
     <div class="flex flex-col">
