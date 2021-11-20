@@ -44,7 +44,7 @@ class OtherAuditPayrollController extends Controller
                             ]),
                         ]);
 
-        return Inertia::render('AuditPayroll/Index', ['payrolls' => $payrolls,]);
+        return Inertia::render('OtherAuditPayroll/Index', ['payrolls' => $payrolls,]);
     }
 
     public function store()
