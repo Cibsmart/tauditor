@@ -57,17 +57,17 @@ class TmsPayeApiController extends Controller
 
         $file_name = $this->prepareFile($category);
 
-        $response = $this->uploadToApi($category, $file_name);
-
-        $category->payeData()->create([
-            'user_id'    => Auth::id(),
-            'status'     => $response->status(),
-            'response'   => collect($response->json()),
-            'successful' => $response->successful(),
-            'failed'     => $response->failed(),
-            'client'     => $response->clientError(),
-            'server'     => $response->serverError(),
-        ]);
+//        $response = $this->uploadToApi($category, $file_name);
+//
+//        $category->payeData()->create([
+//            'user_id'    => Auth::id(),
+//            'status'     => $response->status(),
+//            'response'   => collect($response->json()),
+//            'successful' => $response->successful(),
+//            'failed'     => $response->failed(),
+//            'client'     => $response->clientError(),
+//            'server'     => $response->serverError(),
+//        ]);
 
         return back();
     }
