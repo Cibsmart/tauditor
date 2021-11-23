@@ -169,7 +169,7 @@ export default {
                     audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
                     schedule_file: data.schedule_file[audit_sub_mda]
                 }))
-                .post(this.route('audit_pay_schedules.store'), {
+                .post('/audit_pay_schedules/store', {
                     preserveScroll: true
                 })
         },
@@ -180,7 +180,7 @@ export default {
 
             if (result) {
                 this.form
-                    .post(this.route('audit_pay_schedules.destroy', {audit_sub_mda_schedule: audit_sub_mda}), {
+                    .post(`/audit_pay_schedules/${audit_sub_mda}/destroy`, {
                         preserveScroll: true,
                     })
             }
