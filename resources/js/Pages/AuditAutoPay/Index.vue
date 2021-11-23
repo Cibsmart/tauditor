@@ -131,6 +131,83 @@
                                             </Link>
                                         </td>
                                     </tr>
+
+                                    <tr v-for="category in payroll.other_categories" :key="category.id">
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <div class="text-sm leading-5 text-gray-900">
+                                                {{ category.payment_title }}
+                                                <span class="px-2 text-xs leading-5 font-semibold rounded-full" :class="category.color">
+                                                 {{ category.payment_type }}
+                                               </span>
+                                            </div>
+
+                                            <div class="text-sm leading-5 ">
+                                                <span v-if="!category.tenece && !category.fidelity" class="italic text-green-900">No Charge Applied</span>
+                                                <span v-if="category.tenece && category.fidelity" class="italic text-pink-900">All Charges Applied</span>
+                                                <span v-if="category.tenece && !category.fidelity" class="italic text-blue-900">Fidelity Charge not Applied</span>
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                                  :class="category.uploaded
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'">
+                                                {{ category.uploaded ? 'SCHEDULE UPLOADED' : 'SCHEDULE NOT-UPLOADED' }}
+                                              </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                                  :class="category.autopay_generated
+                                                    ? 'bg-green-100 text-green-800'
+                                                    : 'bg-red-100 text-red-800'">
+                                                {{ category.autopay_generated ? 'AUTOPAY GENERATED' : 'AUTOPAY NOT-GENERATED' }}
+                                              </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                            <span class="px-2 text-xs leading-5 font-semibold rounded-full uppercase"
+                                                  :class="status[category.autopay_status]">
+                                             {{ category.autopay_status }}
+                                           </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
+                                            <Link v-show="category.can_generate" as="button"
+                                                  :href="route('other_audit_autopay.generate', { other_audit_payroll_category: category.id })"
+                                                  method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                                Generate
+                                            </Link>
+
+                                            <Link v-show="category.refreshable"
+                                                  :href="route('audit_autopay.index')"
+                                                  class="px-5 py-3" preserve-state preserve-scroll>
+                                                Refresh
+                                            </Link>
+
+                                            <a v-show="category.viewable"
+                                               :href="route('audit_autopay.download', { audit_payroll_category: category.id })"
+                                               class="px-5 py-3">
+                                                Download Autopay
+                                            </a>
+
+                                            <span v-show="category.viewable"> | </span>
+
+                                            <a v-show="category.viewable"
+                                               :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })"
+                                               class="px-5 py-3">
+                                                Download MFB
+                                            </a>
+
+                                            <span v-show="category.viewable"> | </span>
+
+                                            <Link v-show="category.viewable"
+                                                  :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
+                                                  class="px-5 py-3" preserve-state preserve-scroll>
+                                                View Schedule
+                                            </Link>
+                                        </td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </td>
