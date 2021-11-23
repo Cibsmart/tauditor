@@ -19,6 +19,8 @@ class OtherAuditPayrollCategory extends Model
         'uploaded' => 'datetime',
         'paycomm_tenece' => 'boolean',
         'paycomm_fidelity' => 'boolean',
+        'autopay_uploaded' => 'datetime',
+        'autopay_generated' => 'datetime',
     ];
 
     public function auditPayroll()

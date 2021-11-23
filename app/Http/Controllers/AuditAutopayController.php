@@ -59,6 +59,28 @@ class AuditAutopayController extends Controller
                                         'refreshable'     => $available && $status === 'running',
                                     ];
                                 }),
+
+                            'other_categories'        => $payroll->otherPaymentCategories
+                                ->transform(function ($category) {
+                                    $uploaded_count = $category->countOfMdasSchedulesUploaded();
+                                    $autopay_count = $category->countOfMdasAutopayGenerated();
+                                    $status = $category->autopay_status;
+                                    $available = $uploaded_count - $autopay_count > 0;
+
+                                    return [
+                                        'id'              => $category->id,
+                                        'payment_type_id' => $category->payment_type_id,
+                                        'payment_type'    => $category->paymentTypeName(),
+                                        'payment_title'   => $category->payment_title,
+                                        'autopay_status'  => $category->autopay_status,
+                                        'mda_count'       => $category->mdaCount(),
+                                        'uploaded_count'  => $uploaded_count,
+                                        'autopay_count'   => $autopay_count,
+                                        'can_generate'    => $available && $status !== 'running',
+                                        'viewable'        => $autopay_count > 0,
+                                        'refreshable'     => $available && $status === 'running',
+                                    ];
+                                }),
                         ]);
 
         return Inertia::render('AuditAutoPay/Index', [
