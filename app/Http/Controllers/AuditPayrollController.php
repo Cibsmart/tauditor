@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Inertia\Inertia;
-use App\Models\AuditPayroll;
 use Illuminate\Support\Str;
+use App\Models\PaymentType;
+use App\Models\AuditPayroll;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use function now;
 use function redirect;
+use function number_format;
 
 class AuditPayrollController extends Controller
 {
@@ -23,14 +25,14 @@ class AuditPayrollController extends Controller
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
                         ->paginate()
                         ->transform(fn (AuditPayroll $payroll) => [
-                            'id'           => $payroll->id,
-                            'month'        => $payroll->month_name,
-                            'year'         => $payroll->year,
-                            'created_by'   => $payroll->createdBy(),
-                            'date_created' => $payroll->dateCreated(),
-                            'is_current' => $payroll->currentMonth(),
-                            'can_add_leave' => $payroll->canAddLeaveAllowance(),
-                            'categories'   => $payroll->auditPaymentCategories->transform(fn ($category) => [
+                            'id'               => $payroll->id,
+                            'month'            => $payroll->month_name,
+                            'year'             => $payroll->year,
+                            'created_by'       => $payroll->createdBy(),
+                            'date_created'     => $payroll->dateCreated(),
+                            'is_current'       => $payroll->currentMonth(),
+                            'can_add_leave'    => $payroll->canAddLeaveAllowance(),
+                            'categories'       => $payroll->auditPaymentCategories->transform(fn ($category) => [
                                 'id'              => $category->id,
                                 'payment_type_id' => $category->payment_type_id,
                                 'payment_type'    => $category->paymentTypeName(),
@@ -38,9 +40,29 @@ class AuditPayrollController extends Controller
                                 'total_amount'    => number_format($category->total_net_pay, 2),
                                 'head_count'      => number_format($category->head_count),
                             ]),
+                            'other_categories' => $payroll->otherPaymentCategories->transform(fn ($category) => [
+                                'id'              => $category->id,
+                                'payment_type_id' => $category->payment_type_id,
+                                'payment_type'    => $category->paymentTypeName(),
+                                'payment_title'   => $category->payment_title,
+                                'total_amount'    => number_format($category->total_net_pay, 2),
+                                'head_count'      => number_format($category->head_count),
+                                'uploaded'        => $category->uploaded,
+                                'tenece'          => $category->paycomm_tenece,
+                                'fidelity'        => $category->paycomm_fidelity,
+                                'color'           => $category->color,
+                            ]),
                         ]);
 
-        return Inertia::render('AuditPayroll/Index', ['payrolls' => $payrolls,]);
+        $payment_types = PaymentType::query()
+                                    ->select('id', 'name')
+                                    ->where('category', 'others')
+                                    ->get();
+
+        return Inertia::render('AuditPayroll/Index', [
+            'payrolls' => $payrolls,
+            'payment_types' => $payment_types,
+        ]);
     }
 
     public function store()
@@ -107,7 +129,7 @@ class AuditPayrollController extends Controller
             $category = $payroll->auditPaymentCategories()->create([
                 'payment_type_id' => $salary,
                 'payment_title'   => $title,
-                'staff_type' => 'staff'
+                'staff_type'      => 'staff',
             ]);
 
             foreach ($salary_beneficiary_types as $beneficiary_type) {
@@ -123,7 +145,7 @@ class AuditPayrollController extends Controller
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
                     'payment_title'   => $title,
-                    'staff_type' => $beneficiary_type->id,
+                    'staff_type'      => $beneficiary_type->id,
                 ]);
 
                 $this->createAuditMdaSchedules($beneficiary_type, $category);
@@ -139,7 +161,7 @@ class AuditPayrollController extends Controller
         $category = $payroll->auditPaymentCategories()->create([
             'payment_type_id' => $pension,
             'payment_title'   => $title,
-            'staff_type' => 'pensioners'
+            'staff_type'      => 'pensioners',
         ]);
 
         foreach ($pension_beneficiary_types as $beneficiary_type) {
@@ -163,7 +185,7 @@ class AuditPayrollController extends Controller
             $category = $payroll->auditPaymentCategories()->create([
                 'payment_type_id' => $salary,
                 'payment_title'   => $title,
-                'staff_type' => 'staff'
+                'staff_type'      => 'staff',
             ]);
 
             foreach ($salary_beneficiary_types as $beneficiary_type) {
@@ -179,7 +201,7 @@ class AuditPayrollController extends Controller
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
                     'payment_title'   => $title,
-                    'staff_type' => $beneficiary_type->id,
+                    'staff_type'      => $beneficiary_type->id,
                 ]);
 
                 $this->createAuditMdaSchedules($beneficiary_type, $category);

@@ -21,42 +21,6 @@ class OtherAuditPayrollController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
-                        ->paginate()
-                        ->transform(fn(AuditPayroll $payroll) => [
-                            'id'           => $payroll->id,
-                            'month'        => $payroll->month_name,
-                            'year'         => $payroll->year,
-                            'created_by'   => $payroll->createdBy(),
-                            'date_created' => $payroll->dateCreated(),
-                            'is_current'   => $payroll->currentMonth(),
-                            'categories'   => $payroll->otherPaymentCategories->transform(fn($category) => [
-                                'id'              => $category->id,
-                                'payment_type_id' => $category->payment_type_id,
-                                'payment_type'    => $category->paymentTypeName(),
-                                'payment_title'   => $category->payment_title,
-                                'total_amount'    => number_format($category->total_net_pay, 2),
-                                'head_count'      => number_format($category->head_count),
-                                'uploaded'        => $category->uploaded,
-                                'tenece'          => $category->paycomm_tenece,
-                                'fidelity'        => $category->paycomm_fidelity,
-                                'color'           => $category->color,
-                            ]),
-                        ]);
-
-        $payment_types = PaymentType::query()
-                                    ->select('id', 'name')
-                                    ->where('category', 'others')
-                                    ->get();
-
-        return Inertia::render('OtherAuditPayroll/Index', [
-            'payrolls'      => $payrolls,
-            'payment_types' => $payment_types,
-        ]);
-    }
-
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -73,7 +37,7 @@ class OtherAuditPayrollController extends Controller
         $message = "Other Payroll Category for $request->payment_title Created Successfully";
 
         return redirect()
-            ->route('other_audit_payroll.index')
+            ->route('audit_payroll.index')
             ->with('success', $message);
     }
 
@@ -92,13 +56,13 @@ class OtherAuditPayrollController extends Controller
 
         $file_path = Storage::putFile('other_schedules', $data['schedule_file']);
 
-        try{
+        try {
             (new OtherScheduleImport($other_payroll_category, $file_path))->import($file_path);
-        } catch (WrongScheduleException $e){
+        } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
-        } catch (\ErrorException $e){
+        } catch (\ErrorException $e) {
             return back()->with('error', 'Attached File is not a valid Other Pay Schedule '.$e->getMessage());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
         }
 

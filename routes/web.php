@@ -89,7 +89,6 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('other_audit_payroll.')->group(function () {
-        Route::get('other_audit_payroll', [OtherAuditPayrollController::class, 'index'])->name('index');
         Route::post('other_audit_payroll/store', [OtherAuditPayrollController::class, 'store'])->name('store');
         Route::post(
             'other_audit_schedule/store',

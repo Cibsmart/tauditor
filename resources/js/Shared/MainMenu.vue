@@ -112,15 +112,6 @@ export default {
                     active: false,
                     permission: 'canViewSchedule'
                 },
-                other_schedule: {
-                    id: 8,
-                    name: 'other_audit_payroll',
-                    label: 'Other Schedule',
-                    url: route('other_audit_payroll.index'),
-                    icon: 'brief-case',
-                    active: false,
-                    permission: 'canViewSchedule'
-                },
                 analysis: {
                     id: 2,
                     name: 'audit_analysis',
