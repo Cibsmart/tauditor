@@ -193,11 +193,11 @@ Route::middleware('auth')->group(function () {
         )->name('generate');
         Route::get(
             'other_audit_autopay/{other_audit_payroll_category}/download',
-            [AuditAutopayController::class, 'download']
+            [OtherAuditAutopayController::class, 'download']
         )->name('download');
         Route::get(
             'other_audit_autopay/{other_audit_payroll_category}/downloadMfb',
-            [AuditAutopayController::class, 'downloadMfb']
+            [OtherAuditAutopayController::class, 'downloadMfb']
         )->name('downloadMfb');
     });
 });

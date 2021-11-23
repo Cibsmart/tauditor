@@ -186,7 +186,7 @@
                                             </Link>
 
                                             <a v-show="category.viewable"
-                                               :href="route('audit_autopay.download', { audit_payroll_category: category.id })"
+                                               :href="route('other_audit_autopay.download', { other_audit_payroll_category: category.id })"
                                                class="px-5 py-3">
                                                 Download Autopay
                                             </a>
@@ -194,7 +194,7 @@
                                             <span v-show="category.viewable"> | </span>
 
                                             <a v-show="category.viewable"
-                                               :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })"
+                                               :href="route('other_audit_autopay.downloadMfb', { other_audit_payroll_category: category.id })"
                                                class="px-5 py-3">
                                                 Download MFB
                                             </a>
@@ -202,7 +202,7 @@
                                             <span v-show="category.viewable"> | </span>
 
                                             <Link v-show="category.viewable"
-                                                  :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
+                                                  href="#"
                                                   class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Schedule
                                             </Link>

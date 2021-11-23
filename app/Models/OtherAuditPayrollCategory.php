@@ -75,6 +75,11 @@ class OtherAuditPayrollCategory extends Model
         $this->save();
     }
 
+    public function noMfbSchedule()
+    {
+        return $this->microfinanceSchedules->count() <= 0;
+    }
+
     public function setTotalNetPayAttribute(float $value) : int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
