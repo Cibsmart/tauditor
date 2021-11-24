@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
-use App\Actions\GenerateAutoPayScheduleAction;
+use App\Models\OtherAuditPayrollCategory;
 use function back;
+use function is_null;
 
 class AuditAutopayController extends Controller
 {
@@ -39,7 +40,7 @@ class AuditAutopayController extends Controller
                             'date_created'      => $payroll->dateCreated(),
                             'autopay_generated' => $payroll->autopay_generated,
                             'categories'        => $payroll->auditPaymentCategories
-                                ->transform(function ($category) {
+                                ->transform(function (AuditPayrollCategory $category) {
                                     $uploaded_count = $category->countOfMdasSchedulesUploaded();
                                     $autopay_count = $category->countOfMdasAutopayGenerated();
                                     $status = $category->autopay_status;
@@ -59,6 +60,29 @@ class AuditAutopayController extends Controller
                                         'refreshable'     => $available && $status === 'running',
                                     ];
                                 }),
+
+                            'other_categories' => $payroll->otherPaymentCategories
+                                ->transform(function (OtherAuditPayrollCategory $category) {
+                                    $status = $category->autopay_status;
+                                    $uploaded = $category->uploaded;
+                                    $generated = $category->autopay_generated;
+
+                                    return [
+                                        'id'                => $category->id,
+                                        'payment_type_id'   => $category->payment_type_id,
+                                        'payment_type'      => $category->paymentTypeName(),
+                                        'payment_title'     => $category->payment_title,
+                                        'autopay_status'    => $status,
+                                        'autopay_generated' => $generated,
+                                        'uploaded'          => $uploaded,
+                                        'can_generate'      => $uploaded && !$generated &&$status !== 'running',
+                                        'viewable'          => $uploaded && $generated,
+                                        'refreshable'       => $uploaded && $status === 'running',
+                                        'tenece'          => $category->paycomm_tenece,
+                                        'fidelity'        => $category->paycomm_fidelity,
+                                        'color'           => $category->color,
+                                    ];
+                                }),
                         ]);
 
         return Inertia::render('AuditAutoPay/Index', [
@@ -76,7 +100,7 @@ class AuditAutopayController extends Controller
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
                                             ->orderBy('mda_id')
                                             ->paginate()
-                                            ->transform(fn (AuditMdaSchedule $schedule) => [
+                                            ->transform(fn(AuditMdaSchedule $schedule) => [
                                                 'id'           => $schedule->id,
                                                 'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
                                                 'payroll_id'   => $audit_payroll_category->id,

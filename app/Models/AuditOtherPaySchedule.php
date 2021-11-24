@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,6 +12,12 @@ class AuditOtherPaySchedule extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    //A polymorphic relationship to either Bank or Microfinance
+    public function bankable() : MorphTo
+    {
+        return $this->morphTo();
+    }
 
     public function otherPayrollCategory()
     {

@@ -20,6 +20,7 @@ use App\Http\Controllers\FidelityMandateController;
 use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditMdaScheduleController;
 use App\Http\Controllers\OtherAuditPayrollController;
+use App\Http\Controllers\OtherAuditAutopayController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
 
 /*
@@ -89,7 +90,6 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
     Route::name('other_audit_payroll.')->group(function () {
-        Route::get('other_audit_payroll', [OtherAuditPayrollController::class, 'index'])->name('index');
         Route::post('other_audit_payroll/store', [OtherAuditPayrollController::class, 'store'])->name('store');
         Route::post(
             'other_audit_schedule/store',
@@ -176,6 +176,28 @@ Route::middleware('auth')->group(function () {
         Route::get(
             'audit_autopay/{audit_payroll_category}/downloadMfb',
             [AuditAutopayController::class, 'downloadMfb']
+        )->name('downloadMfb');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| Other Audit Autopay Routes
+|-------------------------------------------------------------------------------
+*/
+Route::middleware('auth')->group(function () {
+    Route::name('other_audit_autopay.')->group(function () {
+        Route::post(
+            'other_audit_autopay/{other_audit_payroll_category}/generate',
+            [OtherAuditAutopayController::class, 'generate']
+        )->name('generate');
+        Route::get(
+            'other_audit_autopay/{other_audit_payroll_category}/download',
+            [OtherAuditAutopayController::class, 'download']
+        )->name('download');
+        Route::get(
+            'other_audit_autopay/{other_audit_payroll_category}/downloadMfb',
+            [OtherAuditAutopayController::class, 'downloadMfb']
         )->name('downloadMfb');
     });
 });

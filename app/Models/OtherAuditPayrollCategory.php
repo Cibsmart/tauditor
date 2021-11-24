@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,8 @@ class OtherAuditPayrollCategory extends Model
         'uploaded' => 'datetime',
         'paycomm_tenece' => 'boolean',
         'paycomm_fidelity' => 'boolean',
+        'autopay_uploaded' => 'datetime',
+        'autopay_generated' => 'datetime',
     ];
 
     public function auditPayroll()
@@ -31,14 +34,50 @@ class OtherAuditPayrollCategory extends Model
         return $this->hasMany(AuditOtherPaySchedule::class);
     }
 
+    public function autopaySchedules()
+    {
+        return $this->hasMany(AutopayOtherSchedule::class);
+    }
+
+    public function microfinanceSchedules()
+    {
+        return $this->hasMany(MicrofinanceOtherSchedule::class);
+    }
+
     public function paymentType()
     {
         return $this->belongsTo(PaymentType::class);
     }
 
+    public function domain()
+    {
+        return $this->auditPayroll->domain;
+    }
+
     public function paymentTypeName()
     {
         return $this->paymentType->name;
+    }
+
+    public function setAutopayStatus($status)
+    {
+        $this->autopay_status  =  $status;
+
+        $this->save();
+    }
+
+    public function autopayGenerated()
+    {
+        $this->autopay_generated = Carbon::now();
+
+        $this->autopay_status = 'completed';
+
+        $this->save();
+    }
+
+    public function noMfbSchedule()
+    {
+        return $this->microfinanceSchedules->count() <= 0;
     }
 
     public function setTotalNetPayAttribute(float $value) : int

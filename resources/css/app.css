@@ -6,6 +6,7 @@
 
 
 @layer components {
+    .btn-white { @apply w-full inline-flex justify-center whitespace-nowrap rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm; }
     .btn-indigo { @apply px-6 py-3 rounded bg-indigo-600 text-white text-sm font-bold whitespace-nowrap;}
 
     .btn { @apply flex items-center rounded text-sm font-bold whitespace-nowrap; }
