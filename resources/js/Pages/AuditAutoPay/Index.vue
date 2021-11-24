@@ -148,7 +148,10 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
-
+                                            Line Items:
+                                            <span class="font-bold">
+                                                {{ category.line_items }}
+                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
