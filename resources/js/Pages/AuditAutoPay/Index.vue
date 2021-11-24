@@ -155,7 +155,7 @@
                                                   :class="category.uploaded
                                                     ? 'bg-green-100 text-green-800'
                                                     : 'bg-red-100 text-red-800'">
-                                                {{ category.uploaded ? 'SCHEDULE UPLOADED' : 'SCHEDULE NOT-UPLOADED' }}
+                                                {{ category.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
                                               </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
@@ -163,7 +163,7 @@
                                                   :class="category.autopay_generated
                                                     ? 'bg-green-100 text-green-800'
                                                     : 'bg-red-100 text-red-800'">
-                                                {{ category.autopay_generated ? 'AUTOPAY GENERATED' : 'AUTOPAY NOT-GENERATED' }}
+                                                {{ category.autopay_generated ? 'GENERATED' : 'NOT-GENERATED' }}
                                               </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
