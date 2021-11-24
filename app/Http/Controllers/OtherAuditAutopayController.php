@@ -5,18 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use App\Classes\ZipDirectory;
 use Illuminate\Support\Facades\DB;
-use App\Exports\MfbScheduleExport;
-use App\Models\AuditPayrollCategory;
-use App\Exports\AutoPayScheduleExport;
 use Illuminate\Support\Facades\Storage;
 use App\Exports\MfbOtherScheduleExport;
 use App\Models\OtherAuditPayrollCategory;
 use App\Exports\AutopayOtherScheduleExport;
 use App\Jobs\GenerateAutopayForOtherSchedule;
-use App\Actions\GenerateAutopayOtherScheduleAction;
-use function back;
-use function response;
-use function public_path;
+
 
 class OtherAuditAutopayController extends Controller
 {
@@ -73,7 +67,7 @@ class OtherAuditAutopayController extends Controller
     {
         $title = $category->payment_title;
 
-        $month_year = $category->auditPayroll->month(true);
+        $month_year = $category->auditPayroll->month();
 
         $directory = "autopay/$title - AUTOPAY SCHEDULE - $month_year";
 
@@ -135,7 +129,7 @@ class OtherAuditAutopayController extends Controller
     {
         $title = $category->payment_title;
 
-        $month_year = $category->auditPayroll->month(true);
+        $month_year = $category->auditPayroll->month();
 
         $directory = "autopay/$title - MFB SCHEDULE - $month_year";
 
@@ -154,8 +148,8 @@ class OtherAuditAutopayController extends Controller
 
             $path = "$directory/$mfb_name/$file_name";
 
-            $mfb_file_exists = Storage::disk('local')->exists($path);
-
+//            $mfb_file_exists = Storage::disk('local')->exists($path);
+//
 //                    if ($mfb_file_exists) {
 //                        continue;
 //                    }

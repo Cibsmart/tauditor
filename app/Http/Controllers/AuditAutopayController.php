@@ -16,8 +16,6 @@ use App\Exports\AutoPayScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
 use Illuminate\Support\Facades\Storage;
 use App\Models\OtherAuditPayrollCategory;
-use function back;
-use function is_null;
 
 class AuditAutopayController extends Controller
 {
@@ -72,6 +70,7 @@ class AuditAutopayController extends Controller
                                         'payment_type_id'   => $category->payment_type_id,
                                         'payment_type'      => $category->paymentTypeName(),
                                         'payment_title'     => $category->payment_title,
+                                        'line_items'        => $category->autopaySchedules->count(),
                                         'autopay_status'    => $status,
                                         'autopay_generated' => $generated,
                                         'uploaded'          => $uploaded,
