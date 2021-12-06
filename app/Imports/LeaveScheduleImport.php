@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use function in_array;
 
 class LeaveScheduleImport implements OnEachRow
 {
@@ -98,20 +99,26 @@ class LeaveScheduleImport implements OnEachRow
      */
     protected function processRowTwo(string $row_two)
     {
-        $row = Str::of($row_two)->after('MDA/PARASTATAL: ')->upper()->explode(', ');
+        $months = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+        $rows = Str::of($row_two)->after('MDA/PARASTATAL:')->trim()->upper()->explode(', ');
 
-        $count = count($row);
+        $count = count($rows);
 
-        $this->mda = $row[0];
+        $this->mda = $rows[0];
+        $this->department = $rows[0];
 
-        $title = $count === 2 ? $row[1] : $row[2];
+        for ($i = 1; $i < $count; $i++) {
+            $row = Str::of($rows[$i])->explode(' ');
+            if (in_array($row[0], $months)) {
+                $this->month = $row[0];
+                $this->year = $row[1];
+                continue;
+            }
 
-        $this->department = $count === 2 ? $this->mdaNameCheck($row[0]) : $this->mdaNameCheck($row[1]);
-
-        $month_year = Str::of($title)->explode(' ');
-
-        $this->month = $month_year[0];
-        $this->year = $month_year[1];
+            if ($i === 1) {
+                $this->department = $rows[$i];
+            }
+        }
 
         return;
     }
@@ -233,6 +240,7 @@ class LeaveScheduleImport implements OnEachRow
             'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
             'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
             'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
+            'UNION BANK OF NIGERIA'                => 'UNION BANK OF NIGERIA PLC',
             'ZENITH BANK'                          => 'ZENITH BANK PLC',
             'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
             'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
