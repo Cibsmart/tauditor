@@ -37,10 +37,10 @@ class SendDeductionConfirmation
                         ->setTime(23, 00)
                         ->format('Y-m-d\TH:i:s+000Z');
 
-        $total = $schedule->totalAmount();
+        $total = $schedule->totalAmount() - 16.13;
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
             'LoanAccount' => $deduction->loan_account,
-            'Amount' => $deduction->amount - 16.13
+            'Amount' => $deduction->amount
         ]);
 
         $response = Http::withToken($token)
