@@ -40,7 +40,7 @@ class SendDeductionConfirmation
         $total = $schedule->totalAmount();
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
             'LoanAccount' => $deduction->loan_account,
-            'Amount' => $deduction->amount
+            'Amount' => $deduction->amount - 16.13
         ]);
 
         $response = Http::withToken($token)
