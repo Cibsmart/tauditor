@@ -37,7 +37,7 @@ class SendDeductionConfirmation
                         ->setTime(23, 00)
                         ->format('Y-m-d\TH:i:s+000Z');
 
-        $total = $schedule->totalAmount() - 16.13;
+        $total = $schedule->totalAmount();
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
             'LoanAccount' => $deduction->loan_account,
             'Amount' => $deduction->amount
