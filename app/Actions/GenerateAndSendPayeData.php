@@ -17,17 +17,17 @@ class GenerateAndSendPayeData
     {
         $file_name = $this->prepareFile($category);
 
-//        $response = $this->uploadToApi($category, $file_name);
-//
-//        $category->payeData()->create([
-//            'user_id'    => Auth::id(),
-//            'status'     => $response->status(),
-//            'response'   => collect($response->json()),
-//            'successful' => $response->successful(),
-//            'failed'     => $response->failed(),
-//            'client'     => $response->clientError(),
-//            'server'     => $response->serverError(),
-//        ]);
+        $response = $this->uploadToApi($category, $file_name);
+
+        $category->payeData()->create([
+            'user_id'    => Auth::id(),
+            'status'     => $response->status(),
+            'response'   => collect($response->json()),
+            'successful' => $response->successful(),
+            'failed'     => $response->failed(),
+            'client'     => $response->clientError(),
+            'server'     => $response->serverError(),
+        ]);
     }
 
     protected function uploadToApi($category, $path)
@@ -109,9 +109,9 @@ class GenerateAndSendPayeData
             'mda'            => $schedule->mda_name,
             'employee_no'    => $schedule->verification_number,
             'account_number' => $schedule->account_number,
-            'bank_code'      => $schedule->bank_code,
-            'grade'          => $schedule->beneficiary_cadre,
-            'designation'    => $schedule->designation,
+            'bank_code'      => '', // $schedule->bank_code,
+            'grade'          => '', // $schedule->beneficiary_cadre,
+            'designation'    => '', //$schedule->designation,
             'basic_pay'      => $this->formatValue($schedule->basic_pay),
             'gross_pay'      => $this->formatValue($schedule->gross_pay),
             'nhf'            => $this->getValue(['nhf'], $schedule->deductions),
