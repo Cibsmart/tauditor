@@ -47,7 +47,7 @@ class TmsPayeApiController extends Controller
     {
         $category = AuditPayrollCategory::findOrFail($category);
 
-        GenerateAndSendPayeData::dispatch($category);
+        GenerateAndSendPayeData::dispatch($category, Auth::id());
 
         $message = "$category->payment_title CSV File is been Generated in the Background, but not Sent to API";
 
