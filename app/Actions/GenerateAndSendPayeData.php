@@ -6,7 +6,6 @@ use Illuminate\Support\Str;
 use App\Models\AuditPaySchedule;
 use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Lorisleiva\Actions\Concerns\AsAction;
 
@@ -14,14 +13,14 @@ class GenerateAndSendPayeData
 {
     use AsAction;
 
-    public function handle(AuditPayrollCategory $category)
+    public function handle(AuditPayrollCategory $category, $user_id)
     {
         $file_name = $this->prepareFile($category);
 
         $response = $this->uploadToApi($category, $file_name);
 
         $category->payeData()->create([
-            'user_id'    => Auth::id(),
+            'user_id'    => $user_id,
             'status'     => $response->status(),
             'response'   => collect($response->json()),
             'successful' => $response->successful(),
