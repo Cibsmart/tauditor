@@ -1,0 +1,6 @@
+includes:
+    - phpstan.neon.dist
+
+parameters:
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+    #editorUrl: 'vscode://file/%%file%%:%%line%%'
