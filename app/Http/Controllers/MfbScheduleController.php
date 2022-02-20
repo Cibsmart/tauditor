@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use App\Models\AuditPayroll;
 use App\Classes\ZipDirectory;
-use App\Models\MicroFinanceBank;
 use App\Exports\MfbScheduleExport;
-use Illuminate\Support\Facades\Auth;
+use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
+use App\Models\MicroFinanceBank;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class MfbScheduleController extends Controller
 {
@@ -49,8 +49,8 @@ class MfbScheduleController extends Controller
                                                                 'payment_title'   => $category->payment_title,
                                                                 'autopay_status'  => $category->autopay_status,
                                                                 'mda_count'       => $category->mfbMdaCount($mfb),
-                                                                'mfb_id'          => $mfb
-                                                            ])
+                                                                'mfb_id'          => $mfb,
+                                                            ]),
                                 ]);
 
         return Inertia::render('MFBSchedule/Index', [
@@ -77,7 +77,6 @@ class MfbScheduleController extends Controller
         $this->authorize('view', $mfb);
 
         $user = Auth::user();
-
     }
 
     public function createMfbFiles(AuditPayrollCategory $category, MicroFinanceBank $mfb)
@@ -104,7 +103,6 @@ class MfbScheduleController extends Controller
                             ->get();
 
             foreach ($sub_mdas as $sub_mda) {
-
                 $sub_mda_name = $sub_mda->sub_mda_name;
 
                 $file_name = "$sub_mda_name $month_year.xlsx";

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Classes;
 
 use ZipArchive;
@@ -15,7 +14,6 @@ class ZipDirectory
      */
     private static function folderToZip($folder, &$zipFile, $exclusiveLength)
     {
-
         $handle = opendir($folder);
 
         while (false !== $f = readdir($handle)) {
@@ -46,7 +44,7 @@ class ZipDirectory
      */
     public static function zipDir($sourcePath, $outZipPath)
     {
-        $pathInfo = pathInfo($sourcePath);
+        $pathInfo = pathinfo($sourcePath);
         $parentPath = $pathInfo['dirname'];
         $dirName = $pathInfo['basename'];
 

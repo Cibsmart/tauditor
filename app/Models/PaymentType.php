@@ -12,6 +12,6 @@ class PaymentType extends Model
 
     public function beneficiaryTypes()
     {
-        return $this->belongsToMany(PaymentType::class);
+        return $this->belongsToMany(self::class);
     }
 }

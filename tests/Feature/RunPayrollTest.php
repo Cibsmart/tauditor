@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
+use App\Actions\RunPayrollAction;
+use App\Beneficiary;
 use App\Domain;
 use App\Payroll;
-use App\Beneficiary;
-use App\Actions\RunPayrollAction;
+use function dump;
 use Facades\Tests\Setup\BeneficiaryTestFactory;
+use function factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use function dump;
 use function route;
-use function factory;
+use Tests\TestCase;
 
 class RunPayrollTest extends TestCase
 {

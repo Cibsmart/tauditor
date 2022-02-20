@@ -2,30 +2,40 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Str;
-use App\Models\MicroFinanceBank;
-use Illuminate\Support\Facades\DB;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\FidelityLoanDeduction;
+use App\Models\MicroFinanceBank;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GenerateAutoPayScheduleAction
 {
     protected $year;
+
     protected $month;
+
     protected $domain;
+
     protected $payment;
+
     protected $narration;
+
     protected $reference;
+
     protected $reference_id = 1;
 
     protected $pay_comm_i;
+
     protected $pay_comm_ii;
+
     protected $fidelityLoan;
 
     protected $pay_comm_i_amount;
+
     protected $pay_comm_ii_amount;
 
     protected $pay_comm_i_charge;
+
     protected $pay_comm_ii_charge;
 
     protected const INTERSWITCH_CHARGE = 16.13;
@@ -126,7 +136,6 @@ class GenerateAutoPayScheduleAction
          * ___________________________________________________
          */
         foreach ($microfinance_schedules as $schedule) {
-
             if ($schedule->bankable_id == $ignore->id) {
                 continue;
             }
@@ -209,7 +218,6 @@ class GenerateAutoPayScheduleAction
              * ___________________________________________________
              */
             if ($this->sub_mda->fidelityDeductions->count() > 0) {
-
                 $fidelityLoanAmount = $this->sub_mda->fidelityLoanAmount() + self::INTERSWITCH_CHARGE;
                 $this->pay_comm_ii_amount -= self::INTERSWITCH_CHARGE;
 
@@ -255,12 +263,10 @@ class GenerateAutoPayScheduleAction
 
             $this->sub_mda->autopaySchedules()->create($paycom_i);
 
-
             /**
              * Paycom II
              * ___________________________________________________
              */
-
             $paycom_ii = [
                 'payment_reference' => $this->getReferenceFor($this->reference_id),
                 'beneficiary_code'  => $this->pay_comm_ii->account_number,

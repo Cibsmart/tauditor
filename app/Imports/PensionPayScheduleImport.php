@@ -2,28 +2,34 @@
 
 namespace App\Imports;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Bank;
-use Maatwebsite\Excel\Row;
-use Illuminate\Support\Str;
-use App\Models\AuditSubMdaSchedule;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\Bank;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Str;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
 
 class PensionPayScheduleImport implements OnEachRow
 {
     use Importable;
 
     protected $mda;
+
     protected $month;
+
     protected $year;
+
     protected $domain;
+
     protected $heading;
+
     protected $department;
 
     public AuditSubMdaSchedule $audit_sub_mda_schedule;
+
     public string $file_path;
 
     public function __construct(AuditSubMdaSchedule $audit_sub_mda_schedule, $file_path)
@@ -32,7 +38,6 @@ class PensionPayScheduleImport implements OnEachRow
         $this->file_path = $file_path;
     }
 
-
     public function onRow(Row $row)
     {
         $row_number = $row->getIndex();
@@ -40,21 +45,24 @@ class PensionPayScheduleImport implements OnEachRow
 
         if ($row_number === 1) {
             $this->processRowOne($columns[0]);
+
             return null;
         }
 
         if ($row_number === 2) {
             $this->domain = $this->audit_sub_mda_schedule->domain();
+
             return null;
         }
 
         if ($row_number === 3) {
             $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
+
             return null;
         }
 
-        $app_date = Str::upper($this->audit_sub_mda_schedule->month().' '.$this->audit_sub_mda_schedule->year());
-        $file_date = $this->month.' '.$this->year;
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month() . ' ' . $this->audit_sub_mda_schedule->year());
+        $file_date = $this->month . ' ' . $this->year;
         $message = "Trying to Upload Schedule for $file_date into $app_date";
 
         throw_if(
@@ -99,9 +107,7 @@ class PensionPayScheduleImport implements OnEachRow
         $this->month = $month_year[0];
         $this->year = $month_year[1];
 
-        return;
     }
-
 
     /**
      * Extract Beneficiary's Info, Allowances, Deductions and Save in Audit Pay Schedule Table
@@ -123,7 +129,7 @@ class PensionPayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: '.$beneficiary['bank_name'].' '.$e->getMessage()
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
             );
         }
 
@@ -135,7 +141,7 @@ class PensionPayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: '.$beneficiary['bank_name'].' Does Not Exist'
+                'Bank Named: ' . $beneficiary['bank_name'] . ' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();

@@ -2,15 +2,14 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Domain;
 use App\Models\Deduction;
-use App\Models\FixedValue;
 use App\Models\DeductionName;
-use Illuminate\Support\Str;
+use App\Models\Domain;
+use App\Models\FixedValue;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
 
 $factory->define(Deduction::class, function (Faker $faker) {
-
     $valuable = factory(FixedValue::class)->create();
 
     return [

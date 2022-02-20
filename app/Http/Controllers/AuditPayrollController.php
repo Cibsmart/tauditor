@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use App\Models\PaymentType;
 use App\Models\AuditPayroll;
-use Illuminate\Support\Facades\DB;
+use App\Models\PaymentType;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 use function now;
-use function redirect;
 use function number_format;
+use function redirect;
 
 class AuditPayrollController extends Controller
 {
@@ -233,7 +233,8 @@ class AuditPayrollController extends Controller
         //Only State Education Commission should have add subs
         if ($mda->code !== 'SEC') {
             $audit_mda_schedule->auditSubMdaSchedules()
-                               ->create(['sub_mda_name' => $audit_mda_schedule->mda_name,]);
+                               ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
+
             return;
         }
 
@@ -244,9 +245,8 @@ class AuditPayrollController extends Controller
 
         foreach ($sub_mdas as $sub_mda) {
             $audit_mda_schedule->auditSubMdaSchedules()
-                               ->create(['sub_mda_name' => $sub_mda->name,]);
+                               ->create(['sub_mda_name' => $sub_mda->name]);
         }
 
-        return;
     }
 }

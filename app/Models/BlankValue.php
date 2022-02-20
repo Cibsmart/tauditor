@@ -22,7 +22,6 @@ class BlankValue extends Model
         return $this->morphOne(Deduction::class, 'valuable');
     }
 
-
     public function amount(Beneficiary $beneficiary = null)
     {
         return null;

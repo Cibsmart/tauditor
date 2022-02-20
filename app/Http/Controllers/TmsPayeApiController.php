@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
+use App\Actions\GenerateAndSendPayeData;
 use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\GenerateAndSendPayeData;
+use Inertia\Inertia;
 
 class TmsPayeApiController extends Controller
 {
-
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')

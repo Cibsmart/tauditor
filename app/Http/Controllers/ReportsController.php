@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
 use App\Models\AuditPayroll;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
 use App\Models\AuditPayrollCategory;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 use function number_format;
 
 class ReportsController extends Controller
@@ -70,7 +70,7 @@ class ReportsController extends Controller
 
         $pdf = App::make('snappy.pdf.wrapper');
 
-        $filename = Str::upper($payroll->month_name.' '.$payroll->year.' - '.$payroll->domain_id);
+        $filename = Str::upper($payroll->month_name . ' ' . $payroll->year . ' - ' . $payroll->domain_id);
         $filename = "PAYMENT SUMMARY - $filename";
 
         $data = ['categories' => $categories, 'payroll' => $payroll, 'filename' => $filename];
@@ -85,10 +85,8 @@ class ReportsController extends Controller
             ->setOption('footer-right', '[isodate] [time]')
             ->setOption('footer-left', $filename);
 
-
-        return $pdf->download($filename.'.pdf');
+        return $pdf->download($filename . '.pdf');
     }
-
 
     public function mdaView(Request $request)
     {
@@ -167,7 +165,7 @@ class ReportsController extends Controller
                              'diff_net_pay'    => $this->formatAmount($report->net_pay - $report->prev_net_pay),
                          ]);
 
-            $category = ['id' => $category->id,];
+            $category = ['id' => $category->id];
         }
 
         return Inertia::render('Reports/MdaReport', [
@@ -227,8 +225,7 @@ class ReportsController extends Controller
             ->setOption('footer-right', '[isodate] [time]')
             ->setOption('footer-left', $filename);
 
-
-        return $pdf->download($filename.'.pdf');
+        return $pdf->download($filename . '.pdf');
     }
 
     protected function formatAmount($value)

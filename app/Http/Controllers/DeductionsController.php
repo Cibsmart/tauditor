@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Deduction;
-use App\Models\ValueType;
-use App\Models\FixedValue;
+use App\Http\Requests\DeductionRequest;
 use App\Models\BlankValue;
-use Inertia\Inertia;
 use App\Models\ComputedValue;
+use App\Models\Deduction;
+use App\Models\FixedValue;
 use App\Models\PercentageValue;
+use App\Models\ValueType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\DeductionRequest;
+use Inertia\Inertia;
 
 class DeductionsController extends Controller
 {
@@ -19,7 +19,6 @@ class DeductionsController extends Controller
     {
         $this->middleware('auth');
     }
-
 
     /**
      * Display a listing of the resource.
@@ -163,7 +162,8 @@ class DeductionsController extends Controller
         }
 
         if ($value_type == 'computed') {
-            $computer = 'compute_'.$deduction_name;
+            $computer = 'compute_' . $deduction_name;
+
             return ComputedValue::create(['computer' => $computer]);
         }
 

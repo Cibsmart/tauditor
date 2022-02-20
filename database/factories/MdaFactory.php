@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Mda;
 use App\Models\BeneficiaryType;
+use App\Models\Mda;
 use Faker\Generator as Faker;
 
 $factory->define(Mda::class, function (Faker $faker) {

@@ -2,34 +2,41 @@
 
 namespace App\Imports;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Bank;
-use Maatwebsite\Excel\Row;
-use Illuminate\Support\Str;
-use App\Models\AuditSubMdaSchedule;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use function str_pad;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\Bank;
+use Carbon\Carbon;
 use function collect;
-use function throw_if;
+use Exception;
+use Illuminate\Support\Str;
 use function in_array;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
+use function str_pad;
 use const STR_PAD_LEFT;
+use function throw_if;
 
 class PayScheduleImport implements OnEachRow
 {
     use Importable;
 
     protected $mda;
+
     protected $month;
+
     protected $year;
+
     protected $domain;
+
     protected $heading;
+
     protected $department;
+
     protected $headers = [];
 
     public AuditSubMdaSchedule $audit_sub_mda_schedule;
+
     public string $file_path;
 
     public function __construct(AuditSubMdaSchedule $audit_sub_mda_schedule, $file_path)
@@ -38,20 +45,19 @@ class PayScheduleImport implements OnEachRow
         $this->file_path = $file_path;
     }
 
-
     public function onRow(Row $row)
     {
-
         $row_number = $row->getIndex();
         $columns = $row->toArray();
 
         if ($row_number === 1) {
             $this->processRowOne($columns[0]);
+
             return null;
         }
 
-        $app_date = Str::upper($this->audit_sub_mda_schedule->month().' '.$this->audit_sub_mda_schedule->year());
-        $file_date = $this->month.' '.$this->year;
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month() . ' ' . $this->audit_sub_mda_schedule->year());
+        $file_date = $this->month . ' ' . $this->year;
         $message = "Trying to Upload Schedule for $file_date into $app_date";
 
         throw_if(
@@ -73,17 +79,17 @@ class PayScheduleImport implements OnEachRow
         if ($row_number === 2) {
             //set domain
             $this->domain = $this->audit_sub_mda_schedule->domain();
+
             return null;
         }
 
         if ($row_number === 3) {
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
 
             $this->setHeaders();
 
             return null;
         }
-
 
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
@@ -128,7 +134,6 @@ class PayScheduleImport implements OnEachRow
         $this->month = $month_year[0];
         $this->year = $month_year[1];
 
-        return;
     }
 
     /**
@@ -163,7 +168,7 @@ class PayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
+                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
             );
         }
 

@@ -1,40 +1,50 @@
 <?php
 
-
 namespace Tests\Setup;
 
-use App\Bank;
-use App\NextOfKin;
-use App\MdaDetail;
-use App\CadreStep;
-use App\BankDetail;
-use App\WorkDetail;
-use App\Beneficiary;
-use Faker\Generator;
-use App\SalaryDetail;
-use App\Qualification;
 use App\AllowanceDetail;
-use App\DeductionDetail;
-use App\MicroFinanceBank;
-use App\StructuredSalary;
+use App\Bank;
+use App\BankDetail;
+use App\Beneficiary;
 use App\BeneficiaryStatus;
+use App\CadreStep;
+use App\DeductionDetail;
+use App\MdaDetail;
+use App\MicroFinanceBank;
+use App\NextOfKin;
 use App\PersonalizedSalary;
+use App\Qualification;
+use App\SalaryDetail;
+use App\StructuredSalary;
+use App\WorkDetail;
 use Facades\BeneficiaryFactory;
 use function factory;
+use Faker\Generator;
 
 class BeneficiaryTestFactory
 {
     private Generator $faker;
+
     private $bank = null;
+
     private $payable = null;
+
     private bool $mda = false;
+
     private bool $next_of_kin = false;
+
     private bool $work_detail = false;
+
     private int $qualification_count = 0;
+
     private ?float $monthly_basic = null;
+
     private ?int $allowance_count = null;
+
     private ?int $deduction_count = null;
+
     private ?float $valuable_amount = null;
+
     private int $beneficiary_status = 0;
 
     public function __construct(Generator $faker)
@@ -83,6 +93,7 @@ class BeneficiaryTestFactory
     {
         if ($structured_salary) {
             $this->payable = $structured_salary;
+
             return $this;
         }
 
@@ -181,7 +192,7 @@ class BeneficiaryTestFactory
 
         if ($this->bank) {
             $this->bank->beneficiaries()->save(factory(BankDetail::class)->make([
-                'beneficiary_id' => $beneficiary->id
+                'beneficiary_id' => $beneficiary->id,
             ]));
         }
 

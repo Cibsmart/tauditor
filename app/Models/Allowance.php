@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function array_merge;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property int id
@@ -48,7 +48,6 @@ class Allowance extends Model
         return $this->hasOne(CadreStepAllowance::class);
     }
 
-
     /*
     |-------------------------------------------------------------------------------
     | Methods
@@ -86,7 +85,7 @@ class Allowance extends Model
      * @param  int|null  $allowable_id
      * @return Allowance
      */
-    public function applyTo(Beneficiary $beneficiary, int $allowable_id = null) : Allowance
+    public function applyTo(Beneficiary $beneficiary, int $allowable_id = null) : self
     {
         $attributes = [
             'amount'         => $this->amount($beneficiary->basic()),
@@ -106,10 +105,10 @@ class Allowance extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%')
-                      ->orWhere('amount', 'like', '%'.$search.'%')
-                      ->orWhere('type', 'like', '%'.$search.'%')
-                      ->orWhere('value_type', 'like', '%'.$search.'%');
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhere('amount', 'like', '%' . $search . '%')
+                      ->orWhere('type', 'like', '%' . $search . '%')
+                      ->orWhere('value_type', 'like', '%' . $search . '%');
             });
         });
     }

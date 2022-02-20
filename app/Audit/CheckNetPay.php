@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckNetPay extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckNetPay extends AuditCheckable
 
         $this->report(self::NET_PAY_CHANGED, $message, $current_net_pay, $previous_net_pay);
 
-        return;
     }
 }

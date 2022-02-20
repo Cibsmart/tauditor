@@ -4,15 +4,15 @@ namespace Tests\Feature;
 
 use App\Mda;
 use App\Payroll;
-use Carbon\Carbon;
 use App\PaySchedule;
+use function array_keys;
+use Carbon\Carbon;
+use function compact;
+use function factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use function route;
-use function factory;
-use function compact;
-use function array_keys;
+use Tests\TestCase;
 
 class PayScheduleTest extends TestCase
 {
@@ -53,7 +53,8 @@ class PayScheduleTest extends TestCase
              ->assertPropValue('schedules.data', function ($schedules) {
                  $this->assertEquals(
                      ['id', 'beneficiary_name', 'beneficiary_code', 'mda', 'sub_mda', 'sub_sub_mda', 'account_number', 'bank_name', 'net_pay'],
-                     array_keys($schedules[0]));
+                     array_keys($schedules[0])
+                 );
              });
     }
 }

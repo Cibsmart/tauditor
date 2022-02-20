@@ -1,27 +1,27 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Actions\SendDeductionConfirmation;
-use App\Http\Controllers\ReportsController;
-use App\Http\Controllers\WelcomeController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\TmsPayeApiController;
-use App\Http\Controllers\ManageUserController;
-use App\Http\Controllers\InterswitchController;
-use App\Http\Controllers\MfbScheduleController;
-use App\Http\Controllers\BeneficiaryController;
-use App\Http\Controllers\AuditPayrollController;
-use App\Http\Controllers\AuditAutopayController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\AuditAnalysisController;
-use App\Http\Controllers\CreateUserTokenController;
-use App\Http\Controllers\FidelityMandateController;
-use App\Http\Controllers\AuditPayScheduleController;
+use App\Http\Controllers\AuditAutopayController;
 use App\Http\Controllers\AuditMdaScheduleController;
-use App\Http\Controllers\OtherAuditPayrollController;
-use App\Http\Controllers\OtherAuditAutopayController;
+use App\Http\Controllers\AuditPayrollController;
+use App\Http\Controllers\AuditPayScheduleController;
 use App\Http\Controllers\AuditSubMdaSchedulesController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BeneficiaryController;
+use App\Http\Controllers\CreateUserTokenController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FidelityMandateController;
+use App\Http\Controllers\InterswitchController;
+use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\MfbScheduleController;
+use App\Http\Controllers\OtherAuditAutopayController;
+use App\Http\Controllers\OtherAuditPayrollController;
+use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\TmsPayeApiController;
+use App\Http\Controllers\WelcomeController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,7 +66,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
 /*
 |-------------------------------------------------------------------------------
 | Audit Payroll Routes
@@ -98,7 +97,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
 /*
 |-------------------------------------------------------------------------------
 | Audit MDA Schedules Routes
@@ -127,7 +125,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
 /*
 |-------------------------------------------------------------------------------
 | Audit Pay Schedules Routes
@@ -146,7 +143,6 @@ Route::middleware('auth')->group(function () {
         Route::post('audit_pay_schedules/store', [AuditPayScheduleController::class, 'store'])->name('store');
     });
 });
-
 
 /*
 |-------------------------------------------------------------------------------
@@ -225,7 +221,6 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-
 /*
 |-------------------------------------------------------------------------------
 | Interswitch Routes
@@ -251,7 +246,6 @@ Route::middleware('auth')->group(function () {
         Route::get('paye/data/{category}', [TmsPayeApiController::class, 'upload'])->name('upload');
     });
 });
-
 
 /*
 |-------------------------------------------------------------------------------
@@ -285,7 +279,6 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
         Route::post('manage_users/store', [ManageUserController::class, 'store'])->name('store');
     });
 });
-
 
 /*
 |-------------------------------------------------------------------------------
@@ -335,7 +328,6 @@ Route::get(
     'fidelity/beneficiary/deduction_confirmation',
     SendDeductionConfirmation::class
 );
-
 
 /*
 |-------------------------------------------------------------------------------

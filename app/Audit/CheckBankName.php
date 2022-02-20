@@ -2,8 +2,8 @@
 
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckBankName extends AuditCheckable
 {
@@ -33,6 +33,5 @@ class CheckBankName extends AuditCheckable
 
         $this->report(self::BANK_CHANGED, $message, $current_bank_name, $previous_bank_name);
 
-        return;
     }
 }

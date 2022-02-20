@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Inertia\Inertia;
-use App\Models\Domain;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Domain;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
@@ -44,7 +44,7 @@ class LoginController extends Controller
     public function showLoginForm(Domain $domain)
     {
         return Inertia::render('Auth/Login', [
-            'domain' => [ 'id' => $domain->id, ]
+            'domain' => ['id' => $domain->id],
         ]);
     }
 

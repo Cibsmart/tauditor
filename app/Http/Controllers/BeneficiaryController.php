@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\BeneficiariesImport;
+use App\Models\Beneficiary;
+use App\Models\StructuredSalary;
+use App\ViewModels\BeneficiaryViewModel;
+use function back;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Models\Beneficiary;
-use Illuminate\Http\Request;
-use App\Models\StructuredSalary;
-use Illuminate\Support\Facades\Auth;
-use App\Imports\BeneficiariesImport;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
-use App\ViewModels\BeneficiaryViewModel;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use function back;
 use function redirect;
 
 class BeneficiaryController extends Controller
@@ -22,7 +22,6 @@ class BeneficiaryController extends Controller
     {
         $this->middleware('auth');
     }
-
 
     public function create()
     {

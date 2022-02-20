@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Mda;
 use App\Models\Payroll;
 use App\Models\PaySchedule;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use function back;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 use function number_format;
 
 class PayScheduleController extends Controller

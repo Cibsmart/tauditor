@@ -24,5 +24,4 @@ class ComputeTaxTest extends TestCase
 
         $this->assertEquals(4261.67, $tax);
     }
-
 }

@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Actions\AuditPayScheduleAction;
 use App\Models\AuditSubMdaSchedule;
 use Illuminate\Bus\Queueable;
-use App\Actions\AuditPayScheduleAction;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;

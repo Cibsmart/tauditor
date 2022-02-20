@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
 use App\Classes\ZipDirectory;
+use App\Exports\AutopayOtherScheduleExport;
+use App\Exports\MfbOtherScheduleExport;
+use App\Jobs\GenerateAutopayForOtherSchedule;
+use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use App\Exports\MfbOtherScheduleExport;
-use App\Models\OtherAuditPayrollCategory;
-use App\Exports\AutopayOtherScheduleExport;
-use App\Jobs\GenerateAutopayForOtherSchedule;
-
+use Illuminate\Support\Str;
 
 class OtherAuditAutopayController extends Controller
 {
@@ -26,6 +25,7 @@ class OtherAuditAutopayController extends Controller
 
         if ($category->autopay_status !== 'pending') {
             $message = "Autopay Schedule Cannot be Generated for $title ";
+
             return back()->with('error', $message);
         }
 
@@ -70,7 +70,6 @@ class OtherAuditAutopayController extends Controller
         $month_year = $category->auditPayroll->month();
 
         $directory = "autopay/$title - AUTOPAY SCHEDULE - $month_year";
-
 
         $file_name = "$title $month_year.xlsx";
 
@@ -132,7 +131,6 @@ class OtherAuditAutopayController extends Controller
         $month_year = $category->auditPayroll->month();
 
         $directory = "autopay/$title - MFB SCHEDULE - $month_year";
-
 
         $mfbs = $category->microfinanceSchedules()->with('microfinanceBank')
                         ->select(DB::raw('other_audit_payroll_category_id, micro_finance_bank_id'))

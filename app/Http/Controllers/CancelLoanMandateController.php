@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
-use Illuminate\Support\Str;
 use App\Models\LoanMandate;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 use function now;
-use function uniqid;
 use function response;
+use Symfony\Component\HttpFoundation\Response;
+use function uniqid;
 
 class CancelLoanMandateController extends Controller
 {
@@ -85,7 +85,7 @@ class CancelLoanMandateController extends Controller
             'data'         => [
                 'customerId' => $beneficiary->verification_number,
                 'mandateReference' => $mandate->reference,
-                'status' => 'false'
+                'status' => 'false',
             ],
         ])->setStatusCode(Response::HTTP_FOUND);
     }

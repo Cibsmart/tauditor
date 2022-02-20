@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use Illuminate\Console\Command;
 use App\Models\FidelityLoanSchedule;
+use Illuminate\Console\Command;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class InitiateSendDeductionConfirmation

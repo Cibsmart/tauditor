@@ -5,7 +5,6 @@ use Illuminate\Database\Seeder;
 
 class StatusSeeder extends Seeder
 {
-
     /**
      * Run the database seeds.
      *
@@ -37,7 +36,7 @@ class StatusSeeder extends Seeder
             factory(Status::class)->create([
                 'code' => $key,
                 'name' => $value,
-                'state' => 0
+                'state' => 0,
             ]);
         }
 
@@ -45,7 +44,7 @@ class StatusSeeder extends Seeder
             factory(Status::class)->create([
                 'code' => $key,
                 'name' => $value,
-                'state' => 1
+                'state' => 1,
             ]);
         }
     }

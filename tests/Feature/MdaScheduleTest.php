@@ -4,11 +4,11 @@ namespace Tests\Feature;
 
 use App\Mda;
 use App\Payroll;
-use Carbon\Carbon;
-use Tests\TestCase;
 use App\PaySchedule;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 use function factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class MdaScheduleTest extends TestCase
 {
@@ -26,7 +26,6 @@ class MdaScheduleTest extends TestCase
         $this->get(route('mda_schedules.index', $payroll))
              ->assertSessionHas('error');
     }
-
 
     /** @test */
     public function canViewMdaPaySchedules()

@@ -1,16 +1,16 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
-use Illuminate\Support\Collection;
+use App\Models\AuditPaySchedule;
 use function collect;
+use Illuminate\Support\Collection;
 
 class CheckDeductions extends AuditCheckable
 {
     protected Collection $current_deductions;
+
     protected Collection $previous_deductions;
 
     public function check(AuditPaySchedule $schedule)
@@ -35,7 +35,6 @@ class CheckDeductions extends AuditCheckable
 
         $this->checkAndReportChangedDeductions();
 
-        return;
     }
 
     private function checkAndReportNewDeductions()
@@ -46,7 +45,7 @@ class CheckDeductions extends AuditCheckable
             return;
         }
 
-        $message = "DEDUCTIONS(S) ADDED";
+        $message = 'DEDUCTIONS(S) ADDED';
 
         $this->report(self::DEDUCTION_ADDED, $message, $current_diffs, null);
     }
@@ -59,7 +58,7 @@ class CheckDeductions extends AuditCheckable
             return;
         }
 
-        $message = "DEDUCTIONS(S) REMOVED";
+        $message = 'DEDUCTIONS(S) REMOVED';
 
         $this->report(self::DEDUCTION_REMOVED, $message, null, $previous_diffs);
     }
@@ -78,7 +77,7 @@ class CheckDeductions extends AuditCheckable
 
         $previous_diffs = $this->previous_deductions->diff($this->current_deductions)->except($removed_deductions);
 
-        $message = "DEDUCTIONS(S) CHANGED IN VALUE";
+        $message = 'DEDUCTIONS(S) CHANGED IN VALUE';
 
         $this->report(self::DEDUCTION_CHANGED, $message, $current_diffs, $previous_diffs);
     }

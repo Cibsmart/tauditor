@@ -12,7 +12,6 @@ class DeductionNameSeeder extends Seeder
      */
     public function run()
     {
-
         $others = [
             'TAX'     => 'TAX',
             'AISHA'   => 'AISHA',

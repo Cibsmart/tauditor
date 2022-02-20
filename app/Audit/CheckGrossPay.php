@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckGrossPay extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckGrossPay extends AuditCheckable
 
         $this->report(self::GROSS_PAY_CHANGED, $message, $current_gross_pay, $previous_gross_pay);
 
-        return;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Designation;
 use App\Models\BeneficiaryType;
+use App\Models\Designation;
 use Illuminate\Database\Seeder;
 
 class DesignationSeeder extends Seeder

@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckAccountNumber extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckAccountNumber extends AuditCheckable
 
         $this->report(self::ACCOUNT_NUMBER_CHANGED, $message, $current_account_number, $previous_account_number);
 
-        return;
     }
 }

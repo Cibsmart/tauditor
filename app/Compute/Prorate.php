@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Compute;
-
 
 use App\Beneficiary;
 use App\Contracts\Computable;

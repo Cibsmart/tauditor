@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use App\Casts\AddressCast;
-use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use function array_merge;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Str;
 
 /**
  * @property int id
@@ -77,11 +77,11 @@ class Beneficiary extends Model
         return $this->bankDetail->bvn;
     }
 
-
     public function status()
     {
         return $this->hasOne(BeneficiaryStatus::class);
     }
+
     public function gender() : BelongsTo
     {
         return $this->belongsTo(Gender::class);
@@ -137,7 +137,6 @@ class Beneficiary extends Model
         return $this->hasMany(PaySchedule::class);
     }
 
-
     /*
     |-------------------------------------------------------------------------------
     | Methods
@@ -148,7 +147,6 @@ class Beneficiary extends Model
     {
         return $this->status->active;
     }
-
 
     public function isPensioner() : bool
     {
@@ -229,7 +227,7 @@ class Beneficiary extends Model
      * @param  int  $value
      * @return Beneficiary
      */
-    public function setBasic(int $type, int $value) : Beneficiary
+    public function setBasic(int $type, int $value) : self
     {
         $payable = $type === 1
             ? new PersonalizedSalary(['monthly_basic' => $value])
@@ -248,7 +246,7 @@ class Beneficiary extends Model
      * @param  int|null  $allowable_id
      * @return Beneficiary
      */
-    public function applyAllowance(Allowance $allowance, int $allowable_id = null) : Beneficiary
+    public function applyAllowance(Allowance $allowance, int $allowable_id = null) : self
     {
         $attributes = [
             'amount'       => $allowance->amount($this),
@@ -269,7 +267,7 @@ class Beneficiary extends Model
      * @param  AllowanceDetail  $allowance_detail
      * @return Beneficiary
      */
-    public function removeAllowance(AllowanceDetail $allowance_detail) : Beneficiary
+    public function removeAllowance(AllowanceDetail $allowance_detail) : self
     {
         $allowance_detail->unapply();
 
@@ -292,7 +290,7 @@ class Beneficiary extends Model
      * @param  int  $deductible
      * @return Beneficiary
      */
-    public function applyDeduction(Deduction $deduction, int $deductible = null) : Beneficiary
+    public function applyDeduction(Deduction $deduction, int $deductible = null) : self
     {
         $attributes = [
             'amount'       => $deduction->amount($this),
@@ -308,7 +306,7 @@ class Beneficiary extends Model
         return $this;
     }
 
-    public function removeDeduction(DeductionDetail $deduction_detail) : Beneficiary
+    public function removeDeduction(DeductionDetail $deduction_detail) : self
     {
         $deduction_detail->unapply();
 
@@ -366,30 +364,30 @@ class Beneficiary extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('last_name', 'like', '%'.$search.'%')
-                      ->orWhere('first_name', 'like', '%'.$search.'%')
-                      ->orWhere('middle_name', 'like', '%'.$search.'%')
-                      ->orWhere('verification_number', 'like', '%'.$search.'%')
+                $query->where('last_name', 'like', '%' . $search . '%')
+                      ->orWhere('first_name', 'like', '%' . $search . '%')
+                      ->orWhere('middle_name', 'like', '%' . $search . '%')
+                      ->orWhere('verification_number', 'like', '%' . $search . '%')
                       ->orWhereHas('status', function ($query) use ($search) {
                           $query->where('active', Str::startsWith($search, ['act', 'acti', 'activ', 'active']));
                       })->orWhereHas('mdaDetail', function ($query) use ($search) {
-                          $query->whereHas('mda', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
-                          $query->orWhereHas('subMda', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
+                          $query->whereHas('mda', fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
+                          $query->orWhereHas('subMda', fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
                           $query->orWhereHas(
                               'subSubMda',
-                              fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                              fn ($query) => $query->where('name', 'like', '%' . $search . '%')
                           );
                       })->orWhereHas('workDetail', function ($query) use ($search) {
                           $query->whereHas(
                               'designation',
-                              fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                              fn ($query) => $query->where('name', 'like', '%' . $search . '%')
                           );
                       })->orWhereHas('bankDetail', function ($query) use ($search) {
-                          $query->where('account_number', 'like', '%'.$search.'%')
+                          $query->where('account_number', 'like', '%' . $search . '%')
                               ->orWhereHasMorph(
                                   'bankable',
                                   [Bank::class, MicroFinanceBank::class],
-                                  fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                                  fn ($query) => $query->where('name', 'like', '%' . $search . '%')
                               );
 //                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
 //                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {

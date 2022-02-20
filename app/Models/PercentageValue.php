@@ -23,7 +23,6 @@ class PercentageValue extends Model
         return $this->morphOne(Deduction::class, 'valuable');
     }
 
-
     public function amount(Beneficiary $beneficiary = null) : float
     {
         if (! $beneficiary) {
@@ -31,6 +30,7 @@ class PercentageValue extends Model
         }
 
         $amount = $beneficiary->basic() * $this->percentage / 100;
+
         return number_format($amount, 2, '.', '');
     }
 

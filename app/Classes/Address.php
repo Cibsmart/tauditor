@@ -1,14 +1,17 @@
 <?php
 
-
 namespace App\Classes;
 
 class Address
 {
     public $address_line_1;
+
     public $address_line_2;
+
     public $address_city;
+
     public $address_state;
+
     public $address_country;
 
     /**

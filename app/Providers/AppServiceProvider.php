@@ -2,36 +2,36 @@
 
 namespace App\Providers;
 
-use App\Models\Bank;
-use Inertia\Inertia;
-use App\Compute\Tax;
-use App\Models\User;
-use App\Models\Cadre;
-use App\Models\Domain;
 use App\Compute\Prorate;
-use App\Models\Structure;
+use App\Compute\Tax;
+use App\Models\AuditMdaSchedule;
+use App\Models\AuditPayroll;
+use App\Models\AuditPaySchedule;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\Bank;
+use App\Models\BeneficiaryType;
+use App\Models\Cadre;
 use App\Models\CadreStep;
+use App\Models\ComputedValue;
+use App\Models\Domain;
 use App\Models\FixedValue;
 use App\Models\MdaStructure;
-use App\Models\AuditPayroll;
-use App\Models\ComputedValue;
-use App\Models\PercentageValue;
-use App\Models\BeneficiaryType;
 use App\Models\MicroFinanceBank;
-use App\Models\StructuredSalary;
-use App\Models\AuditPaySchedule;
-use App\Models\AuditMdaSchedule;
+use App\Models\PercentageValue;
 use App\Models\PersonalizedSalary;
-use Illuminate\Support\Collection;
-use App\Models\AuditSubMdaSchedule;
+use App\Models\Structure;
+use App\Models\StructuredSalary;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\UrlWindow;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -120,6 +120,7 @@ class AppServiceProvider extends ServiceProvider
             },
             'permissions' => function () {
                 $user = Auth::user();
+
                 return $user
                     ? [
                         'canViewDashboard'         => $user->can('view_dashboard'),

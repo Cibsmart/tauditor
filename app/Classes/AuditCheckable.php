@@ -1,45 +1,67 @@
 <?php
 
-
 namespace App\Classes;
 
-use Carbon\Carbon;
 use App\Models\AuditPaySchedule;
+use Carbon\Carbon;
 use Illuminate\Support\Str;
 
 abstract class AuditCheckable
 {
     protected $month;
+
     protected $domain;
+
     protected $payroll_category;
+
     protected $audit_sub_mda_schedule;
 
     protected string $category = '';
+
     protected string $message = '';
+
     protected $current_value = null;
+
     protected $previous_value = null;
 
     protected $this_month;
+
     protected $last_payment;
 
     protected $schedule;
+
     protected $last_schedule;
+
     protected $previous_schedules;
 
     protected const BANK_CHANGED = 'changed_bank';
+
     protected const NET_PAY_CHANGED = 'changed_net_pay';
+
     protected const NEW_BENEFICIARY = 'new_beneficiary';
+
     protected const BASIC_PAY_CHANGED = 'changed_basic_pay';
+
     protected const GROSS_PAY_CHANGED = 'changed_gross_pay';
+
     protected const RESTORED_BENEFICIARY = 'restored_beneficiary';
+
     protected const ACCOUNT_NUMBER_CHANGED = 'changed_account_number';
+
     protected const TOTAL_ALLOWANCE_CHANGED = 'changed_total_allowance';
+
     protected const TOTAL_DEDUCTION_CHANGED = 'changed_total_deduction';
+
     protected const ALLOWANCES_ADDED = 'added_allowances';
+
     protected const DEDUCTION_ADDED = 'added_deductions';
+
     protected const ALLOWANCES_REMOVED = 'removed_allowances';
+
     protected const DEDUCTION_REMOVED = 'removed_deductions';
+
     protected const ALLOWANCES_CHANGED = 'changed_allowances';
+
     protected const DEDUCTION_CHANGED = 'changed_deductions';
 
     abstract public function check(AuditPaySchedule $schedule);

@@ -16,7 +16,7 @@ class SubMdaSeeder extends Seeder
         $dbmdas = Mda::where('has_sub', 1)->get();
 
         //Get the content of of sub_mda.json
-        $json = file_get_contents(storage_path().'/json/sub_mda.json');
+        $json = file_get_contents(storage_path() . '/json/sub_mda.json');
 
         //Convert json to an array
         $data = json_decode($json, true);

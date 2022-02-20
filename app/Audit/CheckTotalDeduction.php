@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckTotalDeduction extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckTotalDeduction extends AuditCheckable
 
         $this->report(self::TOTAL_DEDUCTION_CHANGED, $message, $current_total_deduction, $previous_total_deduction);
 
-        return;
     }
 }

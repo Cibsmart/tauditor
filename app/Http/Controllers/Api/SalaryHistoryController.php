@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\BankDetail;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
+use App\Models\AuditPaySchedule;
+use App\Models\BankDetail;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Str;
 use function json_encode;
+use Symfony\Component\HttpFoundation\Response;
 
 class SalaryHistoryController extends Controller
 {
@@ -88,7 +88,7 @@ class SalaryHistoryController extends Controller
             'firstPaymentDate'     => $schedules->last()->payment_date,
             'lastPaymentDate'      => $schedules->first()->payment_date,
             'salaryCount'          => $schedules->count(),
-            'salaryPaymentDetails' => $schedules->map(fn($schedule) => [
+            'salaryPaymentDetails' => $schedules->map(fn ($schedule) => [
                 'paymentDate'   => $schedule->payment_date,
                 'amount'        => $schedule->net_pay,
                 'accountNumber' => $schedule->account_number,
@@ -118,13 +118,13 @@ class SalaryHistoryController extends Controller
     public function invalid()
     {
         return response()->json([
-            "hasData"      => false,
-            "responseDate" => now(),
-            "requestDate"  => now(),
-            "responseCode" => "00",
-            "responseMsg"  => "INVALID REQUEST",
-            "data"         => [
-                "status" => "false",
+            'hasData'      => false,
+            'responseDate' => now(),
+            'requestDate'  => now(),
+            'responseCode' => '00',
+            'responseMsg'  => 'INVALID REQUEST',
+            'data'         => [
+                'status' => 'false',
             ],
         ])->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
     }

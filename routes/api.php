@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\LoanMandateController;
 use App\Http\Controllers\Api\BeneficiaryController;
-use App\Http\Controllers\Api\SalaryHistoryController;
-use App\Http\Controllers\Api\PaymentHistoryController;
 use App\Http\Controllers\Api\CancelLoanMandateController;
+use App\Http\Controllers\Api\LoanMandateController;
+use App\Http\Controllers\Api\PaymentHistoryController;
+use App\Http\Controllers\Api\SalaryHistoryController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,6 @@ use App\Http\Controllers\Api\CancelLoanMandateController;
 //    return $request->user();
 //});
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('beneficiary/paye')->group(function () {
         Route::post('month', [BeneficiaryController::class, 'payeMonth']);
@@ -34,7 +33,6 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('', [PaymentHistoryController::class, 'index']);
         Route::fallback([PaymentHistoryController::class, 'invalid']);
     });
-
 
     //Fidelity Loan Management APIs
     Route::prefix('beneficiary/salary_history')->group(function () {

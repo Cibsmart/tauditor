@@ -3,8 +3,8 @@
 use App\Models\Bank;
 use App\Models\Domain;
 use App\Models\MicroFinanceBank;
-use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class MicroFinanceBankSeeder extends Seeder
 {
@@ -18,12 +18,12 @@ class MicroFinanceBankSeeder extends Seeder
         $domains = Domain::all();
         $banks = Bank::all();
 
-        $json =  file_get_contents(storage_path() .'/json/mfb.json');
+        $json = file_get_contents(storage_path() . '/json/mfb.json');
 
         $data = json_decode($json, true);
 
         foreach ($data as $domain => $mfbs) {
-            foreach ($mfbs as $mfb){
+            foreach ($mfbs as $mfb) {
                 $bank_id = $banks->firstWhere('code', $mfb['code'])->id;
                 factory(MicroFinanceBank::class)->create([
                     'name' => Str::of($mfb['name'])->trim(),

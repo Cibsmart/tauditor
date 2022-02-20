@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use Inertia\Middleware;
 use Illuminate\Http\Request;
+use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -59,6 +59,7 @@ class HandleInertiaRequests extends Middleware
             },
             'permissions' => function () use ($request) {
                 $user = $request->user();
+
                 return $user
                     ? [
                         'canViewDashboard'         => $user->can('view_dashboard'),

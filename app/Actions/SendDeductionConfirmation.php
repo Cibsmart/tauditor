@@ -2,10 +2,10 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Facades\Http;
+use App\Models\FidelityLoanDeduction;
 use App\Models\FidelityLoanSchedule;
 use Illuminate\Support\Facades\Cache;
-use App\Models\FidelityLoanDeduction;
+use Illuminate\Support\Facades\Http;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class SendDeductionConfirmation
@@ -23,8 +23,8 @@ class SendDeductionConfirmation
             'fidelity_loan_token',
             3000,
             fn () => Http::post($tokenUrl, [
-            'ClientID' => $clientId,
-            'ClientSecret' => $clientSecret,
+                'ClientID' => $clientId,
+                'ClientSecret' => $clientSecret,
             ])->json()['access_token']
         );
 
@@ -40,7 +40,7 @@ class SendDeductionConfirmation
         $total = $schedule->totalAmount();
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
             'LoanAccount' => $deduction->loan_account,
-            'Amount' => $deduction->amount
+            'Amount' => $deduction->amount,
         ]);
 
         $response = Http::withToken($token)
@@ -48,7 +48,7 @@ class SendDeductionConfirmation
                             'Narration' => $schedule->narration,
                             'TransactionDate' => $date,
                             'TotalAmount' => $total,
-                            'Data' => $data
+                            'Data' => $data,
                         ]);
 
         $payload = $response->json();

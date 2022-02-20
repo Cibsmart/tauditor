@@ -16,13 +16,13 @@ class PaymentTypeSeeder extends Seeder
             'main' => [
                 'sal' => 'SALARY',
                 'pen' => 'PENSION',
-                'lev' => 'ANNUAL LEAVE ALLOWANCE'
-              ],
+                'lev' => 'ANNUAL LEAVE ALLOWANCE',
+            ],
             'other' => [
                 'nys' => 'NYSC',
                 'all' => 'ALLOWANCE',
-                'arr' => 'ARREARS'
-            ]
+                'arr' => 'ARREARS',
+            ],
         ];
 
         foreach ($payment_types as $category => $types) {

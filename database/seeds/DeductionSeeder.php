@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Deduction;
-use App\Models\FixedValue;
 use App\Models\DeductionName;
+use App\Models\FixedValue;
 use App\Models\PercentageValue;
 use Illuminate\Database\Seeder;
 

@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use function in_array;
 
 /**
@@ -135,6 +135,6 @@ class AuditPayroll extends Model
             in_array($this->month, [11, 12])
             && $this->auditPaymentCategories()
                     ->where('payment_type_id', 'lev')
-                    ->doesntExist() ;
+                    ->doesntExist();
     }
 }

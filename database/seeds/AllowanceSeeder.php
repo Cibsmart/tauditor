@@ -1,14 +1,14 @@
 <?php
 
-use App\Models\Step;
-use App\Models\Cadre;
-use App\Models\Structure;
-use App\Models\CadreStep;
 use App\Models\Allowance;
-use App\Models\GradeLevel;
-use App\Models\FixedValue;
 use App\Models\AllowanceName;
+use App\Models\Cadre;
+use App\Models\CadreStep;
+use App\Models\FixedValue;
+use App\Models\GradeLevel;
 use App\Models\PercentageValue;
+use App\Models\Step;
+use App\Models\Structure;
 use Illuminate\Database\Seeder;
 
 class AllowanceSeeder extends Seeder
@@ -26,7 +26,7 @@ class AllowanceSeeder extends Seeder
         $salary_structures = Structure::all();
 
         //Get the content of of sub_mda.json
-        $json = file_get_contents(storage_path().'/json/salary_structure.json');
+        $json = file_get_contents(storage_path() . '/json/salary_structure.json');
 
         //Convert json to an array
         $data = json_decode($json, true);
@@ -36,7 +36,6 @@ class AllowanceSeeder extends Seeder
                 $structure_id = $salary_structures->firstWhere('code', $code)->id;
 
                 foreach ($structures as $items) {
-
                     $cadre_id = '';
                     $step_id = '';
                     $cadre_step_id = '';

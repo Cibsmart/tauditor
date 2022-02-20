@@ -36,7 +36,6 @@ class CadreStep extends Model
         return $this->morphMany(Allowable::class, 'allowable')->with('allowance');
     }
 
-
     /*
     |-------------------------------------------------------------------------------
     | Methods

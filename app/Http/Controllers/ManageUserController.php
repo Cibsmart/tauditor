@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Inertia\Inertia;
-use App\Models\Domain;
 use App\Mail\Registration;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\PotentialUser;
-use Illuminate\Validation\Rule;
+use App\Models\Domain;
 use App\Models\MicroFinanceBank;
-use Spatie\Permission\Models\Role;
+use App\Models\PotentialUser;
+use App\Models\User;
+use App\Notifications\AccountCreated;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use App\Notifications\AccountCreated;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 use function redirect;
+use Spatie\Permission\Models\Role;
 
 class ManageUserController extends Controller
 {
@@ -70,8 +70,8 @@ class ManageUserController extends Controller
         $domain = $user->domain;
 
         $request->validate([
-            'first_name'        => ['required', 'string',],
-            'last_name'         => ['required', 'string',],
+            'first_name'        => ['required', 'string'],
+            'last_name'         => ['required', 'string'],
             'email'             => [
                 'required',
                 'email:filter',
@@ -79,7 +79,7 @@ class ManageUserController extends Controller
                     ->where(fn ($query) => $query->where('domain_id', $domain->id)),
             ],
             'role'              => ['required', 'integer'],
-            'microfinance_bank' => ['sometimes', 'required', 'integer',],
+            'microfinance_bank' => ['sometimes', 'required', 'integer'],
         ]);
 
         $new_user = $domain->potentialUser()

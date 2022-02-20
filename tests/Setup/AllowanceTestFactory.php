@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Tests\Setup;
 
-
 use App\Allowance;
-use Faker\Generator;
 use function factory;
+use Faker\Generator;
 
 class AllowanceTestFactory
 {

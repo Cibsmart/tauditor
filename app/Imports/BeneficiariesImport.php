@@ -2,30 +2,31 @@
 
 namespace App\Imports;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Bank;
-use Maatwebsite\Excel\Row;
-use Illuminate\Support\Str;
-use App\Models\Beneficiary;
-use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
-use function dd;
-use function collect;
-use function is_null;
-use function str_pad;
-use function throw_if;
-use function in_array;
+use App\Models\Bank;
+use App\Models\Beneficiary;
 use function array_combine;
+use Carbon\Carbon;
+use function collect;
+use function dd;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use function in_array;
+use function is_null;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
+use function str_pad;
 use const STR_PAD_LEFT;
+use function throw_if;
 
 class BeneficiariesImport implements OnEachRow
 {
     use Importable;
 
     protected $domain;
+
     protected $heading;
 
     public function onRow(Row $row)
@@ -62,7 +63,7 @@ class BeneficiariesImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: '.$beneficiary['bank_name'].' '.$e->getMessage()
+                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
             );
         }
 

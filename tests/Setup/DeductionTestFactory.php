@@ -1,12 +1,10 @@
 <?php
 
-
 namespace Tests\Setup;
 
-
 use App\Deduction;
-use Faker\Generator;
 use function factory;
+use Faker\Generator;
 
 class DeductionTestFactory
 {
@@ -25,6 +23,5 @@ class DeductionTestFactory
         \Facades\DeductionFactory::clearResolvedInstance('DeductionTestFactory');
 
         $allowance = factory(Deduction::class)->create();
-
     }
 }

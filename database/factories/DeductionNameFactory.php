@@ -2,9 +2,9 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Domain;
 use App\Models\DeductionName;
 use App\Models\DeductionType;
+use App\Models\Domain;
 use Faker\Generator as Faker;
 
 $factory->define(DeductionName::class, function (Faker $faker) {

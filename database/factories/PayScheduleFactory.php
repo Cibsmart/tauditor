@@ -2,11 +2,11 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
+use App\Models\Beneficiary;
 use App\Models\Payroll;
 use App\Models\PaySchedule;
-use App\Models\Beneficiary;
-use Faker\Generator as Faker;
 use Facades\Tests\Setup\BeneficiaryTestFactory;
+use Faker\Generator as Faker;
 
 $factory->define(PaySchedule::class, function (Faker $faker) {
     $b = BeneficiaryTestFactory::withAllowances($faker->numberBetween(5, 10))

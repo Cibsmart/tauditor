@@ -2,37 +2,48 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Str;
-use App\Models\MicroFinanceBank;
-use Illuminate\Support\Facades\DB;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\FidelityLoanDeduction;
+use App\Models\MicroFinanceBank;
 use App\Models\OtherAuditPayrollCategory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GenerateAutopayOtherScheduleAction
 {
     protected $year;
+
     protected $month;
+
     protected $domain;
+
     protected $charge;
+
     protected $payment;
+
     protected $narration;
+
     protected $reference;
+
     protected $reference_id = 1;
 
     protected $pay_comm_i;
+
     protected $pay_comm_ii;
 
     protected $pay_comm_i_amount;
+
     protected $pay_comm_ii_amount;
 
     protected $pay_comm_i_charge;
+
     protected $pay_comm_ii_charge;
 
     protected const INTERSWITCH_CHARGE = 16.13;
-    protected const NYSC_TENECE_CHARGE = 224.25;
-    protected const NYSC_FIDELITY_CHARGE = 100.00;
 
+    protected const NYSC_TENECE_CHARGE = 224.25;
+
+    protected const NYSC_FIDELITY_CHARGE = 100.00;
 
     protected OtherAuditPayrollCategory $category;
 
@@ -110,7 +121,6 @@ class GenerateAutopayOtherScheduleAction
          * ___________________________________________________
          */
         foreach ($microfinance_schedules as $schedule) {
-
             if ($schedule->bankable_id == $ignore->id) {
                 continue;
             }
@@ -213,7 +223,6 @@ class GenerateAutopayOtherScheduleAction
             } else {
                 $this->pay_comm_ii_amount += $this->pay_comm_i_amount;
             }
-
 
             /**
              * Paycom II

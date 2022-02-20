@@ -1,7 +1,7 @@
 <?php
 
-use Carbon\Carbon;
 use App\Models\Payroll;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
 class PayrollSeeder extends Seeder
