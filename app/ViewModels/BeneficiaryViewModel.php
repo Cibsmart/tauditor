@@ -1,14 +1,13 @@
 <?php
 
-
 namespace App\ViewModels;
 
-use App\Models\User;
-use App\Models\State;
-use App\Models\Gender;
 use App\Models\Beneficiary;
-use App\Models\MaritalStatus;
+use App\Models\Gender;
 use App\Models\LocalGovernment;
+use App\Models\MaritalStatus;
+use App\Models\State;
+use App\Models\User;
 
 class BeneficiaryViewModel
 {

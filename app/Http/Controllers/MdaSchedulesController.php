@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Payroll;
-use Inertia\Inertia;
 use App\Models\PaySchedule;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class MdaSchedulesController extends Controller
 {
@@ -26,7 +26,7 @@ class MdaSchedulesController extends Controller
                              ->groupBy('mda_id', 'payroll_id', 'pensioner')
                              ->orderBy('mda_id')
                              ->paginate()
-                             ->transform(fn(PaySchedule $schedule) => [
+                             ->transform(fn (PaySchedule $schedule) => [
                                  'payroll_id'   => $payroll->id,
                                  'mda_id'       => $schedule->mda->id,
                                  'mda_name'     => $schedule->mda->name,

@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\ValueType;
 use App\Models\MaritalStatus;
+use App\Models\ValueType;
 use Illuminate\Database\Seeder;
 
 class ValueTypeSeeder extends Seeder
@@ -17,7 +17,7 @@ class ValueTypeSeeder extends Seeder
             'computed' => 'COMPUTED VALUE',
             'fixed' => 'FIXED VALUE',
             'percentage' => 'PERCENTAGE VALUE',
-            'blank' => 'BLANK VALUE'
+            'blank' => 'BLANK VALUE',
         ];
 
         foreach ($types as $key => $value) {

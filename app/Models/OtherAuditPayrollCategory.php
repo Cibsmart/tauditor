@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use function now;
 
 class OtherAuditPayrollCategory extends Model
@@ -61,7 +61,7 @@ class OtherAuditPayrollCategory extends Model
 
     public function setAutopayStatus($status)
     {
-        $this->autopay_status  =  $status;
+        $this->autopay_status = $status;
 
         $this->save();
     }
@@ -98,10 +98,10 @@ class OtherAuditPayrollCategory extends Model
     public function getColorAttribute()
     {
         return [
-                   'all' => 'bg-blue-100 text-blue-800',
-                   'nys' => 'bg-green-100 text-green-800',
-                   'arr' => 'bg-pink-100 text-pink-800',
-               ][$this->payment_type_id] ?? 'bg-gray-200 text-gray-800';
+            'all' => 'bg-blue-100 text-blue-800',
+            'nys' => 'bg-green-100 text-green-800',
+            'arr' => 'bg-pink-100 text-pink-800',
+        ][$this->payment_type_id] ?? 'bg-gray-200 text-gray-800';
     }
 
     public function scheduleUploaded($file_path)

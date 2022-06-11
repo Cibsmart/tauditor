@@ -23,7 +23,7 @@ class PayCommSeeder extends Seeder
             'commission' => 120,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
-            'domain_id' => 'state'
+            'domain_id' => 'state',
         ]);
 
         //FIDELITY JAAC
@@ -34,7 +34,7 @@ class PayCommSeeder extends Seeder
             'commission' => 120,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
-            'domain_id' => 'jaac'
+            'domain_id' => 'jaac',
         ]);
 
         //TENECE STATE
@@ -45,7 +45,7 @@ class PayCommSeeder extends Seeder
             'commission' => 243.87,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
-            'domain_id' => 'state'
+            'domain_id' => 'state',
         ]);
 
         //TENECE JAAC
@@ -56,7 +56,7 @@ class PayCommSeeder extends Seeder
             'commission' => 243.87,
             'bankable_type' => 'commercial',
             'bankable_id' => $banks->where('code', '070')->first()->id,
-            'domain_id' => 'jaac'
+            'domain_id' => 'jaac',
         ]);
     }
 }

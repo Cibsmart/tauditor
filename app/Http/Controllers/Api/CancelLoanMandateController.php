@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Meta;
+use App\Http\Controllers\Controller;
 use App\Models\Beneficiary;
 use App\Models\LoanMandate;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Notifications\MandateReceived;
+use App\Models\Meta;
 use App\Notifications\MandateCancelled;
+use App\Notifications\MandateReceived;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CancelLoanMandateController extends Controller
@@ -87,7 +87,7 @@ class CancelLoanMandateController extends Controller
             'data'         => [
                 'customerId' => $beneficiary->verification_number,
                 'mandateReference' => $mandate->reference,
-                'status' => 'false'
+                'status' => 'false',
             ],
         ])->setStatusCode(Response::HTTP_FOUND);
     }

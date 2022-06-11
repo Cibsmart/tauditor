@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Meta;
-use App\Models\Beneficiary;
-use Illuminate\Support\Str;
-use App\Models\LoanMandate;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Beneficiary;
+use App\Models\LoanMandate;
+use App\Models\Meta;
 use App\Notifications\MandateReceived;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class LoanMandateController extends Controller

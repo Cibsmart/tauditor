@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class PersonalizedSalary extends Model
 {
@@ -24,7 +24,6 @@ class PersonalizedSalary extends Model
     {
         return $this->belongsTo(CadreStep::class);
     }
-
 
     /*
     |-------------------------------------------------------------------------------

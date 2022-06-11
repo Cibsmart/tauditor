@@ -31,7 +31,6 @@ class CreateAutopayOtherSchedulesTable extends Migration
             $table->softDeletes();
 
             $table->foreign('other_audit_payroll_category_id')->references('id')->on('other_audit_payroll_categories');
-
         });
     }
 

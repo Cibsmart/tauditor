@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Bank;
-use Illuminate\Database\Seeder;
 use App\Models\PaymentCredential;
+use Illuminate\Database\Seeder;
 
 class PaymentCredentialSeeder extends Seeder
 {
@@ -73,7 +73,6 @@ class PaymentCredentialSeeder extends Seeder
             'beneficiary_type_id' => 'anpen',
             'domain_id'           => 'state',
         ]);
-
 
         /**
          * JAAC

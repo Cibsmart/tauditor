@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Compute;
 
 use App\Beneficiary;
@@ -9,15 +8,21 @@ use App\Contracts\Computable;
 class Tax implements Computable
 {
     private Beneficiary $beneficiary;
+
     private float $annual_basic = 0.0;
+
     private float $annual_allowance = 0.0;
+
     private float $annual_gross = 0.0;
 
     private const PENSION_RATE = 8; //8 percent of annual_gross
+
     private const NHF_RATE = 2.5; // 2.5 percent of annual_gross
+
     private const NHIS_RATE = 5; // 5 percent of annual_gross
 
     private array $amounts = [300000, 300000, 500000, 500000, 1600000, 3200000]; // tax amount break points
+
     private array $rates = [7, 11, 15, 19, 21, 24]; //Percentage rates
 
     public function compute(Beneficiary $beneficiary)

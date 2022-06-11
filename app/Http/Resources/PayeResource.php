@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
+use function array_key_exists;
 use Illuminate\Http\Resources\Json\JsonResource;
 use function number_format;
-use function array_key_exists;
 
 class PayeResource extends JsonResource
 {

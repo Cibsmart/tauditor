@@ -6,7 +6,6 @@ use App\Models\Domain;
 use App\Models\PayComm;
 use Faker\Generator as Faker;
 
-
 $factory->define(PayComm::class, function (Faker $faker) {
     return [
         'code'           => $faker->countryCode,

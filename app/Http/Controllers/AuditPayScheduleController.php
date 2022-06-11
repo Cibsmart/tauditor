@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\AuditPaySchedule;
-use Illuminate\Http\Request;
-use App\Models\AuditSubMdaSchedule;
-use App\Imports\PayScheduleImport;
-use Illuminate\Support\Facades\Auth;
-use App\Imports\LeaveScheduleImport;
-use Illuminate\Support\Facades\Storage;
-use App\Imports\PensionPayScheduleImport;
 use App\Exceptions\WrongScheduleException;
+use App\Imports\LeaveScheduleImport;
+use App\Imports\PayScheduleImport;
+use App\Imports\PensionPayScheduleImport;
+use App\Models\AuditPaySchedule;
+use App\Models\AuditSubMdaSchedule;
 use function back;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class AuditPayScheduleController extends Controller
 {
@@ -68,7 +68,6 @@ class AuditPayScheduleController extends Controller
         $payment_type = $audit_sub_mda->auditMdaSchedule->auditPayrollCategory->payment_type_id;
 
         try {
-
             switch ($payment_type) {
                 case 'pen':
                     (new PensionPayScheduleImport($audit_sub_mda, $file_path))->import($file_path);
@@ -93,6 +92,7 @@ class AuditPayScheduleController extends Controller
         if ($confirm_upload->isEmpty()) {
             $headers = 'ID | NAME | GRADE | DESIGNATION | B/S | BANK | ACCT | CODE | ALLOWANCES | TOTAL ALLW | GROSS PAY | DUES | TOTAL DUES | DEDUCTION | TOTAL DED | NET PAY';
             $message = "Upload Failed: Ensure Heading has {$headers}";
+
             return back()->with('error', $message);
         }
 

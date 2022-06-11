@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use App\Traits\CanBeReported;
-use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @method static find($audit_sub_mda)

@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Models\Allowance;
-use App\Models\FixedValue;
-use Inertia\Inertia;
 use App\Models\AllowanceName;
+use App\Models\FixedValue;
 use App\Models\PercentageValue;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class AllowancesController extends Controller
 {
@@ -97,7 +97,7 @@ class AllowancesController extends Controller
         try {
             $request = Request::all();
             //check the type of allowance
-            if ($request['allowance_type'] == "percentage_type") {
+            if ($request['allowance_type'] == 'percentage_type') {
                 //create the percentage value
                 $percentage_amount = $request['percentage'];
 
@@ -109,13 +109,13 @@ class AllowancesController extends Controller
                 $allowance = new Allowance();
                 $allowance->allowance_name_id = $request['allowance_name_id'];
                 $allowance->domain_id = 1;
-                $allowance->valuable_type = "percentage_type";
+                $allowance->valuable_type = 'percentage_type';
                 $allowance->valuable_id = $percentage_value->id;
 
                 $allowance->save();
 
-                return back()->with('success', "Percentage Type Allowance Created");
-            } elseif ($request['allowance_type'] == "fixed_value") {
+                return back()->with('success', 'Percentage Type Allowance Created');
+            } elseif ($request['allowance_type'] == 'fixed_value') {
                 //create the fixed values
                 $fixed_amount = $request['amount'];
                 $fixed_value = new FixedValue();
@@ -126,14 +126,14 @@ class AllowancesController extends Controller
                 $allowance = new Allowance();
                 $allowance->allowance_name_id = $request['allowance_name_id'];
                 $allowance->domain_id = 1;
-                $allowance->valuable_type = "fixed_value";
+                $allowance->valuable_type = 'fixed_value';
                 $allowance->valuable_id = $fixed_value->id;
 
                 $allowance->save();
 
-                return back()->with('success', "Fixed Value Allowance Created");
+                return back()->with('success', 'Fixed Value Allowance Created');
             } else {
-                return back()->with('error', "Invalid Request");
+                return back()->with('error', 'Invalid Request');
             }
         } catch (Exception $e) {
             return back()->with('error', $e);

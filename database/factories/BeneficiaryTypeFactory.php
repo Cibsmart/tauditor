@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\Domain;
 use App\Models\BeneficiaryType;
+use App\Models\Domain;
 use Faker\Generator as Faker;
 
 $factory->define(BeneficiaryType::class, function (Faker $faker) {

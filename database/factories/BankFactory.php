@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(Bank::class, function (Faker $faker) {
     return [
         'code' => $faker->randomNumber(3, true),
-        'name' => $faker->company
+        'name' => $faker->company,
     ];
 });

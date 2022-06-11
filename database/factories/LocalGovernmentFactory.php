@@ -8,6 +8,6 @@ use Faker\Generator as Faker;
 $factory->define(LocalGovernment::class, function (Faker $faker) {
     return [
         'state_id' => 1,
-        'name' => 'Aba'
+        'name' => 'Aba',
     ];
 });

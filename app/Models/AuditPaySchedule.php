@@ -2,15 +2,14 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Traits\CanBeReported;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use function number_format;
 
 /**
- *
  * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
  * @method static where(string $string, $verification_number)
  * @method static allSchedules()
@@ -26,7 +25,7 @@ class AuditPaySchedule extends Model
         'pension'    => 'boolean',
         'allowances' => 'array',
         'deductions' => 'array',
-        'month'      => 'datetime'
+        'month'      => 'datetime',
     ];
 
     //A polymorphic relationship to either Bank or Microfinance
@@ -172,6 +171,4 @@ class AuditPaySchedule extends Model
     {
         return is_int($string) ? str_pad($string, $padding, '0', STR_PAD_LEFT) : $string;
     }
-
-
 }

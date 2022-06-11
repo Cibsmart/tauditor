@@ -2,18 +2,18 @@
 
 namespace Tests\Feature;
 
-use App\Domain;
 use App\Deduction;
-use App\ValueType;
 use App\DeductionName;
 use App\DeductionType;
+use App\Domain;
+use App\ValueType;
+use function dump;
+use function factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use function dump;
-use function route;
-use function factory;
 use function random_int;
+use function route;
+use Tests\TestCase;
 
 class DeductionsTest extends TestCase
 {
@@ -59,7 +59,7 @@ class DeductionsTest extends TestCase
             'deduction_name' => -1,
             'value_type' => $value_type->id,
             'value' => $amount,
-            'new_deduction' => 'Max'
+            'new_deduction' => 'Max',
         ];
 
         $this->post(route('deductions.store'), $attributes)

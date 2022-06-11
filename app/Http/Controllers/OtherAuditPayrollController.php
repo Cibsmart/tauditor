@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\PaymentType;
-use Illuminate\Http\Request;
-use App\Models\AuditPayroll;
-use Illuminate\Support\Facades\Auth;
-use App\Imports\OtherScheduleImport;
-use Illuminate\Support\Facades\Storage;
-use App\Models\OtherAuditPayrollCategory;
 use App\Exceptions\WrongScheduleException;
+use App\Imports\OtherScheduleImport;
+use App\Models\AuditPayroll;
+use App\Models\OtherAuditPayrollCategory;
+use App\Models\PaymentType;
 use function back;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 use function redirect;
 
 class OtherAuditPayrollController extends Controller
@@ -30,7 +30,6 @@ class OtherAuditPayrollController extends Controller
             'payment_type_id'  => ['required', 'exists:payment_types,id'],
             'audit_payroll_id' => ['required', 'exists:audit_payrolls,id'],
         ]);
-
 
         OtherAuditPayrollCategory::create($data);
 
@@ -61,9 +60,9 @@ class OtherAuditPayrollController extends Controller
         } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
         } catch (\ErrorException $e) {
-            return back()->with('error', 'Attached File is not a valid Other Pay Schedule '.$e->getMessage());
+            return back()->with('error', 'Attached File is not a valid Other Pay Schedule ' . $e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
         }
 
         $confirm_upload = $other_payroll_category->auditOtherPaySchedules;
@@ -71,6 +70,7 @@ class OtherAuditPayrollController extends Controller
         if ($confirm_upload->isEmpty()) {
             $headers = 'SN | NAME | DESCRIPTION | AMOUNT | ACCOUNT NUMBER | BANK ';
             $message = "Upload Failed: Ensure Heading has {$headers}";
+
             return back()->with('error', $message);
         }
 

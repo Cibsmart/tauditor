@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property mixed allowance
@@ -31,7 +31,6 @@ class AllowanceDetail extends Model
     {
         return $this->belongsTo(Allowance::class);
     }
-
 
     /*
     |-------------------------------------------------------------------------------

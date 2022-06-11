@@ -2,11 +2,11 @@
 
 namespace App\Actions;
 
-use Illuminate\Support\Str;
-use App\Models\AuditPaySchedule;
 use App\Models\AuditPayrollCategory;
+use App\Models\AuditPaySchedule;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Lorisleiva\Actions\Concerns\AsAction;
 
 class GenerateAndSendPayeData
@@ -38,7 +38,7 @@ class GenerateAndSendPayeData
 
         $staff_type = $category->staff_type;
 
-        $key = 'paye.'.$staff_type;
+        $key = 'paye.' . $staff_type;
 
         $config = config($key);
 
@@ -47,7 +47,7 @@ class GenerateAndSendPayeData
             $content,
             $filename
         )->withHeaders([
-            'Authorization'   => base64_encode($config['id'].':'.$config['secret']),
+            'Authorization'   => base64_encode($config['id'] . ':' . $config['secret']),
             'ProjectID'       => $config['project_id'],
             'ProjectName'     => $config['project_name'],
             'ProjectCategory' => $config['project_category'],
@@ -84,7 +84,7 @@ class GenerateAndSendPayeData
                         ->orderBy('audit_sub_mda_schedule_id')
                         ->orderBy('verification_number')
                         ->lazy()
-                        ->each(function ($schedule) use ($month, $year, $file_name){
+                        ->each(function ($schedule) use ($month, $year, $file_name) {
                             $content = $this->formatContent($this->getContent($schedule, $month, $year));
 
                             Storage::disk('local')->append($file_name, $content);

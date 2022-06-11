@@ -174,14 +174,14 @@ class AuditPayrollCategory extends Model
 
     public function setAnalysisStatus($status)
     {
-        $this->analysis_status =  $status;
+        $this->analysis_status = $status;
 
         $this->save();
     }
 
     public function setAutopayStatus($status)
     {
-        $this->autopay_status  =  $status;
+        $this->autopay_status = $status;
 
         $this->save();
     }
@@ -204,11 +204,11 @@ class AuditPayrollCategory extends Model
     {
         $prev_payroll = $this->auditPayroll->previousPayroll($domain_id);
 
-        if (!$prev_payroll) {
+        if (! $prev_payroll) {
             return null;
         }
 
-        return AuditPayrollCategory::where('audit_payroll_id', '=', $prev_payroll->id)
+        return self::where('audit_payroll_id', '=', $prev_payroll->id)
                             ->where('payment_type_id', '=', $this->payment_type_id)
                             ->where('staff_type', '=', $this->staff_type)
                             ->first();

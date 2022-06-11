@@ -2,10 +2,10 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\MicroFinanceBank;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\User;
 use function dd;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class MicroFinanceBankPolicy
 {

@@ -2,29 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Domain;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\PayeResourceCollection;
+use App\Http\Resources\PayloadCollection;
 use App\Models\AuditPayroll;
 use App\Models\AuditPaySchedule;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\PayloadCollection;
-use Symfony\Component\HttpFoundation\Response;
-use App\Http\Resources\PayeResourceCollection;
-use function collect;
-use function response;
-use function in_array;
+use App\Models\Domain;
 use function array_diff;
+use function collect;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use function in_array;
+use function response;
+use Symfony\Component\HttpFoundation\Response;
 
 class BeneficiaryController extends Controller
 {
-
     public function index($domain, $year, $month, $type)
     {
         $domain = Domain::find($domain);
 
         $staff_types = [
-            'state' => ['staff', 'pension',],
+            'state' => ['staff', 'pension'],
             'jaac'  => ['lgea', 'lgsc', 'pension'],
         ];
 
@@ -156,7 +155,6 @@ class BeneficiaryController extends Controller
                 'message' => 'No Record Found',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
-
 
         $beneficiary = $schedules->first();
 

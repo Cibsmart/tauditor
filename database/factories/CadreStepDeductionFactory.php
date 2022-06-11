@@ -3,8 +3,8 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\Models\CadreStep;
-use App\Models\Deduction;
 use App\Models\CadreStepDeduction;
+use App\Models\Deduction;
 use Faker\Generator as Faker;
 
 $factory->define(CadreStepDeduction::class, function (Faker $faker) {

@@ -1,24 +1,24 @@
 <?php
 
 use App\Models\Bank;
-use App\Models\State;
+use App\Models\BankDetail;
+use App\Models\Beneficiary;
+use App\Models\BeneficiaryStatus;
 use App\Models\Domain;
 use App\Models\Gender;
-use App\Models\NextOfKin;
+use App\Models\LocalGovernment;
+use App\Models\MaritalStatus;
 use App\Models\MdaDetail;
-use App\Models\BankDetail;
-use App\Models\WorkDetail;
-use App\Models\Beneficiary;
+use App\Models\MicroFinanceBank;
+use App\Models\NextOfKin;
+use App\Models\PersonalizedSalary;
+use App\Models\Qualification;
+use App\Models\QualificationType;
 use App\Models\Relationship;
 use App\Models\SalaryDetail;
-use App\Models\MaritalStatus;
-use App\Models\Qualification;
-use App\Models\LocalGovernment;
-use App\Models\MicroFinanceBank;
+use App\Models\State;
 use App\Models\StructuredSalary;
-use App\Models\QualificationType;
-use App\Models\BeneficiaryStatus;
-use App\Models\PersonalizedSalary;
+use App\Models\WorkDetail;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 

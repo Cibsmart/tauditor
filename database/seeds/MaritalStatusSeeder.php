@@ -13,17 +13,17 @@ class MaritalStatusSeeder extends Seeder
     public function run()
     {
         $status = [
-          'S' => 'SINGLE',
-          'M' => 'MARRIED',
-          'D' => 'DIVORCED',
-          'W' => 'WIDOW(ER)',
-          'P' => 'SEPARATED',
+            'S' => 'SINGLE',
+            'M' => 'MARRIED',
+            'D' => 'DIVORCED',
+            'W' => 'WIDOW(ER)',
+            'P' => 'SEPARATED',
         ];
 
         foreach ($status as $key => $value) {
             factory(MaritalStatus::class)->create([
-              'id' => $key,
-              'name' => $value,
+                'id' => $key,
+                'name' => $value,
             ]);
         }
     }

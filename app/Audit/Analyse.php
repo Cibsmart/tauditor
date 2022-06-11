@@ -1,13 +1,11 @@
 <?php
 
-
 namespace App\Audit;
 
 use App\Models\AuditPaySchedule;
 
 class Analyse
 {
-
     protected array $checks = [
         CheckNewBeneficiary::class,
         CheckAccountNumber::class,

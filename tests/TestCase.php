@@ -3,12 +3,12 @@
 namespace Tests;
 
 use App\User;
+use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Arr;
+use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert;
 use RolesAndPermissionsSeeder;
-use Illuminate\Testing\TestResponse;
 use Spatie\Permission\PermissionRegistrar;
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -58,7 +58,6 @@ abstract class TestCase extends BaseTestCase
             return $this;
         });
     }
-
 
     protected function signIn($user = null)
     {

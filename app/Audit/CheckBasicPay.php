@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckBasicPay extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckBasicPay extends AuditCheckable
 
         $this->report(self::BASIC_PAY_CHANGED, $message, $current_basic_pay, $previous_basic_pay);
 
-        return;
     }
 }

@@ -50,7 +50,6 @@ class PaySchedule extends Model
         return $value / 100;
     }
 
-
     public function setBasicPayAttribute(float $value) : int
     {
         return $this->attributes['basic_pay'] = $value * 100;
@@ -60,7 +59,6 @@ class PaySchedule extends Model
     {
         return $value / 100;
     }
-
 
     public function setGrossPayAttribute(float $value) : int
     {

@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int id
  * @property int active
- *
  */
 class BeneficiaryStatus extends Model
 {

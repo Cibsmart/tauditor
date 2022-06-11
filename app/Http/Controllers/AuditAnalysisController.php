@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\AuditReport;
-use App\Models\AuditPayroll;
-use Barryvdh\DomPDF\PDF;
-use Illuminate\Support\Str;
-use App\Models\AuditPayrollCategory;
+use App\Actions\AuditPayScheduleAction;
 use App\Jobs\AnalysePaySchedules;
-use Illuminate\Support\Facades\DB;
+use App\Models\AuditPayroll;
+use App\Models\AuditPayrollCategory;
+use App\Models\AuditReport;
+use function back;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-use App\Actions\AuditPayScheduleAction;
-use function back;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class AuditAnalysisController extends Controller
 {
@@ -86,7 +86,7 @@ class AuditAnalysisController extends Controller
             ->setOption('footer-right', '[isodate] [time]')
             ->setOption('footer-left', $audit_payroll_category->payment_title);
 
-        return $pdf->download('ANALYSIS REPORT - '.$audit_payroll_category->payment_title.'.pdf');
+        return $pdf->download('ANALYSIS REPORT - ' . $audit_payroll_category->payment_title . '.pdf');
     }
 
     public function analyse(AuditPayrollCategory $audit_payroll_category)
@@ -97,6 +97,7 @@ class AuditAnalysisController extends Controller
 
         if ($audit_payroll_category->analysis_status !== 'pending') {
             $message = "No [New] Schedule Has Been Uploaded for $title";
+
             return back()->with('error', $message);
         }
 

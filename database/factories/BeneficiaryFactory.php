@@ -2,17 +2,17 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Carbon\Carbon;
-use App\Models\State;
+use App\Models\Beneficiary;
+use App\Models\BeneficiaryType;
 use App\Models\Domain;
 use App\Models\Gender;
-use App\Models\Beneficiary;
-use Faker\Generator as Faker;
-use App\Models\MaritalStatus;
-use App\Models\BeneficiaryType;
 use App\Models\LocalGovernment;
+use App\Models\MaritalStatus;
+use App\Models\State;
+use Carbon\Carbon;
+use Faker\Generator as Faker;
 
-$factory->define(Beneficiary::class, function (Faker $faker){
+$factory->define(Beneficiary::class, function (Faker $faker) {
     return [
         'last_name'           => $faker->lastName,
         'first_name'          => $faker->firstName,

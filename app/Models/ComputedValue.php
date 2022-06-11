@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 use function resolve;
 
 /**
@@ -23,7 +23,6 @@ class ComputedValue extends Model
     {
         return $this->morphOne(Deduction::class, 'valuable');
     }
-
 
     public function amount(Beneficiary $beneficiary = null)
     {

@@ -1,15 +1,15 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 use Illuminate\Support\Collection;
 
 class CheckAllowances extends AuditCheckable
 {
     protected Collection $current_allowances;
+
     protected Collection $previous_allowances;
 
     public function check(AuditPaySchedule $schedule)
@@ -34,7 +34,6 @@ class CheckAllowances extends AuditCheckable
 
         $this->checkChangedAllowances();
 
-        return;
     }
 
     private function checkForNewAllowances()
@@ -45,7 +44,7 @@ class CheckAllowances extends AuditCheckable
             return;
         }
 
-        $message = "ALLOWANCE(S) ADDED";
+        $message = 'ALLOWANCE(S) ADDED';
 
         $this->report(self::ALLOWANCES_ADDED, $message, $current_diffs, null);
     }
@@ -58,7 +57,7 @@ class CheckAllowances extends AuditCheckable
             return;
         }
 
-        $message = "ALLOWANCE(S) REMOVED";
+        $message = 'ALLOWANCE(S) REMOVED';
 
         $this->report(self::ALLOWANCES_REMOVED, $message, null, $previous_diffs);
     }
@@ -77,7 +76,7 @@ class CheckAllowances extends AuditCheckable
 
         $previous_diffs = $this->previous_allowances->diff($this->current_allowances)->except($removed_allowances);
 
-        $message = "ALLOWANCE(S) CHANGED IN VALUE ";
+        $message = 'ALLOWANCE(S) CHANGED IN VALUE ';
 
         $this->report(self::ALLOWANCES_CHANGED, $message, $current_diffs, $previous_diffs);
     }

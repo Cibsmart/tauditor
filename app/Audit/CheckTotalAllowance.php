@@ -1,10 +1,9 @@
 <?php
 
-
 namespace App\Audit;
 
-use App\Models\AuditPaySchedule;
 use App\Classes\AuditCheckable;
+use App\Models\AuditPaySchedule;
 
 class CheckTotalAllowance extends AuditCheckable
 {
@@ -34,6 +33,5 @@ class CheckTotalAllowance extends AuditCheckable
 
         $this->report(self::TOTAL_ALLOWANCE_CHANGED, $message, $current_total_allowance, $previous_total_allowance);
 
-        return;
     }
 }

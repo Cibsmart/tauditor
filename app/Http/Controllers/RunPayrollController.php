@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Payroll;
 use App\Actions\RunPayrollAction;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Payroll;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\Auth;
 
 class RunPayrollController
 {

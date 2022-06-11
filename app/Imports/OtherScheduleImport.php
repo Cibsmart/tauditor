@@ -2,30 +2,33 @@
 
 namespace App\Imports;
 
-use Exception;
-use App\Models\Bank;
-use Maatwebsite\Excel\Row;
-use Illuminate\Support\Str;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use App\Models\OtherAuditPayrollCategory;
-use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use App\Models\Bank;
+use App\Models\OtherAuditPayrollCategory;
 use function collect;
-use function is_null;
-use function str_pad;
+use Exception;
+use Illuminate\Support\Str;
 use function in_array;
-use function throw_if;
+use function is_null;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
+use function str_pad;
 use const STR_PAD_LEFT;
+use function throw_if;
 
 class OtherScheduleImport implements OnEachRow
 {
     use Importable;
 
     protected $domain;
+
     protected $heading;
+
     protected $headers = [];
 
     public OtherAuditPayrollCategory $payroll_category;
+
     public string $file_path;
 
     public function __construct(OtherAuditPayrollCategory $payroll_category, $file_path)
@@ -42,13 +45,12 @@ class OtherScheduleImport implements OnEachRow
         if ($row_number === 1) {
             $this->domain = $this->payroll_category->auditPayroll->domain;
 
-            $this->heading = collect($columns)->map(fn($value) => Str::slug($value, '_'))->toArray();
+            $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
 
             $this->setHeaders();
 
             return null;
         }
-
 
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
@@ -84,7 +86,7 @@ class OtherScheduleImport implements OnEachRow
     {
         $heading = collect($this->heading);
 
-        return $heading->search(fn($item, $key) => in_array($item, $array));
+        return $heading->search(fn ($item, $key) => in_array($item, $array));
     }
 
     protected function createOtherPaySchedule($beneficiary)
@@ -95,7 +97,7 @@ class OtherScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
+                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
             );
         }
 
@@ -114,7 +116,6 @@ class OtherScheduleImport implements OnEachRow
             : $beneficiary[$this->headers['account_number']];
 
         $bank_code = $bankable->bankCode();
-
 
         $attributes = [
             'serial_number'    => $beneficiary[$this->headers['sn']],

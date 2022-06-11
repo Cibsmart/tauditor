@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use Illuminate\Support\Str;
-use App\Models\AuditPayroll;
 use App\Classes\ZipDirectory;
-use App\Models\AuditMdaSchedule;
-use Illuminate\Support\Facades\DB;
-use App\Exports\MfbScheduleExport;
-use App\Models\AuditSubMdaSchedule;
-use App\Models\AuditPayrollCategory;
-use Illuminate\Support\Facades\Auth;
 use App\Exports\AutoPayScheduleExport;
+use App\Exports\MfbScheduleExport;
 use App\Jobs\GenerateAutopaySchedules;
-use Illuminate\Support\Facades\Storage;
+use App\Models\AuditMdaSchedule;
+use App\Models\AuditPayroll;
+use App\Models\AuditPayrollCategory;
+use App\Models\AuditSubMdaSchedule;
 use App\Models\OtherAuditPayrollCategory;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class AuditAutopayController extends Controller
 {
@@ -74,7 +74,7 @@ class AuditAutopayController extends Controller
                                         'autopay_status'    => $status,
                                         'autopay_generated' => $generated,
                                         'uploaded'          => $uploaded,
-                                        'can_generate'      => $uploaded && !$generated &&$status !== 'running',
+                                        'can_generate'      => $uploaded && ! $generated && $status !== 'running',
                                         'viewable'          => $uploaded && $generated,
                                         'refreshable'       => $uploaded && $status === 'running',
                                         'tenece'          => $category->paycomm_tenece,
@@ -99,7 +99,7 @@ class AuditAutopayController extends Controller
                                             ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
                                             ->orderBy('mda_id')
                                             ->paginate()
-                                            ->transform(fn(AuditMdaSchedule $schedule) => [
+                                            ->transform(fn (AuditMdaSchedule $schedule) => [
                                                 'id'           => $schedule->id,
                                                 'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
                                                 'payroll_id'   => $audit_payroll_category->id,
@@ -156,6 +156,7 @@ class AuditAutopayController extends Controller
 
         if ($audit_payroll_category->autopay_status !== 'pending') {
             $message = "No [New] Schedule Has Been Uploaded for $title";
+
             return back()->with('error', $message);
         }
 

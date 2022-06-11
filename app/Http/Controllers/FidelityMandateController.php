@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Inertia\Inertia;
-use App\Models\LoanStatus;
 use App\Models\LoanMandate;
+use App\Models\LoanStatus;
 use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
 
 class FidelityMandateController extends Controller
 {

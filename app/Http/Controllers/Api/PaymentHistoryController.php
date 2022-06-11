@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Domain;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\AuditPaySchedule;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\LoanResourceCollection;
+use App\Models\AuditPaySchedule;
+use App\Models\Domain;
 use function collect;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use function response;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentHistoryController extends Controller
 {
@@ -58,7 +58,7 @@ class PaymentHistoryController extends Controller
             'staff_name'  => $schedules[0]->beneficiary_name,
             'staff_cadre' => $schedules[0]->beneficiary_cadre,
             'staff_mda'   => $mda_name,
-            'schedules'   => $schedules->map(fn($schedule) => [
+            'schedules'   => $schedules->map(fn ($schedule) => [
                 'net_pay'        => number_format($schedule->net_pay, 2, '.', ','),
                 'month'          => "{$schedule->month_name} {$schedule->year}",
                 'bank_name'      => $schedule->bank_name,

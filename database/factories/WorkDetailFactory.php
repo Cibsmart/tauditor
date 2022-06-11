@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use Carbon\Carbon;
-use App\Models\WorkDetail;
 use App\Models\Beneficiary;
 use App\Models\Designation;
+use App\Models\WorkDetail;
+use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(WorkDetail::class, function (Faker $faker) {

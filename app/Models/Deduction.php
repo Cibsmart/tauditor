@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property int id
@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Deduction extends Model
 {
     protected $guarded = [];
-
 
     /*
     |-------------------------------------------------------------------------------
@@ -38,7 +37,6 @@ class Deduction extends Model
     {
         return $this->belongsTo(DeductionName::class);
     }
-
 
     /*
     |-------------------------------------------------------------------------------
@@ -84,10 +82,10 @@ class Deduction extends Model
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->whereHas('deductionDetails', function ($query) use ($search) {
-                $query->where('amount', 'like', '%'.$search.'%');
+                $query->where('amount', 'like', '%' . $search . '%');
             })->orWhereHas('deductionName', function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%')
-                      ->orWhereHas('deductionType', fn ($query) => $query->where('name', 'like', '%'.$search.'%'));
+                $query->where('name', 'like', '%' . $search . '%')
+                      ->orWhereHas('deductionType', fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
             });
         });
     }

@@ -3,13 +3,13 @@
 namespace Tests\Feature;
 
 use App\Payroll;
+use function array_merge;
 use Carbon\Carbon;
-use Tests\Setup\UserFactory;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Auth;
+use Tests\Setup\UserFactory;
 use Tests\TestCase;
-use function array_merge;
 
 class PayrollTest extends TestCase
 {
@@ -29,7 +29,6 @@ class PayrollTest extends TestCase
             'year' => $date->year,
         ];
     }
-
 
     /** @test */
     public function anUnauthenticatedUserCannotCreatePayroll()
@@ -98,7 +97,8 @@ class PayrollTest extends TestCase
              ->assertPropValue('payrolls.data', function ($payrolls) {
                  $this->assertEquals(
                      ['id', 'month', 'year', 'approved', 'archived', 'generated', 'generated_by'],
-                     array_keys($payrolls[0]));
+                     array_keys($payrolls[0])
+                 );
              });
     }
 }

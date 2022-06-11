@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Actions;
 
 use App\Audit\Analyse;
@@ -8,7 +7,6 @@ use App\Models\AuditSubMdaSchedule;
 
 class AuditPayScheduleAction
 {
-
     public function execute(AuditSubMdaSchedule $sub_mda_schedule)
     {
         $schedules = $sub_mda_schedule->auditPaySchedules;

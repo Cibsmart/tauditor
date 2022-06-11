@@ -12,7 +12,7 @@ class StepSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 15; $i++){
+        for ($i = 1; $i <= 15; $i++) {
             $code = str_pad($i, 2, '0', STR_PAD_LEFT);
 
             factory(Step::class)->create(['code' => $code, 'name' => 'Step ' . $code]);

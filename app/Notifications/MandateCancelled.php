@@ -48,7 +48,7 @@ class MandateCancelled extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject("Fidelity Loan Mandate Cancelled - Mandate Reference: {$this->mandate->reference}")
-            ->greeting("Hi Admin,")
+            ->greeting('Hi Admin,')
             ->line('A loan mandate from Fidelity Bank has been cancelled and awaits your action.')
             ->line('Click on the button below to view the mandate or use the mandate reference to view the mandate')
             ->action('View Mandate', url(route('fidelity.show', $this->mandate->id)))

@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
-use App\Models\User;
 use App\Models\LoanMandate;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -51,7 +51,7 @@ class MandateReceived extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject("New Fidelity Loan Mandate Received - Mandate Reference: {$this->mandate->reference}")
-            ->greeting("Hi Admin,")
+            ->greeting('Hi Admin,')
             ->line('There is a new loan mandate from Fidelity Bank awaiting your action.')
             ->line('Click on the button below to view the mandate or use the mandate reference to view the mandate')
             ->action('View Mandate', url(route('fidelity.show', $this->mandate->id)))

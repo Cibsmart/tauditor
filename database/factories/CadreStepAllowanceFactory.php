@@ -2,8 +2,8 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\Models\CadreStep;
 use App\Models\Allowance;
+use App\Models\CadreStep;
 use App\Models\CadreStepAllowance;
 use Faker\Generator as Faker;
 

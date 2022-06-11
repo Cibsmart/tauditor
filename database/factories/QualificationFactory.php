@@ -10,7 +10,7 @@ $factory->define(Qualification::class, function (Faker $faker) {
     return [
         'qualification_type_id' => factory(QualificationType::class),
         'institution' => $faker->company,
-        'grade' => $faker->sentence(3,false),
+        'grade' => $faker->sentence(3, false),
         'year' => $faker->year,
     ];
 });

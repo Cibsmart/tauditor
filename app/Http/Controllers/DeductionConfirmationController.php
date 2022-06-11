@@ -2,18 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SendDeductionConfirmation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use App\Actions\SendDeductionConfirmation;
-use function config;
-use function array_sum;
 
 class DeductionConfirmationController extends Controller
 {
-
     public function send(Request $request)
     {
-
         $narration = $request->narration;
         $date = $request->date;
         $data = collect($request->data);
@@ -25,12 +21,12 @@ class DeductionConfirmationController extends Controller
 
         $response = Http::withHeaders([
             'APIUser' => $user,
-            'APIToken' => $token
+            'APIToken' => $token,
         ])->post($url, [
             'Narration' => $narration,
             'TransactionDate' => $date,
             'TotalAmount' => $total,
-            'data' => $data
+            'data' => $data,
         ]);
 
         return $response->json();

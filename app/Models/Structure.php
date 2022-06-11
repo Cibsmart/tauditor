@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Structure extends Model
 {
@@ -13,7 +13,7 @@ class Structure extends Model
 
     public function cadre() : HasMany
     {
-        return $this->hasMany(Cadre::class,);
+        return $this->hasMany(Cadre::class, );
     }
 
     public function steps() : HasManyThrough
@@ -22,7 +22,8 @@ class Structure extends Model
             CadreStep::class,
             Cadre::class,
             'structure_id',
-            'step_id');
+            'step_id'
+        );
     }
 
     public function salaryDetails() : HasManyThrough
@@ -31,7 +32,8 @@ class Structure extends Model
             SalaryDetail::class,
             StructuredSalary::class,
             'salary_detail_id',
-            'payable_id');
+            'payable_id'
+        );
     }
 
     public function allowables() : MorphMany

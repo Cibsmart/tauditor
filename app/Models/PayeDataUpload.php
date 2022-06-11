@@ -10,9 +10,9 @@ class PayeDataUpload extends Model
     protected $guarded = [];
 
     protected $casts = [
-       'successful' => 'boolean',
-       'failed' => 'boolean',
-       'client' => 'boolean',
-       'server' => 'boolean',
+        'successful' => 'boolean',
+        'failed' => 'boolean',
+        'client' => 'boolean',
+        'server' => 'boolean',
     ];
 }

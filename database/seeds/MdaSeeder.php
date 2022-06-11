@@ -1,9 +1,9 @@
 <?php
 
-use App\Models\Mda;
 use App\Models\BeneficiaryType;
-use Illuminate\Support\Str;
+use App\Models\Mda;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class MdaSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class MdaSeeder extends Seeder
         $types = BeneficiaryType::all();
 
         //Get the content of of sub_mda.json
-        $json =  file_get_contents(storage_path() .'/json/mda.json');
+        $json = file_get_contents(storage_path() . '/json/mda.json');
 
         //Convert json to an array
         $data = json_decode($json, true);

@@ -2,31 +2,38 @@
 
 namespace App\Imports;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\Bank;
-use Maatwebsite\Excel\Row;
-use Illuminate\Support\Str;
-use App\Models\AuditSubMdaSchedule;
-use Illuminate\Support\Facades\Auth;
-use Maatwebsite\Excel\Concerns\OnEachRow;
-use Maatwebsite\Excel\Concerns\Importable;
 use App\Exceptions\WrongScheduleException;
+use App\Models\AuditSubMdaSchedule;
+use App\Models\Bank;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use function in_array;
+use Maatwebsite\Excel\Concerns\Importable;
+use Maatwebsite\Excel\Concerns\OnEachRow;
+use Maatwebsite\Excel\Row;
 
 class LeaveScheduleImport implements OnEachRow
 {
     use Importable;
 
     protected $mda;
+
     protected $month;
+
     protected $year;
+
     protected $domain;
+
     protected $heading;
+
     protected $department;
+
     protected $headers = [];
 
     public AuditSubMdaSchedule $audit_sub_mda_schedule;
+
     public string $file_path;
 
     public function __construct(AuditSubMdaSchedule $audit_sub_mda_schedule, $file_path)
@@ -35,7 +42,6 @@ class LeaveScheduleImport implements OnEachRow
         $this->file_path = $file_path;
         $this->domain = Auth::user()->domain;
     }
-
 
     public function onRow(Row $row)
     {
@@ -48,6 +54,7 @@ class LeaveScheduleImport implements OnEachRow
 
         if ($row_number === 2) {
             $this->processRowTwo($columns[0]);
+
             return null;
         }
 
@@ -120,9 +127,7 @@ class LeaveScheduleImport implements OnEachRow
             }
         }
 
-        return;
     }
-
 
     /**
      * Extract Beneficiary's Info, Allowances, Deductions and Save in Audit Pay Schedule Table
@@ -147,7 +152,7 @@ class LeaveScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: '.$beneficiary[$this->headers['bank_name']].' Does Not Exist'
+                'Bank Named: ' . $beneficiary[$this->headers['bank_name']] . ' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();
