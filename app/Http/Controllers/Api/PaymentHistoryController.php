@@ -6,11 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\LoanResourceCollection;
 use App\Models\AuditPaySchedule;
 use App\Models\Domain;
-use function collect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use function response;
 use Symfony\Component\HttpFoundation\Response;
 
 class PaymentHistoryController extends Controller
