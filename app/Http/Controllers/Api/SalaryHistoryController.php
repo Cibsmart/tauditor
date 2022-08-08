@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Beneficiary;
 use App\Http\Controllers\Controller;
 use App\Models\AuditPaySchedule;
 use App\Models\BankDetail;
@@ -58,6 +59,18 @@ class SalaryHistoryController extends Controller
         $beneficiary = $bank->beneficiary;
         $domain = $beneficiary->domain;
         $staff_id = $beneficiary->verification_number;
+
+        $count = Beneficiary::query()->where('verification_number', $staff_id)->count();
+
+        if ($count > 1) {
+            return response()->json([
+                'hasData'      => false,
+                'requestDate'  => now()->format('d-m-Y H:i:s+0000'),
+                'responseCode' => '07',
+                'responseMsg'  => 'INVALID BENEFICIARY RECORD',
+                'data'         => $empty,
+            ])->setStatusCode(Response::HTTP_NOT_FOUND);
+        }
 
         $schedules = AuditPaySchedule::allSchedules()
                                      ->orderByMonth()
