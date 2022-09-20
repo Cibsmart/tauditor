@@ -28,6 +28,8 @@ class PensionPayScheduleImport implements OnEachRow
 
     protected $department;
 
+    protected $headers = [];
+
     public AuditSubMdaSchedule $audit_sub_mda_schedule;
 
     public string $file_path;
@@ -58,6 +60,8 @@ class PensionPayScheduleImport implements OnEachRow
         if ($row_number === 3) {
             $this->heading = collect($columns)->map(fn ($value) => Str::slug($value, '_'))->toArray();
 
+            $this->setHeaders();
+
             return null;
         }
 
@@ -84,7 +88,7 @@ class PensionPayScheduleImport implements OnEachRow
         //Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
 
-        if (! isset($beneficiary['employee_id'])) {
+        if (! isset($beneficiary['employee_id']) || ! isset($beneficiary[$this->headers['employee_name']])) {
             return null;
         }
 
@@ -106,7 +110,6 @@ class PensionPayScheduleImport implements OnEachRow
 
         $this->month = $month_year[0];
         $this->year = $month_year[1];
-
     }
 
     /**
@@ -117,52 +120,64 @@ class PensionPayScheduleImport implements OnEachRow
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn ($item, $key) => $key == 'basic_pay'); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == $this->headers['basic_pay']); //Gets all the beneficiary info part
 
         $deductions = $all->diffKeys($part_a)
-                          ->except('basic_pay', 'total_deduction', 'net_pay')
-                          ->filter();
+                          ->except(
+                              $this->headers['basic_pay'],
+                              $this->headers['gross_pay'],
+                              $this->headers['total_allowance'],
+                              $this->headers['total_deductions'],
+                              $this->headers['net_pay']
+                          )->filter();
 
         try {
-            $bankable = $this->getBankableType($beneficiary['bank_name']);
+            $bankable = $this->getBankableType($beneficiary[$this->headers['bank_name']]);
         } catch (Exception $e) {
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
+                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
             );
         }
 
         $month = Carbon::parse("25 $this->month $this->year");
 
-        $deductions = $deductions->isEmpty() ? ['tax' => $beneficiary['total_deduction']] : $deductions;
+        $deductions = $deductions->isEmpty()
+            ? ['statutory_deduction' => $beneficiary[$this->headers['total_deductions']]]
+            : $deductions;
 
         if ($bankable === null) {
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: ' . $beneficiary['bank_name'] . ' Does Not Exist'
+                'Bank Named: ' . $beneficiary[$this->headers['bank_name']] . ' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();
 
         $account_number = $bankable_type === 'commercial'
-            ? $this->pad($beneficiary['account_number'], 10)
-            : $beneficiary['account_number'];
+            ? $this->pad($beneficiary[$this->headers['account_number']], 10)
+            : $beneficiary[$this->headers['account_number']];
 
         $attributes = [
-            'verification_number' => $beneficiary['employee_id'],
-            'beneficiary_name'    => Str::upper($beneficiary['employee_name']),
+            'verification_number' => $beneficiary[$this->headers['employee_id']],
+            'beneficiary_name'    => Str::upper($beneficiary[$this->headers['employee_name']]),
             'designation'         => 'PENSIONER',
-            'basic_pay'           => $beneficiary['basic_pay'],
-            'bank_name'           => $beneficiary['bank_name'],
+            'mda'                 => '',
+            'department'          => '',
+            'basic_pay'           => $beneficiary[$this->headers['basic_pay']],
+            'bank_name'           => $beneficiary[$this->headers['bank_name']],
             'account_number'      => $account_number,
-            'bank_code'           => $this->pad($beneficiary['bank_code'], 3),
+            'bank_code'           => $this->pad($beneficiary[$this->headers['bank_code']], 3),
             'total_allowance'     => 0,
-            'gross_pay'           => $beneficiary['basic_pay'],
-            'total_deduction'     => $beneficiary['total_deduction'],
-            'net_pay'             => $beneficiary['net_pay'],
+            'gross_pay'           => $beneficiary[$this->headers['gross_pay']],
+            'total_dues'          => 0,
+            'total_deductions'    => $beneficiary[$this->headers['total_deductions']],
+            'total_dues_deductions' => $beneficiary[$this->headers['total_dues_deductions']],
+            'net_pay'             => $beneficiary[$this->headers['net_pay']],
             'allowances'          => [],
+            'dues'                => [],
             'deductions'          => $deductions,
             'month'               => $month,
             'bankable_type'       => $bankable_type,
@@ -170,6 +185,7 @@ class PensionPayScheduleImport implements OnEachRow
             'pension'             => 1,
         ];
 
+//        dd($attributes);
         $schedule = null;
 
         try {
@@ -259,5 +275,35 @@ class PensionPayScheduleImport implements OnEachRow
     public function pad($string, $padding)
     {
         return str_pad($string, $padding, '0', STR_PAD_LEFT);
+    }
+
+    protected function setHeaders()
+    {
+        $items = [
+            'employee_id'     => ['id', 'employee_id'],
+            'employee_name'   => ['name', 'employee_name'],
+            'employee_grade'  => ['grade', 'employee_grade'],
+            'designation'     => ['designation', 'employee_designation'],
+            'basic_pay'       => ['bs', 'basic_salary', 'basic_pay'],
+            'bank_name'       => ['bank', 'bank_name'],
+            'account_number'  => ['acct', 'account_number', 'account_no'],
+            'bank_code'       => ['code', 'bank_code'],
+            'total_allowance' => ['total_allw', 'total_allowance'],
+            'gross_pay'       => ['gross', 'grosspay', 'gross_pay'],
+            'total_deductions'=> ['total_deductions',  'total_deduction'], // total_dues + total_ded
+            'total_dues_deductions'=> ['total_deductions',  'total_deduction'], // total_dues + total_ded
+            'net_pay'         => ['net', 'netpay', 'net_pay'],
+        ];
+
+        foreach ($items as $key => $value) {
+            $this->headers[$key] = $this->heading[$this->getKeyFor($value)];
+        }
+    }
+
+    protected function getKeyFor($array)
+    {
+        $heading = collect($this->heading);
+
+        return $heading->search(fn ($item, $key) => in_array($item, $array));
     }
 }
