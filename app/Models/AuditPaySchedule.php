@@ -23,6 +23,7 @@ class AuditPaySchedule extends Model
     protected $casts = [
         'paid'       => 'boolean',
         'pension'    => 'boolean',
+        'dues'       => 'array',
         'allowances' => 'array',
         'deductions' => 'array',
         'month'      => 'datetime',
@@ -127,12 +128,22 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setTotalDeductionAttribute(float $value) : int
+    public function setTotalDeductionsAttribute(float $value) : int
     {
-        return $this->attributes['total_deduction'] = $value * 100;
+        return $this->attributes['total_deductions'] = $value * 100;
     }
 
-    public function getTotalDeductionAttribute(int $value) : float
+    public function getTotalDeductionsAttribute(int $value) : float
+    {
+        return $value / 100;
+    }
+
+    public function setTotalDuesDeductionsAttribute(float $value) : int
+    {
+        return $this->attributes['total_dues_deductions'] = $value * 100;
+    }
+
+    public function getTotalDuesDeductionsAttribute(int $value) : float
     {
         return $value / 100;
     }
