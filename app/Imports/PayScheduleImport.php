@@ -145,22 +145,24 @@ class PayScheduleImport implements OnEachRow
     {
         $all = collect($beneficiary);
 
-        $part_a = $all->takeUntil(fn (
+        $bio_part = $all->takeUntil(fn (
             $item,
             $key
         ) => $key == $this->headers['bank_code']); //Gets all the beneficiary info part
 
-        $other_part = $all->diffKeys($part_a)->except($this->headers['bank_code']); //Remove part_a from all
-        $allowances = $other_part->takeUntil(fn ($item, $key) => $key == $this->headers['total_allowance'])->filter();
+        $allowance_part = $all->diffKeys($bio_part)->except($this->headers['bank_code']); //Remove bio_part from all
+        $allowances = $allowance_part->takeUntil(fn ($item, $key) => $key == $this->headers['total_allowance']);
 
-        $deductions = $other_part->diffKeys($allowances)
+        $dues_part = $allowance_part->diffKeys($allowances)->except($this->headers['total_allowance'], $this->headers['gross_pay']); //Remove allowance_part from all
+        $dues = $dues_part->takeUntil(fn ($item, $key) => $key == $this->headers['total_dues']);
+
+        $deductions = $dues_part->diffKeys($dues)
                                  ->except(
-                                     $this->headers['total_allowance'],
-                                     $this->headers['gross_pay'],
                                      $this->headers['total_dues'],
-                                     $this->headers['total_deduction'],
+                                     $this->headers['total_deductions'],
+                                     $this->headers['total_dues_deductions'],
                                      $this->headers['net_pay']
-                                 )->filter();
+                                 );
 
         try {
             $bankable = $this->getBankableType($beneficiary[$this->headers['bank_name']]);
@@ -196,17 +198,22 @@ class PayScheduleImport implements OnEachRow
             'verification_number' => $beneficiary[$this->headers['employee_id']],
             'beneficiary_name'    => $beneficiary[$this->headers['employee_name']],
             'beneficiary_cadre'   => $beneficiary[$this->headers['employee_grade']],
-            'designation'         => $designation,
+            'designation'         => Str::of($designation)->trim('/')->trim(),
+            'mda'                 => $beneficiary[$this->headers['mda']],
+            'department'          => $beneficiary[$this->headers['department']] ?? '',
             'basic_pay'           => $beneficiary[$this->headers['basic_salary']],
             'bank_name'           => $beneficiary[$this->headers['bank_name']],
             'account_number'      => $account_number,
             'bank_code'           => $this->pad($beneficiary[$this->headers['bank_code']], 3),
             'total_allowance'     => $beneficiary[$this->headers['total_allowance']],
             'gross_pay'           => $beneficiary[$this->headers['gross_pay']],
-            'total_deduction'     => $beneficiary[$this->headers['total_deduction']] + $beneficiary[$this->headers['total_dues']],
+            'total_dues'          => $beneficiary[$this->headers['total_dues']] ?? 0,
+            'total_deductions'    => $beneficiary[$this->headers['total_deductions']],
+            'total_dues_deductions' => $beneficiary[$this->headers['total_dues_deductions']],
             'net_pay'             => $beneficiary[$this->headers['net_pay']],
-            'allowances'          => $allowances,
-            'deductions'          => $deductions,
+            'allowances'          => $allowances->filter(),
+            'dues'                => $dues->filter(),
+            'deductions'          => $deductions->filter(),
             'month'               => $month,
             'bankable_type'       => $bankable_type,
             'bankable_id'         => $bankable->id,
@@ -307,6 +314,8 @@ class PayScheduleImport implements OnEachRow
             'employee_name'   => ['name', 'employee_name'],
             'employee_grade'  => ['grade', 'employee_grade'],
             'designation'     => ['designation', 'employee_designation'],
+            'mda'             => ['mda'],
+            'department'      => ['department'],
             'basic_salary'    => ['bs', 'basic_salary'],
             'bank_name'       => ['bank', 'bank_name'],
             'account_number'  => ['acct', 'account_number', 'account_no'],
@@ -314,9 +323,9 @@ class PayScheduleImport implements OnEachRow
             'total_allowance' => ['total_allw', 'total_allowance'],
             'gross_pay'       => ['gross', 'grosspay', 'gross_pay'],
             'total_dues'      => ['total_dues'],
-            'total_deduction' => ['total_ded', 'total_deduction'],
+            'total_deductions'       => ['total_ded'],
+            'total_dues_deductions'=> ['total_deductions',  'total_deduction'], // total_dues + total_ded
             'net_pay'         => ['net', 'netpay', 'net_pay'],
-            'fidelity_loan'   => ['fidelity', 'fidelityloan', 'fidelity_loan'],
         ];
 
         foreach ($items as $key => $value) {
