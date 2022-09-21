@@ -51,4 +51,14 @@ class AuditSubMdaSchedulesController extends Controller
 
         return $payroll->month !== $now->month || $payroll->year !== $now->year;
     }
+
+    public function complete(AuditSubMdaSchedule $auditSubMdaSchedule)
+    {
+        $auditSubMdaSchedule->uploaded = 1;
+        $auditSubMdaSchedule->save();
+
+        $auditSubMdaSchedule->auditMdaSchedule->auditSubMdaScheduleWasUpdated();
+
+        return redirect()->back()->with('success', 'MDA Schedule Marked as Successfully Completed');
+    }
 }
