@@ -270,6 +270,7 @@ class PayScheduleImport implements OnEachRow
             'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
             'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
             'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
+            'UBA'                                  => 'UNITED BANK FOR AFRICA PLC',
             'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
             'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
@@ -288,6 +289,8 @@ class PayScheduleImport implements OnEachRow
             'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
             'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
             'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
+            'FIRST CITY MONUMENT BANK'             => 'FIRST CITY MONUMENT BANK PLC',
+            'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
