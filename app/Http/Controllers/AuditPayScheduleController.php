@@ -103,7 +103,7 @@ class AuditPayScheduleController extends Controller
 
     public function auditPayScheduleUploaded(AuditSubMdaSchedule $schedule, $file_path)
     {
-//        $schedule->uploaded = 1;
+        $schedule->uploaded = 1;
         $schedule->user_id = Auth::id();
         $schedule->file_path = $file_path;
         $schedule->total_net_pay = $schedule->totalNetPay();
