@@ -22,10 +22,15 @@ class CreateMdaScheduleView extends Migration
                 `mda`.`code` AS `mda_code`,
                 `mda`.`name` AS `mda_name`,
                 `mda`.`active` AS `mda_active`,
-                `mda`.`beneficiary_type_id` AS `beneficiary_type`
+                `mda`.`beneficiary_type_id` AS `beneficiary_type`,
+                `sub_mda_schedule`.`uploaded` AS `uploaded`,
+                `sub_mda_schedule`.`autopay_generated` AS `generated`,
+                `sub_mda_schedule`.`id` AS `sub_mda_id`
             FROM `audit_payroll_categories` AS `category`
             INNER JOIN `audit_mda_schedules` AS `mda_schedule` ON `category`.`id` = `mda_schedule`.`audit_payroll_category_id`
-            INNER JOIN `mdas` AS `mda` ON `mda_schedule`.`mda_id` = `mda`.`id`;
+            INNER JOIN `audit_sub_mda_schedules` AS `sub_mda_schedule` ON `mda_schedule`.`id` = `sub_mda_schedule`.`audit_mda_schedule_id`
+            INNER JOIN `mdas` AS `mda` ON `mda_schedule`.`mda_id` = `mda`.`id`
+            WHERE `mda`.`active` = 1;
         ");
     }
 
