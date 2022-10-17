@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Actions\GenerateAutoPayScheduleAction;
 use App\Models\AuditSubMdaSchedule;
+use App\Models\Domain;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -19,15 +20,18 @@ class GenerateAutopaySchedules implements ShouldQueue
      */
     public AuditSubMdaSchedule $schedule;
 
+    public Domain $domain;
+
     /**
      * Create a new job instance.
      *
      * @param  AuditSubMdaSchedule  $schedule
      */
-    public function __construct(AuditSubMdaSchedule $schedule)
+    public function __construct(Domain $domain, AuditSubMdaSchedule $schedule)
     {
         //
         $this->schedule = $schedule;
+        $this->domain = $domain;
     }
 
     /**
@@ -38,6 +42,6 @@ class GenerateAutopaySchedules implements ShouldQueue
      */
     public function handle(GenerateAutoPayScheduleAction $auto_pay_schedule_action)
     {
-        $auto_pay_schedule_action->execute($this->schedule);
+        $auto_pay_schedule_action->execute($this->domain, $this->schedule);
     }
 }

@@ -21,6 +21,10 @@ class Domain extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'group' => 'boolean'
+    ];
+
     public function beneficiaries() : HasMany
     {
         return $this->hasMany(Beneficiary::class);
