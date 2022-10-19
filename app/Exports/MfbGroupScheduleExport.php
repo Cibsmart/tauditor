@@ -47,6 +47,7 @@ class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
             )
             ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
             ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+            ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
             ->where('audit_payroll_category_id', $this->category->id)
             ->where('beneficiary_type_id', $this->beneficiaryType->id)
             ->where('micro_finance_bank_id', $this->mfb->id);

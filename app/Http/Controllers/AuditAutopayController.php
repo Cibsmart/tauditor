@@ -154,8 +154,9 @@ class AuditAutopayController extends Controller
         ]);
     }
 
-    public function generate(AuditPayrollCategory $category)
+    public function generate(AuditPayrollCategory $audit_payroll_category)
     {
+        $category = $audit_payroll_category;
         $domain = $category->domain();
         $title = $category->payment_title;
         $count = 0;
@@ -166,21 +167,14 @@ class AuditAutopayController extends Controller
             return back()->with('error', $message);
         }
 
-//        $category->setAutopayStatus('running');
+        $category->setAutopayStatus('running');
 
         if ($domain->group) {
-            $beneficiary_types = MdaScheduleView::query()
-                ->select('beneficiary_type')
-                ->where('id', $category->id)
-                ->where('uploaded', 1)
-                ->whereNull('generated')
-                ->groupBy('beneficiary_type')
-                ->pluck('beneficiary_type');
-            dd($beneficiary_types);
+            $beneficiaryTypes = $category->uploadedBeneficiaryTypes();
 
-            foreach ($beneficiary_types as $beneficiary_type) {
-                $type = BeneficiaryType::find($beneficiary_type);
-                GenerateGroupSchedule::dispatchSync($domain, $category, $type);
+            foreach ($beneficiaryTypes as $beneficiaryType) {
+                $type = BeneficiaryType::find($beneficiaryType);
+                GenerateGroupSchedule::dispatch($domain, $category, $type);
             }
         } else {
             $mdas = $category->auditMdaSchedules;
@@ -194,15 +188,15 @@ class AuditAutopayController extends Controller
                 }
             }
         }
-        dd('here');
 
         $message = "Autopay Schedule Generation for $title is Running, Refresh for Update";
 
         return back()->with('success', $message);
     }
 
-    public function download(AuditPayrollCategory $category)
+    public function download(AuditPayrollCategory $audit_payroll_category)
     {
+        $category = $audit_payroll_category;
         $month_year = $category->monthYear();
         $domain = $category->domain();
 
@@ -233,27 +227,22 @@ class AuditAutopayController extends Controller
 
         $directory = "autopay/$title - AUTOPAY SCHEDULE - $month_year";
 
-        $beneficiaryTypes = MdaScheduleView::query()
-            ->select('beneficiary_type')
-            ->where('id', $category->id)
-            ->whereNotNull('generated')
-            ->groupBy('beneficiary_type')
-            ->pluck('beneficiary_type');
+        $beneficiaryTypes = $category->generatedBeneficiaryTypes();
 
         foreach ($beneficiaryTypes as $beneficiaryType) {
             $type = BeneficiaryType::find($beneficiaryType);
 
             $name = $type->name;
 
-            $file_name = "$name $month_year.xlsx";
+            $file_name = "$name $month_year AUTOPAY SCHEDULE .xlsx";
 
             $path = "$directory/$file_name";
 
             $autopay_file_exists = Storage::disk('local')->exists($path);
 
-//                if ($autopay_file_exists) {
-//                    continue;
-//                }
+//            if ($autopay_file_exists) {
+//                continue;
+//            }
 
             (new AutoPayGroupScheduleExport())->forBeneficiaryType($category, $type)->store($path);
         }
@@ -305,8 +294,9 @@ class AuditAutopayController extends Controller
         return $zipped_file;
     }
 
-    public function downloadMfb(AuditPayrollCategory $category)
+    public function downloadMfb(AuditPayrollCategory $audit_payroll_category)
     {
+        $category = $audit_payroll_category;
         $domain = $category->domain();
         $month_year = $category->monthYear();
 
@@ -341,25 +331,27 @@ class AuditAutopayController extends Controller
 
         $directory = "autopay/$title - MFB SCHEDULE - $month_year";
 
-        $query = MdaScheduleView::query()
-            ->join('microfinance_bank_schedules', 'mda_schedule_views.sub_mda_id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id')
-            ->where('mda_schedule_views.id', $category->id)
-            ->whereNotNull('generated');
+        $query = $category->auditMdaSchedules()
+            ->mfbSchedules()
+            ->whereNotNull('audit_sub_mda_schedules.autopay_generated');
 
-        $beneficiaryTypes = $query->select('beneficiary_type')->groupBy('beneficiary_type')->pluck('beneficiary_type');
+        $beneficiaryTypes = $query->select('beneficiary_type_id')->groupBy('beneficiary_type_id')->pluck('beneficiary_type_id');
 
         foreach ($beneficiaryTypes as $beneficiaryType) {
 
             $type = BeneficiaryType::find($beneficiaryType);
 
-            $subMdas = $query->select('sub_mda_id')
-                ->where('beneficiary_type', $beneficiaryType)
-                ->groupBy('sub_mda_id')->pluck('sub_mda_id');
+            $subMdas = $query->select('audit_sub_mda_schedules.id')
+                ->where('beneficiary_type_id', $beneficiaryType)
+                ->groupBy('audit_sub_mda_schedules.id')->pluck('audit_sub_mda_schedules.id');
 
             $mfbs = MicrofinanceBankSchedule::with('microfinanceBank')
+                ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
+                ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+                ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
                 ->select('micro_finance_bank_id')
                 ->where('beneficiary_type_id', $beneficiaryType)
-                ->whereIn('audit_sub_mda_schedule_id', $subMdas)
+                ->whereIn('audit_sub_mda_schedules.id', $subMdas)
                 ->groupBy('micro_finance_bank_id')
                 ->get();
 
@@ -368,7 +360,7 @@ class AuditAutopayController extends Controller
 
                 $mfb_name = $mfb->name;
 
-                $file_name = "$type->name $month_year.xlsx";
+                $file_name = "$type->name $month_year MFB SCHEDULE.xlsx";
 
                 $path = "$directory/$mfb_name/$file_name";
 
@@ -414,7 +406,7 @@ class AuditAutopayController extends Controller
 
                     $mfb_name = $mfb->name;
 
-                    $file_name = "$sub_mda_name $month_year.xlsx";
+                    $file_name = "$sub_mda_name $month_year MFB SCHEDULE.xlsx";
 
                     $path = "$directory/$mfb_name/$file_name";
 

@@ -213,4 +213,24 @@ class AuditPayrollCategory extends Model
                             ->where('staff_type', '=', $this->staff_type)
                             ->first();
     }
+
+    public function uploadedBeneficiaryTypes()
+    {
+        return $this->auditMdaSchedules()
+            ->paySchedules()
+            ->select('beneficiary_type_id')
+            ->whereNull('audit_sub_mda_schedules.autopay_generated')
+            ->groupBy('beneficiary_type_id')
+            ->pluck('beneficiary_type_id');
+    }
+
+    public function generatedBeneficiaryTypes()
+    {
+        return $this->auditMdaSchedules()
+            ->paySchedules()
+            ->select('beneficiary_type_id')
+            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
+            ->groupBy('beneficiary_type_id')
+            ->pluck('beneficiary_type_id');
+    }
 }

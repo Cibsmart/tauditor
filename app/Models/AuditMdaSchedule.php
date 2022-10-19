@@ -54,8 +54,16 @@ class AuditMdaSchedule extends Model
 
     public function scopeMfbSchedules($query)
     {
-        return $query->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+        return $query->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
+                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
                      ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+    }
+
+    public function scopePaySchedules($query)
+    {
+        return $query->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
+            ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+            ->join('audit_pay_schedules', 'audit_sub_mda_schedules.id', '=', 'audit_pay_schedules.audit_sub_mda_schedule_id');
     }
 
     public function setTotalNetPayAttribute(float $value) : int

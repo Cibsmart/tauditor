@@ -13,6 +13,7 @@ use App\Models\FidelityLoanDeduction;
 use App\Models\FidelityLoanSchedule;
 use App\Models\MicroFinanceBank;
 use App\Models\MicrofinanceBankSchedule;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -45,6 +46,8 @@ class GenerateGroupAutopayScheduleAction
     protected $payCommICharge;
 
     protected $payCommIICharge;
+
+    protected Collection $subMdas;
 
     protected const INTERSWITCH_CHARGE = 16.13;
 
@@ -79,14 +82,22 @@ class GenerateGroupAutopayScheduleAction
 
         $this->payCommICharge = $this->payCommI->commission;
         $this->payCommIICharge = $this->payCommII->commission;
+
+        $this->payment = Str::upper($this->category->payment_type_id);
+        $this->year = $this->category->auditPayroll->timestamp->year;
+        $this->month = $this->category->auditPayroll->timestamp->monthName;
+
+        $this->subMdas = collect([]);
+
     }
 
     private function generateAutoPaySchedule()
     {
         $query = AuditPaySchedule::query()
+            ->allSchedules()
             ->select(
                 'audit_pay_schedules.id',
-                'month',
+                'audit_pay_schedules.month',
                 'bankable_type',
                 'bankable_id',
                 'net_pay',
@@ -95,21 +106,13 @@ class GenerateGroupAutopayScheduleAction
                 'beneficiary_name',
                 'audit_sub_mda_schedule_id'
             )
-            ->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-            ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
-            ->where('audit_payroll_category_id', $this->category->id)
+            ->where('audit_payroll_categories.id', $this->category->id)
             ->where('beneficiary_type_id', $this->beneficiaryType->id)
             ->orderBy('audit_sub_mda_schedules.sub_mda_name');
 
-        dd($schedules);
         $schedules = $query->get();
 
         $schedule = $schedules->first();
-
-        $this->year = $schedule->month->year;
-        $this->month = $schedule->month->monthName;
-        $this->payment = Str::upper($this->category->payment_type_id);
 
         [$commercialSchedules, $microfinanceSchedules] = $schedules->partition(fn (
             $schedule
@@ -126,7 +129,12 @@ class GenerateGroupAutopayScheduleAction
 
         foreach ($commercialSchedules as $schedule) {
             $amount = $schedule->net_pay - $this->payCommICharge - $this->payCommIICharge;
-            $this->subMda = AuditSubMdaSchedule::find($schedule->audit_sub_mda_id);
+            $this->subMda = $schedule->auditSubMdaSchedule;
+
+            if (! $this->subMdas->contains($this->subMda)) {
+                $this->subMdas->push($this->subMda);
+            }
+
 
             if ($schedule->loan->count() > 0) {
                 $loans = $schedule->loan->where('status', 'A');
@@ -266,8 +274,7 @@ class GenerateGroupAutopayScheduleAction
              * ___________________________________________________
              */
             $subMdas = FidelityLoanDeduction::query()
-                ->where('beneficiary_type_id', $this->beneficiaryType->id)
-                ->whereIn('audit_sub_mda_schedule_id', $query->pluck('audit_sub_mda_schedule_id'));
+                ->whereIn('audit_sub_mda_schedule_id', $this->subMdas->pluck('id'));
 
             if ($subMdas->count() > 0) {
                 $fidelityLoanAmount = $subMdas->sum('amount') / 100 + self::INTERSWITCH_CHARGE;
@@ -285,11 +292,12 @@ class GenerateGroupAutopayScheduleAction
                     'amount'            => $fidelityLoanAmount,
                     'email'             => ' ',
                     'currency'          => 'NGN',
+                    'audit_sub_mda_schedule_id' => $this->subMda->id
                 ];
 
                 $this->subMda->autopaySchedules()->create($fidelityLoan);
 
-                $fidelitySchedule = $this->subMda->fidelitySchedules->create($fidelityLoan);
+                $fidelitySchedule = FidelityLoanSchedule::create($fidelityLoan);
 
                 FidelityLoanDeduction::where('audit_sub_mda_schedule_id', $schedule->audit_sub_mda_schedule_id)
                     ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
@@ -333,15 +341,12 @@ class GenerateGroupAutopayScheduleAction
                 'currency'          => 'NGN',
             ];
 
-            $this->subMda->autopaySchedules->create($paycomII);
+            $this->subMda->autopaySchedules()->create($paycomII);
 
-            $subMdas = AuditSubMdaSchedule::query()
-                ->whereIn('id', $query->pluck('audit_sub_mda_schedule_id'))
-                ->get();
-
-            foreach ($subMdas as $subMda) {
+            foreach ($this->subMdas as $subMda) {
                 $subMda->autopayGenerated();
             }
+
         }
     }
 
