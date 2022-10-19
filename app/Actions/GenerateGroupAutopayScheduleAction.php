@@ -48,6 +48,8 @@ class GenerateGroupAutopayScheduleAction
 
     protected const INTERSWITCH_CHARGE = 16.13;
 
+    public AuditSubMdaSchedule $subMda;
+
     public AuditPayrollCategory $category;
 
     public BeneficiaryType $beneficiaryType;
@@ -100,6 +102,7 @@ class GenerateGroupAutopayScheduleAction
             ->where('beneficiary_type_id', $this->beneficiaryType->id)
             ->orderBy('audit_sub_mda_schedules.sub_mda_name');
 
+        dd($schedules);
         $schedules = $query->get();
 
         $schedule = $schedules->first();
@@ -123,6 +126,7 @@ class GenerateGroupAutopayScheduleAction
 
         foreach ($commercialSchedules as $schedule) {
             $amount = $schedule->net_pay - $this->payCommICharge - $this->payCommIICharge;
+            $this->subMda = AuditSubMdaSchedule::find($schedule->audit_sub_mda_id);
 
             if ($schedule->loan->count() > 0) {
                 $loans = $schedule->loan->where('status', 'A');
@@ -138,7 +142,6 @@ class GenerateGroupAutopayScheduleAction
                             'amount'                    => $loanAmount,
                             'loan_account'              => $loan->account_number,
                             'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                            'beneficiary_type_id' => $this->beneficiaryType->id
                         ]);
                     }
 
@@ -151,7 +154,7 @@ class GenerateGroupAutopayScheduleAction
             $this->reference = $this->getReferenceFor($schedule->id);
 
             if (! $this->narration) {
-                $this->narration = $this->createNarration($this->beneficiaryType->name);
+                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
             }
 
             $attributes = [
@@ -166,11 +169,9 @@ class GenerateGroupAutopayScheduleAction
                 'amount'            => $amount,
                 'email'             => ' ',
                 'currency'          => 'NGN',
-                'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                'beneficiary_type_id' => $this->beneficiaryType->id
             ];
 
-            $autopaySchedule = AutopaySchedule::create($attributes);
+            $autopaySchedule = $this->subMda->autopaySchedules()->create($attributes);
             $schedule->autopay_schedule_id = $autopaySchedule->id;
             $schedule->save();
         }
@@ -191,7 +192,7 @@ class GenerateGroupAutopayScheduleAction
             $this->reference = $this->getReferenceFor($schedule->id);
 
             if (! $this->narration) {
-                $this->narration = $this->createNarration($this->beneficiaryType->name);
+                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
             }
 
             $attributes = [
@@ -207,11 +208,9 @@ class GenerateGroupAutopayScheduleAction
                 'amount'                => $amount,
                 'email'                 => ' ',
                 'currency'              => 'NGN',
-                'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                'beneficiary_type_id' => $this->beneficiaryType->id
             ];
 
-            $autopay_schedule = MicrofinanceBankSchedule::create($attributes);
+            $autopay_schedule = $this->subMda->microfinanceSchedules()->create($attributes);
             $schedule->autopay_schedule_id = $autopay_schedule->id;
             $schedule->save();
         }
@@ -237,7 +236,7 @@ class GenerateGroupAutopayScheduleAction
             $bank = $schedule->bankable;
 
             if (! $this->narration) {
-                $this->narration = $this->createNarration($this->beneficiaryType->name);
+                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
             }
 
             $attributes = [
@@ -252,14 +251,12 @@ class GenerateGroupAutopayScheduleAction
                 'amount'            => $amount,
                 'email'             => ' ',
                 'currency'          => 'NGN',
-                'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                'beneficiary_type_id' => $this->beneficiaryType->id
             ];
 
             $this->payCommIAmount = $this->payCommIAmount + $payCommI;
             $this->payCommIIAmount = $this->payCommIIAmount + $payCommII;
 
-            AutopaySchedule::create($attributes);
+            $this->subMda->autopaySchedules()->create($attributes);
         }
 
         if ($this->narration !== null) {
@@ -288,13 +285,11 @@ class GenerateGroupAutopayScheduleAction
                     'amount'            => $fidelityLoanAmount,
                     'email'             => ' ',
                     'currency'          => 'NGN',
-                    'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                    'beneficiary_type_id' => $this->beneficiaryType->id
                 ];
 
-                AutopaySchedule::create($fidelityLoan);
+                $this->subMda->autopaySchedules()->create($fidelityLoan);
 
-                $fidelitySchedule = FidelityLoanSchedule::create($fidelityLoan);
+                $fidelitySchedule = $this->subMda->fidelitySchedules->create($fidelityLoan);
 
                 FidelityLoanDeduction::where('audit_sub_mda_schedule_id', $schedule->audit_sub_mda_schedule_id)
                     ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
@@ -316,11 +311,9 @@ class GenerateGroupAutopayScheduleAction
                 'amount'            => $this->payCommIAmount,
                 'email'             => ' ',
                 'currency'          => 'NGN',
-                'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                'beneficiary_type_id' => $this->beneficiaryType->id
             ];
 
-            AutopaySchedule::create($paycomI);
+            $this->subMda->autopaySchedules()->create($paycomI);
 
             /**
              * Paycom II
@@ -338,11 +331,9 @@ class GenerateGroupAutopayScheduleAction
                 'amount'            => $this->payCommIIAmount,
                 'email'             => ' ',
                 'currency'          => 'NGN',
-                'audit_sub_mda_schedule_id' => $schedule->audit_sub_mda_schedule_id,
-                'beneficiary_type_id' => $this->beneficiaryType->id
             ];
 
-            AutopaySchedule::create($paycomII);
+            $this->subMda->autopaySchedules->create($paycomII);
 
             $subMdas = AuditSubMdaSchedule::query()
                 ->whereIn('id', $query->pluck('audit_sub_mda_schedule_id'))
