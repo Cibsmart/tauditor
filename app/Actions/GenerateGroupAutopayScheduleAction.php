@@ -243,9 +243,7 @@ class GenerateGroupAutopayScheduleAction
 
             $bank = $schedule->bankable;
 
-            if (! $this->narration) {
-                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
-            }
+            $this->narration = $this->createNarration($this->beneficiaryType->name);
 
             $attributes = [
                 'payment_reference' => $this->getReferenceFor($schedule->id),
@@ -268,6 +266,8 @@ class GenerateGroupAutopayScheduleAction
         }
 
         if ($this->narration !== null) {
+
+            $this->narration = $this->createNarration($this->beneficiaryType->name);
 
             /**
              * Fidelity Loan
