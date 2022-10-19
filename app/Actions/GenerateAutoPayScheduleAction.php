@@ -143,7 +143,7 @@ class GenerateAutoPayScheduleAction
                 continue;
             }
 
-            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
+            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge - self::INTERSWITCH_CHARGE;
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
@@ -185,7 +185,7 @@ class GenerateAutoPayScheduleAction
 
             $paycomm_i = $this->pay_comm_i_charge * $mfb_users;
             $paycomm_ii = ($this->pay_comm_ii_charge + self::INTERSWITCH_CHARGE) * $mfb_users
-                - (self::INTERSWITCH_CHARGE * 2);
+                - self::INTERSWITCH_CHARGE;
 
             $amount = $sum_net_pay - $paycomm_i - $paycomm_ii;
 
