@@ -225,7 +225,7 @@ class AuditAutopayController extends Controller
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$title - AUTOPAY SCHEDULE - $month_year";
+        $directory = "autopay/$title - AUTOPAY SCHEDULE - $category->id";
 
         $beneficiaryTypes = $category->generatedBeneficiaryTypes();
 
@@ -258,7 +258,7 @@ class AuditAutopayController extends Controller
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$category - AUTOPAY SCHEDULE - $month_year";
+        $directory = "autopay/$category - AUTOPAY SCHEDULE - $category->id";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->get();
@@ -329,7 +329,7 @@ class AuditAutopayController extends Controller
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$title - MFB SCHEDULE - $month_year";
+        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
 
         $query = $category->auditMdaSchedules()
             ->mfbSchedules()
@@ -385,7 +385,7 @@ class AuditAutopayController extends Controller
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$category - MFB SCHEDULE - $month_year";
+        $directory = "autopay/$category - MFB SCHEDULE - $category->id";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
