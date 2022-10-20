@@ -122,10 +122,6 @@ Route::middleware('auth')->group(function () {
             'audit_sub_mda_schedules/{audit_mda_schedule}/index',
             [AuditSubMdaSchedulesController::class, 'index']
         )->name('index');
-        Route::get(
-            'audit_sub_mda_schedules/{audit_sub_mda_schedule}/complete',
-            [AuditSubMdaSchedulesController::class, 'complete']
-        )->name('complete');
     });
 });
 

@@ -287,6 +287,7 @@ class PayScheduleImport implements OnEachRow
             'ZENITH BANK'                          => 'ZENITH BANK PLC',
             'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
             'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
+            'FIDELITY BANK'                        => 'FIDELITY BANK PLC',
             'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
             'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
             'FIRST CITY MONUMENT BANK'             => 'FIRST CITY MONUMENT BANK PLC',

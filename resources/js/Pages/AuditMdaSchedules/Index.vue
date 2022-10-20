@@ -121,11 +121,6 @@
                                                 class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">
                                             Upload
                                         </button>
-
-                                        <Link :href="route('audit_sub_mda_schedules.complete', {audit_sub_mda_schedule: schedule.sub_mda_id})"
-                                              class="px-5 py-3">
-                                            Completed
-                                        </Link>
                                     </div>
                                 </form>
                             </td>

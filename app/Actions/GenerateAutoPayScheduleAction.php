@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\AuditSubMdaSchedule;
+use App\Models\Domain;
 use App\Models\FidelityLoanDeduction;
 use App\Models\MicroFinanceBank;
 use Illuminate\Support\Facades\DB;
@@ -42,13 +43,15 @@ class GenerateAutoPayScheduleAction
 
     protected AuditSubMdaSchedule $sub_mda;
 
-    public function execute(AuditSubMdaSchedule $sub_mda)
+    public function execute(Domain $domain, AuditSubMdaSchedule $sub_mda)
     {
+        $this->domain = $domain;
+
         $this->sub_mda = $sub_mda;
 
         $this->initializePayComms();
 
-        DB::transaction(function () use ($sub_mda) {
+        DB::transaction(function () {
             $this->generateAutoPaySchedule();
         });
 
@@ -140,7 +143,7 @@ class GenerateAutoPayScheduleAction
                 continue;
             }
 
-            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge;
+            $amount = $schedule->net_pay - $this->pay_comm_i_charge - $this->pay_comm_ii_charge - self::INTERSWITCH_CHARGE;
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
@@ -182,7 +185,7 @@ class GenerateAutoPayScheduleAction
 
             $paycomm_i = $this->pay_comm_i_charge * $mfb_users;
             $paycomm_ii = ($this->pay_comm_ii_charge + self::INTERSWITCH_CHARGE) * $mfb_users
-                - (self::INTERSWITCH_CHARGE * 2);
+                - self::INTERSWITCH_CHARGE;
 
             $amount = $sum_net_pay - $paycomm_i - $paycomm_ii;
 
@@ -317,8 +320,6 @@ class GenerateAutoPayScheduleAction
 
     private function initializePayComms() : void
     {
-        $this->domain = $this->sub_mda->auditMdaSchedule->domain();
-
         $pay_comms = $this->domain->payComms;
 
         $this->pay_comm_i = $pay_comms->where('code', 'PayComm I')->first();
