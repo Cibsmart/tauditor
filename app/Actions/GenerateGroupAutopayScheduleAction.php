@@ -161,9 +161,7 @@ class GenerateGroupAutopayScheduleAction
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
-            if (! $this->narration) {
-                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
-            }
+            $this->narration = $this->createNarration($this->subMda->sub_mda_name);
 
             $attributes = [
                 'payment_reference' => $this->reference,
@@ -199,9 +197,7 @@ class GenerateGroupAutopayScheduleAction
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
-            if (! $this->narration) {
-                $this->narration = $this->createNarration($this->subMda->sub_mda_name);
-            }
+            $this->narration = $this->createNarration($this->subMda->sub_mda_name);
 
             $attributes = [
                 'micro_finance_bank_id' => $schedule->bankable_id,
