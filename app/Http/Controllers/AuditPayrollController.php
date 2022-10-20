@@ -231,22 +231,22 @@ class AuditPayrollController extends Controller
     protected function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
     {
         //Only State Education Commission should have add subs
-        //PPSSC is now treated as a single MDA without Zones 2022-10-17
-//        if ($mda->code !== 'PPSSC') {
-        $audit_mda_schedule->auditSubMdaSchedules()
-                           ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
+        if ($mda->code !== 'PPSSC') {
+            $audit_mda_schedule->auditSubMdaSchedules()
+                               ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
 
-//        }
-//
-//        $sub_mdas = $mda->subs;
-//
-//        $audit_mda_schedule->has_sub = 1;
-//        $audit_mda_schedule->save();
-//
-//        foreach ($sub_mdas as $sub_mda) {
-//            $audit_mda_schedule->auditSubMdaSchedules()
-//                               ->create(['sub_mda_name' => $sub_mda->name]);
-//        }
+            return;
+        }
+
+        $sub_mdas = $mda->subs;
+
+        $audit_mda_schedule->has_sub = 1;
+        $audit_mda_schedule->save();
+
+        foreach ($sub_mdas as $sub_mda) {
+            $audit_mda_schedule->auditSubMdaSchedules()
+                               ->create(['sub_mda_name' => $sub_mda->name]);
+        }
 
     }
 }
