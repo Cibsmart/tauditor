@@ -197,6 +197,12 @@ class GenerateGroupAutopayScheduleAction
 
             $this->reference = $this->getReferenceFor($schedule->id);
 
+            $this->subMda = $schedule->auditSubMdaSchedule;
+
+            if (! $this->subMdas->contains($this->subMda)) {
+                $this->subMdas->push($this->subMda);
+            }
+
             $this->narration = $this->createNarration($this->subMda->sub_mda_name);
 
             $attributes = [
