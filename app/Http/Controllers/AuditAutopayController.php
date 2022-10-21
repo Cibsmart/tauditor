@@ -252,13 +252,13 @@ class AuditAutopayController extends Controller
 
     public function createFiles(AuditPayrollCategory $category)
     {
-        $category = $category->payment_title;
+        $title = $category->payment_title;
 
         $mdas = $category->auditMdaSchedules;
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$category - AUTOPAY SCHEDULE - $category->id";
+        $directory = "autopay/$title - AUTOPAY SCHEDULE - $category->id";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()->autopayGenerated()->get();
@@ -379,13 +379,13 @@ class AuditAutopayController extends Controller
 
     public function createMfbFiles(AuditPayrollCategory $category)
     {
-        $category = $category->payment_title;
+        $title = $category->payment_title;
 
         $mdas = $category->auditMdaSchedules;
 
         $month_year = $category->monthYear();
 
-        $directory = "autopay/$category - MFB SCHEDULE - $category->id";
+        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
