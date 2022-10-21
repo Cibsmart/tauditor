@@ -254,6 +254,7 @@ class LeaveScheduleImport implements OnEachRow
             'ACCESS BANK'                          => 'ACCESS BANK PLC',
             'STANBIC IBTC'                         => 'STANBIC-IBTC BANK PLC',
             'FIRST CITY MONOMENT BANK PLC'         => 'FIRST CITY MONUMENT BANK PLC',
+            'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
