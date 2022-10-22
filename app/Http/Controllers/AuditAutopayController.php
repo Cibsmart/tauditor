@@ -331,27 +331,25 @@ class AuditAutopayController extends Controller
 
         $directory = "autopay/$title - MFB SCHEDULE - $category->id";
 
-        $query = $category->auditMdaSchedules()
+        $beneficiaryTypes = $category->auditMdaSchedules()
             ->mfbSchedules()
-            ->whereNotNull('audit_sub_mda_schedules.autopay_generated');
+            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
+            ->select('beneficiary_type_id', 'audit_sub_mda_schedules.id')
+            ->groupBy(['beneficiary_type_id', 'audit_sub_mda_schedules.id'])
+            ->get();
 
-        $beneficiaryTypes = $query->select('beneficiary_type_id')->groupBy('beneficiary_type_id')->pluck('beneficiary_type_id');
+        $groups = $beneficiaryTypes->groupBy('beneficiary_type_id');
 
-        foreach ($beneficiaryTypes as $beneficiaryType) {
-
+        foreach ($groups as $beneficiaryType => $subMdas) {
             $type = BeneficiaryType::find($beneficiaryType);
-
-            $subMdas = $query->select('audit_sub_mda_schedules.id')
-                ->where('beneficiary_type_id', $beneficiaryType)
-                ->groupBy('audit_sub_mda_schedules.id')->pluck('audit_sub_mda_schedules.id');
 
             $mfbs = MicrofinanceBankSchedule::with('microfinanceBank')
                 ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
                 ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
                 ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
                 ->select('micro_finance_bank_id')
-                ->where('beneficiary_type_id', $beneficiaryType)
-                ->whereIn('audit_sub_mda_schedules.id', $subMdas)
+                ->where('beneficiary_type_id', $type->id)
+                ->whereIn('audit_sub_mda_schedules.id', $subMdas->pluck('id'))
                 ->groupBy('micro_finance_bank_id')
                 ->get();
 
