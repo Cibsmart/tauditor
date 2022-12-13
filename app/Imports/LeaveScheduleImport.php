@@ -161,24 +161,35 @@ class LeaveScheduleImport implements OnEachRow
             ? $this->pad($beneficiary[$this->headers['account_number']], 10)
             : $beneficiary[$this->headers['account_number']];
 
+        $others_info = [
+            'appointment_date'=> $beneficiary[$this->headers['appointment_date']],
+            'number_of_months'=> $beneficiary[$this->headers['number_of_months']],
+            'basic_annual'    => $beneficiary[$this->headers['basic_annual']],
+            'basic_monthly'   => $beneficiary[$this->headers['basic_monthly']]
+        ];
+
         $attributes = [
             'verification_number' => $beneficiary[$this->headers['employee_id']],
             'beneficiary_name'    => Str::upper($beneficiary[$this->headers['employee_name']]),
             'beneficiary_cadre'   => $beneficiary[$this->headers['employee_grade']],
-            'designation'         => '',
+            'designation'         => $beneficiary[$this->headers['designation']],
             'basic_pay'           => 0,
             'bank_name'           => $beneficiary[$this->headers['bank_name']],
             'account_number'      => $account_number,
             'bank_code'           => $this->pad($this->getBankCode($bankable), 3),
             'total_allowance'     => 0,
             'gross_pay'           => 0,
-            'total_deduction'     => 0,
+            'total_deductions'    => 0,
             'net_pay'             => $beneficiary[$this->headers['net_pay']],
-            'allowances'          => [],
+            'allowances'          => collect($others_info),
             'deductions'          => [],
             'month'               => $month,
             'bankable_type'       => $bankable_type,
             'bankable_id'         => $bankable->id,
+            'mda'                 => $this->mda,
+            'department'          => $this->department,
+            'total_dues_deductions' => 0,
+            'dues'                => []
         ];
 
         $schedule = null;
@@ -284,6 +295,11 @@ class LeaveScheduleImport implements OnEachRow
             'account_number'  => ['acct', 'account_number', 'account_no', 'bank_account'],
             'bank_code'       => ['code', 'bank_code'],
             'net_pay'         => ['net', 'netpay', 'net_pay', 'leave_allowance'],
+            'designation'     => ['designation'],
+            'appointment_date'=> ['date_of_first_appointment', 'appointment_date'],
+            'number_of_months'=> ['no_of_months', 'number_of_months'],
+            'basic_annual'    => ['basic_annual_salary', 'annual_salary'],
+            'basic_monthly'   => ['basic_monthly_salary', 'monthly_salary']
         ];
 
         foreach ($items as $key => $value) {
