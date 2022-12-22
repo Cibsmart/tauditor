@@ -73,7 +73,7 @@ class OtherScheduleImport implements OnEachRow
             'beneficiary_name' => ['name', 'names', 'beneficiaries', 'beneficiary', 'employee'],
             'narration'        => ['narration', 'description'],
             'amount'           => ['amount', 'amounts'],
-            'account_number'   => ['account_number', 'account_num', 'account_no'],
+            'account_number'   => ['account_number', 'account_num', 'account_no', 'account'],
             'bank_name'        => ['bank', 'bank_name'],
         ];
 
