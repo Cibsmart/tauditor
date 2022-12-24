@@ -65,29 +65,29 @@ class AuditAutopayController extends Controller
                                     ];
                                 }),
 
-//                            'other_categories' => $payroll->otherPaymentCategories
-//                                ->transform(function (OtherAuditPayrollCategory $category) {
-//                                    $status = $category->autopay_status;
-//                                    $uploaded = $category->uploaded;
-//                                    $generated = $category->autopay_generated;
-//
-//                                    return [
-//                                        'id'                => $category->id,
-//                                        'payment_type_id'   => $category->payment_type_id,
-//                                        'payment_type'      => $category->paymentTypeName(),
-//                                        'payment_title'     => $category->payment_title,
-//                                        'line_items'        => $category->autopaySchedules->count(),
-//                                        'autopay_status'    => $status,
-//                                        'autopay_generated' => $generated,
-//                                        'uploaded'          => $uploaded,
-//                                        'can_generate'      => $uploaded && ! $generated && $status !== 'running',
-//                                        'viewable'          => $uploaded && $generated,
-//                                        'refreshable'       => $uploaded && $status === 'running',
-//                                        'tenece'          => $category->paycomm_tenece,
-//                                        'fidelity'        => $category->paycomm_fidelity,
-//                                        'color'           => $category->color,
-//                                    ];
-//                                }),
+                            'other_categories' => $payroll->otherPaymentCategories
+                                ->transform(function (OtherAuditPayrollCategory $category) {
+                                    $status = $category->autopay_status;
+                                    $uploaded = $category->uploaded;
+                                    $generated = $category->autopay_generated;
+
+                                    return [
+                                        'id'                => $category->id,
+                                        'payment_type_id'   => $category->payment_type_id,
+                                        'payment_type'      => $category->paymentTypeName(),
+                                        'payment_title'     => $category->payment_title,
+                                        'line_items'        => $category->autopaySchedules->count(),
+                                        'autopay_status'    => $status,
+                                        'autopay_generated' => $generated,
+                                        'uploaded'          => $uploaded,
+                                        'can_generate'      => $uploaded && ! $generated && $status !== 'running',
+                                        'viewable'          => $uploaded && $generated,
+                                        'refreshable'       => $uploaded && $status === 'running',
+                                        'tenece'          => $category->paycomm_tenece,
+                                        'fidelity'        => $category->paycomm_fidelity,
+                                        'color'           => $category->color,
+                                    ];
+                                }),
                         ]);
 
         return Inertia::render('AuditAutoPay/Index', [
