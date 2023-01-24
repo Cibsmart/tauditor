@@ -246,25 +246,31 @@ class GenerateAutoPayScheduleAction
                                      ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
             }
 
-            /**
-             * Paycom I
-             * ___________________________________________________
-             */
-            $paycom_i = [
-                'payment_reference' => $this->getReferenceFor($this->reference_id),
-                'beneficiary_code'  => $this->pay_comm_i->account_number,
-                'beneficiary_name'  => $this->pay_comm_i->code,
-                'account_number'    => $this->pay_comm_i->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $this->pay_comm_i->bankable->bankCode(),
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $this->pay_comm_i_amount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
-            ];
+            // Added this condition to remove paycom_I line item and add it to paycom_II for JAAC
+            // as requested by Mr Emmanuel Madubuike 23/01/2023
+            if ($this->domain->id != 'jaac') {
+                /**
+                 * Paycom I
+                 * ___________________________________________________
+                 */
+                $paycom_i = [
+                    'payment_reference' => $this->getReferenceFor($this->reference_id),
+                    'beneficiary_code' => $this->pay_comm_i->account_number,
+                    'beneficiary_name' => $this->pay_comm_i->code,
+                    'account_number' => $this->pay_comm_i->account_number,
+                    'account_type' => 10,
+                    'cbn_code' => $this->pay_comm_i->bankable->bankCode(),
+                    'is_cash_card' => '0',
+                    'narration' => $this->narration,
+                    'amount' => $this->pay_comm_i_amount,
+                    'email' => ' ',
+                    'currency' => 'NGN',
+                ];
 
-            $this->sub_mda->autopaySchedules()->create($paycom_i);
+                $this->sub_mda->autopaySchedules()->create($paycom_i);
+            } else {
+                $this->pay_comm_ii_amount += $this->pay_comm_i_amount;
+            }
 
             /**
              * Paycom II
