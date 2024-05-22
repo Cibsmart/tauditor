@@ -91,14 +91,18 @@ class GenerateAutoPayScheduleAction
                     if ($loan->isNotPaid()) {
                         $loan_amount = $loan->collection_amount;
 
-                        $amount = $amount - $loan_amount - self::INTERSWITCH_CHARGE;
-                        $this->pay_comm_ii_amount += self::INTERSWITCH_CHARGE;
+                        $amountCheck = $amount - $loan_amount - self::INTERSWITCH_CHARGE;
 
-                        $loan->deductions()->create([
-                            'amount'                    => $loan_amount,
-                            'loan_account'              => $loan->account_number,
-                            'audit_sub_mda_schedule_id' => $this->sub_mda->id,
-                        ]);
+                        if($amountCheck > 0) {
+                            $amount = $amountCheck;
+                            $this->pay_comm_ii_amount += self::INTERSWITCH_CHARGE;
+
+                            $loan->deductions()->create([
+                                'amount' => $loan_amount,
+                                'loan_account' => $loan->account_number,
+                                'audit_sub_mda_schedule_id' => $this->sub_mda->id,
+                            ]);
+                        }
                     }
 
                     if ($loan->isPaid()) {
@@ -242,8 +246,9 @@ class GenerateAutoPayScheduleAction
 
                 $fidelitySchedule = $this->sub_mda->fidelitySchedules()->create($fidelityLoan);
 
-                FidelityLoanDeduction::where('audit_sub_mda_schedule_id', $this->sub_mda->id)
-                                     ->update(['fidelity_loan_schedule_id' => $fidelitySchedule->id]);
+                $this->sub_mda->fidelityDeductions()->update([
+                    'fidelity_loan_schedule_id' => $fidelitySchedule->id
+                ]);
             }
 
             /**
