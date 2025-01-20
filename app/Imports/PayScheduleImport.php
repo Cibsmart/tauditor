@@ -292,7 +292,7 @@ class PayScheduleImport implements OnEachRow
             'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
             'FIRST CITY MONUMENT BANK'             => 'FIRST CITY MONUMENT BANK PLC',
             'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
-            'NIGERIA POLICE FUND (NPF) MICROfINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA'
+            'NIGERIA POLICE FUND (NPF) MICROfINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;
