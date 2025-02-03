@@ -190,7 +190,7 @@ class OtherScheduleImport implements OnEachRow
             'ECOBANK OF NIGERIA PLC'               => 'ECOBANK NIGERIA PLC',
             'NDIORAH MICRO FINANCE BANK'           => 'NDIORA MICRO FINANCE BANK',
             'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
-            'NIGERIA POLICE FUND (NPF) MICROfINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
+            'NIGERIA POLICE FUND (NPF) MICROFINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
         ];
 
         return $exceptions[$bank_name] ?? $bank_name;

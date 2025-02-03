@@ -35,20 +35,20 @@ class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, Wit
     /**
      * @inheritDoc
      */
-    public function map($schedule) : array
+    public function map($row) : array
     {
         return [
-            $schedule->payment_reference,
-            $schedule->beneficiary_code,
-            $schedule->beneficiary_name,
-            $schedule->account_number,
-            $schedule->account_type,
-            $schedule->cbn_code,
-            $schedule->is_cash_card,
-            $schedule->narration,
-            $schedule->amount,
-            $schedule->email,
-            $schedule->currency,
+            $row->payment_reference,
+            $row->beneficiary_code,
+            $row->beneficiary_name,
+            $row->account_number,
+            $row->account_type,
+            $row->cbn_code,
+            $row->is_cash_card,
+            $row->narration,
+            $row->amount,
+            $row->email,
+            $row->currency,
         ];
     }
 
