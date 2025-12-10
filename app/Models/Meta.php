@@ -7,14 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Meta extends Model
 {
-    use HasFactory;
-
     public function metable()
     {
         return $this->morphTo();
     }
 
-    public function scopeisActive($query, $name)
+    public function scopeIsActive($query, $name)
     {
         return $query->where('name', $name)
                      ->where('value', '>', 0)
