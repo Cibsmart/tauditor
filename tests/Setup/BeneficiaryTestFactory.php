@@ -2,24 +2,25 @@
 
 namespace Tests\Setup;
 
-use App\AllowanceDetail;
-use App\Bank;
-use App\BankDetail;
-use App\Beneficiary;
-use App\BeneficiaryStatus;
-use App\CadreStep;
-use App\DeductionDetail;
-use App\MdaDetail;
-use App\MicroFinanceBank;
-use App\NextOfKin;
-use App\PersonalizedSalary;
-use App\Qualification;
-use App\SalaryDetail;
-use App\StructuredSalary;
-use App\WorkDetail;
+use App\Models\AllowanceDetail;
+use App\Models\Bank;
+use App\Models\BankDetail;
+use App\Models\Beneficiary;
+use App\Models\BeneficiaryStatus;
+use App\Models\CadreStep;
+use App\Models\DeductionDetail;
+use App\Models\MdaDetail;
+use App\Models\MicroFinanceBank;
+use App\Models\NextOfKin;
+use App\Models\PersonalizedSalary;
+use App\Models\Qualification;
+use App\Models\SalaryDetail;
+use App\Models\StructuredSalary;
+use App\Models\WorkDetail;
 use Facades\BeneficiaryFactory;
-use function factory;
 use Faker\Generator;
+
+use function factory;
 
 class BeneficiaryTestFactory
 {
@@ -53,7 +54,7 @@ class BeneficiaryTestFactory
     }
 
     /**
-     * @param  MicroFinanceBank|null  $micro_finance_bank
+     * @param MicroFinanceBank|null $micro_finance_bank
      * @return $this
      */
     public function withMfb(MicroFinanceBank $micro_finance_bank = null)
@@ -71,7 +72,7 @@ class BeneficiaryTestFactory
     }
 
     /**
-     * @param  PersonalizedSalary|null  $personalized_salary
+     * @param PersonalizedSalary|null $personalized_salary
      * @return $this
      */
     public function withPersonalizedSalary(PersonalizedSalary $personalized_salary = null)
