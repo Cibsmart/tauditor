@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Compute\Prorate;
-use App\Compute\Tax;
 use App\Models\AuditMdaSchedule;
 use App\Models\AuditPayroll;
 use App\Models\AuditPaySchedule;
@@ -37,7 +35,6 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
-     *
      * @return void
      */
     public function register()
@@ -49,29 +46,28 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
      * @return void
      */
     public function boot()
     {
         Relation::$morphMap = [
-            'cadre'                  => Cadre::class,
-            'domain'                 => Domain::class,
-            'commercial'             => Bank::class,
-            'user'                   => User::class,
-            'cadre_step'             => CadreStep::class,
-            'fixed_value'            => FixedValue::class,
-            'mda_structure'          => MdaStructure::class,
-            'salary_structure'       => Structure::class,
-            'audit_payroll'          => AuditPayroll::class,
-            'structured'             => StructuredSalary::class,
-            'computed_value'         => ComputedValue::class,
-            'micro_finance'          => MicroFinanceBank::class,
-            'personalized'           => PersonalizedSalary::class,
-            'percentage_value'       => PercentageValue::class,
-            'beneficiary_type'       => BeneficiaryType::class,
-            'audit_pay_schedule'     => AuditPaySchedule::class,
-            'audit_mda_schedule'     => AuditMdaSchedule::class,
+            'cadre' => Cadre::class,
+            'domain' => Domain::class,
+            'commercial' => Bank::class,
+            'user' => User::class,
+            'cadre_step' => CadreStep::class,
+            'fixed_value' => FixedValue::class,
+            'mda_structure' => MdaStructure::class,
+            'salary_structure' => Structure::class,
+            'audit_payroll' => AuditPayroll::class,
+            'structured' => StructuredSalary::class,
+            'computed_value' => ComputedValue::class,
+            'micro_finance' => MicroFinanceBank::class,
+            'personalized' => PersonalizedSalary::class,
+            'percentage_value' => PercentageValue::class,
+            'beneficiary_type' => BeneficiaryType::class,
+            'audit_pay_schedule' => AuditPaySchedule::class,
+            'audit_mda_schedule' => AuditMdaSchedule::class,
             'audit_sub_mda_schedule' => AuditSubMdaSchedule::class,
         ];
 
@@ -82,8 +78,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function registerBindings()
     {
-        $this->app->bind('compute_tax', Tax::class);
-        $this->app->bind('compute_prorate', Prorate::class);
     }
 
     public function registerInertia()
@@ -93,27 +87,27 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Inertia::share([
-            'auth'        => function () {
+            'auth' => function () {
                 return [
                     'user' => Auth::user() ? [
-                        'id'         => Auth::user()->id,
+                        'id' => Auth::user()->id,
                         'first_name' => Auth::user()->first_name,
-                        'last_name'  => Auth::user()->last_name,
-                        'email'      => Auth::user()->email,
-                        'domain'     => [
-                            'id'   => Auth::user()->domain->id,
+                        'last_name' => Auth::user()->last_name,
+                        'email' => Auth::user()->email,
+                        'domain' => [
+                            'id' => Auth::user()->domain->id,
                             'name' => Auth::user()->domain->name,
                         ],
                     ] : null,
                 ];
             },
-            'flash'       => function () {
+            'flash' => function () {
                 return [
                     'success' => Session::get('success'),
-                    'error'   => Session::get('error'),
+                    'error' => Session::get('error'),
                 ];
             },
-            'errors'      => function () {
+            'errors' => function () {
                 return Session::get('errors')
                     ? Session::get('errors')->getBag('default')->getMessages()
                     : (object) [];
@@ -123,21 +117,21 @@ class AppServiceProvider extends ServiceProvider
 
                 return $user
                     ? [
-                        'canViewDashboard'         => $user->can('view_dashboard'),
-                        'canViewMfbSchedule'       => $user->can('view_mfb_schedule'),
-                        'canViewAnalysis'          => $user->can('view_analysis'),
-                        'canViewAutopay'           => $user->can('view_autopay'),
-                        'canViewReports'           => $user->can('view_report'),
-                        'canViewSchedule'          => $user->can('view_schedule'),
-                        'canViewPaymentSummary'    => $user->can('view_payment_summary'),
-                        'canViewCategoryReport'    => $user->can('view_category_report'),
-                        'canViewMdaReport'         => $user->can('view_mda_report'),
+                        'canViewDashboard' => $user->can('view_dashboard'),
+                        'canViewMfbSchedule' => $user->can('view_mfb_schedule'),
+                        'canViewAnalysis' => $user->can('view_analysis'),
+                        'canViewAutopay' => $user->can('view_autopay'),
+                        'canViewReports' => $user->can('view_report'),
+                        'canViewSchedule' => $user->can('view_schedule'),
+                        'canViewPaymentSummary' => $user->can('view_payment_summary'),
+                        'canViewCategoryReport' => $user->can('view_category_report'),
+                        'canViewMdaReport' => $user->can('view_mda_report'),
                         'canViewBeneficiaryReport' => $user->can('view_beneficiary_report'),
-                        'canViewUsers'             => $user->can('view_users'),
-                        'canCreateUsers'           => $user->can('create_users'),
-                        'canViewFidelityMandate'   => $user->can('view_fidelity_mandate'),
-                        'canUploadPayeData'        => $user->can('upload_paye_data'),
-                        'canManageOtherSchedule'   => $user->can('manage_other_schedule'),
+                        'canViewUsers' => $user->can('view_users'),
+                        'canCreateUsers' => $user->can('create_users'),
+                        'canViewFidelityMandate' => $user->can('view_fidelity_mandate'),
+                        'canUploadPayeData' => $user->can('upload_paye_data'),
+                        'canManageOtherSchedule' => $user->can('manage_other_schedule'),
                     ] : null;
             },
         ]);
@@ -146,7 +140,8 @@ class AppServiceProvider extends ServiceProvider
     protected function registerLengthAwarePaginator()
     {
         $this->app->bind(LengthAwarePaginator::class, function ($app, $values) {
-            return new class(...array_values($values)) extends LengthAwarePaginator {
+            return new class(...array_values($values)) extends LengthAwarePaginator
+            {
                 public function only(...$attributes)
                 {
                     return $this->transform(function ($item) use ($attributes) {
@@ -164,7 +159,7 @@ class AppServiceProvider extends ServiceProvider
                 public function toArray()
                 {
                     return [
-                        'data'  => $this->items->toArray(),
+                        'data' => $this->items->toArray(),
                         'links' => $this->links(),
                     ];
                 }
@@ -187,27 +182,27 @@ class AppServiceProvider extends ServiceProvider
                         if (is_array($item)) {
                             return Collection::make($item)->map(function ($url, $page) {
                                 return [
-                                    'url'    => $url,
-                                    'label'  => $page,
+                                    'url' => $url,
+                                    'label' => $page,
                                     'active' => $this->currentPage() === $page,
                                 ];
                             });
                         } else {
                             return [
                                 [
-                                    'url'    => null,
-                                    'label'  => '...',
+                                    'url' => null,
+                                    'label' => '...',
                                     'active' => false,
                                 ],
                             ];
                         }
                     })->prepend([
-                        'url'    => $this->previousPageUrl(),
-                        'label'  => 'Previous',
+                        'url' => $this->previousPageUrl(),
+                        'label' => 'Previous',
                         'active' => false,
                     ])->push([
-                        'url'    => $this->nextPageUrl(),
-                        'label'  => 'Next',
+                        'url' => $this->nextPageUrl(),
+                        'label' => 'Next',
                         'active' => false,
                     ]);
                 }
