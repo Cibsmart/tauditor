@@ -6,14 +6,12 @@ use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\Beneficiary;
 use App\Models\BeneficiaryStatus;
-use App\Models\CadreStep;
 use App\Models\MdaDetail;
 use App\Models\MicroFinanceBank;
 use App\Models\NextOfKin;
 use App\Models\PersonalizedSalary;
 use App\Models\Qualification;
 use App\Models\SalaryDetail;
-use App\Models\StructuredSalary;
 use App\Models\WorkDetail;
 use Facades\BeneficiaryFactory;
 use Faker\Generator;
@@ -78,27 +76,6 @@ class BeneficiaryTestFactory
         $attributes = $this->monthly_basic ? ['monthly_basic' => $this->monthly_basic] : [];
 
         $this->payable = $personalized_salary ?? factory(PersonalizedSalary::class)->create($attributes);
-
-        return $this;
-    }
-
-    public function withStructuredSalary(StructuredSalary $structured_salary = null)
-    {
-        if ($structured_salary) {
-            $this->payable = $structured_salary;
-
-            return $this;
-        }
-
-        if (! $this->monthly_basic) {
-            $this->payable = factory(StructuredSalary::class)->create();
-
-            return $this;
-        }
-
-        $cadre_step = factory(CadreStep::class)->create(['monthly_basic' => $this->monthly_basic]);
-
-        $this->payable = factory(StructuredSalary::class)->create(['cadre_step_id' => $cadre_step->id]);
 
         return $this;
     }

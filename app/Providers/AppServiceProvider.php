@@ -8,8 +8,6 @@ use App\Models\AuditPaySchedule;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\Bank;
 use App\Models\BeneficiaryType;
-use App\Models\Cadre;
-use App\Models\CadreStep;
 use App\Models\ComputedValue;
 use App\Models\Domain;
 use App\Models\FixedValue;
@@ -18,7 +16,6 @@ use App\Models\MicroFinanceBank;
 use App\Models\PercentageValue;
 use App\Models\PersonalizedSalary;
 use App\Models\Structure;
-use App\Models\StructuredSalary;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -51,16 +48,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::$morphMap = [
-            'cadre' => Cadre::class,
             'domain' => Domain::class,
             'commercial' => Bank::class,
             'user' => User::class,
-            'cadre_step' => CadreStep::class,
             'fixed_value' => FixedValue::class,
             'mda_structure' => MdaStructure::class,
             'salary_structure' => Structure::class,
             'audit_payroll' => AuditPayroll::class,
-            'structured' => StructuredSalary::class,
             'computed_value' => ComputedValue::class,
             'micro_finance' => MicroFinanceBank::class,
             'personalized' => PersonalizedSalary::class,

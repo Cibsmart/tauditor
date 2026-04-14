@@ -194,25 +194,6 @@ class Beneficiary extends Model
     }
 
     /**
-     * Set Beneficiaries Basic Pay
-     * @param  int  $type
-     * @param  int  $value
-     * @return Beneficiary
-     */
-    public function setBasic(int $type, int $value) : self
-    {
-        $payable = $type === 1
-            ? new PersonalizedSalary(['monthly_basic' => $value])
-            : new StructuredSalary(['cadre_step_id' => $value]);
-
-        $salary = $this->salaryDetail->create();
-
-        $payable->salary()->save($salary);
-
-        return $this;
-    }
-
-    /**
      * Get Beneficiary's Last, First and Middle Name as a single string
      * @return string
      */
@@ -277,11 +258,6 @@ class Beneficiary extends Model
                                   [Bank::class, MicroFinanceBank::class],
                                   fn ($query) => $query->where('name', 'like', '%' . $search . '%')
                               );
-//                      })->orWhereHas('salaryDetail', function ($query) use ($search) {
-//                               $query->whereHasMorph('payable', [StructuredSalary::class], function ($query) use ($search) {
-//                                   $query->whereHas('gradeLevel', fn($query) => where('name', 'like', '%' . $search . '%'));
-//                                   $query->whereHas('step', fn($query) => where('name', 'like', '%' . $search . '%'));
-//                               });
                       });
             });
         });

@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Imports\BeneficiariesImport;
-use App\Models\Beneficiary;
-use App\Models\StructuredSalary;
-use App\ViewModels\BeneficiaryViewModel;
-use function back;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Http\RedirectResponse;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
-use Inertia\Response;
+
+use function back;
 use function redirect;
 
 class BeneficiaryController extends Controller
@@ -38,7 +33,7 @@ class BeneficiaryController extends Controller
 
         try {
             (new BeneficiariesImport)->import($file_path);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
         }
 

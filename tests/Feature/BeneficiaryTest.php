@@ -11,26 +11,6 @@ class BeneficiaryTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function beneficiaryWithStructuredSalaryHasBasicPay()
-    {
-        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 100000.12)
-                                             ->withStructuredSalary()
-                                             ->create();
-
-        $this->assertEquals($monthly_basic, $beneficiary->basic());
-    }
-
-    /** @test */
-    public function structuredSalaryBasicPayIsRoundedHalfUpToTwoDecimalPoint()
-    {
-        $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 100000.12945454)
-                                             ->withStructuredSalary()
-                                             ->create();
-
-        $this->assertEquals(round($monthly_basic, 2), $beneficiary->basic());
-    }
-
-    /** @test */
     public function beneficiaryWithPersonalizedSalaryHasBasicPay()
     {
         $beneficiary = BeneficiaryTestFactory::withMonthlyBasic($monthly_basic = 85000)

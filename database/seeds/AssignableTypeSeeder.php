@@ -16,9 +16,7 @@ class AssignableTypeSeeder extends Seeder
             'all'              => 'EVERY ONE INCLUDING PENSIONERS',
             'beneficiary_type' => 'BENEFICIARY TYPE',
             'salary_structure' => 'SALARY STRUCTURE',
-            'cadre'            => 'CADRE',
             'direct'           => 'MDA STRUCTURE',
-            'cadre_step'       => 'CADRE STEP',
             'mda_structure'    => 'MDA STRUCTURE',
             'beneficiary'      => 'BENEFICIARY',
         ];

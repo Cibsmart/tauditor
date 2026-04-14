@@ -17,7 +17,6 @@ use App\Models\QualificationType;
 use App\Models\Relationship;
 use App\Models\SalaryDetail;
 use App\Models\State;
-use App\Models\StructuredSalary;
 use App\Models\WorkDetail;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
@@ -68,12 +67,7 @@ class BeneficiarySeeder extends Seeder
                     : $mfbs->random()->beneficiaries()
                            ->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 
-                $cadre_step_id = 1;
-
-                $payable = $faker->randomElement([1, 2]) == 1
-                    ? factory(PersonalizedSalary::class)->create()
-                    : factory(StructuredSalary::class)
-                        ->create(['cadre_step_id' => $cadre_step_id]);
+                $payable = factory(PersonalizedSalary::class)->create();
 
                 $payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
 

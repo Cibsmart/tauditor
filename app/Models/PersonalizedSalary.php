@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class PersonalizedSalary extends Model
@@ -20,11 +19,6 @@ class PersonalizedSalary extends Model
         return $this->morphOne(SalaryDetail::class, 'payable');
     }
 
-    public function cadreStep() : BelongsTo
-    {
-        return $this->belongsTo(CadreStep::class);
-    }
-
     /*
     |-------------------------------------------------------------------------------
     | Methods
@@ -33,11 +27,6 @@ class PersonalizedSalary extends Model
     public function basicPay() : float
     {
         return $this->monthly_basic;
-    }
-
-    public function cadre() : Cadre
-    {
-        return new Cadre();
     }
 
     public function gradeLevel() : GradeLevel
