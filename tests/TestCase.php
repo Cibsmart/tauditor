@@ -18,7 +18,7 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->seed(RolesAndPermissionsSeeder::class);
+        $this->app->make(RolesAndPermissionsSeeder::class)->run();
 
         $this->app->make(PermissionRegistrar::class)->registerPermissions();
 
