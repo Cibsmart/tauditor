@@ -132,11 +132,6 @@ class Beneficiary extends Model
         return $this->belongsTo(Domain::class)->withDefault();
     }
 
-    public function paySchedule()
-    {
-        return $this->hasMany(PaySchedule::class);
-    }
-
     /*
     |-------------------------------------------------------------------------------
     | Methods

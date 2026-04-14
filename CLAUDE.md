@@ -32,7 +32,7 @@ Default dev login: `john@payroll.com` / `password`.
 
 The app is a classic Laravel + Inertia monolith, but the payroll/audit domain logic is organised into several non-standard top-level namespaces under `app/` that are worth knowing before editing:
 
-- `app/Actions/` — single-purpose orchestrators built on `lorisleiva/laravel-actions` (e.g. `RunPayrollAction`, `AuditPayScheduleAction`, `GenerateAutoPayScheduleAction`, `GenerateAndSendPayeData`). Controllers and jobs generally delegate into these rather than doing work inline. When adding a new end-to-end flow, prefer a new Action over fattening a controller.
+- `app/Actions/` — single-purpose orchestrators built on `lorisleiva/laravel-actions` (e.g. `AuditPayScheduleAction`, `GenerateAutoPayScheduleAction`, `GenerateAndSendPayeData`). Controllers and jobs generally delegate into these rather than doing work inline. When adding a new end-to-end flow, prefer a new Action over fattening a controller.
 - `app/Audit/` — pay-schedule auditors. `Analyse.php` is the entry point; individual `Check*` classes (`CheckBasicPay`, `CheckAllowances`, `CheckBankName`, `CheckAccountNumber`, `CheckNetPay`, `CheckNewBeneficiary`, …) each validate one field/rule on an imported schedule row. Bank-name exceptions (see recent commits) are handled in `CheckBankName` and also in `OtherScheduleImport`.
 - `app/Compute/` — pure calculation helpers (`Tax`, `Prorate`) used by payroll generation.
 - `app/Imports/` + `app/Exports/` — Maatwebsite Excel importers/exporters for the various schedule formats (main pay schedule, pension, leave, "other" schedule, MFB groupings, autopay variants). Exporters come in plain, group, and "other" variants that mirror the importers.

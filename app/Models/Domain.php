@@ -65,11 +65,6 @@ class Domain extends Model
         return $this->morphMany(Allowable::class, 'allowable');
     }
 
-    public function payrolls()
-    {
-        return $this->hasMany(Payroll::class);
-    }
-
     public function auditPayrolls()
     {
         return $this->hasMany(AuditPayroll::class);
