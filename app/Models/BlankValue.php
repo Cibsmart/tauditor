@@ -12,11 +12,6 @@ class BlankValue extends Model
 {
     protected $guarded = [];
 
-    public function deduction()
-    {
-        return $this->morphOne(Deduction::class, 'valuable');
-    }
-
     public function amount(Beneficiary $beneficiary = null)
     {
         return null;

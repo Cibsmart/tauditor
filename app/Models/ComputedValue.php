@@ -14,11 +14,6 @@ class ComputedValue extends Model
 {
     protected $guarded = [];
 
-    public function deduction()
-    {
-        return $this->morphOne(Deduction::class, 'valuable');
-    }
-
     public function amount(Beneficiary $beneficiary = null)
     {
         if (! $beneficiary) {

@@ -5,9 +5,6 @@
                 <salary></salary>
             </tab>
 
-            <tab title="Deductions">
-                <deductions></deductions>
-            </tab>
         </v-tabs>
     </div>
 </template>
@@ -17,7 +14,6 @@
     import Tab from "@/Shared/Tab";
     import VTabs from "@/Shared/VTabs";
     import Salary from "@/Pages/Beneficiary/Tabs/Salary";
-    import Deductions from "@/Pages/Beneficiary/Tabs/Deductions";
 
     export default {
         props: {
@@ -29,7 +25,6 @@
             Icon,
             VTabs,
             Salary,
-            Deductions,
         },
 
         data() {

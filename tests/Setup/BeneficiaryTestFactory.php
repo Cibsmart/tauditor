@@ -7,7 +7,6 @@ use App\Models\BankDetail;
 use App\Models\Beneficiary;
 use App\Models\BeneficiaryStatus;
 use App\Models\CadreStep;
-use App\Models\DeductionDetail;
 use App\Models\MdaDetail;
 use App\Models\MicroFinanceBank;
 use App\Models\NextOfKin;
@@ -38,10 +37,6 @@ class BeneficiaryTestFactory
     private int $qualification_count = 0;
 
     private ?float $monthly_basic = null;
-
-    private ?int $deduction_count = null;
-
-    private ?float $valuable_amount = null;
 
     private int $beneficiary_status = 0;
 
@@ -143,20 +138,6 @@ class BeneficiaryTestFactory
         return $this;
     }
 
-    public function withDeductions($deduction_count = 0)
-    {
-        $this->deduction_count = $deduction_count;
-
-        return $this;
-    }
-
-    public function withValuableAmount(float $valuable_amount)
-    {
-        $this->valuable_amount = $valuable_amount;
-
-        return $this;
-    }
-
     public function activeState()
     {
         $this->beneficiary_status = 1;
@@ -203,14 +184,6 @@ class BeneficiaryTestFactory
 
         if ($this->work_detail) {
             $beneficiary->workDetail()->save(factory(WorkDetail::class)->make());
-        }
-
-        if ($this->deduction_count) {
-            $attributes = $this->valuable_amount
-                ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
-                : ['beneficiary_id' => $beneficiary->id];
-
-            factory(DeductionDetail::class, $this->deduction_count)->create($attributes);
         }
 
         return $beneficiary;

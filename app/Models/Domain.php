@@ -38,21 +38,6 @@ class Domain extends Model
         return $this->hasMany(Structure::class);
     }
 
-    public function deductions() : HasMany
-    {
-        return $this->hasMany(Deduction::class);
-    }
-
-    public function deductionTypes() : HasMany
-    {
-        return $this->hasMany(DeductionType::class);
-    }
-
-    public function deductionNames() : HasMany
-    {
-        return $this->hasMany(DeductionName::class);
-    }
-
     public function auditPayrolls()
     {
         return $this->hasMany(AuditPayroll::class);

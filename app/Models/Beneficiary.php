@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Casts\AddressCast;
-use function array_merge;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -96,11 +94,6 @@ class Beneficiary extends Model
         return $this->hasOne(SalaryDetail::class)->withDefault();
     }
 
-    public function deductionDetails() : HasMany
-    {
-        return $this->hasMany(DeductionDetail::class);
-    }
-
     public function workDetail() : HasOne
     {
         return $this->hasOne(WorkDetail::class);
@@ -145,11 +138,6 @@ class Beneficiary extends Model
     public function basic() : float
     {
         return $this->salaryDetail->basicPay();
-    }
-
-    public function totalMonthlyDeduction() : float
-    {
-        return $this->deductionDetails->sum('amount');
     }
 
     public function accountNumber() : ?string
@@ -222,45 +210,6 @@ class Beneficiary extends Model
         $payable->salary()->save($salary);
 
         return $this;
-    }
-
-    /**
-     * @param  Deduction  $deduction
-     * @param  int  $deductible
-     * @return Beneficiary
-     */
-    public function applyDeduction(Deduction $deduction, int $deductible = null) : self
-    {
-        $attributes = [
-            'amount'       => $deduction->amount($this),
-            'deduction_id' => $deduction->id,
-        ];
-
-        $attributes = $deductible
-            ? array_merge($attributes, ['deductible_id' => $deductible->id])
-            : $attributes;
-
-        $this->deductionDetails()->create($attributes);
-
-        return $this;
-    }
-
-    public function removeDeduction(DeductionDetail $deduction_detail) : self
-    {
-        $deduction_detail->unapply();
-
-        return $this->fresh();
-    }
-
-    public function deductions() : Collection
-    {
-        return $this->deductionDetails()->get()
-                    ->load(['deduction.deductionName'])
-                    ->transform(fn (DeductionDetail $deduction) => [
-                        'id'     => $deduction->id,
-                        'name'   => $deduction->deduction->deductionName->name,
-                        'amount' => $deduction->amount,
-                    ]);
     }
 
     /**

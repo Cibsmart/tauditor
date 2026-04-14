@@ -63,26 +63,6 @@ class User extends Authenticatable
         return $this->domain->beneficiaries();
     }
 
-    public function allowances()
-    {
-        return $this->domain->allowances();
-    }
-
-    public function deductions()
-    {
-        return $this->domain->deductions();
-    }
-
-    public function deductionTypes()
-    {
-        return $this->domain->deductionTypes();
-    }
-
-    public function deductionNames()
-    {
-        return $this->domain->deductionNames();
-    }
-
     public function auditPayrolls()
     {
         return $this->domain->auditPayrolls();
