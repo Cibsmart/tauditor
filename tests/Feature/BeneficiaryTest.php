@@ -51,18 +51,6 @@ class BeneficiaryTest extends TestCase
     }
 
     /** @test */
-    public function beneficiaryComputesSumOfTotalAllowances()
-    {
-        $beneficiary = BeneficiaryTestFactory::withValuableAmount($amount = 500)
-                                             ->withAllowances($number = 5)
-                                             ->create();
-
-        $sum = round($amount, 2) * $number;
-
-        $this->assertEquals($sum, $beneficiary->totalMonthlyAllowance());
-    }
-
-    /** @test */
     public function beneficiaryComputesSumOfTotalDeductions()
     {
         $beneficiary = BeneficiaryTestFactory::withValuableAmount($amount = 500)
@@ -72,15 +60,6 @@ class BeneficiaryTest extends TestCase
         $sum = round($amount, 2) * $number;
 
         $this->assertEquals($sum, $beneficiary->totalMonthlyDeduction());
-    }
-
-    /** @test */
-    public function beneficiaryCanRetrieveAppliedAllowances()
-    {
-        $beneficiary = BeneficiaryTestFactory::withAllowances($number = 5)
-                                             ->create();
-
-        $this->assertEquals($number, $beneficiary->allowances()->count());
     }
 
     /** @test */

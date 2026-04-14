@@ -5,10 +5,6 @@
                 <salary></salary>
             </tab>
 
-            <tab title="Allowances">
-                <allowances></allowances>
-            </tab>
-
             <tab title="Deductions">
                 <deductions></deductions>
             </tab>
@@ -21,7 +17,6 @@
     import Tab from "@/Shared/Tab";
     import VTabs from "@/Shared/VTabs";
     import Salary from "@/Pages/Beneficiary/Tabs/Salary";
-    import Allowances from "@/Pages/Beneficiary/Tabs/Allowances";
     import Deductions from "@/Pages/Beneficiary/Tabs/Deductions";
 
     export default {
@@ -34,7 +29,6 @@
             Icon,
             VTabs,
             Salary,
-            Allowances,
             Deductions,
         },
 

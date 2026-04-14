@@ -2,7 +2,6 @@
 
 namespace Tests\Setup;
 
-use App\Models\AllowanceDetail;
 use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\Beneficiary;
@@ -39,8 +38,6 @@ class BeneficiaryTestFactory
     private int $qualification_count = 0;
 
     private ?float $monthly_basic = null;
-
-    private ?int $allowance_count = null;
 
     private ?int $deduction_count = null;
 
@@ -146,13 +143,6 @@ class BeneficiaryTestFactory
         return $this;
     }
 
-    public function withAllowances($allowance_count = 0)
-    {
-        $this->allowance_count = $allowance_count;
-
-        return $this;
-    }
-
     public function withDeductions($deduction_count = 0)
     {
         $this->deduction_count = $deduction_count;
@@ -213,14 +203,6 @@ class BeneficiaryTestFactory
 
         if ($this->work_detail) {
             $beneficiary->workDetail()->save(factory(WorkDetail::class)->make());
-        }
-
-        if ($this->allowance_count) {
-            $attributes = $this->valuable_amount
-                ? ['beneficiary_id' => $beneficiary->id, 'amount' => $this->valuable_amount]
-                : ['beneficiary_id' => $beneficiary->id];
-
-            factory(AllowanceDetail::class, $this->allowance_count)->create($attributes);
         }
 
         if ($this->deduction_count) {

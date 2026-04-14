@@ -27,7 +27,6 @@ use Illuminate\Support\Str;
  * @property mixed structure
  * @property mixed status
  * @property mixed pensioner
- * @property mixed allowanceDetails
  * @method static create($validate)
  */
 class Beneficiary extends Model
@@ -97,11 +96,6 @@ class Beneficiary extends Model
         return $this->hasOne(SalaryDetail::class)->withDefault();
     }
 
-    public function allowanceDetails() : HasMany
-    {
-        return $this->hasMany(AllowanceDetail::class);
-    }
-
     public function deductionDetails() : HasMany
     {
         return $this->hasMany(DeductionDetail::class);
@@ -151,11 +145,6 @@ class Beneficiary extends Model
     public function basic() : float
     {
         return $this->salaryDetail->basicPay();
-    }
-
-    public function totalMonthlyAllowance() : float
-    {
-        return $this->allowanceDetails->sum('amount');
     }
 
     public function totalMonthlyDeduction() : float
@@ -233,51 +222,6 @@ class Beneficiary extends Model
         $payable->salary()->save($salary);
 
         return $this;
-    }
-
-    /**
-     * Apply an Allowance to a Beneficiary
-     * @param  Allowance  $allowance
-     * @param  int|null  $allowable_id
-     * @return Beneficiary
-     */
-    public function applyAllowance(Allowance $allowance, int $allowable_id = null) : self
-    {
-        $attributes = [
-            'amount'       => $allowance->amount($this),
-            'allowance_id' => $allowance->id,
-        ];
-
-        $attributes = $allowable_id
-            ? array_merge($attributes, ['allowable_id' => $allowable_id])
-            : $attributes;
-
-        $this->allowanceDetails()->firstOrCreate($attributes);
-
-        return $this;
-    }
-
-    /**
-     * Remove an Allowance from a Beneficiary
-     * @param  AllowanceDetail  $allowance_detail
-     * @return Beneficiary
-     */
-    public function removeAllowance(AllowanceDetail $allowance_detail) : self
-    {
-        $allowance_detail->unapply();
-
-        return $this->fresh();
-    }
-
-    public function allowances() : Collection
-    {
-        return $this->allowanceDetails()->get()
-                    ->load(['allowance.allowanceName'])
-                    ->transform(fn (AllowanceDetail $allowance) => [
-                        'id'     => $allowance->id,
-                        'name'   => $allowance->allowance->allowanceName->name,
-                        'amount' => $allowance->amount,
-                    ]);
     }
 
     /**

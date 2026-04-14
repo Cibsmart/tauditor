@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property mixed code
@@ -36,11 +35,6 @@ class BeneficiaryType extends Model
         return $this->hasMany(Mda::class);
     }
 
-    public function allowables() : MorphMany
-    {
-        return $this->morphMany(Allowable::class, 'allowable');
-    }
-
     public function paymentTypes()
     {
         return $this->belongsToMany(PaymentType::class);
@@ -58,19 +52,4 @@ class BeneficiaryType extends Model
         });
     }
 
-    /**
-     * Synchronize all BeneficiaryType Allowances to a Beneficiary
-     * @param  Beneficiary  $beneficiary
-     * @return Beneficiary
-     */
-    public function syncAllowancesTo(Beneficiary $beneficiary) : Beneficiary
-    {
-        $allowables = $this->allowables;
-
-        foreach ($allowables as $allowable) {
-            $beneficiary->applyAllowance($allowable->allowance, $allowable->id);
-        }
-
-        return $beneficiary;
-    }
 }

@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Structure extends Model
 {
@@ -36,24 +35,4 @@ class Structure extends Model
         );
     }
 
-    public function allowables() : MorphMany
-    {
-        return $this->morphMany(Allowable::class, 'allowable');
-    }
-
-    /**
-     * Synchronize all SalaryStructure Allowances to a Beneficiary
-     * @param  Beneficiary  $beneficiary
-     * @return Beneficiary
-     */
-    public function syncAllowancesTo(Beneficiary $beneficiary) : Beneficiary
-    {
-        $allowables = $this->allowables;
-
-        foreach ($allowables as $allowable) {
-            $beneficiary->applyAllowance($allowable->allowance, $allowable->id);
-        }
-
-        return $beneficiary;
-    }
 }

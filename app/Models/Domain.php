@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 /**
  * @property int id
  * @property mixed code
  * @property mixed name
- * @property mixed allowables
  * @method static find($domain)
  */
 class Domain extends Model
@@ -40,11 +38,6 @@ class Domain extends Model
         return $this->hasMany(Structure::class);
     }
 
-    public function allowances() : HasMany
-    {
-        return $this->hasMany(Allowance::class);
-    }
-
     public function deductions() : HasMany
     {
         return $this->hasMany(Deduction::class);
@@ -58,11 +51,6 @@ class Domain extends Model
     public function deductionNames() : HasMany
     {
         return $this->hasMany(DeductionName::class);
-    }
-
-    public function allowables() : MorphMany
-    {
-        return $this->morphMany(Allowable::class, 'allowable');
     }
 
     public function auditPayrolls()
@@ -85,19 +73,4 @@ class Domain extends Model
         return $this->hasMany(PotentialUser::class);
     }
 
-    /**
-     * Synchronize all Domain Allowances to a Beneficiary
-     * @param  Beneficiary  $beneficiary
-     * @return Beneficiary
-     */
-    public function syncAllowancesTo(Beneficiary $beneficiary) : Beneficiary
-    {
-        $allowables = $this->allowables;
-
-        foreach ($allowables as $allowable) {
-            $beneficiary->applyAllowance($allowable->allowance, $allowable->id);
-        }
-
-        return $beneficiary;
-    }
 }
