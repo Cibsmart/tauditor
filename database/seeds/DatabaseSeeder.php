@@ -38,7 +38,6 @@ class DatabaseSeeder extends Seeder
             //            GradeLevelSeeder::class,
             //            StepSeeder::class,
             //            StructureSeeder::class,
-            //            ValueTypeSeeder::class,
             //            SalaryTypeSeeder::class,
             //            AllowanceTypeSeeder::class,
             //            AllowanceNameSeeder::class,

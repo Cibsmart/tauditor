@@ -8,9 +8,7 @@ use App\Models\AuditPaySchedule;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\Bank;
 use App\Models\BeneficiaryType;
-use App\Models\ComputedValue;
 use App\Models\Domain;
-use App\Models\FixedValue;
 use App\Models\MicroFinanceBank;
 use App\Models\PercentageValue;
 use App\Models\PersonalizedSalary;
@@ -50,10 +48,8 @@ class AppServiceProvider extends ServiceProvider
             'domain' => Domain::class,
             'commercial' => Bank::class,
             'user' => User::class,
-            'fixed_value' => FixedValue::class,
             'salary_structure' => Structure::class,
             'audit_payroll' => AuditPayroll::class,
-            'computed_value' => ComputedValue::class,
             'micro_finance' => MicroFinanceBank::class,
             'personalized' => PersonalizedSalary::class,
             'percentage_value' => PercentageValue::class,
