@@ -10,8 +10,6 @@ use App\Models\Bank;
 use App\Models\BeneficiaryType;
 use App\Models\Domain;
 use App\Models\MicroFinanceBank;
-use App\Models\PercentageValue;
-use App\Models\PersonalizedSalary;
 use App\Models\Structure;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -51,8 +49,6 @@ class AppServiceProvider extends ServiceProvider
             'salary_structure' => Structure::class,
             'audit_payroll' => AuditPayroll::class,
             'micro_finance' => MicroFinanceBank::class,
-            'personalized' => PersonalizedSalary::class,
-            'percentage_value' => PercentageValue::class,
             'beneficiary_type' => BeneficiaryType::class,
             'audit_pay_schedule' => AuditPaySchedule::class,
             'audit_mda_schedule' => AuditMdaSchedule::class,

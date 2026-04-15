@@ -3,20 +3,12 @@
 use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\Beneficiary;
-use App\Models\BeneficiaryStatus;
 use App\Models\Domain;
 use App\Models\Gender;
 use App\Models\LocalGovernment;
 use App\Models\MaritalStatus;
 use App\Models\MicroFinanceBank;
-use App\Models\NextOfKin;
-use App\Models\PersonalizedSalary;
-use App\Models\Qualification;
-use App\Models\QualificationType;
-use App\Models\Relationship;
-use App\Models\SalaryDetail;
 use App\Models\State;
-use App\Models\WorkDetail;
 use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
@@ -37,8 +29,6 @@ class BeneficiarySeeder extends Seeder
         $lga = LocalGovernment::all();
         $mfbs = MicroFinanceBank::all();
         $marital = MaritalStatus::all();
-        $relationships = Relationship::all();
-        $qualifications = QualificationType::all();
 
         foreach ($domains as $domain) {
             $beneficiaries = factory(Beneficiary::class, 50)->create([
@@ -50,44 +40,13 @@ class BeneficiarySeeder extends Seeder
                 'beneficiary_type_id' => fn () => $domain->beneficiaryTypes->random()->id,
             ]);
 
-            $beneficiaries->each(function ($beneficiary) use (
-                $banks,
-                $mfbs,
-                $relationships,
-                $qualifications,
-                $domain,
-                $faker
-            ) {
-                $beneficiary->status()->save(factory(BeneficiaryStatus::class)->make());
-
+            $beneficiaries->each(function ($beneficiary) use ($banks, $mfbs, $faker) {
                 $faker->randomElement([1, 2]) == 1
                     ? $banks->random()->beneficiaries()
                             ->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]))
                     : $mfbs->random()->beneficiaries()
                            ->save(factory(BankDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
-
-                $payable = factory(PersonalizedSalary::class)->create();
-
-                $payable->salary()->save(factory(SalaryDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
-
-                $beneficiary->nextOfKin()
-                            ->save(factory(NextOfKin::class)
-                                ->make(['relationship_id' => fn () => $relationships->random()->id]));
-
-                $beneficiary->qualifications()
-                            ->saveMany(factory(Qualification::class, $faker->randomElement([1, 2, 3, 4, 5]))
-                                ->make(['qualification_type_id' => fn () => $qualifications->random()->id]));
-
-                $beneficiary->workDetail()
-                            ->save(factory(WorkDetail::class)
-                                ->make([
-                                    'beneficiary_id' => $beneficiary->id,
-                                    'designation_id' => $beneficiary->beneficiaryType->designations->random()->id,
-                                    'grade_level_id' => 1,
-                                    'step_id'        => 1,
-                                ]));
             });
         }
     }
-
 }
