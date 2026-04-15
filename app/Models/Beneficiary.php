@@ -18,7 +18,6 @@ use Illuminate\Support\Str;
  * @property string middle_name
  * @property mixed salaryDetail
  * @property mixed bankDetail
- * @property mixed mdaDetail
  * @property mixed workDetail
  * @property mixed beneficiaryType
  * @property mixed domain
@@ -82,11 +81,6 @@ class Beneficiary extends Model
     public function gender() : BelongsTo
     {
         return $this->belongsTo(Gender::class);
-    }
-
-    public function mdaDetail() : HasOne
-    {
-        return $this->hasOne(MdaDetail::class);
     }
 
     public function salaryDetail() : HasOne
@@ -153,21 +147,6 @@ class Beneficiary extends Model
     public function bank()
     {
         return $this->bankDetail->bankable();
-    }
-
-    public function mdaName() : ?string
-    {
-        return $this->mdaDetail->mda->name ?? null;
-    }
-
-    public function subMdaName() : ?string
-    {
-        return $this->mdaDetail->subMda->name ?? null;
-    }
-
-    public function subSubMdaName() : ?string
-    {
-        return $this->mdaDetail->subSubMda->name ?? null;
     }
 
     public function designationName() : ?string
@@ -239,13 +218,6 @@ class Beneficiary extends Model
                       ->orWhere('verification_number', 'like', '%' . $search . '%')
                       ->orWhereHas('status', function ($query) use ($search) {
                           $query->where('active', Str::startsWith($search, ['act', 'acti', 'activ', 'active']));
-                      })->orWhereHas('mdaDetail', function ($query) use ($search) {
-                          $query->whereHas('mda', fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas('subMda', fn ($query) => $query->where('name', 'like', '%' . $search . '%'));
-                          $query->orWhereHas(
-                              'subSubMda',
-                              fn ($query) => $query->where('name', 'like', '%' . $search . '%')
-                          );
                       })->orWhereHas('workDetail', function ($query) use ($search) {
                           $query->whereHas(
                               'designation',

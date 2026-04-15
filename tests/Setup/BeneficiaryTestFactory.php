@@ -6,7 +6,6 @@ use App\Models\Bank;
 use App\Models\BankDetail;
 use App\Models\Beneficiary;
 use App\Models\BeneficiaryStatus;
-use App\Models\MdaDetail;
 use App\Models\MicroFinanceBank;
 use App\Models\NextOfKin;
 use App\Models\PersonalizedSalary;
@@ -25,8 +24,6 @@ class BeneficiaryTestFactory
     private $bank = null;
 
     private $payable = null;
-
-    private bool $mda = false;
 
     private bool $next_of_kin = false;
 
@@ -94,13 +91,6 @@ class BeneficiaryTestFactory
         return $this;
     }
 
-    public function withMda()
-    {
-        $this->mda = true;
-
-        return $this;
-    }
-
     public function withQualifications($qualification_count = 1)
     {
         $this->qualification_count = $qualification_count;
@@ -154,10 +144,6 @@ class BeneficiaryTestFactory
         }
 
         $beneficiary->qualifications()->saveMany(factory(Qualification::class, $this->qualification_count)->make());
-
-        if ($this->mda) {
-            $beneficiary->mdaDetail()->save(factory(MdaDetail::class)->make(['beneficiary_id' => $beneficiary->id]));
-        }
 
         if ($this->work_detail) {
             $beneficiary->workDetail()->save(factory(WorkDetail::class)->make());

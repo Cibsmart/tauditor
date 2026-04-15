@@ -11,7 +11,6 @@ use App\Models\BeneficiaryType;
 use App\Models\ComputedValue;
 use App\Models\Domain;
 use App\Models\FixedValue;
-use App\Models\MdaStructure;
 use App\Models\MicroFinanceBank;
 use App\Models\PercentageValue;
 use App\Models\PersonalizedSalary;
@@ -52,7 +51,6 @@ class AppServiceProvider extends ServiceProvider
             'commercial' => Bank::class,
             'user' => User::class,
             'fixed_value' => FixedValue::class,
-            'mda_structure' => MdaStructure::class,
             'salary_structure' => Structure::class,
             'audit_payroll' => AuditPayroll::class,
             'computed_value' => ComputedValue::class,
