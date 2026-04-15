@@ -55,7 +55,6 @@
                             <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                 <div class="text-sm leading-5 text-gray-900">{{ beneficiary.designation }}</div>
                                 <div class="text-sm leading-5 text-gray-600">
-                                    {{ beneficiary.grade_level }}
                                     {{ beneficiary.step }}
                                 </div>
                             </td>

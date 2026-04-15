@@ -33,7 +33,6 @@ class DatabaseSeeder extends Seeder
             //            SubMdaSeeder::class,
             //            SubSubMdaSeeder::class,
             //            DesignationSeeder::class,
-            //            GradeLevelSeeder::class,
             //            StructureSeeder::class,
             //            AllowanceTypeSeeder::class,
             //            AllowanceNameSeeder::class,
