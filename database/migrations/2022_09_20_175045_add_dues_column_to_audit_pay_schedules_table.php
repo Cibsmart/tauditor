@@ -13,18 +13,19 @@ class AddDuesColumnToAuditPaySchedulesTable extends Migration
      */
     public function up()
     {
+        // Rename must be in its own Schema::table() call so that Doctrine DBAL
+        // (used for SQLite column renames) generates SQL against the pre-add
+        // schema, rather than after the new columns have been appended.
         Schema::table('audit_pay_schedules', function (Blueprint $table) {
             $table->renameColumn('total_deduction', 'total_dues_deductions');
+        });
 
-            $table->after('designation', function ($table) {
-                $table->string('mda');
-                $table->string('department');
-            });
+        Schema::table('audit_pay_schedules', function (Blueprint $table) {
+            $table->string('mda')->after('designation');
+            $table->string('department')->after('mda');
 
-            $table->after('total_allowance', function ($table) {
-                $table->unsignedBigInteger('total_dues')->default(0);
-                $table->unsignedBigInteger('total_deductions')->default(0);
-            });
+            $table->unsignedBigInteger('total_dues')->default(0)->after('total_allowance');
+            $table->unsignedBigInteger('total_deductions')->default(0)->after('total_dues');
 
             $table->json('dues')->after('allowances');
         });

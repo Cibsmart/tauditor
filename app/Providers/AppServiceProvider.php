@@ -10,7 +10,6 @@ use App\Models\Bank;
 use App\Models\BeneficiaryType;
 use App\Models\Domain;
 use App\Models\MicroFinanceBank;
-use App\Models\Structure;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -46,7 +45,6 @@ class AppServiceProvider extends ServiceProvider
             'domain' => Domain::class,
             'commercial' => Bank::class,
             'user' => User::class,
-            'salary_structure' => Structure::class,
             'audit_payroll' => AuditPayroll::class,
             'micro_finance' => MicroFinanceBank::class,
             'beneficiary_type' => BeneficiaryType::class,

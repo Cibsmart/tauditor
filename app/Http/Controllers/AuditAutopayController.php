@@ -14,7 +14,6 @@ use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
-use App\Models\MdaScheduleView;
 use App\Models\MicrofinanceBankSchedule;
 use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
@@ -33,62 +32,62 @@ class AuditAutopayController extends Controller
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()
-                        ->orderBy('year', 'desc')
-                        ->orderBy('month', 'desc')
-                        ->paginate()
-                        ->transform(fn (AuditPayroll $payroll) => [
-                            'id'                => $payroll->id,
-                            'month'             => $payroll->month_name,
-                            'year'              => $payroll->year,
-                            'created_by'        => $payroll->createdBy(),
-                            'date_created'      => $payroll->dateCreated(),
-                            'autopay_generated' => $payroll->autopay_generated,
-                            'categories'        => $payroll->auditPaymentCategories
-                                ->transform(function (AuditPayrollCategory $category) {
-                                    $uploaded_count = $category->countOfMdasSchedulesUploaded();
-                                    $autopay_count = $category->countOfMdasAutopayGenerated();
-                                    $status = $category->autopay_status;
-                                    $available = $uploaded_count - $autopay_count > 0;
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->paginate()
+            ->transform(fn (AuditPayroll $payroll) => [
+                'id' => $payroll->id,
+                'month' => $payroll->month_name,
+                'year' => $payroll->year,
+                'created_by' => $payroll->createdBy(),
+                'date_created' => $payroll->dateCreated(),
+                'autopay_generated' => $payroll->autopay_generated,
+                'categories' => $payroll->auditPaymentCategories
+                    ->transform(function (AuditPayrollCategory $category) {
+                        $uploaded_count = $category->countOfMdasSchedulesUploaded();
+                        $autopay_count = $category->countOfMdasAutopayGenerated();
+                        $status = $category->autopay_status;
+                        $available = $uploaded_count - $autopay_count > 0;
 
-                                    return [
-                                        'id'              => $category->id,
-                                        'payment_type_id' => $category->payment_type_id,
-                                        'payment_type'    => $category->paymentTypeName(),
-                                        'payment_title'   => $category->payment_title,
-                                        'autopay_status'  => $category->autopay_status,
-                                        'mda_count'       => $category->mdaCount(),
-                                        'uploaded_count'  => $uploaded_count,
-                                        'autopay_count'   => $autopay_count,
-                                        'can_generate'    => $available && $status !== 'running',
-                                        'viewable'        => $autopay_count > 0,
-                                        'refreshable'     => $available && $status === 'running',
-                                    ];
-                                }),
+                        return [
+                            'id' => $category->id,
+                            'payment_type_id' => $category->payment_type_id,
+                            'payment_type' => $category->paymentTypeName(),
+                            'payment_title' => $category->payment_title,
+                            'autopay_status' => $category->autopay_status,
+                            'mda_count' => $category->mdaCount(),
+                            'uploaded_count' => $uploaded_count,
+                            'autopay_count' => $autopay_count,
+                            'can_generate' => $available && $status !== 'running',
+                            'viewable' => $autopay_count > 0,
+                            'refreshable' => $available && $status === 'running',
+                        ];
+                    }),
 
-                            'other_categories' => $payroll->otherPaymentCategories
-                                ->transform(function (OtherAuditPayrollCategory $category) {
-                                    $status = $category->autopay_status;
-                                    $uploaded = $category->uploaded;
-                                    $generated = $category->autopay_generated;
+                'other_categories' => $payroll->otherPaymentCategories
+                    ->transform(function (OtherAuditPayrollCategory $category) {
+                        $status = $category->autopay_status;
+                        $uploaded = $category->uploaded;
+                        $generated = $category->autopay_generated;
 
-                                    return [
-                                        'id'                => $category->id,
-                                        'payment_type_id'   => $category->payment_type_id,
-                                        'payment_type'      => $category->paymentTypeName(),
-                                        'payment_title'     => $category->payment_title,
-                                        'line_items'        => $category->autopaySchedules->count(),
-                                        'autopay_status'    => $status,
-                                        'autopay_generated' => $generated,
-                                        'uploaded'          => $uploaded,
-                                        'can_generate'      => $uploaded && ! $generated && $status !== 'running',
-                                        'viewable'          => $uploaded && $generated,
-                                        'refreshable'       => $uploaded && $status === 'running',
-                                        'tenece'          => $category->paycomm_tenece,
-                                        'fidelity'        => $category->paycomm_fidelity,
-                                        'color'           => $category->color,
-                                    ];
-                                }),
-                        ]);
+                        return [
+                            'id' => $category->id,
+                            'payment_type_id' => $category->payment_type_id,
+                            'payment_type' => $category->paymentTypeName(),
+                            'payment_title' => $category->payment_title,
+                            'line_items' => $category->autopaySchedules->count(),
+                            'autopay_status' => $status,
+                            'autopay_generated' => $generated,
+                            'uploaded' => $uploaded,
+                            'can_generate' => $uploaded && ! $generated && $status !== 'running',
+                            'viewable' => $uploaded && $generated,
+                            'refreshable' => $uploaded && $status === 'running',
+                            'tenece' => $category->paycomm_tenece,
+                            'fidelity' => $category->paycomm_fidelity,
+                            'color' => $category->color,
+                        ];
+                    }),
+            ]);
 
         return Inertia::render('AuditAutoPay/Index', [
             'payrolls' => $payrolls,
@@ -102,25 +101,25 @@ class AuditAutopayController extends Controller
         }
 
         $schedules = $audit_payroll_category->auditMdaSchedules()->orderBy('mda_name')
-                                            ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
-                                            ->orderBy('mda_id')
-                                            ->paginate()
-                                            ->transform(fn (AuditMdaSchedule $schedule) => [
-                                                'id'           => $schedule->id,
-                                                'sub_mda_id'   => $schedule->auditSubMdaSchedules()->first()->id,
-                                                'payroll_id'   => $audit_payroll_category->id,
-                                                'mda_id'       => $schedule->mda_id,
-                                                'mda_name'     => $schedule->mda->name,
-                                                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
-                                                'head_count'   => number_format($schedule->autopayItemCount()),
-                                                'month'        => $audit_payroll_category->auditPayroll->month_name,
-                                                'year'         => $audit_payroll_category->auditPayroll->year,
-                                                'uploaded'     => $schedule->autopay_uploaded,
-                                                'generated'    => $schedule->autopay_generated,
-                                                'pension'      => $schedule->pension,
-                                                'has_sub'      => $schedule->has_sub,
-                                                'domain'       => $schedule->auditPayrollCategory->auditPayroll->domain->name,
-                                            ]);
+            ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
+            ->orderBy('mda_id')
+            ->paginate()
+            ->transform(fn (AuditMdaSchedule $schedule) => [
+                'id' => $schedule->id,
+                'sub_mda_id' => $schedule->auditSubMdaSchedules()->first()->id,
+                'payroll_id' => $audit_payroll_category->id,
+                'mda_id' => $schedule->mda_id,
+                'mda_name' => $schedule->mda->name,
+                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
+                'head_count' => number_format($schedule->autopayItemCount()),
+                'month' => $audit_payroll_category->auditPayroll->month_name,
+                'year' => $audit_payroll_category->auditPayroll->year,
+                'uploaded' => $schedule->autopay_uploaded,
+                'generated' => $schedule->autopay_generated,
+                'pension' => $schedule->pension,
+                'has_sub' => $schedule->has_sub,
+                'domain' => $schedule->auditPayrollCategory->auditPayroll->domain->name,
+            ]);
 
         return Inertia::render('AuditAutoPay/Show', [
             'schedules' => $schedules,
@@ -134,22 +133,22 @@ class AuditAutopayController extends Controller
         }
 
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
-                                        ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
-                                        ->paginate()
-                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
-                                            'id'           => $schedule->id,
-                                            'sub_mda_name' => $schedule->sub_mda_name,
-                                            'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
-                                            'item_count'   => number_format($schedule->autopayItemCount()),
-                                            'month'        => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
-                                            'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
-                                            'uploaded'     => $schedule->autopay_uploaded,
-                                            'generated'    => $schedule->autopay_generated,
-                                            'mda_name'     => $audit_mda_schedule->mda_name,
-                                        ]);
+            ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
+            ->paginate()
+            ->transform(fn (AuditSubMdaSchedule $schedule) => [
+                'id' => $schedule->id,
+                'sub_mda_name' => $schedule->sub_mda_name,
+                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
+                'item_count' => number_format($schedule->autopayItemCount()),
+                'month' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
+                'year' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
+                'uploaded' => $schedule->autopay_uploaded,
+                'generated' => $schedule->autopay_generated,
+                'mda_name' => $audit_mda_schedule->mda_name,
+            ]);
 
         return Inertia::render('AuditAutoPay/Detail', [
-            'schedules'              => $schedules,
+            'schedules' => $schedules,
             'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
     }
@@ -184,7 +183,7 @@ class AuditAutopayController extends Controller
 
                 foreach ($sub_mdas as $sub_mda) {
                     GenerateAutopaySchedules::dispatch($domain, $sub_mda);
-                    $count++;
+                    $count ++;
                 }
             }
         }
@@ -203,7 +202,7 @@ class AuditAutopayController extends Controller
         if ($category->noAutopaySchedule()) {
             return back()->with(
                 'error',
-                "Autopay Schedule for $month_year yet to be Generated, Click on Generate to Generated Autopay Schedule"
+                "Autopay Schedule for $month_year yet to be Generated, Click on Generate to Generated Autopay Schedule",
             );
         }
 
@@ -216,7 +215,7 @@ class AuditAutopayController extends Controller
         $headers = ['Content-Type' => 'application/zip'];
 
         return response()->download(public_path($zipped_file), null, $headers)
-                         ->deleteFileAfterSend();
+            ->deleteFileAfterSend();
     }
 
     public function createGroupFiles(AuditPayrollCategory $category)
@@ -303,7 +302,7 @@ class AuditAutopayController extends Controller
         if ($category->noAutopaySchedule()) {
             return back()->with(
                 'error',
-                "Autopay Schedule for $month_year yet to be Generated, Click on Generate Schedules Below"
+                "Autopay Schedule for $month_year yet to be Generated, Click on Generate Schedules Below",
             );
         }
 
@@ -320,7 +319,7 @@ class AuditAutopayController extends Controller
         $headers = ['Content-Type' => 'application/zip'];
 
         return response()->download(public_path($zipped_file), null, $headers)
-                         ->deleteFileAfterSend();
+            ->deleteFileAfterSend();
     }
 
     public function createGroupMfbFiles(AuditPayrollCategory $category)
@@ -344,8 +343,10 @@ class AuditAutopayController extends Controller
             $type = BeneficiaryType::find($beneficiaryType);
 
             $mfbs = MicrofinanceBankSchedule::with('microfinanceBank')
-                ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-                ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+                ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=',
+                    'audit_sub_mda_schedules.id')
+                ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=',
+                    'audit_mda_schedules.id')
                 ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
                 ->select('micro_finance_bank_id')
                 ->where('beneficiary_type_id', $type->id)
@@ -387,15 +388,15 @@ class AuditAutopayController extends Controller
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
-                            ->autopayGenerated()
-                            ->hasMicrofinance()
-                            ->get();
+                ->autopayGenerated()
+                ->hasMicrofinance()
+                ->get();
 
             foreach ($sub_mdas as $sub_mda) {
                 $mfbs = $sub_mda->microfinanceSchedules()->with('microfinanceBank')
-                                ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
-                                ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
-                                ->get();
+                    ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
+                    ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
+                    ->get();
 
                 $sub_mda_name = $sub_mda->sub_mda_name;
 

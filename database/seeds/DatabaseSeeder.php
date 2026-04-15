@@ -8,7 +8,6 @@ class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
-     *
      * @return void
      */
     public function run()
@@ -32,14 +31,6 @@ class DatabaseSeeder extends Seeder
             //            MdaSeeder::class,
             //            SubMdaSeeder::class,
             //            SubSubMdaSeeder::class,
-            //            DesignationSeeder::class,
-            //            StructureSeeder::class,
-            //            AllowanceTypeSeeder::class,
-            //            AllowanceNameSeeder::class,
-            //            AllowanceSeeder::class,
-            //            DeductionTypeSeeder::class,
-            //            DeductionNameSeeder::class,
-            //            DeductionSeeder::class,
             //            PaymentCredentialSeeder::class,
             //            BeneficiarySeeder::class,
         ]);
