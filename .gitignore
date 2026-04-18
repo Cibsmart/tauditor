@@ -24,3 +24,4 @@ _ide_helper_models.php
 .php_cs.cache
 .php-cs-fixer.cache
 phpstan-neon
+/.phpunit.cache
