@@ -25,17 +25,17 @@ trait AutopayTestSetup
 {
     // ── Top-level hierarchy ────────────────────────────────────────────────
 
-    protected function createDomain(): Domain
+    public function createDomain(): Domain
     {
         return Domain::create(['id' => 'test-domain', 'name' => 'Test Domain']);
     }
 
-    protected function createUser(Domain $domain): User
+    public function createUser(Domain $domain): User
     {
         return User::factory()->create(['domain_id' => $domain->id]);
     }
 
-    protected function createPaymentType(string $id = 'sal', string $name = 'Salary'): PaymentType
+    public function createPaymentType(string $id = 'sal', string $name = 'Salary'): PaymentType
     {
         // PaymentType has no $guarded/$fillable override; use DB insert to bypass guard.
         DB::table('payment_types')->insert(['id' => $id, 'name' => $name]);
@@ -43,7 +43,7 @@ trait AutopayTestSetup
         return PaymentType::find($id);
     }
 
-    protected function createBeneficiaryType(Domain $domain): BeneficiaryType
+    public function createBeneficiaryType(Domain $domain): BeneficiaryType
     {
         return BeneficiaryType::create([
             'id'        => 'bt-test',
@@ -52,7 +52,7 @@ trait AutopayTestSetup
         ]);
     }
 
-    protected function createMda(BeneficiaryType $beneficiaryType): Mda
+    public function createMda(BeneficiaryType $beneficiaryType): Mda
     {
         return Mda::create([
             'code'                => 'MDA01',
@@ -61,7 +61,7 @@ trait AutopayTestSetup
         ]);
     }
 
-    protected function createAuditPayroll(Domain $domain, User $user): AuditPayroll
+    public function createAuditPayroll(Domain $domain, User $user): AuditPayroll
     {
         return AuditPayroll::create([
             'month'      => 3,
@@ -73,7 +73,7 @@ trait AutopayTestSetup
         ]);
     }
 
-    protected function createAuditPayrollCategory(
+    public function createAuditPayrollCategory(
         AuditPayroll $payroll,
         PaymentType $paymentType
     ): AuditPayrollCategory {
@@ -85,7 +85,7 @@ trait AutopayTestSetup
         ]);
     }
 
-    protected function createAuditMdaSchedule(
+    public function createAuditMdaSchedule(
         AuditPayrollCategory $category,
         Mda $mda
     ): AuditMdaSchedule {
@@ -96,7 +96,7 @@ trait AutopayTestSetup
         ]);
     }
 
-    protected function createAuditSubMdaSchedule(AuditMdaSchedule $mdaSchedule): AuditSubMdaSchedule
+    public function createAuditSubMdaSchedule(AuditMdaSchedule $mdaSchedule): AuditSubMdaSchedule
     {
         return AuditSubMdaSchedule::create([
             'audit_mda_schedule_id' => $mdaSchedule->id,
@@ -112,7 +112,7 @@ trait AutopayTestSetup
      *
      * @return array{payCommI: PayComm, payCommII: PayComm, fidelityComm: PayComm}
      */
-    protected function createPayComms(Domain $domain): array
+    public function createPayComms(Domain $domain): array
     {
         $bankI       = Bank::factory()->create();
         $bankII      = Bank::factory()->create();
@@ -155,7 +155,7 @@ trait AutopayTestSetup
      * Creates the mandatory "CASH PAYMENT" MicroFinanceBank that the generate actions
      * look up and skip when building MFB schedules.
      */
-    protected function createCashPaymentMfb(Domain $domain): MicroFinanceBank
+    public function createCashPaymentMfb(Domain $domain): MicroFinanceBank
     {
         return MicroFinanceBank::create([
             'name'           => 'CASH PAYMENT',
@@ -168,7 +168,7 @@ trait AutopayTestSetup
     /**
      * Creates a real MFB (not CASH PAYMENT) backed by a Bank with a known code.
      */
-    protected function createRealMfb(Domain $domain, string $name = 'TEST MFB'): MicroFinanceBank
+    public function createRealMfb(Domain $domain, string $name = 'TEST MFB'): MicroFinanceBank
     {
         return MicroFinanceBank::create([
             'name'           => $name,

@@ -15,8 +15,8 @@ Backend:
 - `php artisan serve` — run dev server
 - `php artisan migrate` / `php artisan db:seed`
 - `php artisan horizon` — run queue workers (Redis)
-- `php artisan test` or `vendor/bin/phpunit` — run all tests
-- `vendor/bin/phpunit --filter TestClassName` or `vendor/bin/phpunit tests/Unit/Foo/BarTest.php` — single test
+- `php artisan test` or `./vendor/bin/pest` — run all tests
+- `./vendor/bin/pest --filter "test name"` or `./vendor/bin/pest tests/Unit/Foo/BarTest.php` — single test
 - `vendor/bin/phpstan analyse` — static analysis (larastan, level 0, baseline in `phpstan-baseline.neon`)
 
 Frontend (Laravel Mix / webpack):
@@ -67,7 +67,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - laravel/boost (BOOST) - v2
 - laravel/mcp (MCP) - v0
 - laravel/sail (SAIL) - v1
-- phpunit/phpunit (PHPUNIT) - v11
+- phpunit/phpunit (PHPUNIT) - v12
+- pestphp/pest (PEST) - v4
 - tailwindcss (TAILWINDCSS) - v2
 - vue (VUE) - v2
 
@@ -245,12 +246,11 @@ This project has domain-specific skills available. You MUST activate the relevan
 
 - Casts can and likely should be set in a `casts()` method on a model rather than the `$casts` property. Follow existing conventions from other models.
 
-=== phpunit/core rules ===
+=== pest/core rules ===
 
-# PHPUnit
+# Pest
 
-- This application uses PHPUnit for testing. All tests must be written as PHPUnit classes. Use `php artisan make:test --phpunit {name}` to create a new test.
-- If you see a test using "Pest", convert it to PHPUnit.
+- This application uses Pest for testing. All tests must be written using Pest's `it()` / `test()` syntax. Use `php artisan make:test --pest {name}` to create a new test.
 - Every time a test has been updated, run that singular test.
 - When the tests relating to your feature are passing, ask the user if they would like to also run the entire test suite to make sure everything is still passing.
 - Tests should cover all happy paths, failure paths, and edge cases.
@@ -259,8 +259,8 @@ This project has domain-specific skills available. You MUST activate the relevan
 ## Running Tests
 
 - Run the minimal number of tests, using an appropriate filter, before finalizing.
-- To run all tests: `php artisan test --compact`.
-- To run all tests in a file: `php artisan test --compact tests/Feature/ExampleTest.php`.
-- To filter on a particular test name: `php artisan test --compact --filter=testName` (recommended after making a change to a related file).
+- To run all tests: `./vendor/bin/pest --compact`.
+- To run all tests in a file: `./vendor/bin/pest tests/Feature/ExampleTest.php`.
+- To filter on a particular test name: `./vendor/bin/pest --filter="test name"` (recommended after making a change to a related file).
 
 </laravel-boost-guidelines>
