@@ -1,14 +1,20 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Mda;
 use App\Models\SubMda;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(SubMda::class, function (Faker $faker) {
-    return [
-        'name' => $faker->country,
-        'mda_id' => factory(Mda::class),
-    ];
-});
+class SubMdaFactory extends Factory
+{
+    protected $model = SubMda::class;
+
+    public function definition(): array
+    {
+        return [
+            'name'   => $this->faker->country,
+            'mda_id' => Mda::factory(),
+        ];
+    }
+}

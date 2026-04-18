@@ -21,7 +21,7 @@ class GenerateAutopayOtherScheduleActionTest extends TestCase
     public function it_creates_autopay_schedule_for_a_commercial_bank_beneficiary_with_charges()
     {
         ['domain' => $domain, 'category' => $category] = $this->buildHierarchy(paycommEnabled: true);
-        $bank = factory(Bank::class)->create(['code' => '058']);
+        $bank = Bank::factory()->create(['code' => '058']);
 
         AuditOtherPaySchedule::create([
             'other_audit_payroll_category_id' => $category->id,
@@ -50,7 +50,7 @@ class GenerateAutopayOtherScheduleActionTest extends TestCase
     public function it_creates_autopay_schedule_without_charges_when_paycomm_flags_are_off()
     {
         ['domain' => $domain, 'category' => $category] = $this->buildHierarchy(paycommEnabled: false);
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
 
         AuditOtherPaySchedule::create([
             'other_audit_payroll_category_id' => $category->id,
@@ -75,7 +75,7 @@ class GenerateAutopayOtherScheduleActionTest extends TestCase
     public function it_marks_category_as_autopay_generated()
     {
         ['domain' => $domain, 'category' => $category] = $this->buildHierarchy(paycommEnabled: true);
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
 
         AuditOtherPaySchedule::create([
             'other_audit_payroll_category_id' => $category->id,
@@ -160,7 +160,7 @@ class GenerateAutopayOtherScheduleActionTest extends TestCase
             $this->createPayComms($domain);
         } else {
             // We still need paycomms to be initialised; create them with 0 commission
-            $bank = factory(Bank::class)->create();
+            $bank = Bank::factory()->create();
             PayComm::create(['code' => 'PayComm I',  'name' => 'PayComm I',  'account_number' => '1111111111', 'commission' => 0, 'bankable_type' => 'commercial', 'bankable_id' => $bank->id, 'domain_id' => $domain->id]);
             PayComm::create(['code' => 'PayComm II', 'name' => 'PayComm II', 'account_number' => '2222222222', 'commission' => 0, 'bankable_type' => 'commercial', 'bankable_id' => $bank->id, 'domain_id' => $domain->id]);
         }

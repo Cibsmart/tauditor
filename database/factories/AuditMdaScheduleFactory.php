@@ -1,12 +1,16 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\AuditMdaSchedule;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(AuditMdaSchedule::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+class AuditMdaScheduleFactory extends Factory
+{
+    protected $model = AuditMdaSchedule::class;
+
+    public function definition(): array
+    {
+        return [];
+    }
+}

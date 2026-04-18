@@ -28,14 +28,14 @@ class BeneficiaryTestFactory
      */
     public function withMfb(MicroFinanceBank $micro_finance_bank = null)
     {
-        $this->bank = $micro_finance_bank ?? factory(MicroFinanceBank::class)->create();
+        $this->bank = $micro_finance_bank ?? MicroFinanceBank::factory()->create();
 
         return $this;
     }
 
     public function withBank(Bank $bank = null)
     {
-        $this->bank = $bank ?? factory(Bank::class)->create();
+        $this->bank = $bank ?? Bank::factory()->create();
 
         return $this;
     }
@@ -44,10 +44,10 @@ class BeneficiaryTestFactory
     {
         BeneficiaryFactory::clearResolvedInstance('BeneficiaryTestFactory');
 
-        $beneficiary = factory(Beneficiary::class)->create($override);
+        $beneficiary = Beneficiary::factory()->create($override);
 
         if ($this->bank) {
-            $this->bank->beneficiaries()->save(factory(BankDetail::class)->make([
+            $this->bank->beneficiaries()->save(BankDetail::factory()->make([
                 'beneficiary_id' => $beneficiary->id,
             ]));
         }

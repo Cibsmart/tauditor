@@ -7,7 +7,8 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert;
-use RolesAndPermissionsSeeder;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Spatie\Permission\PermissionRegistrar;
 
 abstract class TestCase extends BaseTestCase
@@ -20,7 +21,9 @@ abstract class TestCase extends BaseTestCase
 
         $this->app->make(RolesAndPermissionsSeeder::class)->run();
 
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
+        $this->app->make(PermissionRegistrar::class)->registerPermissions(
+            $this->app->make(Gate::class)
+        );
 
         TestResponse::macro('props', function ($key = null) {
             $props = json_decode(json_encode($this->original->getData()['page']['props']), JSON_OBJECT_AS_ARRAY);
@@ -61,7 +64,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function signIn($user = null)
     {
-        $user = $user ?: factory(User::class)->create();
+        $user = $user ?: User::factory()->create();
 
         $this->actingAs($user);
 

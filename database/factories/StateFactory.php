@@ -1,13 +1,19 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\State;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(State::class, function (Faker $faker) {
-    return [
-        'country_code' => 'NG',
-        'name' => 'Abia',
-    ];
-});
+class StateFactory extends Factory
+{
+    protected $model = State::class;
+
+    public function definition(): array
+    {
+        return [
+            'country_code' => 'NG',
+            'name'         => 'Abia',
+        ];
+    }
+}

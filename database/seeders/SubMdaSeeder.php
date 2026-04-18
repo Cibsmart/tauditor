@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Models\Mda;
 use App\Models\SubMda;
 use Illuminate\Database\Seeder;

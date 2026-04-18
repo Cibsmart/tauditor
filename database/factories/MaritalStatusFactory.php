@@ -1,15 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\MaritalStatus;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(MaritalStatus::class, function (Faker $faker) {
-    $status = $faker->randomElement(['S', 'M']);
+class MaritalStatusFactory extends Factory
+{
+    protected $model = MaritalStatus::class;
 
-    return [
-        'id' => $status,
-        'name' => fn () => $status == 'S' ? 'Single' : 'Married',
-    ];
-});
+    public function definition(): array
+    {
+        $status = $this->faker->randomElement(['S', 'M']);
+
+        return [
+            'id'   => $status,
+            'name' => $status === 'S' ? 'Single' : 'Married',
+        ];
+    }
+}

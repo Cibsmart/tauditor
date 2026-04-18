@@ -21,7 +21,7 @@ class GenerateAutoPayScheduleActionTest extends TestCase
         ['payCommI' => $payCommI, 'payCommII' => $payCommII] = $this->createPayComms($domain);
         $this->createCashPaymentMfb($domain);
 
-        $bank = factory(Bank::class)->create(['code' => '058']);
+        $bank = Bank::factory()->create(['code' => '058']);
 
         $this->createPaySchedule($subMda->id, $bank, '1234567890', 50000);
 
@@ -42,7 +42,7 @@ class GenerateAutoPayScheduleActionTest extends TestCase
         ['payCommI' => $payCommI, 'payCommII' => $payCommII] = $this->createPayComms($domain);
         $this->createCashPaymentMfb($domain);
 
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
         $this->createPaySchedule($subMda->id, $bank, '0000000001', 60000);
 
         (new GenerateAutoPayScheduleAction())->execute($domain, $subMda);
@@ -59,7 +59,7 @@ class GenerateAutoPayScheduleActionTest extends TestCase
         $this->createPayComms($domain);
         $this->createCashPaymentMfb($domain);
 
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
         $this->createPaySchedule($subMda->id, $bank, '5555555555', 40000);
 
         (new GenerateAutoPayScheduleAction())->execute($domain, $subMda);
@@ -75,7 +75,7 @@ class GenerateAutoPayScheduleActionTest extends TestCase
         $this->createPayComms($domain);
         $this->createCashPaymentMfb($domain);
 
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
         $paySchedule = $this->createPaySchedule($subMda->id, $bank, '6666666666', 30000);
 
         (new GenerateAutoPayScheduleAction())->execute($domain, $subMda);

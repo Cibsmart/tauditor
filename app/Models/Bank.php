@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static where(string $string, $bank_name)
  */
 class Bank extends Model
 {
+    use HasFactory;
     protected $guarded = [];
 
     /*

@@ -1,12 +1,16 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\AuditReport;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(AuditReport::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+class AuditReportFactory extends Factory
+{
+    protected $model = AuditReport::class;
+
+    public function definition(): array
+    {
+        return [];
+    }
+}

@@ -1,15 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Gender;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Gender::class, function (Faker $faker) {
-    $gender = $faker->randomElement(['M', 'F']);
+class GenderFactory extends Factory
+{
+    protected $model = Gender::class;
 
-    return [
-        'id' => $gender,
-        'name' => fn () => $gender == 'M' ? 'Male' : 'Female',
-    ];
-});
+    public function definition(): array
+    {
+        $gender = $this->faker->randomElement(['M', 'F']);
+
+        return [
+            'id'   => $gender,
+            'name' => $gender === 'M' ? 'Male' : 'Female',
+        ];
+    }
+}

@@ -1,13 +1,19 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\LocalGovernment;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(LocalGovernment::class, function (Faker $faker) {
-    return [
-        'state_id' => 1,
-        'name' => 'Aba',
-    ];
-});
+class LocalGovernmentFactory extends Factory
+{
+    protected $model = LocalGovernment::class;
+
+    public function definition(): array
+    {
+        return [
+            'state_id' => 1,
+            'name'     => 'Aba',
+        ];
+    }
+}

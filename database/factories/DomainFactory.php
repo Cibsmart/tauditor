@@ -1,13 +1,19 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Domain;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Domain::class, function (Faker $faker) {
-    return [
-        'id' => $faker->slug,
-        'name' => $faker->name,
-    ];
-});
+class DomainFactory extends Factory
+{
+    protected $model = Domain::class;
+
+    public function definition(): array
+    {
+        return [
+            'id'   => $this->faker->slug,
+            'name' => $this->faker->name,
+        ];
+    }
+}

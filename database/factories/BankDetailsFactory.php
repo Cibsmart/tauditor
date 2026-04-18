@@ -1,14 +1,20 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\BankDetail;
 use App\Models\Beneficiary;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(BankDetail::class, function (Faker $faker) {
-    return [
-        'account_number' => $faker->bankAccountNumber,
-        'beneficiary_id' => factory(Beneficiary::class),
-    ];
-});
+class BankDetailsFactory extends Factory
+{
+    protected $model = BankDetail::class;
+
+    public function definition(): array
+    {
+        return [
+            'account_number' => $this->faker->bankAccountNumber,
+            'beneficiary_id' => Beneficiary::factory(),
+        ];
+    }
+}

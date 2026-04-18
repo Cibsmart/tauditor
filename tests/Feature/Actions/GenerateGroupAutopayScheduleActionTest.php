@@ -23,7 +23,7 @@ class GenerateGroupAutopayScheduleActionTest extends TestCase
             'subMda'          => $subMda,
         ] = $this->buildHierarchy();
 
-        $bank = factory(Bank::class)->create(['code' => '058']);
+        $bank = Bank::factory()->create(['code' => '058']);
 
         AuditPaySchedule::create([
             'audit_sub_mda_schedule_id' => $subMda->id,
@@ -70,7 +70,7 @@ class GenerateGroupAutopayScheduleActionTest extends TestCase
             'subMda'          => $subMda,
         ] = $this->buildHierarchy();
 
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
 
         AuditPaySchedule::create([
             'audit_sub_mda_schedule_id' => $subMda->id,
@@ -119,7 +119,7 @@ class GenerateGroupAutopayScheduleActionTest extends TestCase
         $otherMdaSchedule = $this->createAuditMdaSchedule($category, $otherMda);
         $otherSubMda     = $this->createAuditSubMdaSchedule($otherMdaSchedule);
 
-        $bank = factory(Bank::class)->create();
+        $bank = Bank::factory()->create();
 
         // Schedule under the target beneficiary type — unique account not used by any paycomm
         AuditPaySchedule::create([

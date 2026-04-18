@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use Database\Seeders\LoanStatusSeeder;
 use Database\Seeders\NationalitySeeder;
 use Illuminate\Database\Seeder;

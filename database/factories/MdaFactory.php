@@ -1,15 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\BeneficiaryType;
 use App\Models\Mda;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Mda::class, function (Faker $faker) {
-    return [
-        'code' => $faker->countryCode,
-        'name' => $faker->country,
-        'beneficiary_type_id' => factory(BeneficiaryType::class),
-    ];
-});
+class MdaFactory extends Factory
+{
+    protected $model = Mda::class;
+
+    public function definition(): array
+    {
+        return [
+            'code'                => $this->faker->countryCode,
+            'name'                => $this->faker->country,
+            'beneficiary_type_id' => BeneficiaryType::factory(),
+        ];
+    }
+}

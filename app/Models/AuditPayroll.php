@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use function in_array;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static first($payroll)
@@ -17,6 +18,7 @@ use function in_array;
  */
 class AuditPayroll extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     protected $guarded = [];

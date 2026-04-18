@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use function number_format;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
@@ -16,6 +17,7 @@ use function number_format;
  */
 class AuditPaySchedule extends Model
 {
+    use HasFactory;
     use SoftDeletes, CanBeReported;
 
     protected $guarded = [];

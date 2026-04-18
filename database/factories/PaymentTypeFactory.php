@@ -1,13 +1,19 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\PaymentType;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(PaymentType::class, function (Faker $faker) {
-    return [
-        'id' => $faker->unique()->countryCode,
-        'name' => $faker->country,
-    ];
-});
+class PaymentTypeFactory extends Factory
+{
+    protected $model = PaymentType::class;
+
+    public function definition(): array
+    {
+        return [
+            'id'   => $this->faker->unique()->countryCode,
+            'name' => $this->faker->country,
+        ];
+    }
+}

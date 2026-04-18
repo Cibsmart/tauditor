@@ -1,15 +1,21 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\BeneficiaryType;
 use App\Models\Domain;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(BeneficiaryType::class, function (Faker $faker) {
-    return [
-        'id' => $faker->countryCode,
-        'name' => $faker->country,
-        'domain_id' => factory(Domain::class),
-    ];
-});
+class BeneficiaryTypeFactory extends Factory
+{
+    protected $model = BeneficiaryType::class;
+
+    public function definition(): array
+    {
+        return [
+            'id'        => $this->faker->countryCode,
+            'name'      => $this->faker->country,
+            'domain_id' => Domain::factory(),
+        ];
+    }
+}

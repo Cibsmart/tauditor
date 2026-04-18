@@ -1,13 +1,19 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Bank;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Bank::class, function (Faker $faker) {
-    return [
-        'code' => $faker->randomNumber(3, true),
-        'name' => $faker->company,
-    ];
-});
+class BankFactory extends Factory
+{
+    protected $model = Bank::class;
+
+    public function definition(): array
+    {
+        return [
+            'code' => $this->faker->randomNumber(3, true),
+            'name' => $this->faker->company,
+        ];
+    }
+}

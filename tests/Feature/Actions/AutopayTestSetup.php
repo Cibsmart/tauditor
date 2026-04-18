@@ -32,7 +32,7 @@ trait AutopayTestSetup
 
     protected function createUser(Domain $domain): User
     {
-        return factory(User::class)->create(['domain_id' => $domain->id]);
+        return User::factory()->create(['domain_id' => $domain->id]);
     }
 
     protected function createPaymentType(string $id = 'sal', string $name = 'Salary'): PaymentType
@@ -114,9 +114,9 @@ trait AutopayTestSetup
      */
     protected function createPayComms(Domain $domain): array
     {
-        $bankI       = factory(Bank::class)->create();
-        $bankII      = factory(Bank::class)->create();
-        $bankFidelity = factory(Bank::class)->create();
+        $bankI       = Bank::factory()->create();
+        $bankII      = Bank::factory()->create();
+        $bankFidelity = Bank::factory()->create();
 
         $payCommI = PayComm::create([
             'code'           => 'PayComm I',
@@ -160,7 +160,7 @@ trait AutopayTestSetup
         return MicroFinanceBank::create([
             'name'           => 'CASH PAYMENT',
             'account_number' => '0000000000',
-            'bank_id'        => factory(Bank::class)->create()->id,
+            'bank_id'        => Bank::factory()->create()->id,
             'domain_id'      => $domain->id,
         ]);
     }
@@ -173,7 +173,7 @@ trait AutopayTestSetup
         return MicroFinanceBank::create([
             'name'           => $name,
             'account_number' => '4444444444',
-            'bank_id'        => factory(Bank::class)->create(['code' => '999'])->id,
+            'bank_id'        => Bank::factory()->create(['code' => '999'])->id,
             'domain_id'      => $domain->id,
         ]);
     }

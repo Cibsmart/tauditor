@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Traits\CanBeReported;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static find($audit_sub_mda)
  */
 class AuditSubMdaSchedule extends Model
 {
+    use HasFactory;
     use CanBeReported;
 
     protected $guarded = [];

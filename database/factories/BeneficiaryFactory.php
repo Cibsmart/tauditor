@@ -1,6 +1,6 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\Beneficiary;
 use App\Models\BeneficiaryType;
@@ -10,30 +10,39 @@ use App\Models\LocalGovernment;
 use App\Models\MaritalStatus;
 use App\Models\State;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Beneficiary::class, function (Faker $faker) {
-    return [
-        'last_name' => $faker->lastName,
-        'first_name' => $faker->firstName,
-        'middle_name' => $faker->firstName,
-        'date_of_birth' => Carbon::now()->subYears($faker->numberBetween(20, 60)),
-        'gender_id' => factory(Gender::class),
-        'marital_status_id' => factory(MaritalStatus::class),
-        'state_id' => factory(State::class),
-        'local_government_id' => factory(LocalGovernment::class),
-        'phone_number' => $faker->phoneNumber,
-        'email' => $faker->email,
-        'address_line_1' => $faker->streetAddress,
-        'address_line_2' => $faker->secondaryAddress,
-        'address_city' => $faker->city,
-        'address_state' => $faker->state,
-        'address_country' => $faker->country,
-        'pensioner' => 0,
-        'domain_id' => factory(Domain::class),
-        'beneficiary_type_id' => factory(BeneficiaryType::class),
-        'nationality_id' => 'NG',
-    ];
-});
+class BeneficiaryFactory extends Factory
+{
+    protected $model = Beneficiary::class;
 
-$factory->state(Beneficiary::class, 'pensioner', ['pensioner' => 1]);
+    public function definition(): array
+    {
+        return [
+            'last_name'           => $this->faker->lastName,
+            'first_name'          => $this->faker->firstName,
+            'middle_name'         => $this->faker->firstName,
+            'date_of_birth'       => Carbon::now()->subYears($this->faker->numberBetween(20, 60)),
+            'gender_id'           => Gender::factory(),
+            'marital_status_id'   => MaritalStatus::factory(),
+            'state_id'            => State::factory(),
+            'local_government_id' => LocalGovernment::factory(),
+            'phone_number'        => $this->faker->phoneNumber,
+            'email'               => $this->faker->email,
+            'address_line_1'      => $this->faker->streetAddress,
+            'address_line_2'      => $this->faker->secondaryAddress,
+            'address_city'        => $this->faker->city,
+            'address_state'       => $this->faker->state,
+            'address_country'     => $this->faker->country,
+            'pensioner'           => 0,
+            'domain_id'           => Domain::factory(),
+            'beneficiary_type_id' => BeneficiaryType::factory(),
+            'nationality_id'      => 'NG',
+        ];
+    }
+
+    public function pensioner(): static
+    {
+        return $this->state(['pensioner' => 1]);
+    }
+}

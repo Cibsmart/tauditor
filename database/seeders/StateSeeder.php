@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Models\LocalGovernment;
 use App\Models\State;
 use Illuminate\Database\Seeder;

@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Models\BeneficiaryType;
 use App\Models\Mda;
 use Illuminate\Database\Seeder;

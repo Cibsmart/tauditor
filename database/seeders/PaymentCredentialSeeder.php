@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+
 use App\Models\Bank;
 use App\Models\PaymentCredential;
 use Illuminate\Database\Seeder;
