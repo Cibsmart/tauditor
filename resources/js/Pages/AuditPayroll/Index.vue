@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Audit Payroll" />
         <h1 class="mb-8 font-bold text-3xl">Audit Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <div></div>
@@ -180,7 +181,10 @@
             </div>
         </div>
         <pagination :links="payrolls.links" />
-        <modal name="create-other-schedule-modal" height="auto" :adaptive="true" :focusTrap="true" :scrollable="true">
+        <div v-if="showCreateModal" class="fixed z-10 inset-0 overflow-y-auto" role="dialog" aria-modal="true">
+            <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75" @click="closeModal"></div>
+                <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="">
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
@@ -236,7 +240,9 @@
                     Cancel
                 </button>
             </div>
-        </modal>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -244,14 +250,13 @@
 import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
-import {Link} from '@inertiajs/inertia-vue'
+import { Link, useForm } from '@inertiajs/vue3'
 import TextInput from '@/Shared/TextInput'
 import FileInput from '@/Shared/FileInput'
 import SelectInput from '@/Shared/SelectInput'
 import LoadingButton from '@/Shared/LoadingButton'
 
 export default {
-    metaInfo: {title: 'Audit Payroll'},
     layout: Layout,
 
     props: {
@@ -270,20 +275,24 @@ export default {
         LoadingButton,
     },
 
+    setup() {
+        const form = useForm({
+            payment_type_id: null,
+            payment_title: null,
+            paycomm_tenece: false,
+            paycomm_fidelity: false,
+        })
+        const file = useForm({
+            schedule_file: [],
+        })
+        return { form, file }
+    },
+
     data() {
         return {
             show_detail: [],
             payroll_id: null,
-            form: this.$inertia.form({
-                payment_type_id: null,
-                payment_title: null,
-                paycomm_tenece: false,
-                paycomm_fidelity: false
-            }),
-
-            file: this.$inertia.form({
-                schedule_file: [],
-            })
+            showCreateModal: false,
         }
     },
 
@@ -317,12 +326,12 @@ export default {
 
         showModal(payroll_id) {
             this.payroll_id = payroll_id
-            this.$modal.show('create-other-schedule-modal');
+            this.showCreateModal = true
         },
 
         closeModal() {
-            this.$modal.hide('create-other-schedule-modal');
-            this.form.reset();
+            this.showCreateModal = false
+            this.form.reset()
         },
 
         addLeaveAllowance(payroll_id) {

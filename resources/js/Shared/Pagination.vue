@@ -1,10 +1,10 @@
 <template>
     <div class="mt-6 -mb-1 flex flex-wrap">
-        <template v-for="(link, key) in links">
-            <div v-if="link.url === null" :key="key" class="mr-1 mb-1 px-4 py-3 text-sm border rounded">
+        <template v-for="(link, key) in links" :key="key">
+            <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-3 text-sm border rounded">
                 {{ link.label }}
             </div>
-            <Link v-else :key="key"
+            <Link v-else
                           class="mr-1 mb-1 px-4 py-3 text-sm border border-gray-400 rounded hover:bg-white focus:border-indigo-600 focus:text-indigo-600"
                           :class="{ 'bg-white': link.active }" :href="link.url" preserve-scroll preserve-state
             >
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {Link} from '@inertiajs/inertia-vue'
+import {Link} from '@inertiajs/vue3'
 
 export default {
     props: {

@@ -1,4 +1,5 @@
 <template>
+    <Head title="Add Beneficiary" />
     <h-tabs>
         <tab title="General" active>
             <general :data="general"></general>
@@ -13,7 +14,6 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
 import Tab from "@/Shared/Tab";
 import Icon from "@/Shared/Icon";
 import HTabs from "@/Shared/HTabs";
@@ -23,10 +23,6 @@ import General from "@/Pages/Beneficiary/NavTab/General";
 import Biometrics from "@/Pages/Beneficiary/NavTab/Biometrics";
 
 export default {
-    metaInfo: {
-        title: "Add Beneficiary"
-    },
-
     layout: Layout,
 
     props: {
@@ -51,15 +47,6 @@ export default {
         }
     },
 
-    mounted() {
-        this.setBeneficiary(this.beneficiary);
-    },
-
-    methods: {
-        ...mapMutations([
-            'setBeneficiary'
-        ]),
-    },
 }
 </script>
 

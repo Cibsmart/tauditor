@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Upload Beneficiaries" />
         <h1 class="mb-8 font-bold text-3xl">Upload Beneficiaries</h1>
 
         <div class="flex flex-col">
@@ -24,9 +25,9 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import FileInput from "@/Shared/FileInput";
 import Pagination from '@/Shared/Pagination'
+import { useForm } from '@inertiajs/vue3'
 
 export default {
-    metaInfo: { title: 'Upload Beneficiaries' },
     layout: Layout,
 
     components: {
@@ -35,18 +36,17 @@ export default {
         Pagination,
     },
 
-    data(){
-        return {
-            form: this.$inertia.form({
-                file: null,
-            })
-        }
+    setup() {
+        const form = useForm({
+            file: null,
+        })
+        return { form }
     },
 
     methods: {
-        upload(){
+        upload() {
             this.form.post(this.route('beneficiaries.upload'))
-        }
-    }
+        },
+    },
 }
 </script>

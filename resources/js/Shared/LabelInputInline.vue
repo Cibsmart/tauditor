@@ -6,7 +6,7 @@
 
         <label :id="id"
                class="form-input w-full sm:text-sm sm:leading-5 focus:outline-none focus:border-indigo-500 focus:shadow">
-            {{ value }}
+            {{ modelValue }}
             <slot />
         </label>
 
@@ -17,21 +17,16 @@
 </template>
 
 <script>
+let counter = 0
 
-export default{
+export default {
     inheritAttrs: false,
     props: {
-        value: String|Number,
+        modelValue: [String, Number],
         label: String,
         errors: { type: Array, default: () => [] },
-        id: { type: String, default() {
-                return `label-input-${this._uid}` },
-        },
-        required: { type: Boolean, default: false},
-    },
-
-    methods: {
-
+        id: { type: String, default: () => `label-input-${counter++}` },
+        required: { type: Boolean, default: false },
     },
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="flex items-center">
-        <span v-model="checked" :id="id" role="checkbox" tabindex="0" aria-checked="false" ref="input"
+        <span :id="id" role="checkbox" tabindex="0" aria-checked="false" ref="input"
               :class="checked ? 'bg-indigo-600' : 'bg-gray-200'" @click="checked = ! checked"
               class="relative inline-block flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:shadow-outline">
             <span aria-hidden="true"
@@ -15,26 +15,27 @@
 </template>
 
 <script>
+let counter = 0
 
-    export default{
-        inheritAttrs: false,
-        props: {
-            label: String,
-            id: { type: String, default() {
-                    return `check-input-${this._uid}` },
-            },
-        },
+export default {
+    inheritAttrs: false,
+    props: {
+        label: String,
+        id: { type: String, default: () => `check-input-${counter++}` },
+    },
 
-        data(){
-            return{
-                checked: false
-            }
-        },
+    emits: ['update:modelValue'],
 
-        watch: {
-            checked(checked) {
-                this.$emit('input', checked);
-            }
+    data() {
+        return {
+            checked: false,
+        }
+    },
+
+    watch: {
+        checked(checked) {
+            this.$emit('update:modelValue', checked)
         },
-    }
+    },
+}
 </script>

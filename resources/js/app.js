@@ -1,32 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import VueMeta from 'vue-meta'
-import VModal from 'vue-js-modal'
-import PortalVue from 'portal-vue'
-import {App, plugin} from '@inertiajs/inertia-vue'
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+import { createHead } from '@vueuse/head'
+import { ZiggyVue } from 'ziggy-js'
 
-window.axios = require('axios');
+import axios from 'axios';
+window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-Vue.mixin({methods: {route: window.route}}) //Make route helper available on client side
-Vue.config.productionTip = false //Turns off warning during development
-Vue.use(plugin)
-Vue.use(PortalVue)
-Vue.use(VueMeta)
-Vue.use(Vuex)
-Vue.use(VModal)
+const pages = import.meta.glob('./Pages/**/*.vue', { eager: true });
 
-const app = document.getElementById('app')
-
-new Vue({
-    metaInfo: {
-        titleTemplate: (title) => title ? `${title} - HRMEdge` : 'HRMEdge'
+createInertiaApp({
+    title: (title) => title ? `${title} - HRMEdge` : 'HRMEdge',
+    resolve: (name) => pages[`./Pages/${name}.vue`],
+    setup({ el, App, props, plugin }) {
+        const head = createHead()
+        createApp({ render: () => h(App, props) })
+            .use(plugin)
+            .use(head)
+            .use(ZiggyVue)
+            .mount(el)
     },
-
-    render: h => h(App, {
-        props: {
-            initialPage: JSON.parse(app.dataset.page),
-            resolveComponent: name => import(`@/Pages/${name}`).then(module => module.default),
-        },
-    }),
-}).$mount(app)
+})

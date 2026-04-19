@@ -1,4 +1,5 @@
 <template>
+    <Head title="Welcome" />
     <div class="mt-8 flex justify-around">
         <div class="inline-flex rounded-md shadow">
             <Link :href="route('login', {domain: 'state'})"
@@ -17,11 +18,10 @@
 
 <script>
 import WelcomeLayout from '@/Shared/WelcomeLayout'
-import {Link} from '@inertiajs/inertia-vue'
+import {Link} from '@inertiajs/vue3'
 
 
 export default {
-    metaInfo: {title: 'Welcome'},
     layout: WelcomeLayout,
 
     components: {

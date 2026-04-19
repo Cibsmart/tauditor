@@ -1,11 +1,12 @@
 <template>
     <div>
+        <Head title="Payment Summary Report" />
         <h1 class="mb-8 font-bold text-3xl">Payment Summary Report</h1>
 
         <div>
             <select-input v-model="form.payroll" class="pb-8 w-full"
                           label="Payroll Month" :errors="$page.props.errors.payroll"
-                          @input="payrollChanged">
+                          @update:modelValue="payrollChanged">
                 <option disabled value="" class="text-gray-100">Select Payroll Month</option>
                 <option v-for="payroll in payrolls" :key="payroll.id" :value="payroll.id">
                     {{ payroll.month_name + ' ' + payroll.year }}
@@ -90,10 +91,9 @@
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
-    import { Inertia } from '@inertiajs/inertia'
+    import { useForm, router } from '@inertiajs/vue3'
 
     export default {
-        metaInfo: { title: 'Payment Summary Report' },
         layout: Layout,
 
         props: {
@@ -108,17 +108,16 @@
             SelectInput,
         },
 
-        data() {
-            return {
-                form: this.$inertia.form({
-                    payroll: this.payroll.id,
-                })
-            }
+        setup(props) {
+            const form = useForm({
+                payroll: props.payroll.id,
+            })
+            return { form }
         },
 
         methods: {
             payrollChanged() {
-                Inertia.reload({
+                router.reload({
                     method: 'post', data: this.form,
                     preserveState: true, preserveScroll: true,
                     only: ['categories', 'payroll']

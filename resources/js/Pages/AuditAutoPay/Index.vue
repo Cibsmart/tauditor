@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Audit Autopay" />
         <h1 class="mb-8 font-bold text-3xl">Auto Pay Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
@@ -237,10 +238,9 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
-    import { Link } from '@inertiajs/inertia-vue'
+    import { Link } from '@inertiajs/vue3'
 
     export default {
-        metaInfo: {title: 'Audit Autopay'},
         layout: Layout,
 
         props: {

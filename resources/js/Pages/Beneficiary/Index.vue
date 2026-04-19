@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Beneficiaries" />
         <h1 class="mb-8 font-bold text-3xl">Beneficiaries</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
@@ -103,10 +104,9 @@ import SearchFilter from '@/Shared/SearchFilter'
 
 import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
-import {Link} from '@inertiajs/inertia-vue'
+import {Link} from '@inertiajs/vue3'
 
 export default {
-    metaInfo: {title: 'Beneficiaries'},
     layout: Layout,
 
     props: {
@@ -133,7 +133,7 @@ export default {
         form: {
             handler: throttle(function () {
                 let query = pickBy(this.form)
-                this.$inertia.replace(this.route('beneficiaries.index', Object.keys(query).length ? query : {remember: 'forget'}))
+                this.$inertia.visit(this.route('beneficiaries.index', Object.keys(query).length ? query : {remember: 'forget'}), { replace: true })
             }, 300),
             deep: true,
         },

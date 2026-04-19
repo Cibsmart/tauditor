@@ -11,8 +11,8 @@
               </span>
             </div>
 
-            <input :id="id" :type="type" v-bind="$attrs" :value="value" ref="input"
-                   :class="{ error: errors.length }" @input="$emit('input', $event.target.value)"
+            <input :id="id" :type="type" v-bind="$attrs" :value="modelValue" ref="input"
+                   :class="{ error: errors.length }" @input="$emit('update:modelValue', $event.target.value)"
                    class="form-input block w-full pl-10 sm:text-sm sm:leading-5 focus:outline-none focus:border-indigo-500 focus:shadow">
         </div>
 
@@ -23,23 +23,20 @@
 </template>
 
 <script>
+let counter = 0
 
-    export default{
-        inheritAttrs: false,
-        props: {
-            value: String,
-            label: String,
-            leading_character: String,
-            type: { type: String, default: 'text' },
-            errors: { type: Array, default: () => [] },
-            id: { type: String, default() {
-                    return `text-input-${this._uid}` },
-            },
-            required: { type: Boolean, default: false},
-        },
+export default {
+    inheritAttrs: false,
+    props: {
+        modelValue: String,
+        label: String,
+        leading_character: String,
+        type: { type: String, default: 'text' },
+        errors: { type: Array, default: () => [] },
+        id: { type: String, default: () => `text-input-${counter++}` },
+        required: { type: Boolean, default: false },
+    },
 
-        methods: {
-
-        },
-    }
+    emits: ['update:modelValue'],
+}
 </script>

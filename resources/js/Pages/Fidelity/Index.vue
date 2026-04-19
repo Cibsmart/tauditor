@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Mandates" />
         <h1 class="mb-8 font-bold text-3xl">Mandates</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
@@ -123,14 +124,12 @@ import Layout from '@/Shared/Layout';
 import throttle from 'lodash/throttle'
 import mapValues from 'lodash/mapValues'
 import Pagination from '@/Shared/Pagination'
-import { Inertia } from '@inertiajs/inertia'
-import { Link } from '@inertiajs/inertia-vue'
+import { router, Link } from '@inertiajs/vue3'
 import SelectInput from "@/Shared/SelectInput"
 import SearchFilter from '@/Shared/SearchFilter'
 
 
 export default {
-    metaInfo: { title: 'Mandates' },
     layout: Layout,
 
     props: {
@@ -160,7 +159,7 @@ export default {
     watch: {
       form: {
           handler: throttle( function() {
-              Inertia.get(this.route('fidelity.index'), pickBy(this.form), { preserveState: true })
+              router.get(this.route('fidelity.index'), pickBy(this.form), { preserveState: true })
           }, 150),
           deep: true,
       }

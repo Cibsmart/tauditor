@@ -1,6 +1,5 @@
 <template>
     <div>
-        <portal-target name="dropdown" slim/>
         <div class="flex flex-col">
             <div class="h-screen flex flex-col" @click="hideDropdownMenus">
                 <!-- Uppder Part of the Screen containing Branding, Header and Profile -->
@@ -15,9 +14,11 @@
                         <!-- Menu for Mobile Screen Visible only on Mobile screen -->
                         <dropdown class="md:hidden">
                             <icon name="list" class="text-indigo-800 w-6 h-6"/>
-                            <div slot="dropdown" class="mt-2 shadow-lg bg-white rounded">
-                                <main-menu :url="url()"/>
-                            </div>
+                            <template v-slot:dropdown>
+                                <div class="mt-2 shadow-lg bg-white rounded">
+                                    <main-menu :url="url()"/>
+                                </div>
+                            </template>
                         </dropdown>
                     </div>
 
@@ -38,20 +39,22 @@
                                     class="w-5 h-5 fill-current text-gray-900 focus:fill-current focus:text-indigo-800"
                                     name="cheveron-down"/>
                             </div>
-                            <div slot="dropdown" class="mt-2 py-2 shadow-lg bg-white rounded text-sm">
-                                <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" href="#">My
-                                    Profile
-                                </Link>
-                                <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
-                                              :href="route('manage_users.index')"
-                                              v-if="$page.props.permissions.canViewUsers">
-                                    Manage Users
-                                </Link>
-                                <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
-                                              :href="route('logout')" method="post" as="button">
-                                    Logout
-                                </Link>
-                            </div>
+                            <template v-slot:dropdown>
+                                <div class="mt-2 py-2 shadow-lg bg-white rounded text-sm">
+                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" href="#">My
+                                        Profile
+                                    </Link>
+                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
+                                                  :href="route('manage_users.index')"
+                                                  v-if="$page.props.permissions.canViewUsers">
+                                        Manage Users
+                                    </Link>
+                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
+                                                  :href="route('logout')" method="post" as="button">
+                                        Logout
+                                    </Link>
+                                </div>
+                            </template>
                         </dropdown>
                     </div>
                 </div>
@@ -78,7 +81,7 @@ import Logo from '@/Shared/Logo'
 import Icon from '@/Shared/Icon'
 import Dropdown from '@/Shared/Dropdown'
 import MainMenu from '@/Shared/MainMenu'
-import { Link } from '@inertiajs/inertia-vue'
+import { Link } from '@inertiajs/vue3'
 import FlashMessages from '@/Shared/FlashMessages'
 
 export default {
@@ -96,16 +99,6 @@ export default {
             showUserMenu: false,
         }
     },
-
-    // mounted() {
-    //     console.log(this.user)
-    // },
-    //
-    // computed: {
-    //     user() {
-    //         return this.$page.props.auth.user
-    //     }
-    // },
 
     methods: {
         url() {

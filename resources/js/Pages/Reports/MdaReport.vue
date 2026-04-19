@@ -1,11 +1,12 @@
 <template>
     <div>
+        <Head title="MDA Payment Analysis Report" />
         <h1 class="mb-8 font-bold text-3xl">MDA/Zone Summary Report</h1>
 
         <div>
             <select-input v-model="form.payroll" class="pb-8 w-full"
                           label="Payroll Month" :errors="$page.props.errors.payroll"
-                          @input="payrollChanged">
+                          @update:modelValue="payrollChanged">
                 <option disabled value="" class="text-gray-100">Select Payroll Month</option>
                 <option v-for="payroll in payrolls" :key="payroll.id" :value="payroll.id">
                     {{ payroll.month_name + ' ' + payroll.year }}
@@ -14,7 +15,7 @@
 
             <select-input v-model="form.category" class="pb-8 w-full"
                           label="Payment Category" :errors="$page.props.errors.category"
-                          @input="categoryChanged">
+                          @update:modelValue="categoryChanged">
                 <option disabled value="" class="text-gray-100">Select Category</option>
                 <option v-for="category in categories" :key="category.id" :value="category.id">
                     {{ category.payment_title }}
@@ -212,10 +213,9 @@
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
-    import { Inertia } from '@inertiajs/inertia'
+    import { router } from '@inertiajs/vue3'
 
     export default {
-        metaInfo: { title: 'MDA Payment Analysis Report' },
         layout: Layout,
 
         props: {
@@ -264,7 +264,7 @@
             },
 
             categoryChanged() {
-                Inertia.reload({
+                router.reload({
                     method: 'post', data: this.form,
                     preserveState: true, preserveScroll: true,
                     only: ['reports', 'category']

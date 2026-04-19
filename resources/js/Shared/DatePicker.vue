@@ -4,7 +4,7 @@
             <legend v-if="label" :for="id" class="mb-2 block text-sm text-gray-800">
                 {{ label }} <span v-show="required && label" class="text-red-600 ml-1 font-bold">*</span>
             </legend>
-            <div v-model="date" class="mt-1 bg-white rounded-md shadow-sm" :class="{ 'pt-px rounded border border-red-500' : errors.length }" ref="input">
+            <div class="mt-1 bg-white rounded-md shadow-sm" :class="{ 'pt-px rounded border border-red-500' : errors.length }" ref="input">
                 <div class="-mt-px flex">
                     <div class="w-1/4 flex min-w-0">
                         <select v-model="day" id="day"
@@ -38,83 +38,78 @@
 </template>
 
 <script>
+let counter = 0
+
 export default {
-    name: "DatePicker",
+    name: 'DatePicker',
     inheritAttrs: false,
 
     props: {
-        value: [String, Number, Boolean],
+        modelValue: [String, Number, Boolean],
         label: String,
-        errors: {type: Array, default: () => []},
-        id: {
-            type: String,
-            default() {
-                return `date-input-${this._uid}`
-            }
-        },
-        to: {type: [Number, String], default: null},
-        from: {type: [Number, String], default: null},
-        required: {type: Boolean, default: false},
+        errors: { type: Array, default: () => [] },
+        id: { type: String, default: () => `date-input-${counter++}` },
+        to: { type: [Number, String], default: null },
+        from: { type: [Number, String], default: null },
+        required: { type: Boolean, default: false },
     },
+
+    emits: ['update:modelValue'],
 
     data() {
-      return {
-          day: null,
-          month: null,
-          year: null,
-          date: null,
+        return {
+            day: null,
+            month: null,
+            year: null,
+            date: null,
 
-          days: [],
-          years: [],
-          month_names: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      }
-    },
-
-    mounted() {
-        this.initDate();
-    },
-
-    watch: {
-        day(){
-            this.setDate();
-        },
-
-        month(){
-            this.setDate();
-        },
-
-        year(){
-            this.setDate();
-        },
-
-        date(date) {
-            this.$emit('input', date);
+            days: [],
+            years: [],
+            month_names: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         }
     },
 
+    mounted() {
+        this.initDate()
+    },
+
+    watch: {
+        day() {
+            this.setDate()
+        },
+
+        month() {
+            this.setDate()
+        },
+
+        year() {
+            this.setDate()
+        },
+
+        date(date) {
+            this.$emit('update:modelValue', date)
+        },
+    },
+
     methods: {
-        setDate(){
-            this.date = this.day + ' ' + this.month + ' ' + this.year;
+        setDate() {
+            this.date = this.day + ' ' + this.month + ' ' + this.year
         },
 
         initDate() {
-            let today = new Date();
-            // this.day = today.getDay();
-            // this.month = this.month_names[today.getMonth()];
-            let year = today.getFullYear();
+            let today = new Date()
+            let year = today.getFullYear()
 
-            for (let i = 1; i <= 31; i++){
-                this.days.push(i);
+            for (let i = 1; i <= 31; i++) {
+                this.days.push(i)
             }
 
-            let start = this.from == null ? year - 40 : this.from;
-            let end = this.to == null ? year : this.to;
+            let start = this.from == null ? year - 40 : this.from
+            let end = this.to == null ? year : this.to
 
-            for (let i = end; i >= start; i--){
-                this.years.push(i);
+            for (let i = end; i >= start; i--) {
+                this.years.push(i)
             }
-
-            // this.setDate()
         },
     },
 }

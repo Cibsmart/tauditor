@@ -12,7 +12,7 @@ mix.js('resources/js/app.js', 'public/js')
         output: {chunkFilename: 'js/[name].js?id=[chunkhash]'},
         resolve: {
             alias: {
-                vue$: 'vue/dist/vue.runtime.esm.js',
+                vue$: 'vue/dist/vue.esm-bundler.js',
                 '@': path.resolve('resources/js'),
             },
         },

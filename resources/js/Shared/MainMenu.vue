@@ -86,7 +86,7 @@
 <script>
 import Icon from '@/Shared/Icon'
 import SubMenu from '@/Shared/SubMenu'
-import { Link } from '@inertiajs/inertia-vue'
+import { Link } from '@inertiajs/vue3'
 
 export default {
 
@@ -205,7 +205,7 @@ export default {
         },
 
         uri(name) {
-            return route(name).urlBuilder.route.uri
+            return route(name, {}, false).toString().replace(/^\//, '')
         },
     },
 }

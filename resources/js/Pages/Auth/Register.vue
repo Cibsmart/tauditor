@@ -1,14 +1,15 @@
 <template>
+    <Head title="Register" />
     <form class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden" @submit.prevent="submit">
         <div class="px-10 py-12">
             <h1 class="text-center font-bold text-3xl">Account Registration</h1>
             <div class="mx-auto mt-6 w-24 border-b-2"/>
 
-            <label-input :value="user.first_name" label="First Name" class="mt-10"/>
+            <label-input :model-value="user.first_name" label="First Name" class="mt-10"/>
 
-            <label-input :value="user.last_name" label="Last Name" class="mt-10"/>
+            <label-input :model-value="user.last_name" label="Last Name" class="mt-10"/>
 
-            <label-input :value="user.email" label="Email" class="mt-10"/>
+            <label-input :model-value="user.email" label="Email" class="mt-10"/>
 
             <text-input v-model="form.password" label="Password" type="password" class="mt-6"
                         :errors="form.errors.password"/>
@@ -16,7 +17,7 @@
             <text-input v-model="form.password_confirmation" label="Confirm Password" type="password"
                         class="mt-6" :errors="form.errors.password_confirmation"/>
 
-            <label-input :value="domain.name" label="Domain" class="mt-10"/>
+            <label-input :model-value="domain.name" label="Domain" class="mt-10"/>
         </div>
 
         <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
@@ -35,16 +36,15 @@ import TextInput from '@/Shared/TextInput'
 import AuthLayout from '@/Shared/AuthLayout'
 import LabelInput from '@/Shared/LabelInput'
 import SelectInput from '@/Shared/SelectInput'
-import { Link } from '@inertiajs/inertia-vue'
-
+import { Link, Head, useForm } from '@inertiajs/vue3'
 
 export default {
-    metaInfo: {title: 'Register'},
     layout: AuthLayout,
 
     components: {
         Logo,
         Link,
+        Head,
         TextInput,
         LabelInput,
         SelectInput,
@@ -56,14 +56,12 @@ export default {
         user: Object,
     },
 
-    data() {
-        return {
-            //TODO: update to new version
-            form: this.$inertia.form({
-                password: null,
-                password_confirmation: null,
-            }),
-        }
+    setup() {
+        const form = useForm({
+            password: null,
+            password_confirmation: null,
+        })
+        return { form }
     },
 
     methods: {
@@ -77,7 +75,7 @@ export default {
                     first_name: this.user.first_name,
                 }))
                 .post(this.route('register.store'))
-        }
+        },
     },
 }
 </script>

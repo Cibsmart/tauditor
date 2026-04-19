@@ -9,34 +9,34 @@
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.last_name"
                             placeholder="Last Name" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Last Name" :errors="$page.errors.last_name" required>
+                            label="Last Name" :errors="$page.props.errors.last_name" required>
                 </text-input>
 
                 <text-input v-model="form.first_name"
                             placeholder="First Name" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="First Name" :errors="$page.errors.first_name" required>
+                            label="First Name" :errors="$page.props.errors.first_name" required>
                 </text-input>
 
                 <text-input v-model="form.middle_name"
                             placeholder="Middle Name" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Middle Name" :errors="$page.errors.middle_name">
+                            label="Middle Name" :errors="$page.props.errors.middle_name">
                 </text-input>
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
                 <date-picker v-model="form.date_of_birth" class="pr-6 pb-8 w-full lg:w-1/3" from="1980"
-                            label="Date Of Birth" :errors="$page.errors.date_of_birth" required>
+                            label="Date Of Birth" :errors="$page.props.errors.date_of_birth" required>
                 </date-picker>
 
                 <select-input v-model="form.gender_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Gender"
-                              :errors="$page.errors.gender_id" required>
+                              :errors="$page.props.errors.gender_id" required>
                     <option v-for="gender in data.genders" :key="gender.id"
                             :value="gender.id" v-text="gender.name">
                     </option>
                 </select-input>
 
                 <select-input v-model="form.marital_status_id" class="pr-6 pb-8 w-full lg:w-1/3" label="Marital Status"
-                              :errors="$page.errors.marital_status_id" required>
+                              :errors="$page.props.errors.marital_status_id" required>
                     <option v-for="marital_status in data.marital_statues" :key="marital_status.id"
                             :value="marital_status.id" v-text="marital_status.name">
                     </option>
@@ -46,25 +46,25 @@
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.phone_number"
                             placeholder="Phone Number" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Phone Number" :errors="$page.errors.phone_number" required>
+                            label="Phone Number" :errors="$page.props.errors.phone_number" required>
                 </text-input>
 
                 <text-input v-model="form.email"
                             placeholder="Email" class="pr-6 pb-8 w-full lg:w-2/3"
-                            label="Email" :errors="$page.errors.email">
+                            label="Email" :errors="$page.props.errors.email">
                 </text-input>
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
                 <select-input v-model="form.state_id" class="pr-6 pb-8 w-full lg:w-1/2" label="State of Origin"
-                              :errors="$page.errors.state_id" @input="stateChanged" required>
+                              :errors="$page.props.errors.state_id" @update:modelValue="stateChanged" required>
                     <option v-for="state in data.states" :key="state.id"
                             :value="state.id" v-text="state.name">
                     </option>
                 </select-input>
 
                 <select-input v-model="form.local_government_id" class="pr-6 pb-8 w-full lg:w-1/2" label="Local Government of Origin"
-                              :errors="$page.errors.local_government_id" required>
+                              :errors="$page.props.errors.local_government_id" required>
                     <option v-for="local_government in local_governments" :key="local_government.id"
                             :value="local_government.id" v-text="local_government.name">
                     </option>
@@ -74,37 +74,37 @@
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.address_line_1"
                             placeholder="Address Line 1" class="pr-6 pb-8 w-full lg:w-1/2"
-                            label="Address Line 1" :errors="$page.errors.address_line_1" required>
+                            label="Address Line 1" :errors="$page.props.errors.address_line_1" required>
                 </text-input>
 
                 <text-input v-model="form.address_line_2"
                             placeholder="Address Line 2" class="pr-6 pb-8 w-full lg:w-1/2"
-                            label="Address Line 2" :errors="$page.errors.address_line_2">
+                            label="Address Line 2" :errors="$page.props.errors.address_line_2">
                 </text-input>
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
                 <text-input v-model="form.address_city"
                             placeholder="City" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="City" :errors="$page.errors.address_city" required>
+                            label="City" :errors="$page.props.errors.address_city" required>
                 </text-input>
 
                 <text-input v-model="form.address_state"
                             placeholder="State" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="State" :errors="$page.errors.address_state" required>
+                            label="State" :errors="$page.props.errors.address_state" required>
                 </text-input>
 
                 <text-input v-model="form.address_country"
                             placeholder="Country" class="pr-6 pb-8 w-full lg:w-1/3"
-                            label="Country" :errors="$page.errors.address_country" required>
+                            label="Country" :errors="$page.props.errors.address_country" required>
                 </text-input>
             </div>
 
             <div class="flex flex-col lg:flex-row w-full">
-                <check-input v-model="form.pensioner" class="pr-6 pb-8 w-full lg:w-1/3" label="Pensioner" @input="checkedPensioner" ></check-input>
+                <check-input v-model="form.pensioner" class="pr-6 pb-8 w-full lg:w-1/3" label="Pensioner" @update:modelValue="checkedPensioner" ></check-input>
 
                 <select-input v-model="form.beneficiary_type_id" class="pr-6 pb-8 w-full lg:w-2/3" label="Beneficiary Type"
-                              :errors="$page.errors.beneficiary_type_id" required>
+                              :errors="$page.props.errors.beneficiary_type_id" required>
                     <option v-for="(beneficiary_type, index) in beneficiary_types" :key="index"
                             :value="beneficiary_type.id" v-text="beneficiary_type.name">
                     </option>

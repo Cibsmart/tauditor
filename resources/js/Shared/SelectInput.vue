@@ -17,37 +17,34 @@
 </template>
 
 <script>
+let counter = 0
 
-    export default {
+export default {
+    inheritAttrs: false,
 
-        inheritAttrs: false,
+    props: {
+        modelValue: [String, Number, Boolean],
+        label: String,
+        errors: { type: Array, default: () => [] },
+        id: { type: String, default: () => `select-input-${counter++}` },
+        required: { type: Boolean, default: false },
+    },
 
-        components: {},
+    emits: ['update:modelValue'],
 
-        props: {
-            value: [String, Number, Boolean],
-            label: String,
-            errors: {type: Array, default: () => []},
-            id: {
-                type: String,
-                default() {
-                    return `select-input-${this._uid}`
-                }
-            },
-            required: {type: Boolean, default: false},
+    data() {
+        return {
+            selected: this.modelValue,
+        }
+    },
+
+    watch: {
+        selected(selected) {
+            this.$emit('update:modelValue', selected)
         },
-
-        data() {
-            return {
-                selected: this.value,
-            }
+        modelValue(value) {
+            this.selected = value
         },
-
-        watch: {
-            selected(selected) {
-                this.$emit('input', selected)
-            }
-        },
-    }
-
+    },
+}
 </script>

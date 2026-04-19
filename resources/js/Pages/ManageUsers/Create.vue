@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Create User" />
         <h1 class="mb-8 font-bold text-3xl">
             <Link class="text-indigo-400 hover:text-indigo-600" :href="route('manage_users.index')">Users</Link>
             <span class="text-indigo-400 font-medium">/</span> Create
@@ -28,7 +29,7 @@
                             {{ mfb.name }}
                         </option>
                     </select-input>
-                    <label-input :value="domain" :error="form.errors.domain" class="pr-6 pb-8 w-full" label="Domain"/>
+                    <label-input :model-value="domain" :error="form.errors.domain" class="pr-6 pb-8 w-full" label="Domain"/>
                 </div>
                 <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
                     <loading-button :loading="sending" class="btn-indigo" type="submit">Create User</loading-button>
@@ -42,13 +43,12 @@
 import Layout from '@/Shared/Layout'
 import FileInput from '@/Shared/FileInput'
 import TextInput from '@/Shared/TextInput'
-import {Link} from '@inertiajs/inertia-vue'
+import { Link, useForm } from '@inertiajs/vue3'
 import LabelInput from '@/Shared/LabelInput'
 import SelectInput from '@/Shared/SelectInput'
 import LoadingButton from '@/Shared/LoadingButton'
 
 export default {
-    metaInfo: {title: 'Create User'},
     layout: Layout,
 
     components: {
@@ -69,17 +69,21 @@ export default {
 
     remember: 'form',
 
+    setup() {
+        const form = useForm({
+            first_name: null,
+            last_name: null,
+            email: null,
+            role: null,
+            mfb: null,
+        })
+        return { form }
+    },
+
     data() {
         return {
             sending: false,
             mfb_role_id: null,
-            form: this.$inertia.form({
-                first_name: null,
-                last_name: null,
-                email: null,
-                role: null,
-                mfb: null,
-            }),
         }
     },
 

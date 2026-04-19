@@ -1,11 +1,12 @@
 <template>
     <div>
+        <Head title="Users" />
         <h1 class="mb-8 font-bold text-3xl">Users</h1>
 
         <div>
             <select-input v-model="form.role" class="pb-8 w-full"
                           label="Payroll Month"
-                          @input="roleChanged">
+                          @update:modelValue="roleChanged">
                 <option disabled value="" class="text-gray-100">Select Role</option>
                 <option v-for="role in roles" :key="role.id" :value="role.id">
                     {{ role.name }}
@@ -153,12 +154,11 @@
 <script>
     import Icon from '@/Shared/Icon';
     import Layout from '@/Shared/Layout';
-    import { Inertia } from '@inertiajs/inertia'
+    import { router } from '@inertiajs/vue3'
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
 
     export default {
-        metaInfo: { title: 'Users' },
         layout: Layout,
 
         props: {
@@ -185,7 +185,7 @@
         methods: {
 
             roleChanged() {
-                Inertia.reload({data: this.form, only: ['users', 'new_users', 'role']})
+                router.reload({data: this.form, only: ['users', 'new_users', 'role']})
             },
         },
     }

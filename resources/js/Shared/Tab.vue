@@ -1,13 +1,12 @@
 <template>
     <div role="tabpanel" v-show="isActive">
-
         <slot></slot>
     </div>
 </template>
 
 <script>
 export default {
-    props:{
+    props: {
         title: String,
         active: {
             type: Boolean,
@@ -16,14 +15,19 @@ export default {
         completed: {
             type: Boolean,
             default: false,
-        }
+        },
     },
 
-    data(){
-        return{
+    inject: ['registerTab'],
+
+    data() {
+        return {
             isActive: this.active,
         }
     },
+
+    mounted() {
+        this.registerTab(this)
+    },
 }
 </script>
-

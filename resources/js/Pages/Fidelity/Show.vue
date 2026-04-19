@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Show Mandate Detail" />
         <h1 class="mb-8 font-bold text-3xl">
             <Link class="text-indigo-400 hover:text-indigo-600" :href="route('fidelity.index')">Loan Mandates
             </Link>
@@ -41,13 +42,11 @@
 
 <script>
 import Layout from '@/Shared/Layout';
-import { Link } from '@inertiajs/inertia-vue';
+import { Link, useForm } from '@inertiajs/vue3';
 import LabelInput from '@/Shared/LabelInputInline';
 import LoadingButton from '@/Shared/LoadingButton';
 
 export default {
-    metaInfo: {title: 'Show Mandate Detail'},
-
     layout: Layout,
 
     components: {
@@ -61,15 +60,18 @@ export default {
         domain: String,
     },
 
+    setup(props) {
+        const form = useForm({
+            mandate_id: props.mandate.id,
+        })
+        return { form }
+    },
+
     data() {
         return {
             sending: false,
             mandatee: this.mandate,
-            form: this.$inertia.form({
-                mandate_id: this.mandate.id,
-            }),
         }
     },
 }
 </script>
-

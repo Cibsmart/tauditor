@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Autopay MDA Schedules" />
         <h1 class="mb-4 font-bold text-3xl">
             <Link :href="route('audit_autopay.index')" class="text-indigo-500 hover:text-indigo-700">
                 Audit Autopay
@@ -139,12 +140,12 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue3'
 import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
 
 export default {
-    metaInfo: {title: 'Autopay MDA Schedules'},
     layout: Layout,
 
     props: {

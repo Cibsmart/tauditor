@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Audit Report" />
         <h1 class="mb-8 font-bold text-3xl">Audit Report for {{  }} Payment</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
@@ -78,7 +79,6 @@
     import throttle from 'lodash/throttle'
 
     export default {
-        metaInfo: { title: 'Audit Report' },
         layout: Layout,
 
         props: {

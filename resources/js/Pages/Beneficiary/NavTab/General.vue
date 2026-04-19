@@ -34,8 +34,6 @@ import Qualifications from "@/Pages/Beneficiary/Tabs/Qualifications";
 import BasicInformation from "@/Pages/Beneficiary/Tabs/BasicInformation";
 import EmploymentDetails from "@/Pages/Beneficiary/Tabs/EmploymentDetails";
 
-import { mapState }  from 'vuex';
-
 export default {
     props: {
         data: Object,
@@ -57,10 +55,6 @@ export default {
 
         }
     },
-
-    computed: mapState([
-        'basic_information_completed'
-    ]),
 
     methods: {
 

@@ -1,4 +1,5 @@
 <template>
+    <Head title="Login" />
     <form class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden" @submit.prevent="submit">
         <div class="px-10 py-12">
             <h1 class="text-center font-bold text-3xl">Account Login</h1>
@@ -30,16 +31,15 @@
 import Logo from '@/Shared/Logo'
 import TextInput from '@/Shared/TextInput'
 import AuthLayout from '@/Shared/AuthLayout'
-import {Link} from '@inertiajs/inertia-vue'
-
+import { Link, Head, useForm } from '@inertiajs/vue3'
 
 export default {
-    metaInfo: {title: 'Login'},
     layout: AuthLayout,
 
     components: {
         Logo,
         Link,
+        Head,
         TextInput,
     },
 
@@ -48,14 +48,13 @@ export default {
         domain: Object,
     },
 
-    data() {
-        return {
-            form: this.$inertia.form({
-                email: '',
-                password: '',
-                remember: false,
-            }),
-        }
+    setup() {
+        const form = useForm({
+            email: '',
+            password: '',
+            remember: false,
+        })
+        return { form }
     },
 
     methods: {
@@ -67,7 +66,7 @@ export default {
                     domain_id: this.domain.id
                 }))
                 .post(this.route('login.attempt'))
-        }
+        },
     },
 }
 </script>

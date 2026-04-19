@@ -12,13 +12,15 @@
                             d="M239.998 239.999L0 0h961.243L721.246 240c-131.999 132-240.28 240-240.624 239.999-.345-.001-108.625-108.001-240.624-240z"/>
                     </svg>
                 </div>
-                <div slot="dropdown" class="mt-2 px-4 py-6 w-screen shadow-xl bg-white rounded"
-                     :style="{ maxWidth: `${maxWidth}px` }">
-                    <slot/>
-                </div>
+                <template v-slot:dropdown>
+                    <div class="mt-2 px-4 py-6 w-screen shadow-xl bg-white rounded"
+                         :style="{ maxWidth: `${maxWidth}px` }">
+                        <slot/>
+                    </div>
+                </template>
             </dropdown>
-            <input type="text" name="search" placeholder="Search..." :value="value" autocomplete="off"
-                   @input="$emit('input', $event.target.value)"
+            <input type="text" name="search" placeholder="Search..." :value="modelValue" autocomplete="off"
+                   @input="$emit('update:modelValue', $event.target.value)"
                    class="relative w-full px-6 py-3 appearance-none border rounded outline-none focus:border-indigo-600">
         </div>
         <button class="ml-3 text-sm text-gray-500 hover:text-gray-700 focus:text-indigo-500" type="button" @click="$emit('reset')">Reset</button>
@@ -31,11 +33,13 @@ import Dropdown from '@/Shared/NewDropdown'
 export default {
     components: { Dropdown },
     props: {
-        value: String,
+        modelValue: String,
         maxWidth: {
             type: Number,
             default: 300,
         },
     },
+
+    emits: ['update:modelValue', 'reset'],
 }
 </script>

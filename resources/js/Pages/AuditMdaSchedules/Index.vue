@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Audit MDA Schedules" />
         <h1 class="mb-4 font-bold text-3xl">
             <Link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
                 Audit Payroll
@@ -146,10 +147,9 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import FileInput from "@/Shared/FileInput";
 import Pagination from '@/Shared/Pagination'
-import {Link} from '@inertiajs/inertia-vue'
+import { Link, useForm } from '@inertiajs/vue3'
 
 export default {
-    metaInfo: {title: 'Audit MDA Schedules'},
     layout: Layout,
 
     props: {
@@ -163,13 +163,11 @@ export default {
         Pagination,
     },
 
-    data() {
-        return {
-
-            form: this.$inertia.form({
-                schedule_file: [],
-            })
-        }
+    setup() {
+        const form = useForm({
+            schedule_file: [],
+        })
+        return { form }
     },
 
     methods: {

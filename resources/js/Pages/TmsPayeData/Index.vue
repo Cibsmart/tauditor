@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Upload PAYE Data" />
         <h1 class="mb-8 font-bold text-3xl">Upload PAYE Data</h1>
         <div class="mb-6 flex justify-between items-center">
             <div></div>
@@ -102,10 +103,9 @@
     import Icon from '@/Shared/Icon'
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
-    import { Link } from '@inertiajs/inertia-vue';
+    import { Link } from '@inertiajs/vue3';
 
     export default {
-        metaInfo: { title: 'Audit Payroll' },
         layout: Layout,
 
         props: {

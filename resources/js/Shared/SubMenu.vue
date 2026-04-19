@@ -11,7 +11,7 @@
 
 <script>
 import Icon from '@/Shared/Icon'
-import { Link } from '@inertiajs/inertia-vue'
+import { Link } from '@inertiajs/vue3'
 
 export default {
 

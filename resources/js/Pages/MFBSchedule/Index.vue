@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Head title="Microfinance Bank Schedule" />
         <h1 class="mb-8 font-bold text-3xl">Microfinance Bank Schedules</h1>
         <div class="mb-6 flex justify-between items-center">
             <!-- Search Filter goes here -->
@@ -115,11 +116,10 @@
 <script>
 import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
-import {Link} from '@inertiajs/inertia-vue'
+import {Link} from '@inertiajs/vue3'
 import Pagination from '@/Shared/Pagination'
 
 export default {
-    metaInfo: {title: 'Microfinance Bank Schedule'},
     layout: Layout,
 
     props: {

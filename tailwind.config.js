@@ -1,17 +1,11 @@
 const defaultTheme = require('tailwindcss/defaultTheme')
 
 module.exports = {
-    mode: 'jit',
-    purge: {
-        content: [
-            './resources/js/Pages/**/*.vue',
-            './resources/js/Pages/**/**/*.vue',
-            './resources/js/Shared/*.vue',
-        ],
-        options: {
-            safelist: []
-        },
-    },
+    content: [
+        './resources/js/Pages/**/*.vue',
+        './resources/js/Pages/**/**/*.vue',
+        './resources/js/Shared/*.vue',
+    ],
     theme: {
         extend: {
             fontFamily: {
@@ -31,10 +25,9 @@ module.exports = {
             boxShadow: theme => ({
                 outline: '0 0 0 2px ' + theme('colors.indigo.500'),
             }),
-            fill: theme => theme ('colors'),
+            fill: theme => theme('colors'),
         },
     },
-    variants: {},
     plugins: [
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
