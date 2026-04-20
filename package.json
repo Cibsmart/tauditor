@@ -20,9 +20,14 @@
         "@tailwindcss/typography": "^0.5.19",
         "@tailwindcss/vite": "^4.2.2",
         "@vueuse/head": "^1.0",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "lucide-vue-next": "^1.0.0",
         "postcss": "^8.2.13",
         "postcss-import": "^12.0.1",
         "postcss-nesting": "^7.0.1",
+        "reka-ui": "^2.9.6",
+        "tailwind-merge": "^3.5.0",
         "tailwindcss": "^4.2.2",
         "vue-final-modal": "^4.5.0"
     }
