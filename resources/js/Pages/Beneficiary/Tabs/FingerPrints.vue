@@ -13,9 +13,9 @@
 
             <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
             <span class="flex justify-end">
-                <button type="submit" class="inline-flex btn btn-big btn-indigo">
+                <Button type="submit" size="lg">
                     Save & Continue
-                </button>
+                </Button>
             </span>
             </div>
         </form>
@@ -24,6 +24,7 @@
 
 <script>
     import TextInput from "@/Shared/TextInput";
+    import { Button } from '@/Components/ui/button';
 
     export default {
         name: "FingerPrints",
@@ -33,6 +34,7 @@
 
         components: {
             TextInput,
+            Button,
         },
 
         data() {

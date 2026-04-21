@@ -1,14 +1,12 @@
 <template>
-    <button :disabled="loading" class="flex items-center">
+    <Button v-bind="$attrs" :disabled="loading">
         <div v-if="loading" class="btn-spinner mr-2" />
         <slot />
-    </button>
+    </Button>
 </template>
 
-<script>
-    export default {
-        props: {
-            loading: Boolean,
-        },
-    }
+<script setup>
+import { Button } from '@/Components/ui/button'
+
+defineProps({ loading: Boolean })
 </script>

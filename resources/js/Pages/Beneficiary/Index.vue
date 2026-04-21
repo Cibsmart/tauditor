@@ -7,9 +7,9 @@
             <search-filter v-model="form.search" class="w-full max-w-lg mr-4">
             </search-filter>
             <div></div>
-            <Link href="#" class="btn btn-big btn-indigo">
+            <Button :as="Link" href="#" size="lg">
                 <span class="hidden md:inline">New Beneficiary</span>
-            </Link>
+            </Button>
         </div>
 
         <div class="flex flex-col">
@@ -105,6 +105,7 @@ import SearchFilter from '@/Shared/SearchFilter'
 import pickBy from 'lodash/pickBy'
 import throttle from 'lodash/throttle'
 import {Link} from '@inertiajs/vue3'
+import { Button } from '@/Components/ui/button'
 
 export default {
     layout: Layout,
@@ -119,6 +120,7 @@ export default {
         Link,
         Pagination,
         SearchFilter,
+        Button,
     },
 
     data() {

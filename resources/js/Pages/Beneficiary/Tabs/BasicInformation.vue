@@ -114,9 +114,9 @@
 
         <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
             <span class="flex justify-end">
-                <button type="submit" class="inline-flex btn btn-big btn-indigo">
+                <Button type="submit" size="lg">
                     Save & Continue
-                </button>
+                </Button>
             </span>
         </div>
         </form>
@@ -128,6 +128,7 @@ import TextInput from "@/Shared/TextInput";
 import CheckInput from "@/Shared/CheckInput";
 import DatePicker from "@/Shared/DatePicker";
 import SelectInput from "@/Shared/SelectInput";
+import { Button } from '@/Components/ui/button';
 
 export default {
     name: "BasicInformation",
@@ -141,6 +142,7 @@ export default {
         CheckInput,
         DatePicker,
         SelectInput,
+        Button,
     },
 
     data() {

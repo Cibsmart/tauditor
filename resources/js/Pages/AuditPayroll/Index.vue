@@ -4,13 +4,9 @@
         <h1 class="mb-8 font-bold text-3xl">Audit Payrolls</h1>
         <div class="mb-6 flex justify-between items-center">
             <div></div>
-            <Link :href="route('audit_payroll.store')"
-                  method="post"
-                  class="btn btn-big btn-indigo"
-                  as="button"
-                  preserve-state>
+            <Button :as="Link" :href="route('audit_payroll.store')" method="post" size="lg" preserve-state>
                 Add <span class="hidden md:inline"> &nbsp; Payroll</span>
-            </Link>
+            </Button>
         </div>
 
         <div class="flex flex-col">
@@ -62,18 +58,19 @@
                             </td>
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200">
-                                <Link v-if="payroll.is_current && payroll.can_add_leave"
+                                <Button v-if="payroll.is_current && payroll.can_add_leave" :as="Link"
                                       href="#"
+                                      variant="outline" size="sm"
                                       @click.prevent="addLeaveAllowance(payroll.id)"
-                                      class="btn-white" preserve-state>
+                                      preserve-state>
                                     Add Annual Leave Allowance
-                                </Link>
+                                </Button>
                             </td>
                             <td class="w-px whitespace-no-wrap border-b border-gray-200">
-                                <Link href="#" @click.prevent="showModal(payroll.id)"preserve-state
-                                      class="btn-white" >
+                                <Button :as="Link" href="#" @click.prevent="showModal(payroll.id)" preserve-state
+                                      variant="outline" size="sm">
                                     Add Schedule
-                                </Link>
+                                </Button>
                             </td>
 
                             <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
@@ -155,10 +152,9 @@
                                                     <file-input v-model="file.schedule_file[category.id]"
                                                                 :errors="file.errors.schedule_file" class="pr-6 w-full" type="file"
                                                                 accept="file/*"/>
-                                                    <button type="submit"
-                                                            class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">
+                                                    <Button type="submit" variant="secondary" size="sm">
                                                         Upload
-                                                    </button>
+                                                    </Button>
                                                 </div>
                                             </form>
                                         </td>
@@ -231,14 +227,12 @@
                 </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" @click="saveSchedule"
-                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-8 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:ml-3 sm:w-auto sm:text-sm">
+                <Button type="button" @click="saveSchedule" class="sm:ml-3">
                     Save
-                </button>
-                <button type="button" @click="closeModal"
-                        class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-8 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                </Button>
+                <Button type="button" variant="outline" @click="closeModal" class="sm:ml-3">
                     Cancel
-                </button>
+                </Button>
             </div>
                 </div>
             </div>
@@ -255,6 +249,7 @@ import TextInput from '@/Shared/TextInput'
 import FileInput from '@/Shared/FileInput'
 import SelectInput from '@/Shared/SelectInput'
 import LoadingButton from '@/Shared/LoadingButton'
+import { Button } from '@/Components/ui/button'
 
 export default {
     layout: Layout,
@@ -273,6 +268,7 @@ export default {
         Pagination,
         SelectInput,
         LoadingButton,
+        Button,
     },
 
     setup() {

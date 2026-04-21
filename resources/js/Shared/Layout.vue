@@ -6,7 +6,7 @@
                 <div class="md:flex">
                     <!-- Branding and Main Menu for Mobile Screen -->
                     <div
-                        class="bg-gray-100 dark:bg-gray-800 md:flex-shrink-0 md:w-64 py-4 flex items-center justify-between md:justify-center">
+                        class="bg-secondary md:flex-shrink-0 md:w-64 py-4 flex items-center justify-between md:justify-center">
                         <!-- Logo -->
                         <Link class="mt-1" href="/">
                             <logo class="text-indigo-900" width="120" height="28"/>
@@ -24,9 +24,9 @@
 
                     <!-- Header and Profile with Dropdown -->
                     <div
-                        class="bg-white dark:bg-gray-900 border-b dark:border-gray-700 w-full p-4 md:py-0 md:px-12 text-sm md:text-base flex justify-between items-center">
+                        class="bg-background border-b border-border w-full p-4 md:py-0 md:px-12 text-sm md:text-base flex justify-between items-center">
                         <!-- Header -->
-                        <div class="mt-1 mr-4 dark:text-gray-100">{{ $page.props.auth.user.domain.name }}</div>
+                        <div class="mt-1 mr-4 text-foreground">{{ $page.props.auth.user.domain.name }}</div>
 
                         <!-- Right side: theme toggle + profile -->
                         <div class="flex items-center gap-2 mt-1">
@@ -53,10 +53,10 @@
                                                   v-if="$page.props.permissions.canViewUsers">
                                         Manage Users
                                     </Link>
-                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
-                                                  :href="route('logout')" method="post" as="button">
+                                    <Button :as="Link" variant="ghost" :href="route('logout')" method="post"
+                                            class="block w-full justify-start rounded-none h-auto px-6 py-2 hover:bg-indigo-800 hover:text-white">
                                         Logout
-                                    </Link>
+                                    </Button>
                                 </div>
                             </template>
                         </dropdown>
@@ -67,10 +67,10 @@
                 <!-- Lower part of the screen -->
                 <div class="flex flex-grow overflow-hidden">
                     <!-- Main Menu on the Left Side Bar Visible on Medium Screen-->
-                    <main-menu :url="url()" class="bg-white dark:bg-gray-900 flex-shrink-0 w-64 hidden md:block overflow-y-auto"/>
+                    <main-menu :url="url()" class="bg-background flex-shrink-0 w-64 hidden md:block overflow-y-auto"/>
 
                     <!-- Display Screen on the Right of the Main Menu becomes Full screen on sm -->
-                    <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto dark:bg-gray-950" scroll-region>
+                    <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto bg-background" scroll-region>
                         <flash-messages/>
                         <slot/>
                     </div>
@@ -89,6 +89,7 @@ import MainMenu from '@/Shared/MainMenu'
 import { Link } from '@inertiajs/vue3'
 import FlashMessages from '@/Shared/FlashMessages'
 import ThemeSwitcher from '@/Components/ThemeSwitcher'
+import { Button } from '@/Components/ui/button'
 
 export default {
     components: {
@@ -99,6 +100,7 @@ export default {
         Dropdown,
         FlashMessages,
         ThemeSwitcher,
+        Button,
     },
 
     data() {

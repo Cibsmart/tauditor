@@ -17,10 +17,9 @@
         <div v-show="categories.data">
         <div class="mb-6 flex justify-between items-center">
             <div></div>
-            <a :href="route('reports.summary_print', {payroll: form.payroll})"
-               class="btn btn-big btn-indigo">
+            <Button as="a" :href="route('reports.summary_print', {payroll: form.payroll})" size="lg">
                 Download<span class="hidden md:inline">&nbsp; PDF</span>
-            </a>
+            </Button>
         </div>
 
         <div class="flex flex-col">
@@ -90,6 +89,7 @@
     import Layout from '@/Shared/Layout';
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
+    import { Button } from '@/Components/ui/button';
 
     import { useForm, router } from '@inertiajs/vue3'
 
@@ -106,6 +106,7 @@
             Icon,
             Pagination,
             SelectInput,
+            Button,
         },
 
         setup(props) {

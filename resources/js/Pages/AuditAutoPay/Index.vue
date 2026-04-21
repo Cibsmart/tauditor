@@ -7,7 +7,7 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
+            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-primary">-->
             <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
             <!--            </Link>-->
         </div>
@@ -97,11 +97,11 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <Link v-show="category.can_generate" as="button"
+                                            <Button v-show="category.can_generate" :as="Link"
                                                           :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
-                                                          method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                                          method="post" size="sm" preserve-state preserve-scroll>
                                                 Generate
-                                            </Link>
+                                            </Button>
 
                                             <Link v-show="category.refreshable"
                                                           :href="route('audit_autopay.index')"
@@ -177,11 +177,11 @@
                                            </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
-                                            <Link v-show="category.can_generate" as="button"
+                                            <Button v-show="category.can_generate" :as="Link"
                                                   :href="route('other_audit_autopay.generate', { other_audit_payroll_category: category.id })"
-                                                  method="post" class="px-5 py-3" preserve-state preserve-scroll>
+                                                  method="post" size="sm" preserve-state preserve-scroll>
                                                 Generate
-                                            </Link>
+                                            </Button>
 
                                             <Link v-show="category.refreshable"
                                                   :href="route('audit_autopay.index')"
@@ -239,6 +239,7 @@
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
     import { Link } from '@inertiajs/vue3'
+    import { Button } from '@/Components/ui/button'
 
     export default {
         layout: Layout,
@@ -251,6 +252,7 @@
             Icon,
             Link,
             Pagination,
+            Button,
         },
 
         data() {

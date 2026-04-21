@@ -7,7 +7,7 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-indigo">-->
+            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-primary">-->
             <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
             <!--            </Link>-->
         </div>

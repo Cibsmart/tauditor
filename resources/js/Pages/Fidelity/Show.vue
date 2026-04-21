@@ -31,8 +31,8 @@
                     <label-input v-model="mandatee.date_disbursed" class="pr-6 pb-8 w-full" label="Disbursement Date"/>
                 </div>
                 <div class="px-8 py-4 bg-gray-100 border-t border-gray-200 flex justify-end items-center">
-                    <Link :href="route('fidelity.index')" class="mr-5 inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back</Link>
-                    <loading-button v-if="! mandatee.processed" :loading="form.processing" class="btn-indigo" type="submit">Processed</loading-button>
+                    <Button :as="Link" :href="route('fidelity.index')" variant="secondary" class="mr-5">Back</Button>
+                    <loading-button v-if="! mandatee.processed" :loading="form.processing" class="btn-primary" type="submit">Processed</loading-button>
                 </div>
             </form>
         </div>
@@ -45,6 +45,7 @@ import Layout from '@/Shared/Layout';
 import { Link, useForm } from '@inertiajs/vue3';
 import LabelInput from '@/Shared/LabelInputInline';
 import LoadingButton from '@/Shared/LoadingButton';
+import { Button } from '@/Components/ui/button';
 
 export default {
     layout: Layout,
@@ -53,6 +54,7 @@ export default {
         Link,
         LabelInput,
         LoadingButton,
+        Button,
     },
 
     props: {

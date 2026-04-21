@@ -33,7 +33,7 @@ const props = defineProps({
     variant: { type: String, default: 'default' },
     size: { type: String, default: 'default' },
     class: { type: String, default: '' },
-    as: { type: String, default: 'button' },
+    as: { type: [String, Object], default: 'button' },
 })
 
 const classes = computed(() => cn(buttonVariants({ variant: props.variant, size: props.size }), props.class))

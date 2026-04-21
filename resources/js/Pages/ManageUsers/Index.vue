@@ -17,10 +17,9 @@
         <div>
             <div class="mb-6 flex justify-between items-center" v-if="can.create_user" >
                 <div></div>
-                <a :href="route('manage_users.create')"
-                   class="btn btn-big btn-indigo">
+                <Button as="a" :href="route('manage_users.create')" size="lg">
                     Create<span class="hidden md:inline">&nbsp; User</span>
-                </a>
+                </Button>
             </div>
 
             <div class="flex flex-col">
@@ -157,6 +156,7 @@
     import { router } from '@inertiajs/vue3'
     import Pagination from '@/Shared/Pagination';
     import SelectInput from "@/Shared/SelectInput";
+    import { Button } from '@/Components/ui/button';
 
     export default {
         layout: Layout,
@@ -172,6 +172,7 @@
             Icon,
             Pagination,
             SelectInput,
+            Button,
         },
 
         data() {

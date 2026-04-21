@@ -7,10 +7,9 @@
             <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
             <!--            </search-filter>-->
             <div></div>
-            <a :href="route('audit_analysis.pdf_report', {audit_payroll_category: audit_payroll_category})"
-               class="btn btn-big btn-indigo">
+            <Button as="a" :href="route('audit_analysis.pdf_report', {audit_payroll_category: audit_payroll_category})" size="lg">
                 Download<span class="hidden md:inline">&nbsp; PDF</span>
-            </a>
+            </Button>
         </div>
 
         <div class="flex flex-col">
@@ -72,6 +71,7 @@
     import Layout from '@/Shared/Layout'
     import Pagination from '@/Shared/Pagination'
     import SearchFilter from '@/Shared/SearchFilter'
+    import { Button } from '@/Components/ui/button'
 
 
     import mapValues from 'lodash/mapValues'
@@ -89,6 +89,7 @@
         components: {
             Icon,
             Pagination,
+            Button,
         },
 
     }
