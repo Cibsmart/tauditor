@@ -3,100 +3,82 @@
         <Head title="Audit Analysis" />
         <h1 class="mb-8 font-bold text-3xl">Audit Analysis</h1>
         <div class="mb-6 flex justify-between items-center">
-            <!-- Search Filter goes here -->
-            <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
-            <!--            </search-filter>-->
             <div></div>
-            <!--            <Link :href="route('audit_payroll.store')" method="post" class="btn btn-big btn-primary">-->
-            <!--                <span class="hidden md:inline">New Audit Payroll</span>-->
-            <!--            </Link>-->
         </div>
 
-        <div class="flex flex-col">
-            <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div
-                    class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-                    <table class="min-w-full">
-                        <thead>
-                        <tr>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Month
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Created By
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Details
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody v-for="payroll in payrolls.data" :key="payroll.id" class="bg-white">
-                        <tr :key="payroll.id" class="hover:bg-gray-100 focus-within:bg-gray-100">
-                            <td class="whitespace-no-wrap border-b border-gray-200">
-                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
-                                              preserve-scroll>
-                                    <div class="px-6 pt-4 text-sm leading-5 font-medium text-gray-900 uppercase">
-                                        {{ payroll.month }}
-                                    </div>
-                                    <div class="px-6 pb-4 text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
-                                </Link>
-                            </td>
-                            <td class="whitespace-no-wrap border-b border-gray-200">
-                                <Link href="#" @click="show(payroll.id)" class="" preserve-state
-                                              preserve-scroll>
-                                    <div class="px-6 pt-4 text-sm leading-5 text-gray-900">
-                                        {{ payroll.created_by }}
-                                    </div>
-                                    <div class="px-6 pb-4 text-sm leading-5 text-gray-600">
-                                        {{ payroll.date_created }}
-                                    </div>
-                                </Link>
-                            </td>
-                            <td class="w-px whitespace-no-wrap border-b border-gray-200 text-sm leading-5 font-medium">
-                                <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state
-                                              preserve-scroll>
-                                    <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400"/>
-                                </Link>
-                            </td>
-                        </tr>
+        <div class="rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Month</TableHead>
+                        <TableHead>Created By</TableHead>
+                        <TableHead class="text-right">Details</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody v-for="payroll in payrolls.data" :key="payroll.id">
+                    <TableRow :key="payroll.id">
+                        <TableCell>
+                            <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                    {{ payroll.month }}
+                                </div>
+                                <div class="text-sm leading-5 text-gray-600">{{ payroll.year }}</div>
+                            </Link>
+                        </TableCell>
+                        <TableCell>
+                            <Link href="#" @click="show(payroll.id)" class="" preserve-state preserve-scroll>
+                                <div class="text-sm leading-5 text-gray-900">
+                                    {{ payroll.created_by }}
+                                </div>
+                                <div class="text-sm leading-5 text-gray-600">
+                                    {{ payroll.date_created }}
+                                </div>
+                            </Link>
+                        </TableCell>
+                        <TableCell class="w-px text-sm leading-5 font-medium">
+                            <Link href="#" @click="show(payroll.id)" class="px-6" preserve-state preserve-scroll>
+                                <icon name="cheveron-right" class="block w-6 h-4 fill-gray-400"/>
+                            </Link>
+                        </TableCell>
+                    </TableRow>
 
-                        <tr v-if="show_detail[payroll.id]">
-                            <td colspan="6"
-                                class="whitespace-no-wrap text-left border-b border-gray-200 text-sm text-indigo-800 leading-5 font-medium">
-                                <table class="min-w-full">
-                                    <tr v-for="category in payroll.categories" :key="category.id">
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                    <TableRow v-if="show_detail[payroll.id]">
+                        <TableCell colspan="6">
+                            <Table>
+                                <TableBody>
+                                    <TableRow v-for="category in payroll.categories" :key="category.id">
+                                        <TableCell class="bg-gray-200">
                                             {{ category.payment_title }}
                                             <span class="px-2 text-xs leading-5 font-semibold rounded-full uppercase"
                                                   :class="category.payment_type_id === 'sal' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'">
-                                             {{ category.payment_type }}
-                                           </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                                {{ category.payment_type }}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell class="bg-gray-200">
                                             MDA Count:
                                             <span class="font-bold">
                                                 {{ category.mda_count }}
                                             </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                        </TableCell>
+                                        <TableCell class="bg-gray-200">
                                             Uploaded:
                                             <span class="font-bold">
                                                 {{ category.uploaded_count }}
                                             </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                        </TableCell>
+                                        <TableCell class="bg-gray-200">
                                             Analysed:
                                             <span class="font-bold">
                                                 {{ category.analysed_count }}
                                             </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-left text-sm border-b border-gray-100 bg-gray-200 leading-5 font-medium">
+                                        </TableCell>
+                                        <TableCell class="bg-gray-200">
                                             <span class="px-2 text-xs leading-5 font-semibold rounded-full uppercase"
                                                   :class="status[category.analysis_status]">
-                                             {{ category.analysis_status }}
-                                           </span>
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-100 bg-gray-200 text-sm leading-5 font-medium">
+                                                {{ category.analysis_status }}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell class="text-right bg-gray-200">
                                             <Button v-show="category.analysable" :as="Link"
                                                           :href="route('audit_analysis.analyse', { audit_payroll_category: category.id })"
                                                           method="post" size="sm"
@@ -117,24 +99,22 @@
                                                           class="px-5 py-3" preserve-state preserve-scroll>
                                                 View Reports
                                             </Link>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        </tbody>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
 
-                        <tbody>
-                        <tr v-if="payrolls.data.length === 0">
-                            <td colspan="6"
-                                class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                No Payroll
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                <TableBody>
+                    <TableRow v-if="payrolls.data.length === 0">
+                        <TableCell colspan="6" class="text-xs font-medium text-gray-700 uppercase tracking-wider">
+                            No Payroll
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         </div>
         <pagination :links="payrolls.links"/>
     </div>
@@ -146,6 +126,7 @@ import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
 import { Link } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 
 export default {
     layout: Layout,
@@ -159,6 +140,12 @@ export default {
         Link,
         Pagination,
         Button,
+        Table,
+        TableHeader,
+        TableBody,
+        TableRow,
+        TableHead,
+        TableCell,
     },
 
     data() {

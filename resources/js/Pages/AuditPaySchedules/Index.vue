@@ -19,105 +19,83 @@
         </h1>
 
         <div class="mb-6 flex justify-between items-center">
-            <!-- Search Filter goes here -->
-            <!--            <search-filter v-model="form.search" class="w-full max-w-lg mr-4">-->
-            <!--            </search-filter>-->
             <div></div>
         </div>
 
-        <div class="flex flex-col">
-            <div class="-my-2 py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-                <div
-                    class="align-middle inline-block min-w-full shadow overflow-hidden sm:rounded-lg border-b border-gray-200">
-                    <table class="min-w-full">
-                        <thead>
-                        <tr>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Beneficiary Name/Verification Number
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Cadre/Designation
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Bank Details
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Net Pay
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Payment Status
-                            </th>
-                            <th class="px-6 py-3 border-b border-gray-200 bg-gray-50 text-right text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                Actions
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white">
-                        <tr v-for="schedule in schedules.data" :key="schedule.id">
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="flex items-center">
-                                    <div class="ml-4">
-                                        <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
-                                            {{ schedule.beneficiary_name }}
-                                        </div>
-                                        <div class="text-sm leading-5 text-gray-600">{{
-                                                schedule.verification_number
-                                            }}
-                                        </div>
+        <div class="rounded-md border">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Beneficiary Name/Verification Number</TableHead>
+                        <TableHead>Cadre/Designation</TableHead>
+                        <TableHead>Bank Details</TableHead>
+                        <TableHead>Net Pay</TableHead>
+                        <TableHead>Payment Status</TableHead>
+                        <TableHead class="text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    <TableRow v-for="schedule in schedules.data" :key="schedule.id">
+                        <TableCell>
+                            <div class="flex items-center">
+                                <div class="ml-4">
+                                    <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
+                                        {{ schedule.beneficiary_name }}
+                                    </div>
+                                    <div class="text-sm leading-5 text-gray-600">{{
+                                            schedule.verification_number
+                                        }}
                                     </div>
                                 </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="text-sm leading-5 text-gray-900">
-                                    {{ schedule.cadre }}
-                                </div>
-                                <div class="text-sm leading-5 text-gray-600">
-                                    {{ schedule.designation }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="text-sm leading-5 text-gray-900">
-                                    {{ schedule.bank_name }}
-                                </div>
-                                <div class="text-sm leading-5 text-gray-600">
-                                    {{ schedule.account_number }}
-                                </div>
-                            </td>
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div class="text-sm leading-5 text-gray-900">
+                                {{ schedule.cadre }}
+                            </div>
+                            <div class="text-sm leading-5 text-gray-600">
+                                {{ schedule.designation }}
+                            </div>
+                        </TableCell>
+                        <TableCell>
+                            <div class="text-sm leading-5 text-gray-900">
+                                {{ schedule.bank_name }}
+                            </div>
+                            <div class="text-sm leading-5 text-gray-600">
+                                {{ schedule.account_number }}
+                            </div>
+                        </TableCell>
 
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                <div class="text-sm leading-5 text-gray-900">
-                                    <span class="line-through">N</span>
-                                    {{ schedule.net_pay }}
-                                </div>
-                            </td>
+                        <TableCell>
+                            <div class="text-sm leading-5 text-gray-900">
+                                <span class="line-through">N</span>
+                                {{ schedule.net_pay }}
+                            </div>
+                        </TableCell>
 
-                            <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                              <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                    :class="schedule.paid
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-red-100 text-red-800'">
+                        <TableCell>
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                                  :class="schedule.paid
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'">
                                 {{ schedule.paid ? 'Paid' : 'Pending' }}
-                              </span>
-                            </td>
+                            </span>
+                        </TableCell>
 
-                            <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 text-sm leading-5 font-medium">
+                        <TableCell class="text-right">
+                            <Link href="#" class="px-5 py-3">
+                                View Details
+                            </Link>
+                        </TableCell>
+                    </TableRow>
 
-                                <Link href="#" class="px-5 py-3">
-                                    View Details
-                                </Link>
-                            </td>
-                        </tr>
-
-                        <tr v-if="schedules.data.length === 0">
-                            <td colspan="6"
-                                class="px-6 py-4 border-b border-gray-200 bg-gray-50 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                                No Pay Schedule
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    <TableRow v-if="schedules.data.length === 0">
+                        <TableCell colspan="6" class="text-xs font-medium text-gray-700 uppercase tracking-wider">
+                            No Pay Schedule
+                        </TableCell>
+                    </TableRow>
+                </TableBody>
+            </Table>
         </div>
         <pagination :links="schedules.links"/>
     </div>
@@ -128,6 +106,7 @@ import Icon from '@/Shared/Icon'
 import Layout from '@/Shared/Layout'
 import Pagination from '@/Shared/Pagination'
 import {Link} from '@inertiajs/vue3'
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 
 export default {
     layout: Layout,
@@ -142,6 +121,12 @@ export default {
         Icon,
         Link,
         Pagination,
+        Table,
+        TableHeader,
+        TableBody,
+        TableRow,
+        TableHead,
+        TableCell,
     },
 }
 </script>
