@@ -1,124 +1,28 @@
-<template>
-    <div>
-        <div class="flex flex-col">
-            <div class="h-screen flex flex-col" @click="hideDropdownMenus">
-                <!-- Uppder Part of the Screen containing Branding, Header and Profile -->
-                <div class="md:flex">
-                    <!-- Branding and Main Menu for Mobile Screen -->
-                    <div
-                        class="bg-secondary md:flex-shrink-0 md:w-64 py-4 flex items-center justify-between md:justify-center">
-                        <!-- Logo -->
-                        <Link class="mt-1" href="/">
-                            <logo class="text-indigo-900" width="120" height="28"/>
-                        </Link>
-                        <!-- Menu for Mobile Screen Visible only on Mobile screen -->
-                        <dropdown class="md:hidden">
-                            <icon name="list" class="text-indigo-800 w-6 h-6"/>
-                            <template v-slot:dropdown>
-                                <div class="mt-2 shadow-lg bg-white rounded">
-                                    <main-menu :url="url()"/>
-                                </div>
-                            </template>
-                        </dropdown>
-                    </div>
-
-                    <!-- Header and Profile with Dropdown -->
-                    <div
-                        class="bg-background border-b border-border w-full p-4 md:py-0 md:px-12 text-sm md:text-base flex justify-between items-center">
-                        <!-- Header -->
-                        <div class="mt-1 mr-4 text-foreground">{{ $page.props.auth.user.domain.name }}</div>
-
-                        <!-- Right side: theme toggle + profile -->
-                        <div class="flex items-center gap-2 mt-1">
-                        <theme-switcher />
-
-                        <!-- Profile with Dropdown -->
-                        <dropdown>
-                            <div class="flex items-center cursor-pointer select-none">
-                                <div class="text-gray-900 focus:text-indigo-800 mr-1 whitespace-no-wrap">
-                                    <span>{{ $page.props.auth.user.first_name }}</span>
-                                    <span class="hidden md:inline">{{ $page.props.auth.user.last_name }}</span>
-                                </div>
-                                <icon
-                                    class="w-5 h-5 fill-current text-gray-900 focus:fill-current focus:text-indigo-800"
-                                    name="cheveron-down"/>
-                            </div>
-                            <template v-slot:dropdown>
-                                <div class="mt-2 py-2 shadow-lg bg-white rounded text-sm">
-                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white" href="#">My
-                                        Profile
-                                    </Link>
-                                    <Link class="block px-6 py-2 hover:bg-indigo-800 hover:text-white"
-                                                  :href="route('manage_users.index')"
-                                                  v-if="$page.props.permissions.canViewUsers">
-                                        Manage Users
-                                    </Link>
-                                    <Button :as="Link" variant="ghost" :href="route('logout')" method="post"
-                                            class="block w-full justify-start rounded-none h-auto px-6 py-2 hover:bg-indigo-800 hover:text-white">
-                                        Logout
-                                    </Button>
-                                </div>
-                            </template>
-                        </dropdown>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Lower part of the screen -->
-                <div class="flex flex-grow overflow-hidden">
-                    <!-- Main Menu on the Left Side Bar Visible on Medium Screen-->
-                    <main-menu :url="url()" class="bg-background flex-shrink-0 w-64 hidden md:block overflow-y-auto"/>
-
-                    <!-- Display Screen on the Right of the Main Menu becomes Full screen on sm -->
-                    <div class="w-full overflow-hidden px-4 py-8 md:p-12 overflow-y-auto bg-background" scroll-region>
-                        <flash-messages/>
-                        <slot/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</template>
-
-
-<script>
-import Logo from '@/Shared/Logo'
-import Icon from '@/Shared/Icon'
-import Dropdown from '@/Shared/Dropdown'
-import MainMenu from '@/Shared/MainMenu'
-import { Link } from '@inertiajs/vue3'
-import FlashMessages from '@/Shared/FlashMessages'
-import ThemeSwitcher from '@/Components/ThemeSwitcher'
-import { Button } from '@/Components/ui/button'
-
-export default {
-    components: {
-        Icon,
-        Link,
-        Logo,
-        MainMenu,
-        Dropdown,
-        FlashMessages,
-        ThemeSwitcher,
-        Button,
-    },
-
-    data() {
-        return {
-            showUserMenu: false,
-        }
-    },
-
-    methods: {
-        url() {
-            return location.pathname.substr(1)
-        },
-
-        hideDropdownMenus() {
-            this.showUserMenu = false
-        },
-    },
-}
-
-
+<script setup>
+import { SidebarProvider, SidebarTrigger, SidebarInset } from '@/Components/ui/sidebar'
+import AppSidebar from '@/Components/AppSidebar.vue'
+import FlashMessages from '@/Shared/FlashMessages.vue'
+import ThemeSwitcher from '@/Components/ThemeSwitcher.vue'
 </script>
+
+<template>
+    <SidebarProvider>
+        <AppSidebar />
+
+        <SidebarInset>
+            <!-- Top header bar -->
+            <header class="flex h-14 shrink-0 items-center gap-2 border-b border-border px-4">
+                <SidebarTrigger />
+                <div class="h-4 w-px bg-border mx-1" />
+                <div class="flex-1" />
+                <ThemeSwitcher />
+            </header>
+
+            <!-- Page content -->
+            <div class="flex flex-1 flex-col p-6 overflow-y-auto" scroll-region>
+                <FlashMessages />
+                <slot />
+            </div>
+        </SidebarInset>
+    </SidebarProvider>
+</template>
