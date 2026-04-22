@@ -23,35 +23,35 @@ class MfbScheduleController extends Controller
     {
         $user = Auth::user();
 
-        $mfb = $user->microfinanceBank->micro_finance_bank_id;
+        $mfb = $user->microfinanceBank?->micro_finance_bank_id;
 
         $payrolls = AuditPayroll::query()
-                                ->select('audit_payrolls.*')
-                                ->payrolls()
-                                ->orderByMonth()
-                                ->where('micro_finance_bank_id', $mfb)
-                                ->distinct()
-                                ->paginate()
-                                ->transform(fn (AuditPayroll $payroll) => [
-                                    'id'         => $payroll->id,
-                                    'month'      => $payroll->month_name,
-                                    'year'       => $payroll->year,
-                                    'categories' => $payroll->auditPaymentCategories()
-                                                            ->categories()
-                                                            ->select('audit_payroll_categories.*')
-                                                            ->where('micro_finance_bank_id', $mfb)
-                                                            ->distinct()
-                                                            ->orderBy('payment_type_id', 'desc')->get()
-                                                            ->transform(fn (AuditPayrollCategory $category) => [
-                                                                'id'              => $category->id,
-                                                                'payment_type_id' => $category->payment_type_id,
-                                                                'payment_type'    => $category->paymentTypeName(),
-                                                                'payment_title'   => $category->payment_title,
-                                                                'autopay_status'  => $category->autopay_status,
-                                                                'mda_count'       => $category->mfbMdaCount($mfb),
-                                                                'mfb_id'          => $mfb,
-                                                            ]),
-                                ]);
+            ->select('audit_payrolls.*')
+            ->payrolls()
+            ->orderByMonth()
+            ->where('micro_finance_bank_id', $mfb)
+            ->distinct()
+            ->paginate()
+            ->transform(fn (AuditPayroll $payroll) => [
+                'id' => $payroll->id,
+                'month' => $payroll->month_name,
+                'year' => $payroll->year,
+                'categories' => $payroll->auditPaymentCategories()
+                    ->categories()
+                    ->select('audit_payroll_categories.*')
+                    ->where('micro_finance_bank_id', $mfb)
+                    ->distinct()
+                    ->orderBy('payment_type_id', 'desc')->get()
+                    ->transform(fn (AuditPayrollCategory $category) => [
+                        'id' => $category->id,
+                        'payment_type_id' => $category->payment_type_id,
+                        'payment_type' => $category->paymentTypeName(),
+                        'payment_title' => $category->payment_title,
+                        'autopay_status' => $category->autopay_status,
+                        'mda_count' => $category->mfbMdaCount($mfb),
+                        'mfb_id' => $mfb,
+                    ]),
+            ]);
 
         return Inertia::render('MFBSchedule/Index', [
             'payrolls' => $payrolls,
@@ -69,7 +69,7 @@ class MfbScheduleController extends Controller
         $headers = ['Content-Type' => 'application/zip'];
 
         return response()->download(public_path($zipped_file), null, $headers)
-                         ->deleteFileAfterSend();
+            ->deleteFileAfterSend();
     }
 
     public function show()
@@ -84,11 +84,11 @@ class MfbScheduleController extends Controller
         $title = $category->payment_title;
 
         $mdas = $category->auditMdaSchedules()
-                         ->mfbSchedules()
-                         ->select('audit_mda_schedules.*')
-                         ->where('micro_finance_bank_id', $mfb->id)
-                         ->distinct()
-                         ->get();
+            ->mfbSchedules()
+            ->select('audit_mda_schedules.*')
+            ->where('micro_finance_bank_id', $mfb->id)
+            ->distinct()
+            ->get();
 
         $month_year = $category->monthYear();
 
@@ -96,11 +96,11 @@ class MfbScheduleController extends Controller
 
         foreach ($mdas as $mda) {
             $sub_mdas = $mda->auditSubMdaSchedules()
-                            ->mfbSchedules()
-                            ->select('audit_sub_mda_schedules.*')
-                            ->where('micro_finance_bank_id', $mfb->id)
-                            ->distinct()
-                            ->get();
+                ->mfbSchedules()
+                ->select('audit_sub_mda_schedules.*')
+                ->where('micro_finance_bank_id', $mfb->id)
+                ->distinct()
+                ->get();
 
             foreach ($sub_mdas as $sub_mda) {
                 $sub_mda_name = $sub_mda->sub_mda_name;
