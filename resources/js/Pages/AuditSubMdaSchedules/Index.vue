@@ -1,111 +1,110 @@
 <template>
-    <div>
-        <Head title="Audit Sub MDA Schedules" />
-        <h1 class="mb-4 font-bold text-3xl">
-            <Link :href="route('audit_payroll.index')" class="text-indigo-500 hover:text-indigo-700">
-                Audit Payroll
-            </Link>
-            <span class="text-indigo-500 font-medium">/</span>
-            <Link :href="route('audit_mda_schedules.index', {audit_payroll_category})"
-                  class="text-indigo-500 hover:text-indigo-700">
-                MDA Schedules
-            </Link>
-            <span class="text-indigo-500 font-medium">/</span> Sub MDA Schedules
-        </h1>
+  <div>
+    <Head title="Audit Sub MDA Schedules" />
+    <h1 class="mb-4 font-bold text-3xl">
+      <Link :href="route('audit_payroll.index')">
+        Audit Payroll
+      </Link>
+      <span class=" font-medium">/</span>
+      <Link :href="route('audit_mda_schedules.index', {audit_payroll_category})">
+        MDA Schedules
+      </Link>
+      <span class=" font-medium">/</span> Sub MDA Schedules
+    </h1>
 
-        <div class="mb-6 flex justify-between items-center">
-            <div></div>
-        </div>
-
-        <div class="rounded-md border">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>MDA/Department/Zone</TableHead>
-                        <TableHead>Month</TableHead>
-                        <TableHead>Total Net Amount</TableHead>
-                        <TableHead>Uploaded</TableHead>
-                        <TableHead class="text-right">Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow v-for="schedule in schedules.data" :key="schedule.id">
-                        <TableCell>
-                            <div class="flex items-center">
-                                <div class="ml-4">
-                                    <div class="text-sm leading-5 font-medium text-gray-900 uppercase">
-                                        {{ schedule.sub_mda_name }}
-                                    </div>
-                                    <div class="text-sm leading-5 text-gray-600">{{ schedule.mda_name }}</div>
-                                </div>
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <div class="text-sm leading-5 text-gray-900">
-                                {{ schedule.month }}
-                            </div>
-                            <div class="text-sm leading-5 text-gray-600">
-                                {{ schedule.year }}
-                            </div>
-                        </TableCell>
-                        <TableCell>
-                            <div class="text-sm leading-5 text-gray-900">
-                                <span class="line-through">N</span>
-                                {{ schedule.total_amount }}
-                            </div>
-                            <div class="text-sm leading-5 text-gray-600">
-                                <span>Head Count: </span>
-                                {{ schedule.head_count }}
-                            </div>
-                        </TableCell>
-
-                        <TableCell>
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                                  :class="schedule.uploaded
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-red-100 text-red-800'">
-                                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
-                            </span>
-                        </TableCell>
-
-                        <TableCell class="text-right">
-                            <form v-show="schedule.uploaded && ! schedule.archived"
-                                  @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
-                                  class="inline" :key="schedule.sub_mda_name">
-                                <Button type="submit" variant="ghost" size="sm">
-                                    Re-upload
-                                </Button>
-                            </form>
-
-                            <Link v-if="schedule.uploaded"
-                                  :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})"
-                                  class="px-5 py-3">
-                                View Details
-                            </Link>
-
-                            <form v-else @submit.prevent="upload(schedule.id)" :key="schedule.id">
-                                <div class="flex items-center">
-                                    <file-input v-model="form.schedule_file[schedule.id]"
-                                                :errors="form.errors.schedule_file" class="pr-6 w-full" type="file"
-                                                accept="file/*"/>
-                                    <Button type="submit" size="sm">
-                                        Upload
-                                    </Button>
-                                </div>
-                            </form>
-                        </TableCell>
-                    </TableRow>
-
-                    <TableRow v-if="schedules.data.length === 0">
-                        <TableCell colspan="6" class="text-xs font-medium text-gray-700 uppercase tracking-wider">
-                            No Pay Schedule
-                        </TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
-        </div>
-        <pagination :links="schedules.links"/>
+    <div class="mb-6 flex justify-between items-center">
+      <div></div>
     </div>
+
+    <div class="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>MDA/Department/Zone</TableHead>
+            <TableHead>Month</TableHead>
+            <TableHead>Total Net Amount</TableHead>
+            <TableHead>Uploaded</TableHead>
+            <TableHead class="text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="schedule in schedules.data" :key="schedule.id">
+            <TableCell>
+              <div class="flex items-center">
+                <div class="ml-4">
+                  <div class="text-sm leading-5 font-medium uppercase">
+                    {{ schedule.sub_mda_name }}
+                  </div>
+                  <div class="text-sm leading-5 text-muted-foreground">{{ schedule.mda_name }}</div>
+                </div>
+              </div>
+            </TableCell>
+            <TableCell>
+              <div class="text-sm leading-5">
+                {{ schedule.month }}
+              </div>
+              <div class="text-sm leading-5 text-muted-foreground">
+                {{ schedule.year }}
+              </div>
+            </TableCell>
+            <TableCell>
+              <div class="text-sm leading-5">
+                <span class="line-through">N</span>
+                {{ schedule.total_amount }}
+              </div>
+              <div class="text-sm leading-5 text-muted-foreground">
+                <span>Head Count: </span>
+                {{ schedule.head_count }}
+              </div>
+            </TableCell>
+
+            <TableCell>
+                            <span :class="schedule.uploaded
+                                  ? 'bg-green-100 text-green-800'
+                                  : 'bg-red-100 text-red-800'"
+                                  class="px-2 inline-flex text-xs leading-5 uppercase font-semibold rounded-full">
+                                {{ schedule.uploaded ? 'uploaded' : 'pending' }}
+                            </span>
+            </TableCell>
+
+            <TableCell class="text-right">
+              <form v-show="schedule.uploaded && ! schedule.archived"
+                    :key="schedule.sub_mda_name"
+                    class="inline" @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)">
+                <Button size="sm" type="submit" variant="ghost">
+                  Re-upload
+                </Button>
+              </form>
+
+              <Link v-if="schedule.uploaded"
+                    :href="route('audit_pay_schedules.index', {audit_sub_mda_schedule: schedule.id})"
+                    class="px-5 py-3">
+                View Details
+              </Link>
+
+              <form v-else :key="schedule.id" @submit.prevent="upload(schedule.id)">
+                <div class="flex items-center">
+                  <file-input v-model="form.schedule_file[schedule.id]"
+                              :errors="form.errors.schedule_file" accept="file/*" class="pr-6 w-full"
+                              type="file" />
+                  <Button size="sm" type="submit">
+                    Upload
+                  </Button>
+                </div>
+              </form>
+            </TableCell>
+          </TableRow>
+
+          <TableRow v-if="schedules.data.length === 0">
+            <TableCell class="text-xs font-medium uppercase tracking-wider" colspan="6">
+              No Pay Schedule
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+    <pagination :links="schedules.links" />
+  </div>
 </template>
 
 <script>
@@ -115,61 +114,61 @@ import FileInput from "@/Shared/FileInput";
 import Pagination from '@/Shared/Pagination'
 import { Link, useForm } from '@inertiajs/vue3'
 import { Button } from '@/Components/ui/button'
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
 
 export default {
-    layout: Layout,
+  layout: Layout,
 
-    props: {
-        schedules: Object,
-        audit_payroll_category: Number,
-    },
+  props: {
+    schedules: Object,
+    audit_payroll_category: Number,
+  },
 
-    components: {
-        Icon,
-        Link,
-        FileInput,
-        Pagination,
-        Button,
-        Table,
-        TableHeader,
-        TableBody,
-        TableRow,
-        TableHead,
-        TableCell,
-    },
+  components: {
+    Icon,
+    Link,
+    FileInput,
+    Pagination,
+    Button,
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    TableHead,
+    TableCell,
+  },
 
-    setup() {
-        const form = useForm({
-            schedule_file: [],
+  setup() {
+    const form = useForm({
+      schedule_file: [],
+    })
+    return { form }
+  },
+
+  methods: {
+    upload(audit_sub_mda) {
+
+      this.form
+        .transform((data) => ({
+          audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
+          schedule_file: data.schedule_file[audit_sub_mda]
+        }))
+        .post('/audit_pay_schedules/store', {
+          preserveScroll: true
         })
-        return { form }
     },
 
-    methods: {
-        upload(audit_sub_mda) {
+    reupload(audit_sub_mda, mda_name) {
 
-            this.form
-                .transform((data) => ({
-                    audit_sub_mda: audit_sub_mda ? audit_sub_mda : '',
-                    schedule_file: data.schedule_file[audit_sub_mda]
-                }))
-                .post('/audit_pay_schedules/store', {
-                    preserveScroll: true
-                })
-        },
+      let result = confirm('Confirm Re-Upload for' + mda_name);
 
-        reupload(audit_sub_mda, mda_name) {
-
-            let result = confirm('Confirm Re-Upload for' + mda_name);
-
-            if (result) {
-                this.form
-                    .post(`/audit_pay_schedules/${audit_sub_mda}/destroy`, {
-                        preserveScroll: true,
-                    })
-            }
-        }
+      if (result) {
+        this.form
+          .post(`/audit_pay_schedules/${audit_sub_mda}/destroy`, {
+            preserveScroll: true,
+          })
+      }
     }
+  }
 }
 </script>

@@ -1,30 +1,27 @@
 <template>
-    <Head title="Login" />
-    <form class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden" @submit.prevent="submit">
-        <div class="px-10 py-12">
-            <h1 class="text-center font-bold text-3xl">Account Login</h1>
-            <div class="mx-auto mt-6 w-24 border-b-2"/>
+  <Head title="Login" />
+  <form class="mt-8 rounded-lg shadow-lg overflow-hidden" @submit.prevent="submit">
+    <div class="px-10 py-12">
+      <h1 class="text-center font-bold text-3xl">Account Login</h1>
+      <div class="mx-auto mt-6 w-24 border-b-2" />
 
-            <text-input v-model="form.email" label="Email" type="email" class="mt-10"
-                        :errors="form.errors.email"/>
+      <text-input v-model="form.email" :errors="form.errors.email" class="mt-10" label="Email"
+                  type="email" />
 
-            <text-input v-model="form.password" label="Password" type="password" class="mt-6"
-                        :errors="form.errors.password"/>
+      <text-input v-model="form.password" :errors="form.errors.password" class="mt-6" label="Password"
+                  type="password" />
 
-            <label class="mt-6 select-none flex items-center" for="remember">
-                <input v-model="form.remember" id="remember" type="checkbox" class="mr-1">
-                <span class="text-sm">Remember Me</span>
-            </label>
-        </div>
+      <label class="mt-6 select-none flex items-center" for="remember">
+        <input id="remember" v-model="form.remember" class="mr-1" type="checkbox">
+        <span class="text-sm">Remember Me</span>
+      </label>
+    </div>
 
-        <div class="px-10 py-4 bg-gray-200 border-t border-gray-200 flex justify-between items-center">
-            <Link href="#" class="hover:underline">Forgot password</Link>
-            <button type="submit"
-                    class="px-6 py-3 flex items-center rounded bg-indigo-800 text-white text-sm font-bold whitespace-no-wrap hover:bg-orange-600 focus:bg-orange-500">
-                Login
-            </button>
-        </div>
-    </form>
+    <div class="px-10 py-4 border-t flex justify-between items-center">
+      <Link class="hover:underline" href="#">Forgot password</Link>
+      <Button>Login</Button>
+    </div>
+  </form>
 </template>
 
 <script>
@@ -32,41 +29,43 @@ import Logo from '@/Shared/Logo'
 import TextInput from '@/Shared/TextInput'
 import AuthLayout from '@/Shared/AuthLayout'
 import { Link, Head, useForm } from '@inertiajs/vue3'
+import { Button } from "@/Components/ui/button";
 
 export default {
-    layout: AuthLayout,
+  layout: AuthLayout,
 
-    components: {
-        Logo,
-        Link,
-        Head,
-        TextInput,
-    },
+  components: {
+    Button,
+    Logo,
+    Link,
+    Head,
+    TextInput,
+  },
 
-    props: {
-        errors: Object,
-        domain: Object,
-    },
+  props: {
+    errors: Object,
+    domain: Object,
+  },
 
-    setup() {
-        const form = useForm({
-            email: '',
-            password: '',
-            remember: false,
-        })
-        return { form }
-    },
+  setup() {
+    const form = useForm({
+      email: '',
+      password: '',
+      remember: false,
+    })
+    return { form }
+  },
 
-    methods: {
-        submit() {
-            this.form
-                .transform(data => ({
-                    ...data,
-                    remember: data.remember ? 'on' : '',
-                    domain_id: this.domain.id
-                }))
-                .post(this.route('login.attempt'))
-        },
+  methods: {
+    submit() {
+      this.form
+        .transform(data => ({
+          ...data,
+          remember: data.remember ? 'on' : '',
+          domain_id: this.domain.id
+        }))
+        .post(this.route('login.attempt'))
     },
+  },
 }
 </script>
