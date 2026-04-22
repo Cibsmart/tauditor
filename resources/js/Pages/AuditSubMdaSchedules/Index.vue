@@ -72,10 +72,9 @@
                             <form v-show="schedule.uploaded && ! schedule.archived"
                                   @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
                                   class="inline" :key="schedule.sub_mda_name">
-                                <button type="submit"
-                                        class="px-5 py-3 h-1/2 bg-transparent font-medium focus:outline-none">
+                                <Button type="submit" variant="ghost" size="sm">
                                     Re-upload
-                                </button>
+                                </Button>
                             </form>
 
                             <Link v-if="schedule.uploaded"
@@ -89,10 +88,9 @@
                                     <file-input v-model="form.schedule_file[schedule.id]"
                                                 :errors="form.errors.schedule_file" class="pr-6 w-full" type="file"
                                                 accept="file/*"/>
-                                    <button type="submit"
-                                            class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none">
+                                    <Button type="submit" size="sm">
                                         Upload
-                                    </button>
+                                    </Button>
                                 </div>
                             </form>
                         </TableCell>
@@ -116,6 +114,7 @@ import Layout from '@/Shared/Layout'
 import FileInput from "@/Shared/FileInput";
 import Pagination from '@/Shared/Pagination'
 import { Link, useForm } from '@inertiajs/vue3'
+import { Button } from '@/Components/ui/button'
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/Components/ui/table'
 
 export default {
@@ -131,6 +130,7 @@ export default {
         Link,
         FileInput,
         Pagination,
+        Button,
         Table,
         TableHeader,
         TableBody,
