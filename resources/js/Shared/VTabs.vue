@@ -93,6 +93,7 @@ export default {
     methods: {
         registerTab(tab) {
             this.tabs.push(tab);
+
             if (this.tabs.length === 1 || tab.active) {
                 this.activeTab = tab;
             }

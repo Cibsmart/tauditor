@@ -89,13 +89,13 @@
 </template>
 
 <script>
-import Layout from '@/Shared/Layout';
-import FileInput from '@/Shared/FileInput';
-import TextInput from '@/Shared/TextInput';
 import { Link, useForm } from '@inertiajs/vue3';
+import FileInput from '@/Shared/FileInput';
 import LabelInput from '@/Shared/LabelInput';
-import SelectInput from '@/Shared/SelectInput';
+import Layout from '@/Shared/Layout';
 import LoadingButton from '@/Shared/LoadingButton';
+import SelectInput from '@/Shared/SelectInput';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     layout: Layout,
@@ -126,6 +126,7 @@ export default {
             role: null,
             mfb: null,
         });
+
         return { form };
     },
 

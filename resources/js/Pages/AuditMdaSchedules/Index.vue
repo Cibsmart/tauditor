@@ -190,10 +190,6 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import FileInput from '@/Shared/FileInput';
-import Pagination from '@/Shared/Pagination';
 import { Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
 import {
@@ -204,6 +200,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import FileInput from '@/Shared/FileInput';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
     layout: Layout,
@@ -230,6 +230,7 @@ export default {
         const form = useForm({
             schedule_file: [],
         });
+
         return { form };
     },
 

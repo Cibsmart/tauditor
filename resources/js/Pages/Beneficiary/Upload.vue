@@ -29,12 +29,12 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import FileInput from '@/Shared/FileInput';
-import Pagination from '@/Shared/Pagination';
 import { useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import FileInput from '@/Shared/FileInput';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
     layout: Layout,
@@ -50,6 +50,7 @@ export default {
         const form = useForm({
             file: null,
         });
+
         return { form };
     },
 

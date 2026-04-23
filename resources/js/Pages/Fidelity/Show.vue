@@ -100,11 +100,11 @@
 </template>
 
 <script>
-import Layout from '@/Shared/Layout';
 import { Link, useForm } from '@inertiajs/vue3';
-import LabelInput from '@/Shared/LabelInputInline';
-import LoadingButton from '@/Shared/LoadingButton';
 import { Button } from '@/Components/ui/button';
+import LabelInput from '@/Shared/LabelInputInline';
+import Layout from '@/Shared/Layout';
+import LoadingButton from '@/Shared/LoadingButton';
 
 export default {
     layout: Layout,
@@ -125,6 +125,7 @@ export default {
         const form = useForm({
             mandate_id: props.mandate.id,
         });
+
         return { form };
     },
 

@@ -223,11 +223,11 @@
 </template>
 
 <script>
-import TextInput from '@/Shared/TextInput';
+import { Button } from '@/Components/ui/button';
 import CheckInput from '@/Shared/CheckInput';
 import DatePicker from '@/Shared/DatePicker';
 import SelectInput from '@/Shared/SelectInput';
-import { Button } from '@/Components/ui/button';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     name: 'BasicInformation',

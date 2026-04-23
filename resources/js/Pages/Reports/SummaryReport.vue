@@ -128,11 +128,15 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import Pagination from '@/Shared/Pagination';
-import SelectInput from '@/Shared/SelectInput';
+import { router, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/Components/ui/select';
 import {
     Table,
     TableBody,
@@ -141,15 +145,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/Components/ui/select';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
+import SelectInput from '@/Shared/SelectInput';
 
-import { router, useForm } from '@inertiajs/vue3';
 
 export default {
     layout: Layout,
@@ -182,6 +182,7 @@ export default {
         const form = useForm({
             payroll: props.payroll.id,
         });
+
         return { form };
     },
 

@@ -293,9 +293,7 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import Pagination from '@/Shared/Pagination';
+import { router } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
 import {
     Select,
@@ -312,8 +310,10 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
-import { router } from '@inertiajs/vue3';
 
 export default {
     layout: Layout,

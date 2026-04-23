@@ -213,8 +213,13 @@ export default {
         },
 
         getNoOfDays(act = '') {
-            if (act === 'add') this.month++;
-            if (act === 'sub') this.month--;
+            if (act === 'add') {
+this.month++;
+}
+
+            if (act === 'sub') {
+this.month--;
+}
 
             let daysInMonth = new Date(this.year, this.month + 1, 0).getDate();
 
@@ -227,6 +232,7 @@ export default {
             }
 
             let daysArray = [];
+
             for (let i = 1; i <= daysInMonth; i++) {
                 daysArray.push(i);
             }

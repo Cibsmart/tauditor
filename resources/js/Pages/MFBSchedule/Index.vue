@@ -133,10 +133,7 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
 import { Link } from '@inertiajs/vue3';
-import Pagination from '@/Shared/Pagination';
 import {
     Table,
     TableBody,
@@ -145,6 +142,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
     layout: Layout,

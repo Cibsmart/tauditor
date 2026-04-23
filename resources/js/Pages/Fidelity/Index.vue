@@ -140,15 +140,10 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import pickBy from 'lodash/pickBy';
-import Layout from '@/Shared/Layout';
-import throttle from 'lodash/throttle';
-import mapValues from 'lodash/mapValues';
-import Pagination from '@/Shared/Pagination';
 import { Link, router } from '@inertiajs/vue3';
-import SelectInput from '@/Shared/SelectInput';
-import SearchFilter from '@/Shared/SearchFilter';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
+import throttle from 'lodash/throttle';
 import {
     Table,
     TableBody,
@@ -157,6 +152,11 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
+import SearchFilter from '@/Shared/SearchFilter';
+import SelectInput from '@/Shared/SelectInput';
 
 export default {
     layout: Layout,

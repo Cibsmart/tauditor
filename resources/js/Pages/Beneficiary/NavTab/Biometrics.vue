@@ -13,11 +13,11 @@
 </template>
 
 <script>
+import FingerPrints from '@/Pages/Beneficiary/Tabs/FingerPrints';
+import PhotoCapture from '@/Pages/Beneficiary/Tabs/PhotoCapture';
 import Icon from '@/Shared/Icon';
 import Tab from '@/Shared/Tab';
 import VTabs from '@/Shared/VTabs';
-import PhotoCapture from '@/Pages/Beneficiary/Tabs/PhotoCapture';
-import FingerPrints from '@/Pages/Beneficiary/Tabs/FingerPrints';
 
 export default {
     props: {

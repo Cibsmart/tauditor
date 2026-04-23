@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import TextInput from '@/Shared/TextInput';
 import { Button } from '@/Components/ui/button';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     name: 'FingerPrints',

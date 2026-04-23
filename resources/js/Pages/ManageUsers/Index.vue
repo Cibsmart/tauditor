@@ -169,11 +169,7 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
 import { router } from '@inertiajs/vue3';
-import Pagination from '@/Shared/Pagination';
-import SelectInput from '@/Shared/SelectInput';
 import { Button } from '@/Components/ui/button';
 import {
     Table,
@@ -183,6 +179,10 @@ import {
     TableHead,
     TableCell,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
+import SelectInput from '@/Shared/SelectInput';
 
 export default {
     layout: Layout,

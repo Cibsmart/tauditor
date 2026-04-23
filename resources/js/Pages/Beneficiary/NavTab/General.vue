@@ -28,14 +28,14 @@
 </template>
 
 <script>
-import Tab from '@/Shared/Tab';
-import Icon from '@/Shared/Icon';
-import VTabs from '@/Shared/VTabs';
-import NextOfKin from '@/Pages/Beneficiary/Tabs/NextOfKin';
 import BankDetails from '@/Pages/Beneficiary/Tabs/BankDetails';
-import Qualifications from '@/Pages/Beneficiary/Tabs/Qualifications';
 import BasicInformation from '@/Pages/Beneficiary/Tabs/BasicInformation';
 import EmploymentDetails from '@/Pages/Beneficiary/Tabs/EmploymentDetails';
+import NextOfKin from '@/Pages/Beneficiary/Tabs/NextOfKin';
+import Qualifications from '@/Pages/Beneficiary/Tabs/Qualifications';
+import Icon from '@/Shared/Icon';
+import Tab from '@/Shared/Tab';
+import VTabs from '@/Shared/VTabs';
 
 export default {
     props: {

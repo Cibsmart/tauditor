@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import WelcomeLayout from '@/Shared/WelcomeLayout';
 import { Link } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import WelcomeLayout from '@/Shared/WelcomeLayout';
 
 export default {
     layout: WelcomeLayout,

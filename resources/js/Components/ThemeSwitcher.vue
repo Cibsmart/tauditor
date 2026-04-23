@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue';
 import { Sun, Moon } from 'lucide-vue-next';
+import { ref, onMounted } from 'vue';
 
 const isDark = ref(false);
 
@@ -10,6 +10,7 @@ onMounted(() => {
 
 function toggle() {
     isDark.value = !isDark.value;
+
     if (isDark.value) {
         document.documentElement.classList.add('dark');
         localStorage.setItem('theme', 'dark');

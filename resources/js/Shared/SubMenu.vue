@@ -15,8 +15,8 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
 import { Link } from '@inertiajs/vue3';
+import Icon from '@/Shared/Icon';
 
 export default {
     components: {

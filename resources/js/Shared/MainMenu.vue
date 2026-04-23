@@ -211,9 +211,9 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue3';
 import Icon from '@/Shared/Icon';
 import SubMenu from '@/Shared/SubMenu';
-import { Link } from '@inertiajs/vue3';
 
 export default {
     components: {

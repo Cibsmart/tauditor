@@ -43,11 +43,11 @@
 </template>
 
 <script>
-import Logo from '@/Shared/Logo';
-import TextInput from '@/Shared/TextInput';
-import AuthLayout from '@/Shared/AuthLayout';
 import { Link, Head, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import AuthLayout from '@/Shared/AuthLayout';
+import Logo from '@/Shared/Logo';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     layout: AuthLayout,
@@ -71,6 +71,7 @@ export default {
             password: '',
             remember: false,
         });
+
         return { form };
     },
 

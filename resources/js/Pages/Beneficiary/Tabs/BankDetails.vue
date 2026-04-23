@@ -21,9 +21,9 @@
 </template>
 
 <script>
-import TextInput from '@/Shared/TextInput';
-import SelectInput from '@/Shared/SelectInput';
 import { Button } from '@/Components/ui/button';
+import SelectInput from '@/Shared/SelectInput';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     name: 'BankDetails',

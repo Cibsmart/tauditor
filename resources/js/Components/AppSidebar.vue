@@ -1,18 +1,8 @@
 <script setup>
-import { computed } from 'vue';
 import { usePage, Link } from '@inertiajs/vue3';
 import { ChevronsUpDown, LogOut, UserRound } from 'lucide-vue-next';
-import Sidebar from '@/Components/ui/sidebar/Sidebar.vue';
-import SidebarHeader from '@/Components/ui/sidebar/SidebarHeader.vue';
-import SidebarContent from '@/Components/ui/sidebar/SidebarContent.vue';
-import SidebarFooter from '@/Components/ui/sidebar/SidebarFooter.vue';
-import SidebarGroup from '@/Components/ui/sidebar/SidebarGroup.vue';
-import SidebarGroupContent from '@/Components/ui/sidebar/SidebarGroupContent.vue';
-import SidebarMenu from '@/Components/ui/sidebar/SidebarMenu.vue';
-import SidebarMenuItem from '@/Components/ui/sidebar/SidebarMenuItem.vue';
-import SidebarMenuButton from '@/Components/ui/sidebar/SidebarMenuButton.vue';
+import { computed } from 'vue';
 import NavMain from '@/Components/NavMain.vue';
-import Logo from '@/Shared/Logo.vue';
 import {
     DropdownMenu,
     DropdownMenuTrigger,
@@ -21,6 +11,16 @@ import {
     DropdownMenuSeparator,
     DropdownMenuLabel,
 } from '@/Components/ui/dropdown-menu';
+import Sidebar from '@/Components/ui/sidebar/Sidebar.vue';
+import SidebarContent from '@/Components/ui/sidebar/SidebarContent.vue';
+import SidebarFooter from '@/Components/ui/sidebar/SidebarFooter.vue';
+import SidebarGroup from '@/Components/ui/sidebar/SidebarGroup.vue';
+import SidebarGroupContent from '@/Components/ui/sidebar/SidebarGroupContent.vue';
+import SidebarHeader from '@/Components/ui/sidebar/SidebarHeader.vue';
+import SidebarMenu from '@/Components/ui/sidebar/SidebarMenu.vue';
+import SidebarMenuButton from '@/Components/ui/sidebar/SidebarMenuButton.vue';
+import SidebarMenuItem from '@/Components/ui/sidebar/SidebarMenuItem.vue';
+import Logo from '@/Shared/Logo.vue';
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);

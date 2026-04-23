@@ -161,9 +161,6 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import Pagination from '@/Shared/Pagination';
 import { Link } from '@inertiajs/vue3';
 import {
     Table,
@@ -173,6 +170,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
     layout: Layout,

@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import Tab from '@/Shared/Tab';
-import Icon from '@/Shared/Icon';
-import HTabs from '@/Shared/HTabs';
-import Layout from '@/Shared/Layout';
-import Salary from '@/Pages/Beneficiary/NavTab/Salary';
-import General from '@/Pages/Beneficiary/NavTab/General';
 import Biometrics from '@/Pages/Beneficiary/NavTab/Biometrics';
+import General from '@/Pages/Beneficiary/NavTab/General';
+import Salary from '@/Pages/Beneficiary/NavTab/Salary';
+import HTabs from '@/Shared/HTabs';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Tab from '@/Shared/Tab';
 
 export default {
     layout: Layout,

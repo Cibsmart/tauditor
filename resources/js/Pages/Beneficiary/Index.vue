@@ -101,14 +101,9 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import Pagination from '@/Shared/Pagination';
-import SearchFilter from '@/Shared/SearchFilter';
-
+import { Link } from '@inertiajs/vue3';
 import pickBy from 'lodash/pickBy';
 import throttle from 'lodash/throttle';
-import { Link } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
 import {
     Table,
@@ -118,6 +113,11 @@ import {
     TableHead,
     TableCell,
 } from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
+import SearchFilter from '@/Shared/SearchFilter';
+
 
 export default {
     layout: Layout,

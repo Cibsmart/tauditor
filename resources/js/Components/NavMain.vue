@@ -1,11 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
 import { usePage, Link } from '@inertiajs/vue3';
-import {
-    CollapsibleRoot,
-    CollapsibleContent,
-    CollapsibleTrigger,
-} from 'reka-ui';
 import {
     LayoutDashboard,
     Calendar,
@@ -17,12 +11,18 @@ import {
     FileText,
     ChevronRight,
 } from 'lucide-vue-next';
+import {
+    CollapsibleRoot,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from 'reka-ui';
+import { ref, computed } from 'vue';
 import SidebarMenu from '@/Components/ui/sidebar/SidebarMenu.vue';
-import SidebarMenuItem from '@/Components/ui/sidebar/SidebarMenuItem.vue';
 import SidebarMenuButton from '@/Components/ui/sidebar/SidebarMenuButton.vue';
+import SidebarMenuItem from '@/Components/ui/sidebar/SidebarMenuItem.vue';
 import SidebarMenuSub from '@/Components/ui/sidebar/SidebarMenuSub.vue';
-import SidebarMenuSubItem from '@/Components/ui/sidebar/SidebarMenuSubItem.vue';
 import SidebarMenuSubButton from '@/Components/ui/sidebar/SidebarMenuSubButton.vue';
+import SidebarMenuSubItem from '@/Components/ui/sidebar/SidebarMenuSubItem.vue';
 
 const page = usePage();
 const permissions = computed(() => page.props.permissions);
@@ -31,7 +31,10 @@ const currentUrl = computed(() => page.url.replace(/^\//, ''));
 const reportsOpen = ref(false);
 
 function isActive(segment) {
-    if (segment === '') return currentUrl.value === '';
+    if (segment === '') {
+return currentUrl.value === '';
+}
+
     return currentUrl.value.startsWith(segment);
 }
 </script>

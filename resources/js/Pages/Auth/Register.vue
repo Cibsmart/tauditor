@@ -62,13 +62,13 @@
 </template>
 
 <script>
-import Logo from '@/Shared/Logo';
-import TextInput from '@/Shared/TextInput';
-import AuthLayout from '@/Shared/AuthLayout';
-import LabelInput from '@/Shared/LabelInput';
-import SelectInput from '@/Shared/SelectInput';
 import { Link, Head, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import AuthLayout from '@/Shared/AuthLayout';
+import LabelInput from '@/Shared/LabelInput';
+import Logo from '@/Shared/Logo';
+import SelectInput from '@/Shared/SelectInput';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     layout: AuthLayout,
@@ -94,6 +94,7 @@ export default {
             password: null,
             password_confirmation: null,
         });
+
         return { form };
     },
 

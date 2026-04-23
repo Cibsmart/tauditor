@@ -9,10 +9,10 @@
 </template>
 
 <script>
+import Salary from '@/Pages/Beneficiary/Tabs/Salary';
 import Icon from '@/Shared/Icon';
 import Tab from '@/Shared/Tab';
 import VTabs from '@/Shared/VTabs';
-import Salary from '@/Pages/Beneficiary/Tabs/Salary';
 
 export default {
     props: {

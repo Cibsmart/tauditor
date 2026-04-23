@@ -1,12 +1,12 @@
 <script setup>
+import AppSidebar from '@/Components/AppSidebar.vue';
+import ThemeSwitcher from '@/Components/ThemeSwitcher.vue';
 import {
     SidebarProvider,
     SidebarTrigger,
     SidebarInset,
 } from '@/Components/ui/sidebar';
-import AppSidebar from '@/Components/AppSidebar.vue';
 import FlashMessages from '@/Shared/FlashMessages.vue';
-import ThemeSwitcher from '@/Components/ThemeSwitcher.vue';
 </script>
 
 <template>

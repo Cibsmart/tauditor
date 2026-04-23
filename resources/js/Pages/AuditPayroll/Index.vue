@@ -436,14 +436,7 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import Layout from '@/Shared/Layout';
-import Pagination from '@/Shared/Pagination';
 import { Link, useForm } from '@inertiajs/vue3';
-import TextInput from '@/Shared/TextInput';
-import FileInput from '@/Shared/FileInput';
-import SelectInput from '@/Shared/SelectInput';
-import LoadingButton from '@/Shared/LoadingButton';
 import { Button } from '@/Components/ui/button';
 import {
     Table,
@@ -453,6 +446,13 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/table';
+import FileInput from '@/Shared/FileInput';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import LoadingButton from '@/Shared/LoadingButton';
+import Pagination from '@/Shared/Pagination';
+import SelectInput from '@/Shared/SelectInput';
+import TextInput from '@/Shared/TextInput';
 
 export default {
     layout: Layout,
@@ -490,6 +490,7 @@ export default {
         const file = useForm({
             schedule_file: [],
         });
+
         return { form, file };
     },
 
