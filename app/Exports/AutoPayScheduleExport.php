@@ -11,14 +11,14 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, ShouldAutoSize
+class AutoPayScheduleExport implements FromQuery, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     use Exportable;
 
     protected $sub_mda;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function query()
     {
@@ -33,9 +33,9 @@ class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, Wit
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function map($row) : array
+    public function map($row): array
     {
         return [
             $row->payment_reference,
@@ -53,9 +53,9 @@ class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, Wit
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Payment Reference',
@@ -73,9 +73,9 @@ class AutoPayScheduleExport implements FromQuery, WithMapping, WithHeadings, Wit
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
             'B' => NumberFormat::FORMAT_TEXT,

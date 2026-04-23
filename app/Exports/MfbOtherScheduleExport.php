@@ -12,7 +12,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class MfbOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, ShouldAutoSize
+class MfbOtherScheduleExport implements FromQuery, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     use Exportable;
 
@@ -21,7 +21,7 @@ class MfbOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     protected MicroFinanceBank $mfb;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function query()
     {
@@ -43,9 +43,9 @@ class MfbOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function map($schedule) : array
+    public function map($schedule): array
     {
         return [
             $schedule->payment_reference,
@@ -63,9 +63,9 @@ class MfbOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Payment Reference',
@@ -83,9 +83,9 @@ class MfbOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
             'B' => NumberFormat::FORMAT_TEXT,

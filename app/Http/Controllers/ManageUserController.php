@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Registration;
 use App\Models\Domain;
 use App\Models\MicroFinanceBank;
 use App\Models\PotentialUser;
@@ -10,12 +9,12 @@ use App\Models\User;
 use App\Notifications\AccountCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use function redirect;
 use Spatie\Permission\Models\Role;
+
+use function redirect;
 
 class ManageUserController extends Controller
 {
@@ -40,8 +39,8 @@ class ManageUserController extends Controller
             'can' => [
                 'create_user' => auth()->user()->can('create_users'),
             ],
-            'roles'     => $roles,
-            'users'     => $users,
+            'roles' => $roles,
+            'users' => $users,
             'new_users' => $new_users,
         ]);
     }
@@ -57,8 +56,8 @@ class ManageUserController extends Controller
         $mfbs = $this->getMicrofinanceBanks($domain);
 
         return Inertia::render('ManageUsers/Create', [
-            'mfbs'   => $mfbs,
-            'roles'  => $roles,
+            'mfbs' => $mfbs,
+            'roles' => $roles,
             'domain' => $domain->name,
         ]);
     }
@@ -70,27 +69,27 @@ class ManageUserController extends Controller
         $domain = $user->domain;
 
         $request->validate([
-            'first_name'        => ['required', 'string'],
-            'last_name'         => ['required', 'string'],
-            'email'             => [
+            'first_name' => ['required', 'string'],
+            'last_name' => ['required', 'string'],
+            'email' => [
                 'required',
                 'email:filter',
                 Rule::unique('users')
                     ->where(fn ($query) => $query->where('domain_id', $domain->id)),
             ],
-            'role'              => ['required', 'integer'],
+            'role' => ['required', 'integer'],
             'microfinance_bank' => ['sometimes', 'required', 'integer'],
         ]);
 
         $new_user = $domain->potentialUser()
-                           ->create([
-                               'uuid'       => Str::uuid(),
-                               'first_name' => $request->first_name,
-                               'last_name'  => $request->last_name,
-                               'email'      => $request->email,
-                               'role_id'    => $request->role,
-                               'user_id' => $user->id,
-                           ]);
+            ->create([
+                'uuid' => Str::uuid(),
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'email' => $request->email,
+                'role_id' => $request->role,
+                'user_id' => $user->id,
+            ]);
 
         if ($request->has('microfinance_bank')) {
             $new_user->microfinanceBank()->create([
@@ -110,36 +109,36 @@ class ManageUserController extends Controller
     {
         $user = Auth::user();
 
-        //User can create all roles
+        // User can create all roles
         if ($user->can('create_super_admin')) {
             return [];
         }
 
-        //User Cannot Create Super Admin
+        // User Cannot Create Super Admin
         if ($user->can('create_hod')) {
             return ['super_admin'];
         }
 
-        //User Cannot Create Super_admin and HOD
+        // User Cannot Create Super_admin and HOD
         if ($user->can('create_admin')) {
             return ['super_admin', 'hod'];
         }
 
-        //User Cannot Create any roles
+        // User Cannot Create any roles
         return Role::all()->pluck('name')->all();
     }
 
     protected function getRoles($black_list = [])
     {
         return Role::query()
-                   ->whereNotIn('name', $black_list)
-                   ->orderBy('name')
-                   ->get()
-                   ->transform(fn (Role $role) => [
-                       'id'   => $role->id,
-                       'name' => Str::upper(Str::of($role->name)
-                                               ->replace('_', ' ')),
-                   ]);
+            ->whereNotIn('name', $black_list)
+            ->orderBy('name')
+            ->get()
+            ->transform(fn (Role $role) => [
+                'id' => $role->id,
+                'name' => Str::upper(Str::of($role->name)
+                    ->replace('_', ' ')),
+            ]);
     }
 
     protected function getUsers($role_id)
@@ -149,26 +148,26 @@ class ManageUserController extends Controller
         $role = Role::findById($role_id);
 
         return User::role($role->id)
-                   ->where('domain_id', $domain->id)
-                   ->paginate(30)
-                   ->transform(fn ($user) => [
-                       'id'    => $user->id,
-                       'name'  => $user->name,
-                       'email' => $user->email,
-                       'role'  => Str::upper(Str::of($role->name)
-                                                ->replace('_', ' ')),
-                   ]);
+            ->where('domain_id', $domain->id)
+            ->paginate(30)
+            ->transform(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => Str::upper(Str::of($role->name)
+                    ->replace('_', ' ')),
+            ]);
     }
 
     protected function getMicrofinanceBanks(Domain $domain)
     {
         return $domain->microFinanceBanks()
-                      ->orderBy('name')
-                      ->get()
-                      ->transform(fn (MicroFinanceBank $mfb) => [
-                          'id'   => $mfb->id,
-                          'name' => $mfb->name,
-                      ]);
+            ->orderBy('name')
+            ->get()
+            ->transform(fn (MicroFinanceBank $mfb) => [
+                'id' => $mfb->id,
+                'name' => $mfb->name,
+            ]);
     }
 
     protected function getNewUsers($role_id)
@@ -178,18 +177,18 @@ class ManageUserController extends Controller
         $role = Role::findById($role_id);
 
         return PotentialUser::query()
-                            ->where('role_id', $role->id)
-                            ->where('domain_id', $domain->id)
-                            ->latest()
-                            ->get()
-                            ->transform(fn ($user) => [
-                                'id'    => $user->id,
-                                'name'  => $user->name,
-                                'email' => $user->email,
-                                'email_sent' => optional($user->email_sent)->diffForHumans() ?: 'Not sent',
-                                'status' => 'unregistered',
-                                'role'  => Str::upper(Str::of($role->name)
-                                                         ->replace('_', ' ')),
-                            ]);
+            ->where('role_id', $role->id)
+            ->where('domain_id', $domain->id)
+            ->latest()
+            ->get()
+            ->transform(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'email_sent' => optional($user->email_sent)->diffForHumans() ?: 'Not sent',
+                'status' => 'unregistered',
+                'role' => Str::upper(Str::of($role->name)
+                    ->replace('_', ' ')),
+            ]);
     }
 }

@@ -12,7 +12,7 @@ class PaymentTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'   => $this->faker->unique()->countryCode,
+            'id' => $this->faker->unique()->countryCode,
             'name' => $this->faker->country,
         ];
     }

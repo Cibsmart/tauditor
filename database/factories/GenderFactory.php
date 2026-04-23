@@ -14,7 +14,7 @@ class GenderFactory extends Factory
         $gender = $this->faker->randomElement(['M', 'F']);
 
         return [
-            'id'   => $gender,
+            'id' => $gender,
             'name' => $gender === 'M' ? 'Male' : 'Female',
         ];
     }

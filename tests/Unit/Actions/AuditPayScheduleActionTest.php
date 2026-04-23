@@ -35,6 +35,7 @@ class SpySubMda extends AuditSubMdaSchedule
         if ($key === 'auditPaySchedules') {
             return $this->fakeSchedules;
         }
+
         return parent::getAttribute($key);
     }
 
@@ -61,7 +62,7 @@ function allCheckClasses(): array
 }
 
 beforeEach(function () {
-    Container::setInstance(new Container());
+    Container::setInstance(new Container);
 });
 
 afterEach(function () {
@@ -70,8 +71,8 @@ afterEach(function () {
 });
 
 it('runs every check on every schedule', function () {
-    $schedule1 = new AuditPaySchedule();
-    $schedule2 = new AuditPaySchedule();
+    $schedule1 = new AuditPaySchedule;
+    $schedule2 = new AuditPaySchedule;
     $schedules = new Collection([$schedule1, $schedule2]);
 
     foreach (allCheckClasses() as $class) {
@@ -82,7 +83,7 @@ it('runs every check on every schedule', function () {
 
     $subMda = new SpySubMda($schedules);
 
-    (new AuditPayScheduleAction())->execute($subMda);
+    (new AuditPayScheduleAction)->execute($subMda);
 
     expect($subMda->analysisCalled)->toBeTrue('analysisCompleted() was not called');
 });
@@ -92,9 +93,9 @@ it('marks analysis completed even with no schedules', function () {
         Container::getInstance()->instance($class, Mockery::mock($class));
     }
 
-    $subMda = new SpySubMda(new Collection());
+    $subMda = new SpySubMda(new Collection);
 
-    (new AuditPayScheduleAction())->execute($subMda);
+    (new AuditPayScheduleAction)->execute($subMda);
 
     expect($subMda->analysisCalled)->toBeTrue('analysisCompleted() was not called for an empty schedule list');
 });

@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AuditMdaSchedule extends Model
 {
@@ -17,8 +17,8 @@ class AuditMdaSchedule extends Model
 
     protected $casts = [
         'analysed' => 'boolean',
-        'has_sub'  => 'boolean',
-        'pension'  => 'boolean',
+        'has_sub' => 'boolean',
+        'pension' => 'boolean',
         'uploaded' => 'boolean',
         'autopay_generated' => 'boolean',
         'autopay_uploaded' => 'boolean',
@@ -57,8 +57,8 @@ class AuditMdaSchedule extends Model
     public function scopeMfbSchedules($query)
     {
         return $query->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
-                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
-                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+            ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+            ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
     }
 
     public function scopePaySchedules($query)
@@ -68,12 +68,12 @@ class AuditMdaSchedule extends Model
             ->join('audit_pay_schedules', 'audit_sub_mda_schedules.id', '=', 'audit_pay_schedules.audit_sub_mda_schedule_id');
     }
 
-    public function setTotalNetPayAttribute(float $value) : int
+    public function setTotalNetPayAttribute(float $value): int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
     }
 
-    public function getTotalNetPayAttribute(?int $value = 0) : float
+    public function getTotalNetPayAttribute(?int $value = 0): float
     {
         return $value / 100;
     }
@@ -144,8 +144,8 @@ class AuditMdaSchedule extends Model
     public function autopayTotalAmount()
     {
         return $this->auditSubMdaSchedules()
-                    ->first()
-                    ->autopayTotalAmount();
+            ->first()
+            ->autopayTotalAmount();
     }
 
     public function autopayItemCount()

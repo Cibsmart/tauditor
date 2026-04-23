@@ -12,15 +12,10 @@ class AccountCreated extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var PotentialUser
-     */
     public PotentialUser $user;
 
     /**
      * Create a new notification instance.
-     *
-     * @param  PotentialUser  $user
      */
     public function __construct(PotentialUser $user)
     {
@@ -42,17 +37,17 @@ class AccountCreated extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Anambra State Payroll System (Account Created)')
-                    ->greeting("Hi {$this->user->first_name},")
-                    ->line('An account has been created for you on Anambra State payroll management platform (HRMEdge).')
-                    ->line('Click on the button below to complete your registration')
-                    ->action('Register', route('register.form', ['registration_token' => (string) $this->user->uuid]))
-                    ->line('Note: Only password is required to complete registration');
+            ->subject('Anambra State Payroll System (Account Created)')
+            ->greeting("Hi {$this->user->first_name},")
+            ->line('An account has been created for you on Anambra State payroll management platform (HRMEdge).')
+            ->line('Click on the button below to complete your registration')
+            ->action('Register', route('register.form', ['registration_token' => (string) $this->user->uuid]))
+            ->line('Note: Only password is required to complete registration');
     }
 
     /**

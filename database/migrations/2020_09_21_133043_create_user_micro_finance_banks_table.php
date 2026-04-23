@@ -16,11 +16,11 @@ class CreateUserMicroFinanceBanksTable extends Migration
         Schema::create('user_micro_finance_banks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
             $table->foreignId('micro_finance_bank_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

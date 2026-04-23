@@ -31,9 +31,9 @@ class CreateAuditOtherPaySchedulesTable extends Migration
             $table->softDeletes();
 
             $table->foreign('other_audit_payroll_category_id', 'other_payroll_category_pay_schedule_indes')
-                  ->references('id')
-                  ->on('other_audit_payroll_categories')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('other_audit_payroll_categories')
+                ->onDelete('cascade');
         });
     }
 

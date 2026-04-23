@@ -20,13 +20,13 @@ class GenerateAndSendPayeData
         $response = $this->uploadToApi($category, $file_name);
 
         $category->payeData()->create([
-            'user_id'    => $user_id,
-            'status'     => $response->status(),
-            'response'   => collect($response->json()),
+            'user_id' => $user_id,
+            'status' => $response->status(),
+            'response' => collect($response->json()),
             'successful' => $response->successful(),
-            'failed'     => $response->failed(),
-            'client'     => $response->clientError(),
-            'server'     => $response->serverError(),
+            'failed' => $response->failed(),
+            'client' => $response->clientError(),
+            'server' => $response->serverError(),
         ]);
     }
 
@@ -38,7 +38,7 @@ class GenerateAndSendPayeData
 
         $staff_type = $category->staff_type;
 
-        $key = 'paye.' . $staff_type;
+        $key = 'paye.'.$staff_type;
 
         $config = config($key);
 
@@ -47,9 +47,9 @@ class GenerateAndSendPayeData
             $content,
             $filename
         )->withHeaders([
-            'Authorization'   => base64_encode($config['id'] . ':' . $config['secret']),
-            'ProjectID'       => $config['project_id'],
-            'ProjectName'     => $config['project_name'],
+            'Authorization' => base64_encode($config['id'].':'.$config['secret']),
+            'ProjectID' => $config['project_id'],
+            'ProjectName' => $config['project_name'],
             'ProjectCategory' => $config['project_category'],
         ])->post($config['url']);
     }
@@ -77,18 +77,18 @@ class GenerateAndSendPayeData
         Storage::disk('local')->put($file_name, $header);
 
         AuditPaySchedule::query()
-                        ->allSchedules()
-                        ->where('audit_payroll_category_id', $category->id)
-                        ->where('payment_type_id', 'sal')
-                        ->orderBy('audit_mda_schedule_id')
-                        ->orderBy('audit_sub_mda_schedule_id')
-                        ->orderBy('verification_number')
-                        ->lazy()
-                        ->each(function ($schedule) use ($month, $year, $file_name) {
-                            $content = $this->formatContent($this->getContent($schedule, $month, $year));
+            ->allSchedules()
+            ->where('audit_payroll_category_id', $category->id)
+            ->where('payment_type_id', 'sal')
+            ->orderBy('audit_mda_schedule_id')
+            ->orderBy('audit_sub_mda_schedule_id')
+            ->orderBy('verification_number')
+            ->lazy()
+            ->each(function ($schedule) use ($month, $year, $file_name) {
+                $content = $this->formatContent($this->getContent($schedule, $month, $year));
 
-                            Storage::disk('local')->append($file_name, $content);
-                        });
+                Storage::disk('local')->append($file_name, $content);
+            });
 
         return $file_name;
     }
@@ -98,43 +98,43 @@ class GenerateAndSendPayeData
         [$surname, $first_name, $middle_name] = $this->splitName($schedule->beneficiary_name);
 
         return [
-            'title'          => '',
-            'surname'        => $surname,
-            'first_name'     => $first_name,
-            'middle_name'    => $middle_name,
-            'date_of_birth'  => '',
-            'gender'         => '',
+            'title' => '',
+            'surname' => $surname,
+            'first_name' => $first_name,
+            'middle_name' => $middle_name,
+            'date_of_birth' => '',
+            'gender' => '',
             'marital_status' => '',
-            'mobile_number'  => '',
-            'mda'            => $schedule->mda_name,
-            'employee_no'    => $schedule->verification_number,
+            'mobile_number' => '',
+            'mda' => $schedule->mda_name,
+            'employee_no' => $schedule->verification_number,
             'account_number' => $schedule->account_number,
-            'bank_code'      => '', // $schedule->bank_code,
-            'grade'          => '', // $schedule->beneficiary_cadre,
-            'designation'    => '', //$schedule->designation,
-            'basic_pay'      => $this->formatValue($schedule->basic_pay),
-            'gross_pay'      => $this->formatValue($schedule->gross_pay),
-            'nhf'            => $this->getValue(['nhf'], $schedule->deductions),
-            'nhis'           => $this->getValue(['ashis', 'ashia'], $schedule->deductions),
-            'nsift'          => '',
-            'pension'        => $this->getValue(['ansg_pen', 'pension'], $schedule->deductions),
-            'tax'            => $this->getValue(['tax'], $schedule->deductions),
-            'month'          => $month,
-            'year'           => $year,
+            'bank_code' => '', // $schedule->bank_code,
+            'grade' => '', // $schedule->beneficiary_cadre,
+            'designation' => '', // $schedule->designation,
+            'basic_pay' => $this->formatValue($schedule->basic_pay),
+            'gross_pay' => $this->formatValue($schedule->gross_pay),
+            'nhf' => $this->getValue(['nhf'], $schedule->deductions),
+            'nhis' => $this->getValue(['ashis', 'ashia'], $schedule->deductions),
+            'nsift' => '',
+            'pension' => $this->getValue(['ansg_pen', 'pension'], $schedule->deductions),
+            'tax' => $this->getValue(['tax'], $schedule->deductions),
+            'month' => $month,
+            'year' => $year,
         ];
     }
 
     protected function splitName($name)
     {
         $names = Str::of($name)->trim()
-                    ->explode(' ');
+            ->explode(' ');
 
         $surname = $names->last();
         $first_name = $names->first();
         $middle_name = array_diff($names->all(), [$first_name, $surname]);
 
         $middle_name = Str::of($this->formatContent($middle_name))
-                          ->replace(',', ' ');
+            ->replace(',', ' ');
 
         return [$surname, $first_name, $middle_name];
     }
@@ -142,29 +142,29 @@ class GenerateAndSendPayeData
     protected function getHeader()
     {
         return [
-            'title'          => 'Title',
-            'surname'        => 'SurName',
-            'first_name'     => 'FirstName',
-            'middle_name'    => 'MiddleName',
-            'date_of_birth'  => 'Dob',
-            'gender'         => 'Gender',
+            'title' => 'Title',
+            'surname' => 'SurName',
+            'first_name' => 'FirstName',
+            'middle_name' => 'MiddleName',
+            'date_of_birth' => 'Dob',
+            'gender' => 'Gender',
             'marital_status' => 'Marital',
-            'mobile_number'  => 'MobilePhone',
-            'mda'            => 'Mda',
-            'employee_no'    => 'EmpNo',
+            'mobile_number' => 'MobilePhone',
+            'mda' => 'Mda',
+            'employee_no' => 'EmpNo',
             'account_number' => 'AccountNumber',
-            'bank_code'      => 'BankCode',
-            'grade'          => 'Grade',
-            'designation'    => 'Designation',
-            'basic_pay'      => 'Basic',
-            'gross_pay'      => 'Gross',
-            'nhf'            => 'Nhf',
-            'nhis'           => 'Nhis',
-            'nsift'          => 'Nsift',
-            'pension'        => 'Pension',
-            'tax'            => 'Tax',
-            'month'          => 'Month',
-            'year'           => 'Year',
+            'bank_code' => 'BankCode',
+            'grade' => 'Grade',
+            'designation' => 'Designation',
+            'basic_pay' => 'Basic',
+            'gross_pay' => 'Gross',
+            'nhf' => 'Nhf',
+            'nhis' => 'Nhis',
+            'nsift' => 'Nsift',
+            'pension' => 'Pension',
+            'tax' => 'Tax',
+            'month' => 'Month',
+            'year' => 'Year',
         ];
     }
 

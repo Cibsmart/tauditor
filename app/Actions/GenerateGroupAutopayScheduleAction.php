@@ -2,17 +2,14 @@
 
 namespace App\Actions;
 
-use App\Models\AuditMdaSchedule;
 use App\Models\AuditPayrollCategory;
 use App\Models\AuditPaySchedule;
 use App\Models\AuditSubMdaSchedule;
-use App\Models\AutopaySchedule;
 use App\Models\BeneficiaryType;
 use App\Models\Domain;
 use App\Models\FidelityLoanDeduction;
 use App\Models\FidelityLoanSchedule;
 use App\Models\MicroFinanceBank;
-use App\Models\MicrofinanceBankSchedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -65,14 +62,12 @@ class GenerateGroupAutopayScheduleAction
 
         $this->initializePayComms();
 
-
         DB::transaction(function () {
             $this->generateAutoPaySchedule();
         });
     }
 
-
-    private function initializePayComms() : void
+    private function initializePayComms(): void
     {
         $payComms = $this->domain->payComms;
 
@@ -135,7 +130,6 @@ class GenerateGroupAutopayScheduleAction
                 $this->subMdas->push($this->subMda);
             }
 
-
             if ($schedule->loan->count() > 0) {
                 $loans = $schedule->loan->where('status', 'A');
 
@@ -145,7 +139,7 @@ class GenerateGroupAutopayScheduleAction
 
                         $amountCheck = $amount - $loanAmount - self::INTERSWITCH_CHARGE;
 
-                        if($amountCheck > 0) {
+                        if ($amountCheck > 0) {
                             $amount = $amountCheck;
                             $this->payCommIIAmount += self::INTERSWITCH_CHARGE;
 
@@ -169,16 +163,16 @@ class GenerateGroupAutopayScheduleAction
 
             $attributes = [
                 'payment_reference' => $this->reference,
-                'beneficiary_code'  => $schedule->account_number,
-                'beneficiary_name'  => $schedule->beneficiary_name,
-                'account_number'    => $schedule->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $schedule->bankable->code,
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $amount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $schedule->account_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'account_number' => $schedule->account_number,
+                'account_type' => 10,
+                'cbn_code' => $schedule->bankable->code,
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $autopaySchedule = $this->subMda->autopaySchedules()->create($attributes);
@@ -211,17 +205,17 @@ class GenerateGroupAutopayScheduleAction
 
             $attributes = [
                 'micro_finance_bank_id' => $schedule->bankable_id,
-                'payment_reference'     => $this->reference,
-                'beneficiary_code'      => $schedule->account_number,
-                'beneficiary_name'      => $schedule->beneficiary_name,
-                'account_number'        => $schedule->account_number,
-                'account_type'          => 10,
-                'cbn_code'              => $schedule->bankable->bankCode(),
-                'is_cash_card'          => '0',
-                'narration'             => $this->narration,
-                'amount'                => $amount,
-                'email'                 => ' ',
-                'currency'              => 'NGN',
+                'payment_reference' => $this->reference,
+                'beneficiary_code' => $schedule->account_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'account_number' => $schedule->account_number,
+                'account_type' => 10,
+                'cbn_code' => $schedule->bankable->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $autopay_schedule = $this->subMda->microfinanceSchedules()->create($attributes);
@@ -253,16 +247,16 @@ class GenerateGroupAutopayScheduleAction
 
             $attributes = [
                 'payment_reference' => $this->getReferenceFor($schedule->id),
-                'beneficiary_code'  => $bank->account_number,
-                'beneficiary_name'  => $bank->name,
-                'account_number'    => $bank->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $bank->bankCode(),
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $amount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $bank->account_number,
+                'beneficiary_name' => $bank->name,
+                'account_number' => $bank->account_number,
+                'account_type' => 10,
+                'cbn_code' => $bank->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $this->payCommIAmount = $this->payCommIAmount + $payCommI;
@@ -288,17 +282,17 @@ class GenerateGroupAutopayScheduleAction
 
                 $fidelityLoan = [
                     'payment_reference' => $this->getReferenceFor($this->referenceId),
-                    'beneficiary_code'  => $this->fidelityLoan->account_number,
-                    'beneficiary_name'  => $this->fidelityLoan->code,
-                    'account_number'    => $this->fidelityLoan->account_number,
-                    'account_type'      => 10,
-                    'cbn_code'          => $this->fidelityLoan->bankable->bankCode(),
-                    'is_cash_card'      => '0',
-                    'narration'         => substr($this->narration, 0, 16),
-                    'amount'            => $fidelityLoanAmount,
-                    'email'             => ' ',
-                    'currency'          => 'NGN',
-                    'audit_sub_mda_schedule_id' => $this->subMda->id
+                    'beneficiary_code' => $this->fidelityLoan->account_number,
+                    'beneficiary_name' => $this->fidelityLoan->code,
+                    'account_number' => $this->fidelityLoan->account_number,
+                    'account_type' => 10,
+                    'cbn_code' => $this->fidelityLoan->bankable->bankCode(),
+                    'is_cash_card' => '0',
+                    'narration' => substr($this->narration, 0, 16),
+                    'amount' => $fidelityLoanAmount,
+                    'email' => ' ',
+                    'currency' => 'NGN',
+                    'audit_sub_mda_schedule_id' => $this->subMda->id,
                 ];
 
                 $this->subMda->autopaySchedules()->create($fidelityLoan);
@@ -306,7 +300,7 @@ class GenerateGroupAutopayScheduleAction
                 $fidelitySchedule = FidelityLoanSchedule::create($fidelityLoan);
 
                 $this->subMda->fidelityDeductions()->update([
-                    'fidelity_loan_schedule_id' => $fidelitySchedule->id
+                    'fidelity_loan_schedule_id' => $fidelitySchedule->id,
                 ]);
             }
 
@@ -316,16 +310,16 @@ class GenerateGroupAutopayScheduleAction
              */
             $paycomI = [
                 'payment_reference' => $this->getReferenceFor($this->referenceId),
-                'beneficiary_code'  => $this->payCommI->account_number,
-                'beneficiary_name'  => $this->payCommI->code,
-                'account_number'    => $this->payCommI->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $this->payCommI->bankable->bankCode(),
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $this->payCommIAmount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $this->payCommI->account_number,
+                'beneficiary_name' => $this->payCommI->code,
+                'account_number' => $this->payCommI->account_number,
+                'account_type' => 10,
+                'cbn_code' => $this->payCommI->bankable->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $this->payCommIAmount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $this->subMda->autopaySchedules()->create($paycomI);
@@ -336,16 +330,16 @@ class GenerateGroupAutopayScheduleAction
              */
             $paycomII = [
                 'payment_reference' => $this->getReferenceFor($this->referenceId),
-                'beneficiary_code'  => $this->payCommII->account_number,
-                'beneficiary_name'  => $this->payCommII->code,
-                'account_number'    => $this->payCommII->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $this->payCommII->bankable->bankCode(),
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $this->payCommIIAmount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $this->payCommII->account_number,
+                'beneficiary_name' => $this->payCommII->code,
+                'account_number' => $this->payCommII->account_number,
+                'account_type' => 10,
+                'cbn_code' => $this->payCommII->bankable->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $this->payCommIIAmount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $this->subMda->autopaySchedules()->create($paycomII);

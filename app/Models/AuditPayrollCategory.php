@@ -70,46 +70,46 @@ class AuditPayrollCategory extends Model
     public function scopeCategories($query)
     {
         return $query->join('audit_mda_schedules', 'audit_payroll_categories.id', '=', 'audit_mda_schedules.audit_payroll_category_id')
-                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
-                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+            ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+            ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
     }
 
     public function mfbMdaCount($micro_finance_bank_id)
     {
         return $this->categories()
-                    ->select('audit_mda_schedules.*')
-                    ->where('micro_finance_bank_id', $micro_finance_bank_id)
-                    ->distinct()
-                    ->get()->count();
+            ->select('audit_mda_schedules.*')
+            ->where('micro_finance_bank_id', $micro_finance_bank_id)
+            ->distinct()
+            ->get()->count();
     }
 
     public function countOfMdasSchedulesUploaded()
     {
         return $this->auditMdaSchedules()
-                    ->where('uploaded', '=', 1)
-                    ->count();
+            ->where('uploaded', '=', 1)
+            ->count();
     }
 
     public function countOfMdasAnalysed()
     {
         return $this->auditMdaSchedules()
-                    ->where('analysed', '=', 1)
-                    ->count();
+            ->where('analysed', '=', 1)
+            ->count();
     }
 
     public function countOfMdasAutopayGenerated()
     {
         return $this->auditMdaSchedules()
-                    ->where('autopay_generated', '=', 1)
-                    ->count();
+            ->where('autopay_generated', '=', 1)
+            ->count();
     }
 
-    public function setTotalNetPayAttribute(float $value) : int
+    public function setTotalNetPayAttribute(float $value): int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
     }
 
-    public function getTotalNetPayAttribute(?int $value = 0) : float
+    public function getTotalNetPayAttribute(?int $value = 0): float
     {
         return $value / 100;
     }
@@ -137,17 +137,17 @@ class AuditPayrollCategory extends Model
     public function analysisIsRunning()
     {
         return $this->auditMdaSchedules()
-                    ->where('analysed', 0)
-                    ->where('uploaded', 1)
-                    ->exists();
+            ->where('analysed', 0)
+            ->where('uploaded', 1)
+            ->exists();
     }
 
     public function autopayGenerationIsRunning()
     {
         return $this->auditMdaSchedules()
-                    ->where('autopay_generated', 0)
-                    ->where('uploaded', 1)
-                    ->exists();
+            ->where('autopay_generated', 0)
+            ->where('uploaded', 1)
+            ->exists();
     }
 
     public function analysisStatusWasUpdated()
@@ -209,9 +209,9 @@ class AuditPayrollCategory extends Model
         }
 
         return self::where('audit_payroll_id', '=', $prev_payroll->id)
-                            ->where('payment_type_id', '=', $this->payment_type_id)
-                            ->where('staff_type', '=', $this->staff_type)
-                            ->first();
+            ->where('payment_type_id', '=', $this->payment_type_id)
+            ->where('staff_type', '=', $this->staff_type)
+            ->first();
     }
 
     public function uploadedBeneficiaryTypes()

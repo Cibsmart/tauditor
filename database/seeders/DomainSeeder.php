@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\Domain;
 use Illuminate\Database\Seeder;
 

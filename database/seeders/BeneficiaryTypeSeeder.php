@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\BeneficiaryType;
 use App\Models\PaymentType;
 use Illuminate\Database\Seeder;
@@ -19,15 +18,15 @@ class BeneficiaryTypeSeeder extends Seeder
         $payment_types = PaymentType::all();
 
         $staff_types_state = [
-            'cv'    => 'ANAMBRA STATE CIVIL SERVANT',
-            'sco'   => 'STATUTORY COMMISSION AND OFFICERS',
-            'pa'    => 'POLITICAL APPOINTEES',
+            'cv' => 'ANAMBRA STATE CIVIL SERVANT',
+            'sco' => 'STATUTORY COMMISSION AND OFFICERS',
+            'pa' => 'POLITICAL APPOINTEES',
             'anpen' => 'ANAMBRA STATE GOVERNMENT PENSIONERS',
         ];
 
         $staff_types_jaac = [
-            'lgea'  => 'LOCAL GOVERNMENT EDUCATION AUTHORITY',
-            'lgsc'  => 'LOCAL GOVERNMENT SERVICE COMMISSION',
+            'lgea' => 'LOCAL GOVERNMENT EDUCATION AUTHORITY',
+            'lgsc' => 'LOCAL GOVERNMENT SERVICE COMMISSION',
             'lgpen' => 'LOCAL GOVERNMENT PENSIONERS',
         ];
 
@@ -38,6 +37,7 @@ class BeneficiaryTypeSeeder extends Seeder
                 $attributes = array_merge($attributes, ['pensioners' => 1]);
                 $beneficiary_type = factory(BeneficiaryType::class)->create($attributes);
                 $beneficiary_type->paymentTypes()->attach($payment_types->firstWhere('id', 'pen'));
+
                 continue;
             }
 
@@ -53,6 +53,7 @@ class BeneficiaryTypeSeeder extends Seeder
                 $attributes = array_merge($attributes, ['pensioners' => 1]);
                 $beneficiary_type = factory(BeneficiaryType::class)->create($attributes);
                 $beneficiary_type->paymentTypes()->attach($payment_types->firstWhere('id', 'pen'));
+
                 continue;
             }
 

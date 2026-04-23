@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\Bank;
 use App\Models\Domain;
 use App\Models\MicroFinanceBank;
@@ -21,7 +20,7 @@ class MicroFinanceBankSeeder extends Seeder
         $domains = Domain::all();
         $banks = Bank::all();
 
-        $json = file_get_contents(storage_path() . '/json/mfb.json');
+        $json = file_get_contents(storage_path().'/json/mfb.json');
 
         $data = json_decode($json, true);
 

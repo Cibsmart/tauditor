@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\PaymentType;
 use Illuminate\Database\Seeder;
 
@@ -31,9 +30,9 @@ class PaymentTypeSeeder extends Seeder
         foreach ($payment_types as $category => $types) {
             foreach ($types as $key => $value) {
                 factory(PaymentType::class)->create([
-                    'id'       => $key,
+                    'id' => $key,
                     'category' => $category,
-                    'name'     => $value,
+                    'name' => $value,
                 ]);
             }
         }

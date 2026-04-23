@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Str;
 
 class AuditOtherPaySchedule extends Model
 {
@@ -13,8 +12,8 @@ class AuditOtherPaySchedule extends Model
 
     protected $guarded = [];
 
-    //A polymorphic relationship to either Bank or Microfinance
-    public function bankable() : MorphTo
+    // A polymorphic relationship to either Bank or Microfinance
+    public function bankable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -24,12 +23,12 @@ class AuditOtherPaySchedule extends Model
         return $this->belongsTo(OtherAuditPayrollCategory::class);
     }
 
-    public function setAmountAttribute(float $value) : int
+    public function setAmountAttribute(float $value): int
     {
         return $this->attributes['amount'] = $value * 100;
     }
 
-    public function getAmountAttribute(?int $value = 0) : float
+    public function getAmountAttribute(?int $value = 0): float
     {
         return $value / 100;
     }

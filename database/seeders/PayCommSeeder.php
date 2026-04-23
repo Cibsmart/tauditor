@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\Bank;
 use App\Models\PayComm;
 use Illuminate\Database\Seeder;
@@ -18,7 +17,7 @@ class PayCommSeeder extends Seeder
     {
         $banks = Bank::all();
 
-        //FIDELITY STATE
+        // FIDELITY STATE
         factory(PayComm::class)->create([
             'code' => 'PayComm I',
             'name' => 'FIDELITY BANK PLC',
@@ -29,7 +28,7 @@ class PayCommSeeder extends Seeder
             'domain_id' => 'state',
         ]);
 
-        //FIDELITY JAAC
+        // FIDELITY JAAC
         factory(PayComm::class)->create([
             'code' => 'PayComm I',
             'name' => 'FIDELITY BANK PLC',
@@ -40,7 +39,7 @@ class PayCommSeeder extends Seeder
             'domain_id' => 'jaac',
         ]);
 
-        //TENECE STATE
+        // TENECE STATE
         factory(PayComm::class)->create([
             'code' => 'PayComm II',
             'name' => 'TENECE PROFESSIONAL SERVICES',
@@ -51,7 +50,7 @@ class PayCommSeeder extends Seeder
             'domain_id' => 'state',
         ]);
 
-        //TENECE JAAC
+        // TENECE JAAC
         factory(PayComm::class)->create([
             'code' => 'PayComm II',
             'name' => 'TENECE PROFESSIONAL SERVICES',

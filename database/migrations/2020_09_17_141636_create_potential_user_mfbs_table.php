@@ -16,8 +16,8 @@ class CreatePotentialUserMfbsTable extends Migration
         Schema::create('potential_user_mfbs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('potential_user_id')
-                  ->constrained()
-                  ->onDelete('cascade');
+                ->constrained()
+                ->onDelete('cascade');
             $table->foreignId('micro_finance_bank_id')->constrained();
             $table->timestamps();
             $table->softDeletes();

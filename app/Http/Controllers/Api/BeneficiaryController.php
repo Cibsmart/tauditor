@@ -8,13 +8,14 @@ use App\Http\Resources\PayloadCollection;
 use App\Models\AuditPayroll;
 use App\Models\AuditPaySchedule;
 use App\Models\Domain;
-use function array_diff;
-use function collect;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
+
+use function array_diff;
+use function collect;
 use function in_array;
 use function response;
-use Symfony\Component\HttpFoundation\Response;
 
 class BeneficiaryController extends Controller
 {
@@ -24,46 +25,46 @@ class BeneficiaryController extends Controller
 
         $staff_types = [
             'state' => ['staff', 'pension'],
-            'jaac'  => ['lgea', 'lgsc', 'pension'],
+            'jaac' => ['lgea', 'lgsc', 'pension'],
         ];
 
         if (! $domain) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Domain Does not Exist',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         if (Str::length($year) !== 4) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Invalid Year',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         if (Str::length($month) !== 2) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Invalid Month',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         if (! in_array($type, $staff_types[$domain->id])) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Invalid Staff Type',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         $payroll = AuditPayroll::query()
-                               ->where('domain_id', '=', $domain->id)
-                               ->where('year', '=', $year)
-                               ->where('month', '=', $month)
-                               ->first();
+            ->where('domain_id', '=', $domain->id)
+            ->where('year', '=', $year)
+            ->where('month', '=', $month)
+            ->first();
 
         if (! $payroll) {
             return response()->json([
-                'status'  => false,
+                'status' => false,
                 'message' => 'Cannot Complete Request',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
@@ -72,13 +73,13 @@ class BeneficiaryController extends Controller
 
         if ($schedules->count() < 1) {
             return response()->json([
-                'status'  => true,
+                'status' => true,
                 'message' => 'No Record Found',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         $data = [
-            'address'   => $domain->name,
+            'address' => $domain->name,
             'nigerians' => $schedules->count(),
             'schedules' => $schedules,
         ];
@@ -93,20 +94,20 @@ class BeneficiaryController extends Controller
 
         if ($vno_ok || $year_ok) {
             return response()->json([
-                'status'  => '03',
+                'status' => '03',
                 'message' => 'Invalid Request Data',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         $schedules = AuditPaySchedule::allSchedules()
-                                     ->where('verification_number', $vno)
-                                     ->where('year', $year)
-                                     ->orderBY('audit_payrolls.month')
-                                     ->get();
+            ->where('verification_number', $vno)
+            ->where('year', $year)
+            ->orderBY('audit_payrolls.month')
+            ->get();
 
         if ($schedules->isEmpty()) {
             return response()->json([
-                'status'  => '02',
+                'status' => '02',
                 'message' => 'No Record Found',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
@@ -116,14 +117,14 @@ class BeneficiaryController extends Controller
         [$surname, $firs_name, $middle_name] = $this->splitName($beneficiary->beneficiary_name);
 
         $data = [
-            'surname'             => $surname,
-            'first_name'          => $firs_name,
-            'middle_name'         => $middle_name,
-            'mda'                 => $beneficiary->mda_name,
+            'surname' => $surname,
+            'first_name' => $firs_name,
+            'middle_name' => $middle_name,
+            'mda' => $beneficiary->mda_name,
             'verification_number' => $beneficiary->verification_number,
-            'account_number'      => $beneficiary->account_number,
-            'bank_code'           => $beneficiary->bank_code,
-            'schedules'           => $schedules,
+            'account_number' => $beneficiary->account_number,
+            'bank_code' => $beneficiary->bank_code,
+            'schedules' => $schedules,
         ];
 
         return new PayeResourceCollection($data);
@@ -137,21 +138,21 @@ class BeneficiaryController extends Controller
 
         if ($vno_ok || $year_ok || $month_ok) {
             return response()->json([
-                'status'  => '03',
+                'status' => '03',
                 'message' => 'Invalid Request Data',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         $schedules = AuditPaySchedule::allSchedules()
-                                     ->where('verification_number', $vno)
-                                     ->where('year', $year)
-                                     ->where('audit_payrolls.month', $month)
-                                     ->limit(1)
-                                     ->get();
+            ->where('verification_number', $vno)
+            ->where('year', $year)
+            ->where('audit_payrolls.month', $month)
+            ->limit(1)
+            ->get();
 
         if ($schedules->isEmpty()) {
             return response()->json([
-                'status'  => '02',
+                'status' => '02',
                 'message' => 'No Record Found',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
@@ -161,14 +162,14 @@ class BeneficiaryController extends Controller
         [$surname, $firs_name, $middle_name] = $this->splitName($beneficiary->beneficiary_name);
 
         $data = [
-            'surname'             => $surname,
-            'first_name'          => $firs_name,
-            'middle_name'         => $middle_name,
-            'mda'                 => $beneficiary->mda_name,
+            'surname' => $surname,
+            'first_name' => $firs_name,
+            'middle_name' => $middle_name,
+            'mda' => $beneficiary->mda_name,
             'verification_number' => $beneficiary->verification_number,
-            'account_number'      => $beneficiary->account_number,
-            'bank_code'           => $beneficiary->bank_code,
-            'schedules'           => $schedules,
+            'account_number' => $beneficiary->account_number,
+            'bank_code' => $beneficiary->bank_code,
+            'schedules' => $schedules,
         ];
 
         return new PayeResourceCollection($data);
@@ -177,7 +178,7 @@ class BeneficiaryController extends Controller
     public function invalid()
     {
         return response()->json([
-            'status'  => '07',
+            'status' => '07',
             'message' => 'Bad Request',
         ])->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -185,14 +186,14 @@ class BeneficiaryController extends Controller
     protected function splitName($name)
     {
         $names = Str::of($name)->trim()
-                    ->explode(' ');
+            ->explode(' ');
 
         $surname = $names->last();
         $first_name = $names->first();
         $middle_name = array_diff($names->all(), [$first_name, $surname]);
 
         $middle_name = Str::upper(Str::of($this->formatContent($middle_name))
-                          ->replace(',', ' '));
+            ->replace(',', ' '));
 
         return [$surname, $first_name, $middle_name];
     }

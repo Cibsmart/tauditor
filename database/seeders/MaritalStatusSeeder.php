@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\MaritalStatus;
 use Illuminate\Database\Seeder;
 

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+
 use function now;
 use function number_format;
 use function redirect;
@@ -23,41 +24,41 @@ class AuditPayrollController extends Controller
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()->orderBy('year', 'desc')->orderBy('month', 'desc')
-                        ->paginate()
-                        ->transform(fn (AuditPayroll $payroll) => [
-                            'id'               => $payroll->id,
-                            'month'            => $payroll->month_name,
-                            'year'             => $payroll->year,
-                            'created_by'       => $payroll->createdBy(),
-                            'date_created'     => $payroll->dateCreated(),
-                            'is_current'       => $payroll->currentMonth(),
-                            'can_add_leave'    => $payroll->canAddLeaveAllowance(),
-                            'categories'       => $payroll->auditPaymentCategories->transform(fn ($category) => [
-                                'id'              => $category->id,
-                                'payment_type_id' => $category->payment_type_id,
-                                'payment_type'    => $category->paymentTypeName(),
-                                'payment_title'   => $category->payment_title,
-                                'total_amount'    => number_format($category->total_net_pay, 2),
-                                'head_count'      => number_format($category->head_count),
-                            ]),
-                            'other_categories' => $payroll->otherPaymentCategories->transform(fn ($category) => [
-                                'id'              => $category->id,
-                                'payment_type_id' => $category->payment_type_id,
-                                'payment_type'    => $category->paymentTypeName(),
-                                'payment_title'   => $category->payment_title,
-                                'total_amount'    => number_format($category->total_net_pay, 2),
-                                'head_count'      => number_format($category->head_count),
-                                'uploaded'        => $category->uploaded,
-                                'tenece'          => $category->paycomm_tenece,
-                                'fidelity'        => $category->paycomm_fidelity,
-                                'color'           => $category->color,
-                            ]),
-                        ]);
+            ->paginate()
+            ->transform(fn (AuditPayroll $payroll) => [
+                'id' => $payroll->id,
+                'month' => $payroll->month_name,
+                'year' => $payroll->year,
+                'created_by' => $payroll->createdBy(),
+                'date_created' => $payroll->dateCreated(),
+                'is_current' => $payroll->currentMonth(),
+                'can_add_leave' => $payroll->canAddLeaveAllowance(),
+                'categories' => $payroll->auditPaymentCategories->transform(fn ($category) => [
+                    'id' => $category->id,
+                    'payment_type_id' => $category->payment_type_id,
+                    'payment_type' => $category->paymentTypeName(),
+                    'payment_title' => $category->payment_title,
+                    'total_amount' => number_format($category->total_net_pay, 2),
+                    'head_count' => number_format($category->head_count),
+                ]),
+                'other_categories' => $payroll->otherPaymentCategories->transform(fn ($category) => [
+                    'id' => $category->id,
+                    'payment_type_id' => $category->payment_type_id,
+                    'payment_type' => $category->paymentTypeName(),
+                    'payment_title' => $category->payment_title,
+                    'total_amount' => number_format($category->total_net_pay, 2),
+                    'head_count' => number_format($category->head_count),
+                    'uploaded' => $category->uploaded,
+                    'tenece' => $category->paycomm_tenece,
+                    'fidelity' => $category->paycomm_fidelity,
+                    'color' => $category->color,
+                ]),
+            ]);
 
         $payment_types = PaymentType::query()
-                                    ->select('id', 'name')
-                                    ->where('category', 'others')
-                                    ->get();
+            ->select('id', 'name')
+            ->where('category', 'others')
+            ->get();
 
         return Inertia::render('AuditPayroll/Index', [
             'payrolls' => $payrolls,
@@ -75,10 +76,10 @@ class AuditPayrollController extends Controller
         $year = $date->year;
 
         $attributes = [
-            'month'      => $date->month,
+            'month' => $date->month,
             'month_name' => $month_name,
-            'year'       => $year,
-            'timestamp'  => Carbon::parse("25 $month_name $year"),
+            'year' => $year,
+            'timestamp' => Carbon::parse("25 $month_name $year"),
         ];
 
         $payroll = $user->auditPayrolls()->where($attributes)->first();
@@ -100,7 +101,7 @@ class AuditPayrollController extends Controller
         $message = "Payroll for $date->monthName $date->year Created Successfully";
 
         return redirect()->route('audit_payroll.index')
-                         ->with('success', $message);
+            ->with('success', $message);
     }
 
     public function leave(AuditPayroll $audit_payroll)
@@ -110,15 +111,15 @@ class AuditPayrollController extends Controller
         $message = "Annual Leave Allowance Category Added for $audit_payroll->monthName $audit_payroll->year Successfully";
 
         return redirect()->route('audit_payroll.index')
-                         ->with('success', $message);
+            ->with('success', $message);
     }
 
     private function createPaymentCategories(AuditPayroll $payroll)
     {
         $domains = ['state' => 'ANSG', 'jaac' => 'ANLG'];
         $salary_beneficiary_types = $payroll->domain->beneficiaryTypes()
-                                                    ->thatReceives($salary = 'sal')
-                                                    ->get();
+            ->thatReceives($salary = 'sal')
+            ->get();
 
         $domain = $domains[$payroll->domain->id];
         $month = $payroll->month();
@@ -128,8 +129,8 @@ class AuditPayrollController extends Controller
 
             $category = $payroll->auditPaymentCategories()->create([
                 'payment_type_id' => $salary,
-                'payment_title'   => $title,
-                'staff_type'      => 'staff',
+                'payment_title' => $title,
+                'staff_type' => 'staff',
             ]);
 
             foreach ($salary_beneficiary_types as $beneficiary_type) {
@@ -144,8 +145,8 @@ class AuditPayrollController extends Controller
 
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
-                    'payment_title'   => $title,
-                    'staff_type'      => $beneficiary_type->id,
+                    'payment_title' => $title,
+                    'staff_type' => $beneficiary_type->id,
                 ]);
 
                 $this->createAuditMdaSchedules($beneficiary_type, $category);
@@ -153,15 +154,15 @@ class AuditPayrollController extends Controller
         }
 
         $pension_beneficiary_types = $payroll->domain->beneficiaryTypes()
-                                                     ->thatReceives($pension = 'pen')
-                                                     ->get();
+            ->thatReceives($pension = 'pen')
+            ->get();
 
         $title = Str::upper("$domain $month pension");
 
         $category = $payroll->auditPaymentCategories()->create([
             'payment_type_id' => $pension,
-            'payment_title'   => $title,
-            'staff_type'      => 'pensioners',
+            'payment_title' => $title,
+            'staff_type' => 'pensioners',
         ]);
 
         foreach ($pension_beneficiary_types as $beneficiary_type) {
@@ -173,8 +174,8 @@ class AuditPayrollController extends Controller
     {
         $domains = ['state' => 'ANSG', 'jaac' => 'ANLG'];
         $salary_beneficiary_types = $payroll->domain->beneficiaryTypes()
-                                                    ->thatReceives($salary = 'lev')
-                                                    ->get();
+            ->thatReceives($salary = 'lev')
+            ->get();
 
         $domain = $domains[$payroll->domain->id];
         $year = $payroll->year;
@@ -184,8 +185,8 @@ class AuditPayrollController extends Controller
 
             $category = $payroll->auditPaymentCategories()->create([
                 'payment_type_id' => $salary,
-                'payment_title'   => $title,
-                'staff_type'      => 'staff',
+                'payment_title' => $title,
+                'staff_type' => 'staff',
             ]);
 
             foreach ($salary_beneficiary_types as $beneficiary_type) {
@@ -200,8 +201,8 @@ class AuditPayrollController extends Controller
 
                 $category = $payroll->auditPaymentCategories()->create([
                     'payment_type_id' => $salary,
-                    'payment_title'   => $title,
-                    'staff_type'      => $beneficiary_type->id,
+                    'payment_title' => $title,
+                    'staff_type' => $beneficiary_type->id,
                 ]);
 
                 $this->createAuditMdaSchedules($beneficiary_type, $category);
@@ -217,9 +218,9 @@ class AuditPayrollController extends Controller
 
         foreach ($mdas as $mda) {
             $attributes = [
-                'mda_id'   => $mda->id,
+                'mda_id' => $mda->id,
                 'mda_name' => $mda->name,
-                'pension'  => $pensioners,
+                'pension' => $pensioners,
             ];
 
             $audit_mda_schedule = $category->auditMdaSchedules()->create($attributes);
@@ -230,10 +231,10 @@ class AuditPayrollController extends Controller
 
     protected function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
     {
-        //Only State Education Commission should have add subs
+        // Only State Education Commission should have add subs
         if ($mda->code !== 'PPSSC') {
             $audit_mda_schedule->auditSubMdaSchedules()
-                               ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
+                ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
 
             return;
         }
@@ -245,7 +246,7 @@ class AuditPayrollController extends Controller
 
         foreach ($sub_mdas as $sub_mda) {
             $audit_mda_schedule->auditSubMdaSchedules()
-                               ->create(['sub_mda_name' => $sub_mda->name]);
+                ->create(['sub_mda_name' => $sub_mda->name]);
         }
 
     }

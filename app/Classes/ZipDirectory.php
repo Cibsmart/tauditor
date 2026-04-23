@@ -8,6 +8,7 @@ class ZipDirectory
 {
     /**
      * Add files and sub-directories in a folder to zip file.
+     *
      * @param  string  $folder
      * @param  ZipArchive  $zipFile
      * @param  int  $exclusiveLength  Number of text to be exclusived from the file path.
@@ -48,8 +49,8 @@ class ZipDirectory
         $parentPath = $pathInfo['dirname'];
         $dirName = $pathInfo['basename'];
 
-        $z = new ZipArchive();
-        $z->open($outZipPath, ZIPARCHIVE::CREATE);
+        $z = new ZipArchive;
+        $z->open($outZipPath, ZipArchive::CREATE);
         $z->addEmptyDir($dirName);
         self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
         $z->close();

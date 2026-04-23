@@ -7,7 +7,6 @@ use App\Models\BeneficiaryType;
 use App\Models\MicroFinanceBank;
 use App\Models\MicrofinanceBankSchedule;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
@@ -15,7 +14,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, ShouldAutoSize
+class MfbGroupScheduleExport implements FromQuery, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     use Exportable;
 
@@ -26,7 +25,7 @@ class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     protected MicroFinanceBank $mfb;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function query()
     {
@@ -69,9 +68,9 @@ class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function map($schedule) : array
+    public function map($schedule): array
     {
         return [
             $schedule->payment_reference,
@@ -89,9 +88,9 @@ class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Payment Reference',
@@ -109,9 +108,9 @@ class MfbGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, Wi
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
             'B' => NumberFormat::FORMAT_TEXT,

@@ -15,8 +15,8 @@ class ModifyBankDetails extends Migration
     {
         Schema::table('bank_details', function (Blueprint $table) {
             $table->string('account_name')
-                  ->after('beneficiary_id')
-                  ->nullable();
+                ->after('beneficiary_id')
+                ->nullable();
 
             $table->index('bank_verification_number');
         });

@@ -2,19 +2,21 @@
 
 namespace App\Imports;
 
+use const STR_PAD_LEFT;
+
 use App\Exceptions\WrongScheduleException;
 use App\Models\Bank;
 use App\Models\OtherAuditPayrollCategory;
-use function collect;
 use Exception;
 use Illuminate\Support\Str;
-use function in_array;
-use function is_null;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Row;
+
+use function collect;
+use function in_array;
+use function is_null;
 use function str_pad;
-use const STR_PAD_LEFT;
 use function throw_if;
 
 class OtherScheduleImport implements OnEachRow
@@ -52,7 +54,7 @@ class OtherScheduleImport implements OnEachRow
             return null;
         }
 
-        //Combines each beneficiary record with the heading for identification
+        // Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
 
         if (
@@ -69,12 +71,12 @@ class OtherScheduleImport implements OnEachRow
     protected function setHeaders()
     {
         $items = [
-            'sn'               => ['sn', 's/no', 'sno'],
+            'sn' => ['sn', 's/no', 'sno'],
             'beneficiary_name' => ['name', 'names', 'beneficiaries', 'beneficiary', 'employee'],
-            'narration'        => ['narration', 'description'],
-            'amount'           => ['amount', 'amounts'],
-            'account_number'   => ['account_number', 'account_num', 'account_no', 'account'],
-            'bank_name'        => ['bank', 'bank_name'],
+            'narration' => ['narration', 'description'],
+            'amount' => ['amount', 'amounts'],
+            'account_number' => ['account_number', 'account_num', 'account_no', 'account'],
+            'bank_name' => ['bank', 'bank_name'],
         ];
 
         foreach ($items as $key => $value) {
@@ -97,7 +99,7 @@ class OtherScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
+                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
             );
         }
 
@@ -118,15 +120,15 @@ class OtherScheduleImport implements OnEachRow
         $bank_code = $bankable->bankCode();
 
         $attributes = [
-            'serial_number'    => $beneficiary[$this->headers['sn']],
+            'serial_number' => $beneficiary[$this->headers['sn']],
             'beneficiary_name' => $beneficiary[$this->headers['beneficiary_name']],
-            'narration'        => $beneficiary[$this->headers['narration']],
-            'amount'           => $beneficiary[$this->headers['amount']],
-            'account_number'   => $account_number,
-            'bank_name'        => $beneficiary[$this->headers['bank_name']],
-            'bank_code'        => $this->pad($bank_code, 3),
-            'bankable_type'    => $bankable_type,
-            'bankable_id'      => $bankable->id,
+            'narration' => $beneficiary[$this->headers['narration']],
+            'amount' => $beneficiary[$this->headers['amount']],
+            'account_number' => $account_number,
+            'bank_name' => $beneficiary[$this->headers['bank_name']],
+            'bank_code' => $this->pad($bank_code, 3),
+            'bankable_type' => $bankable_type,
+            'bankable_id' => $bankable->id,
         ];
 
         $schedule = null;
@@ -164,32 +166,32 @@ class OtherScheduleImport implements OnEachRow
         $bank_name = Str::upper($bank_name);
 
         $exceptions = [
-            'FIDELITY'                             => 'FIDELITY BANK PLC',
-            'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
-            'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
-            'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
-            'NDIOLU MICROFINANCE BANK'             => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'FIDELITY' => 'FIDELITY BANK PLC',
+            'POLARIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'FIRST BANK PLC.' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
+            'NDIOLU MICROFINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
-            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
-            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
-            'UNION BANK'                           => 'UNION BANK OF NIGERIA PLC',
-            'FIRST BANK'                           => 'FIRST BANK OF NIGERIA PLC',
-            'UNITY BANK'                           => 'UNITY BANK PLC',
-            'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
-            'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
-            'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
-            'ZENITH BANK'                          => 'ZENITH BANK PLC',
-            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
-            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
-            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
-            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
-            'ECOBANK OF NIGERIA PLC'               => 'ECOBANK NIGERIA PLC',
-            'NDIORAH MICRO FINANCE BANK'           => 'NDIORA MICRO FINANCE BANK',
-            'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
+            'UNITED BANK OF AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK' => 'HERITAGE BANK LIMITED',
+            'UNION BANK' => 'UNION BANK OF NIGERIA PLC',
+            'FIRST BANK' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITY BANK' => 'UNITY BANK PLC',
+            'POLARIS BANK PLC' => 'SKYE BANK PLC',
+            'MAYFRESH SAVINGS ANG LOAN' => 'MAYFRESH SAVINGS AND LOAN',
+            'UNION BANK NIGERIA PLC' => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK' => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC' => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC' => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC' => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK' => 'ECOBANK NIGERIA PLC',
+            'ECOBANK OF NIGERIA PLC' => 'ECOBANK NIGERIA PLC',
+            'NDIORAH MICRO FINANCE BANK' => 'NDIORA MICRO FINANCE BANK',
+            'UKWALA MICROFINANCE BANK LTD' => 'UKWALA MICRO FINANCE BANK LTD',
             'NIGERIA POLICE FUND (NPF) MICROFINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
         ];
 

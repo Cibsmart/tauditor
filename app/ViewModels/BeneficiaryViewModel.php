@@ -15,7 +15,7 @@ class BeneficiaryViewModel
 
     public ?Beneficiary $beneficiary;
 
-    public function __construct(User $user, Beneficiary $beneficiary = null)
+    public function __construct(User $user, ?Beneficiary $beneficiary = null)
     {
         $this->user = $user;
         $this->beneficiary = $beneficiary;
@@ -23,7 +23,7 @@ class BeneficiaryViewModel
 
     public function data()
     {
-        $beneficiary = $this->beneficiary ?? new Beneficiary();
+        $beneficiary = $this->beneficiary ?? new Beneficiary;
 
         return [
             'beneficiary' => $beneficiary,

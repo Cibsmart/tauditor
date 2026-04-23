@@ -4,6 +4,7 @@ namespace App\Audit;
 
 use App\Classes\AuditCheckable;
 use App\Models\AuditPaySchedule;
+
 use function is_null;
 
 class CheckNewBeneficiary extends AuditCheckable

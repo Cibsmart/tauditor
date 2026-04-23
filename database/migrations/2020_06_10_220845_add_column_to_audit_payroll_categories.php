@@ -15,9 +15,9 @@ class AddColumnToAuditPayrollCategories extends Migration
     {
         Schema::table('audit_payroll_categories', function (Blueprint $table) {
             $table->string('analysis_status', 50)
-                  ->after('staff_type')->default('pending');
+                ->after('staff_type')->default('pending');
             $table->string('autopay_status', 50)
-                  ->after('staff_type')->default('pending');
+                ->after('staff_type')->default('pending');
         });
     }
 

@@ -13,7 +13,7 @@ class StateFactory extends Factory
     {
         return [
             'country_code' => 'NG',
-            'name'         => 'Abia',
+            'name' => 'Abia',
         ];
     }
 }

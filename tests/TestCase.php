@@ -3,12 +3,12 @@
 namespace Tests;
 
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Arr;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert;
-use Database\Seeders\RolesAndPermissionsSeeder;
-use Illuminate\Contracts\Auth\Access\Gate;
 use Spatie\Permission\PermissionRegistrar;
 
 abstract class TestCase extends BaseTestCase

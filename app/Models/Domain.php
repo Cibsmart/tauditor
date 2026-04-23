@@ -2,19 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int id
  * @property mixed code
  * @property mixed name
+ *
  * @method static find($domain)
  */
 class Domain extends Model
 {
     use HasFactory;
+
     public $incrementing = false;
 
     protected $keyType = 'string';
@@ -22,20 +24,20 @@ class Domain extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'group' => 'boolean'
+        'group' => 'boolean',
     ];
 
-    public function beneficiaries() : HasMany
+    public function beneficiaries(): HasMany
     {
         return $this->hasMany(Beneficiary::class);
     }
 
-    public function beneficiaryTypes() : HasMany
+    public function beneficiaryTypes(): HasMany
     {
         return $this->hasMany(BeneficiaryType::class);
     }
 
-    public function structures() : HasMany
+    public function structures(): HasMany
     {
         return $this->hasMany(Structure::class);
     }
@@ -59,5 +61,4 @@ class Domain extends Model
     {
         return $this->hasMany(PotentialUser::class);
     }
-
 }

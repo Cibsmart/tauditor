@@ -16,16 +16,16 @@ class PaymentCredentialFactory extends Factory
     public function definition(): array
     {
         return [
-            'corporate_code'      => $this->faker->randomElement(['TPA', 'TLA']),
-            'payment_type_id'     => PaymentType::factory(),
-            'terminal_id'         => $this->faker->randomNumber(8, true),
-            'account_number'      => $this->faker->bankAccountNumber,
-            'account_name'        => $this->faker->company,
-            'pan'                 => $this->faker->bankAccountNumber,
-            'account_type'        => $this->faker->randomElement(['00', '10', '20']),
-            'bank_id'             => Bank::factory(),
+            'corporate_code' => $this->faker->randomElement(['TPA', 'TLA']),
+            'payment_type_id' => PaymentType::factory(),
+            'terminal_id' => $this->faker->randomNumber(8, true),
+            'account_number' => $this->faker->bankAccountNumber,
+            'account_name' => $this->faker->company,
+            'pan' => $this->faker->bankAccountNumber,
+            'account_type' => $this->faker->randomElement(['00', '10', '20']),
+            'bank_id' => Bank::factory(),
             'beneficiary_type_id' => BeneficiaryType::factory(),
-            'domain_id'           => Domain::factory(),
+            'domain_id' => Domain::factory(),
         ];
     }
 }

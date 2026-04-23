@@ -11,12 +11,12 @@ class AutopayOtherSchedule extends Model
 
     protected $guarded = [];
 
-    public function setAmountAttribute(float $value) : int
+    public function setAmountAttribute(float $value): int
     {
         return $this->attributes['amount'] = $value * 100;
     }
 
-    public function getAmountAttribute(int $value) : float
+    public function getAmountAttribute(int $value): float
     {
         return $value / 100;
     }

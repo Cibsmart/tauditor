@@ -3,11 +3,11 @@
 namespace App\Models;
 
 use App\Casts\AddressCast;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int id
@@ -20,16 +20,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property mixed beneficiaryType
  * @property mixed domain
  * @property mixed pensioner
+ *
  * @method static create($validate)
  */
 class Beneficiary extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $casts = [
         'date_of_birth' => 'date',
-        'address'       => AddressCast::class,
+        'address' => AddressCast::class,
     ];
 
     /*
@@ -43,7 +45,7 @@ class Beneficiary extends Model
         return $this->hasOne(StaffInfo::class);
     }
 
-    public function bankDetail() : HasOne
+    public function bankDetail(): HasOne
     {
         return $this->hasOne(BankDetail::class);
     }
@@ -70,17 +72,17 @@ class Beneficiary extends Model
         return $this->bankDetail->bvn;
     }
 
-    public function gender() : BelongsTo
+    public function gender(): BelongsTo
     {
         return $this->belongsTo(Gender::class);
     }
 
-    public function beneficiaryType() : BelongsTo
+    public function beneficiaryType(): BelongsTo
     {
         return $this->belongsTo(BeneficiaryType::class)->withDefault();
     }
 
-    public function domain() : BelongsTo
+    public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class)->withDefault();
     }
@@ -91,17 +93,17 @@ class Beneficiary extends Model
     |-------------------------------------------------------------------------------
     */
 
-    public function isPensioner() : bool
+    public function isPensioner(): bool
     {
         return $this->pensioner;
     }
 
-    public function accountNumber() : ?string
+    public function accountNumber(): ?string
     {
         return $this->bankDetail->account_number ?? null;
     }
 
-    public function bankName() : ?string
+    public function bankName(): ?string
     {
         return $this->bankDetail->bankable->name ?? null;
     }
@@ -113,49 +115,46 @@ class Beneficiary extends Model
 
     /**
      * Get Beneficiary's Last, First and Middle Name as a single string
-     * @return string
      */
-    public function getNameAttribute() : string
+    public function getNameAttribute(): string
     {
         return "{$this->last_name} {$this->first_name} {$this->middle_name}";
     }
 
-    public function setLastNameAttribute(string $value) : string
+    public function setLastNameAttribute(string $value): string
     {
         return $this->attributes['last_name'] = Str::upper($value);
     }
 
-    public function setFirstNameAttribute(string $value) : string
+    public function setFirstNameAttribute(string $value): string
     {
         return $this->attributes['first_name'] = Str::upper($value);
     }
 
-    public function setMiddleNameAttribute(string $value = null) : ?string
+    public function setMiddleNameAttribute(?string $value = null): ?string
     {
         return $this->attributes['middle_name'] = Str::upper($value) ?? null;
     }
 
     /**
      * Search Beneficiaries and Relationships
-     * @param $query
-     * @param  array  $filters
      */
-    public function scopeFilters($query, array $filters) : void
+    public function scopeFilters($query, array $filters): void
     {
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('last_name', 'like', '%' . $search . '%')
-                      ->orWhere('first_name', 'like', '%' . $search . '%')
-                      ->orWhere('middle_name', 'like', '%' . $search . '%')
-                      ->orWhere('verification_number', 'like', '%' . $search . '%')
-                      ->orWhereHas('bankDetail', function ($query) use ($search) {
-                          $query->where('account_number', 'like', '%' . $search . '%')
-                              ->orWhereHasMorph(
-                                  'bankable',
-                                  [Bank::class, MicroFinanceBank::class],
-                                  fn ($query) => $query->where('name', 'like', '%' . $search . '%')
-                              );
-                      });
+                $query->where('last_name', 'like', '%'.$search.'%')
+                    ->orWhere('first_name', 'like', '%'.$search.'%')
+                    ->orWhere('middle_name', 'like', '%'.$search.'%')
+                    ->orWhere('verification_number', 'like', '%'.$search.'%')
+                    ->orWhereHas('bankDetail', function ($query) use ($search) {
+                        $query->where('account_number', 'like', '%'.$search.'%')
+                            ->orWhereHasMorph(
+                                'bankable',
+                                [Bank::class, MicroFinanceBank::class],
+                                fn ($query) => $query->where('name', 'like', '%'.$search.'%')
+                            );
+                    });
             });
         });
     }

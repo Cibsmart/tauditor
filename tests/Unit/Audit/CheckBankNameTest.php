@@ -39,7 +39,8 @@ class SpyCheckBankName extends CheckBankName
 
 function makeSchedule(string $bankName, string $month): AuditPaySchedule
 {
-    $schedule = new class extends AuditPaySchedule {
+    $schedule = new class extends AuditPaySchedule
+    {
         protected $casts = [];
     };
     $schedule->bank_name = $bankName;
@@ -51,7 +52,7 @@ function makeSchedule(string $bankName, string $month): AuditPaySchedule
 it('does nothing when there is no previous schedule', function () {
     $schedule = makeSchedule('First Bank', '2025-03-15');
 
-    $check = new SpyCheckBankName(new Collection());
+    $check = new SpyCheckBankName(new Collection);
     $check->check($schedule);
 
     expect($check->reports)->toBe([]);

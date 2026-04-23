@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+
 use function now;
 
 class OtherAuditPayrollCategory extends Model
@@ -80,17 +81,17 @@ class OtherAuditPayrollCategory extends Model
         return $this->microfinanceSchedules->count() <= 0;
     }
 
-    public function setTotalNetPayAttribute(float $value) : int
+    public function setTotalNetPayAttribute(float $value): int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
     }
 
-    public function setPaymentTitleAttribute(string $value) : string
+    public function setPaymentTitleAttribute(string $value): string
     {
         return $this->attributes['payment_title'] = Str::upper($value);
     }
 
-    public function getTotalNetPayAttribute(?int $value = 0) : float
+    public function getTotalNetPayAttribute(?int $value = 0): float
     {
         return $value / 100;
     }

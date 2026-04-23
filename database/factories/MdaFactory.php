@@ -13,8 +13,8 @@ class MdaFactory extends Factory
     public function definition(): array
     {
         return [
-            'code'                => $this->faker->countryCode,
-            'name'                => $this->faker->country,
+            'code' => $this->faker->countryCode,
+            'name' => $this->faker->country,
             'beneficiary_type_id' => BeneficiaryType::factory(),
         ];
     }

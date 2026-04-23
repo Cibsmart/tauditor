@@ -2,8 +2,6 @@
 
 namespace App\Actions;
 
-use App\Models\AuditSubMdaSchedule;
-use App\Models\FidelityLoanDeduction;
 use App\Models\MicroFinanceBank;
 use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\DB;
@@ -97,16 +95,16 @@ class GenerateAutopayOtherScheduleAction
 
             $attributes = [
                 'payment_reference' => $this->reference,
-                'beneficiary_code'  => $schedule->account_number,
-                'beneficiary_name'  => $schedule->beneficiary_name,
-                'account_number'    => $schedule->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $schedule->bank_code,
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $amount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $schedule->account_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'account_number' => $schedule->account_number,
+                'account_type' => 10,
+                'cbn_code' => $schedule->bank_code,
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $autopay_schedule = $this->category->autopaySchedules()->create($attributes);
@@ -135,17 +133,17 @@ class GenerateAutopayOtherScheduleAction
 
             $attributes = [
                 'micro_finance_bank_id' => $schedule->bankable_id,
-                'payment_reference'     => $this->reference,
-                'beneficiary_code'      => $schedule->account_number,
-                'beneficiary_name'      => $schedule->beneficiary_name,
-                'account_number'        => $schedule->account_number,
-                'account_type'          => 10,
-                'cbn_code'              => $schedule->bankable->bankCode(),
-                'is_cash_card'          => '0',
-                'narration'             => $this->narration,
-                'amount'                => $amount,
-                'email'                 => ' ',
-                'currency'              => 'NGN',
+                'payment_reference' => $this->reference,
+                'beneficiary_code' => $schedule->account_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'account_number' => $schedule->account_number,
+                'account_type' => 10,
+                'cbn_code' => $schedule->bankable->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $autopay_schedule = $this->category->microfinanceSchedules()->create($attributes);
@@ -180,16 +178,16 @@ class GenerateAutopayOtherScheduleAction
 
             $attributes = [
                 'payment_reference' => $this->getReferenceFor($schedule->id),
-                'beneficiary_code'  => $bank->account_number,
-                'beneficiary_name'  => $bank->name,
-                'account_number'    => $bank->account_number,
-                'account_type'      => 10,
-                'cbn_code'          => $bank->bankCode(),
-                'is_cash_card'      => '0',
-                'narration'         => $this->narration,
-                'amount'            => $amount,
-                'email'             => ' ',
-                'currency'          => 'NGN',
+                'beneficiary_code' => $bank->account_number,
+                'beneficiary_name' => $bank->name,
+                'account_number' => $bank->account_number,
+                'account_type' => 10,
+                'cbn_code' => $bank->bankCode(),
+                'is_cash_card' => '0',
+                'narration' => $this->narration,
+                'amount' => $amount,
+                'email' => ' ',
+                'currency' => 'NGN',
             ];
 
             $this->pay_comm_i_amount = $this->pay_comm_i_amount + $paycomm_i;
@@ -207,16 +205,16 @@ class GenerateAutopayOtherScheduleAction
             if ($this->category->paycomm_fidelity) {
                 $paycom_i = [
                     'payment_reference' => $this->getReferenceFor($this->reference_id),
-                    'beneficiary_code'  => $this->pay_comm_i->account_number,
-                    'beneficiary_name'  => $this->pay_comm_i->code,
-                    'account_number'    => $this->pay_comm_i->account_number,
-                    'account_type'      => 10,
-                    'cbn_code'          => $this->pay_comm_i->bankable->bankCode(),
-                    'is_cash_card'      => '0',
-                    'narration'         => $this->narration,
-                    'amount'            => $this->pay_comm_i_amount,
-                    'email'             => ' ',
-                    'currency'          => 'NGN',
+                    'beneficiary_code' => $this->pay_comm_i->account_number,
+                    'beneficiary_name' => $this->pay_comm_i->code,
+                    'account_number' => $this->pay_comm_i->account_number,
+                    'account_type' => 10,
+                    'cbn_code' => $this->pay_comm_i->bankable->bankCode(),
+                    'is_cash_card' => '0',
+                    'narration' => $this->narration,
+                    'amount' => $this->pay_comm_i_amount,
+                    'email' => ' ',
+                    'currency' => 'NGN',
                 ];
 
                 $this->category->autopaySchedules()->create($paycom_i);
@@ -231,16 +229,16 @@ class GenerateAutopayOtherScheduleAction
             if ($this->category->paycomm_tenece || $this->pay_comm_ii_amount > 0) {
                 $paycom_ii = [
                     'payment_reference' => $this->getReferenceFor($this->reference_id),
-                    'beneficiary_code'  => $this->pay_comm_ii->account_number,
-                    'beneficiary_name'  => $this->pay_comm_ii->code,
-                    'account_number'    => $this->pay_comm_ii->account_number,
-                    'account_type'      => 10,
-                    'cbn_code'          => $this->pay_comm_ii->bankable->bankCode(),
-                    'is_cash_card'      => '0',
-                    'narration'         => $this->narration,
-                    'amount'            => $this->pay_comm_ii_amount,
-                    'email'             => ' ',
-                    'currency'          => 'NGN',
+                    'beneficiary_code' => $this->pay_comm_ii->account_number,
+                    'beneficiary_name' => $this->pay_comm_ii->code,
+                    'account_number' => $this->pay_comm_ii->account_number,
+                    'account_type' => 10,
+                    'cbn_code' => $this->pay_comm_ii->bankable->bankCode(),
+                    'is_cash_card' => '0',
+                    'narration' => $this->narration,
+                    'amount' => $this->pay_comm_ii_amount,
+                    'email' => ' ',
+                    'currency' => 'NGN',
                 ];
 
                 $this->category->autopaySchedules()->create($paycom_ii);
@@ -259,18 +257,18 @@ class GenerateAutopayOtherScheduleAction
         $unique_id = uniqid();
 
         return Str::of($this->payment)
-                  ->append($month)
-                  ->append($year)
-                  ->append($id, $unique_id)
-                  ->upper();
+            ->append($month)
+            ->append($year)
+            ->append($id, $unique_id)
+            ->upper();
     }
 
     private function createNarration($description)
     {
         return Str::of($this->reference)
-                  ->limit(8, '')
-                  ->append($description)
-                  ->replace(' ', '');
+            ->limit(8, '')
+            ->append($description)
+            ->replace(' ', '');
     }
 
     protected static function pad($string, $padding)
@@ -278,7 +276,7 @@ class GenerateAutopayOtherScheduleAction
         return str_pad($string, $padding, '0', STR_PAD_LEFT);
     }
 
-    private function initializePayComms() : void
+    private function initializePayComms(): void
     {
         $this->domain = $this->category->domain();
 

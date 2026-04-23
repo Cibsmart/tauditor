@@ -4,14 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\WrongScheduleException;
 use App\Imports\OtherScheduleImport;
-use App\Models\AuditPayroll;
 use App\Models\OtherAuditPayrollCategory;
-use App\Models\PaymentType;
-use function back;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
+
+use function back;
 use function redirect;
 
 class OtherAuditPayrollController extends Controller
@@ -24,10 +21,10 @@ class OtherAuditPayrollController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'payment_title'    => ['required', 'string'],
-            'paycomm_tenece'   => ['required', 'boolean'],
+            'payment_title' => ['required', 'string'],
+            'paycomm_tenece' => ['required', 'boolean'],
             'paycomm_fidelity' => ['required', 'boolean'],
-            'payment_type_id'  => ['required', 'exists:payment_types,id'],
+            'payment_type_id' => ['required', 'exists:payment_types,id'],
             'audit_payroll_id' => ['required', 'exists:audit_payrolls,id'],
         ]);
 
@@ -44,7 +41,7 @@ class OtherAuditPayrollController extends Controller
     {
         $data = $request->validate([
             'other_audit_payroll_category_id' => ['required', 'numeric', 'exists:other_audit_payroll_categories,id'],
-            'schedule_file'                   => ['required', 'mimes:xlsx,xls'],
+            'schedule_file' => ['required', 'mimes:xlsx,xls'],
         ]);
 
         $other_payroll_category = OtherAuditPayrollCategory::find($data['other_audit_payroll_category_id']);
@@ -60,9 +57,9 @@ class OtherAuditPayrollController extends Controller
         } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
         } catch (\ErrorException $e) {
-            return back()->with('error', 'Attached File is not a valid Other Pay Schedule ' . $e->getMessage());
+            return back()->with('error', 'Attached File is not a valid Other Pay Schedule '.$e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
         }
 
         $confirm_upload = $other_payroll_category->auditOtherPaySchedules;

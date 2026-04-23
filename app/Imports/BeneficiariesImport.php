@@ -2,23 +2,24 @@
 
 namespace App\Imports;
 
+use const STR_PAD_LEFT;
+
 use App\Exceptions\WrongScheduleException;
 use App\Models\Bank;
 use App\Models\Beneficiary;
-use function array_combine;
 use Carbon\Carbon;
-use function collect;
-use function dd;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use function in_array;
-use function is_null;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Row;
+
+use function array_combine;
+use function collect;
+use function in_array;
+use function is_null;
 use function str_pad;
-use const STR_PAD_LEFT;
 use function throw_if;
 
 class BeneficiariesImport implements OnEachRow
@@ -63,7 +64,7 @@ class BeneficiariesImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary['bank_name'] . ' ' . $e->getMessage()
+                'Bank Name: '.$beneficiary['bank_name'].' '.$e->getMessage()
             );
         }
 
@@ -154,29 +155,29 @@ class BeneficiariesImport implements OnEachRow
         $bank_name = Str::upper($bank_name);
 
         $exceptions = [
-            'FIDELITY'                             => 'FIDELITY BANK PLC',
-            'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
-            'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
-            'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
-            'NDIOLU MICROFINANCE BANK'             => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'FIDELITY' => 'FIDELITY BANK PLC',
+            'POLARIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'FIRST BANK PLC.' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
+            'NDIOLU MICROFINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
-            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
-            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
-            'UNION BANK'                           => 'UNION BANK OF NIGERIA PLC',
-            'FIRST BANK'                           => 'FIRST BANK OF NIGERIA PLC',
-            'UNITY BANK'                           => 'UNITY BANK PLC',
-            'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
-            'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
-            'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
-            'ZENITH BANK'                          => 'ZENITH BANK PLC',
-            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
-            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
-            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
-            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
+            'UNITED BANK OF AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK' => 'HERITAGE BANK LIMITED',
+            'UNION BANK' => 'UNION BANK OF NIGERIA PLC',
+            'FIRST BANK' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITY BANK' => 'UNITY BANK PLC',
+            'POLARIS BANK PLC' => 'SKYE BANK PLC',
+            'MAYFRESH SAVINGS ANG LOAN' => 'MAYFRESH SAVINGS AND LOAN',
+            'UNION BANK NIGERIA PLC' => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK' => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC' => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC' => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC' => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK' => 'ECOBANK NIGERIA PLC',
             'STERLING BANK' => 'STERLING BANK PLC',
         ];
 

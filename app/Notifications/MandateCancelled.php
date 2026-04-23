@@ -12,15 +12,10 @@ class MandateCancelled extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var LoanMandate
-     */
     private LoanMandate $mandate;
 
     /**
      * Create a new notification instance.
-     *
-     * @param  LoanMandate  $mandate
      */
     public function __construct(LoanMandate $mandate)
     {
@@ -42,7 +37,7 @@ class MandateCancelled extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

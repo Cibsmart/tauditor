@@ -7,11 +7,11 @@ use App\Models\PotentialUser;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+
 use function is_null;
 use function redirect;
 
@@ -50,17 +50,16 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
     {
         return Validator::make($data, [
             'first_name' => ['required', 'string', 'max:255'],
-            'last_name'  => ['required', 'string', 'max:255'],
-            'password'   => ['required', 'string', 'min:6', 'confirmed'],
-            'domain_id'  => ['required', 'string', 'exists:domains,id'],
-            'email'      => [
+            'last_name' => ['required', 'string', 'max:255'],
+            'password' => ['required', 'string', 'min:6', 'confirmed'],
+            'domain_id' => ['required', 'string', 'exists:domains,id'],
+            'email' => [
                 'required', 'string', 'email', 'max:255',
                 Rule::unique('users')
                     ->where(fn ($query) => $query->where('domain_id', $data['domain_id'])),
@@ -71,17 +70,16 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
      * @return \App\User
      */
     protected function create(array $data)
     {
         $user = User::create([
             'first_name' => $data['first_name'],
-            'last_name'  => $data['last_name'],
-            'email'      => $data['email'],
-            'password'   => $data['password'],
-            'domain_id'  => $data['domain_id'],
+            'last_name' => $data['last_name'],
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'domain_id' => $data['domain_id'],
         ]);
 
         $this->assignRoleAndDisableUserRegistrationLink($user);
@@ -107,11 +105,11 @@ class RegisterController extends Controller
 
         return Inertia::render('Auth/Register', [
             'domain' => ['id' => $domain->id, 'name' => $domain->name],
-            'user'   => [
-                'id'         => $user->id,
+            'user' => [
+                'id' => $user->id,
                 'first_name' => $user->first_name,
-                'last_name'  => $user->last_name,
-                'email'      => $user->email,
+                'last_name' => $user->last_name,
+                'email' => $user->email,
             ],
         ]);
     }
@@ -119,9 +117,9 @@ class RegisterController extends Controller
     protected function assignRoleAndDisableUserRegistrationLink(User $user)
     {
         $p_user = PotentialUser::query()
-                             ->where('email', $user->email)
-                             ->where('domain_id', $user->domain_id)
-                             ->first();
+            ->where('email', $user->email)
+            ->where('domain_id', $user->domain_id)
+            ->first();
 
         $user->assignRole($p_user->role_id);
 

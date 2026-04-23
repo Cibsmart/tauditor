@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static where(string $string, string $string1, string $string2)
@@ -18,7 +18,7 @@ class MicroFinanceBank extends Model
 
     protected $guarded = [];
 
-    public function beneficiaries() : MorphMany
+    public function beneficiaries(): MorphMany
     {
         return $this->morphMany(BankDetail::class, 'bankable');
     }
@@ -28,7 +28,7 @@ class MicroFinanceBank extends Model
         return $this->belongsTo(Domain::class);
     }
 
-    public function bank() : BelongsTo
+    public function bank(): BelongsTo
     {
         return $this->belongsTo(Bank::class);
     }

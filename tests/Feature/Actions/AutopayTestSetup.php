@@ -46,8 +46,8 @@ trait AutopayTestSetup
     public function createBeneficiaryType(Domain $domain): BeneficiaryType
     {
         return BeneficiaryType::create([
-            'id'        => 'bt-test',
-            'name'      => 'Staff',
+            'id' => 'bt-test',
+            'name' => 'Staff',
             'domain_id' => $domain->id,
         ]);
     }
@@ -55,8 +55,8 @@ trait AutopayTestSetup
     public function createMda(BeneficiaryType $beneficiaryType): Mda
     {
         return Mda::create([
-            'code'                => 'MDA01',
-            'name'                => 'Test MDA',
+            'code' => 'MDA01',
+            'name' => 'Test MDA',
             'beneficiary_type_id' => $beneficiaryType->id,
         ]);
     }
@@ -64,12 +64,12 @@ trait AutopayTestSetup
     public function createAuditPayroll(Domain $domain, User $user): AuditPayroll
     {
         return AuditPayroll::create([
-            'month'      => 3,
+            'month' => 3,
             'month_name' => 'March',
-            'year'       => 2024,
-            'user_id'    => $user->id,
-            'domain_id'  => $domain->id,
-            'timestamp'  => '2024-03-01 00:00:00',
+            'year' => 2024,
+            'user_id' => $user->id,
+            'domain_id' => $domain->id,
+            'timestamp' => '2024-03-01 00:00:00',
         ]);
     }
 
@@ -79,8 +79,8 @@ trait AutopayTestSetup
     ): AuditPayrollCategory {
         return AuditPayrollCategory::create([
             'payment_type_id' => $paymentType->id,
-            'payment_title'   => 'SALARY',
-            'staff_type'      => 'staff',
+            'payment_title' => 'SALARY',
+            'staff_type' => 'staff',
             'audit_payroll_id' => $payroll->id,
         ]);
     }
@@ -91,8 +91,8 @@ trait AutopayTestSetup
     ): AuditMdaSchedule {
         return AuditMdaSchedule::create([
             'audit_payroll_category_id' => $category->id,
-            'mda_id'                    => $mda->id,
-            'mda_name'                  => $mda->name,
+            'mda_id' => $mda->id,
+            'mda_name' => $mda->name,
         ]);
     }
 
@@ -100,7 +100,7 @@ trait AutopayTestSetup
     {
         return AuditSubMdaSchedule::create([
             'audit_mda_schedule_id' => $mdaSchedule->id,
-            'sub_mda_name'          => 'TEST SUB MDA',
+            'sub_mda_name' => 'TEST SUB MDA',
         ]);
     }
 
@@ -114,38 +114,38 @@ trait AutopayTestSetup
      */
     public function createPayComms(Domain $domain): array
     {
-        $bankI       = Bank::factory()->create();
-        $bankII      = Bank::factory()->create();
+        $bankI = Bank::factory()->create();
+        $bankII = Bank::factory()->create();
         $bankFidelity = Bank::factory()->create();
 
         $payCommI = PayComm::create([
-            'code'           => 'PayComm I',
-            'name'           => 'PayComm I',
+            'code' => 'PayComm I',
+            'name' => 'PayComm I',
             'account_number' => '1111111111',
-            'commission'     => 50,          // 50 NGN (setter × 100 → 5000 in DB)
-            'bankable_type'  => 'commercial',
-            'bankable_id'    => $bankI->id,
-            'domain_id'      => $domain->id,
+            'commission' => 50,          // 50 NGN (setter × 100 → 5000 in DB)
+            'bankable_type' => 'commercial',
+            'bankable_id' => $bankI->id,
+            'domain_id' => $domain->id,
         ]);
 
         $payCommII = PayComm::create([
-            'code'           => 'PayComm II',
-            'name'           => 'PayComm II',
+            'code' => 'PayComm II',
+            'name' => 'PayComm II',
             'account_number' => '2222222222',
-            'commission'     => 100,         // 100 NGN
-            'bankable_type'  => 'commercial',
-            'bankable_id'    => $bankII->id,
-            'domain_id'      => $domain->id,
+            'commission' => 100,         // 100 NGN
+            'bankable_type' => 'commercial',
+            'bankable_id' => $bankII->id,
+            'domain_id' => $domain->id,
         ]);
 
         $fidelityComm = PayComm::create([
-            'code'           => 'Fidelity Loan Collection',
-            'name'           => 'Fidelity Loan',
+            'code' => 'Fidelity Loan Collection',
+            'name' => 'Fidelity Loan',
             'account_number' => '3333333333',
-            'commission'     => 0,
-            'bankable_type'  => 'commercial',
-            'bankable_id'    => $bankFidelity->id,
-            'domain_id'      => $domain->id,
+            'commission' => 0,
+            'bankable_type' => 'commercial',
+            'bankable_id' => $bankFidelity->id,
+            'domain_id' => $domain->id,
         ]);
 
         return compact('payCommI', 'payCommII', 'fidelityComm');
@@ -158,10 +158,10 @@ trait AutopayTestSetup
     public function createCashPaymentMfb(Domain $domain): MicroFinanceBank
     {
         return MicroFinanceBank::create([
-            'name'           => 'CASH PAYMENT',
+            'name' => 'CASH PAYMENT',
             'account_number' => '0000000000',
-            'bank_id'        => Bank::factory()->create()->id,
-            'domain_id'      => $domain->id,
+            'bank_id' => Bank::factory()->create()->id,
+            'domain_id' => $domain->id,
         ]);
     }
 
@@ -171,10 +171,10 @@ trait AutopayTestSetup
     public function createRealMfb(Domain $domain, string $name = 'TEST MFB'): MicroFinanceBank
     {
         return MicroFinanceBank::create([
-            'name'           => $name,
+            'name' => $name,
             'account_number' => '4444444444',
-            'bank_id'        => Bank::factory()->create(['code' => '999'])->id,
-            'domain_id'      => $domain->id,
+            'bank_id' => Bank::factory()->create(['code' => '999'])->id,
+            'domain_id' => $domain->id,
         ]);
     }
 }

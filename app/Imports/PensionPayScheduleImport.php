@@ -7,6 +7,7 @@ use App\Models\AuditSubMdaSchedule;
 use App\Models\Bank;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
@@ -65,8 +66,8 @@ class PensionPayScheduleImport implements OnEachRow
             return null;
         }
 
-        $app_date = Str::upper($this->audit_sub_mda_schedule->month() . ' ' . $this->audit_sub_mda_schedule->year());
-        $file_date = $this->month . ' ' . $this->year;
+        $app_date = Str::upper($this->audit_sub_mda_schedule->month().' '.$this->audit_sub_mda_schedule->year());
+        $file_date = $this->month.' '.$this->year;
         $message = "Trying to Upload Schedule for $file_date into $app_date";
 
         throw_if(
@@ -85,7 +86,7 @@ class PensionPayScheduleImport implements OnEachRow
             $message
         );
 
-        //Combines each beneficiary record with the heading for identification
+        // Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
 
         if (! isset($beneficiary['employee_id']) || ! isset($beneficiary[$this->headers['employee_name']])) {
@@ -97,7 +98,6 @@ class PensionPayScheduleImport implements OnEachRow
 
     /**
      * Extracts the MDA Name, Payment Month & Year from the First Row
-     * @param  string  $row_one
      */
     private function processRowOne(string $row_one)
     {
@@ -114,22 +114,22 @@ class PensionPayScheduleImport implements OnEachRow
 
     /**
      * Extract Beneficiary's Info, Allowances, Deductions and Save in Audit Pay Schedule Table
-     * @param $beneficiary
-     * @return \Illuminate\Database\Eloquent\Model
+     *
+     * @return Model
      */
     private function createAuditPaySchedule($beneficiary)
     {
         $all = collect($beneficiary);
-        $part_a = $all->takeUntil(fn ($item, $key) => $key == $this->headers['basic_pay']); //Gets all the beneficiary info part
+        $part_a = $all->takeUntil(fn ($item, $key) => $key == $this->headers['basic_pay']); // Gets all the beneficiary info part
 
         $deductions = $all->diffKeys($part_a)
-                          ->except(
-                              $this->headers['basic_pay'],
-                              $this->headers['gross_pay'],
-                              $this->headers['total_allowance'],
-                              $this->headers['total_deductions'],
-                              $this->headers['net_pay']
-                          )->filter();
+            ->except(
+                $this->headers['basic_pay'],
+                $this->headers['gross_pay'],
+                $this->headers['total_allowance'],
+                $this->headers['total_deductions'],
+                $this->headers['net_pay']
+            )->filter();
 
         try {
             $bankable = $this->getBankableType($beneficiary[$this->headers['bank_name']]);
@@ -137,7 +137,7 @@ class PensionPayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
+                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
             );
         }
 
@@ -151,7 +151,7 @@ class PensionPayScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: ' . $beneficiary[$this->headers['bank_name']] . ' Does Not Exist'
+                'Bank Named: '.$beneficiary[$this->headers['bank_name']].' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();
@@ -162,30 +162,30 @@ class PensionPayScheduleImport implements OnEachRow
 
         $attributes = [
             'verification_number' => $beneficiary[$this->headers['employee_id']],
-            'beneficiary_name'    => Str::upper($beneficiary[$this->headers['employee_name']]),
-            'designation'         => 'PENSIONER',
-            'mda'                 => '',
-            'department'          => '',
-            'basic_pay'           => $beneficiary[$this->headers['basic_pay']],
-            'bank_name'           => $beneficiary[$this->headers['bank_name']],
-            'account_number'      => $account_number,
-            'bank_code'           => $this->pad($beneficiary[$this->headers['bank_code']], 3),
-            'total_allowance'     => 0,
-            'gross_pay'           => $beneficiary[$this->headers['gross_pay']],
-            'total_dues'          => 0,
-            'total_deductions'    => $beneficiary[$this->headers['total_deductions']],
+            'beneficiary_name' => Str::upper($beneficiary[$this->headers['employee_name']]),
+            'designation' => 'PENSIONER',
+            'mda' => '',
+            'department' => '',
+            'basic_pay' => $beneficiary[$this->headers['basic_pay']],
+            'bank_name' => $beneficiary[$this->headers['bank_name']],
+            'account_number' => $account_number,
+            'bank_code' => $this->pad($beneficiary[$this->headers['bank_code']], 3),
+            'total_allowance' => 0,
+            'gross_pay' => $beneficiary[$this->headers['gross_pay']],
+            'total_dues' => 0,
+            'total_deductions' => $beneficiary[$this->headers['total_deductions']],
             'total_dues_deductions' => $beneficiary[$this->headers['total_dues_deductions']],
-            'net_pay'             => $beneficiary[$this->headers['net_pay']],
-            'allowances'          => [],
-            'dues'                => [],
-            'deductions'          => $deductions,
-            'month'               => $month,
-            'bankable_type'       => $bankable_type,
-            'bankable_id'         => $bankable->id,
-            'pension'             => 1,
+            'net_pay' => $beneficiary[$this->headers['net_pay']],
+            'allowances' => [],
+            'dues' => [],
+            'deductions' => $deductions,
+            'month' => $month,
+            'bankable_type' => $bankable_type,
+            'bankable_id' => $bankable->id,
+            'pension' => 1,
         ];
 
-//        dd($attributes);
+        //        dd($attributes);
         $schedule = null;
 
         try {
@@ -201,13 +201,13 @@ class PensionPayScheduleImport implements OnEachRow
         return $schedule;
     }
 
-    private function monthAndYearNotMatching() : bool
+    private function monthAndYearNotMatching(): bool
     {
         return Str::upper($this->month) != Str::upper($this->audit_sub_mda_schedule->month())
             || Str::upper($this->year) != Str::upper($this->audit_sub_mda_schedule->year());
     }
 
-    private function mdaNotMatching() : bool
+    private function mdaNotMatching(): bool
     {
         return Str::upper($this->department) != Str::upper($this->audit_sub_mda_schedule->sub_mda_name);
     }
@@ -232,33 +232,33 @@ class PensionPayScheduleImport implements OnEachRow
         $bank_name = Str::upper(Str::of($bank_name)->replace('?', ''));
 
         $exceptions = [
-            'FIDELITY'                             => 'FIDELITY BANK PLC',
-            'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
-            'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
-            'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
-            'NDIOLU MICROFINANCE BANK'             => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'FIDELITY' => 'FIDELITY BANK PLC',
+            'POLARIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'FIRST BANK PLC.' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
+            'NDIOLU MICROFINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
-            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
-            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
-            'UNION BANK'                           => 'UNION BANK OF NIGERIA PLC',
-            'FIRST BANK'                           => 'FIRST BANK OF NIGERIA PLC',
-            'UNITY BANK'                           => 'UNITY BANK PLC',
-            'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
-            'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
-            'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
-            'ZENITH BANK'                          => 'ZENITH BANK PLC',
-            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
-            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
-            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
-            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
-            'ACCESS BANK'                          => 'ACCESS BANK PLC',
-            'STANBIC IBTC'                         => 'STANBIC-IBTC BANK PLC',
-            'FIRST CITY MONOMENT BANK PLC'         => 'FIRST CITY MONUMENT BANK PLC',
-            'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
+            'UNITED BANK OF AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK' => 'HERITAGE BANK LIMITED',
+            'UNION BANK' => 'UNION BANK OF NIGERIA PLC',
+            'FIRST BANK' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITY BANK' => 'UNITY BANK PLC',
+            'POLARIS BANK PLC' => 'SKYE BANK PLC',
+            'MAYFRESH SAVINGS ANG LOAN' => 'MAYFRESH SAVINGS AND LOAN',
+            'UNION BANK NIGERIA PLC' => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK' => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC' => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC' => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC' => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK' => 'ECOBANK NIGERIA PLC',
+            'ACCESS BANK' => 'ACCESS BANK PLC',
+            'STANBIC IBTC' => 'STANBIC-IBTC BANK PLC',
+            'FIRST CITY MONOMENT BANK PLC' => 'FIRST CITY MONUMENT BANK PLC',
+            'UKWALA MICROFINANCE BANK LTD' => 'UKWALA MICRO FINANCE BANK LTD',
             'NIGERIA POLICE FUND (NPF) MICROFINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
         ];
 
@@ -282,19 +282,19 @@ class PensionPayScheduleImport implements OnEachRow
     protected function setHeaders()
     {
         $items = [
-            'employee_id'     => ['id', 'employee_id'],
-            'employee_name'   => ['name', 'employee_name'],
-            'employee_grade'  => ['grade', 'employee_grade'],
-            'designation'     => ['designation', 'employee_designation'],
-            'basic_pay'       => ['bs', 'basic_salary', 'basic_pay'],
-            'bank_name'       => ['bank', 'bank_name'],
-            'account_number'  => ['acct', 'account_number', 'account_no'],
-            'bank_code'       => ['code', 'bank_code'],
+            'employee_id' => ['id', 'employee_id'],
+            'employee_name' => ['name', 'employee_name'],
+            'employee_grade' => ['grade', 'employee_grade'],
+            'designation' => ['designation', 'employee_designation'],
+            'basic_pay' => ['bs', 'basic_salary', 'basic_pay'],
+            'bank_name' => ['bank', 'bank_name'],
+            'account_number' => ['acct', 'account_number', 'account_no'],
+            'bank_code' => ['code', 'bank_code'],
             'total_allowance' => ['total_allw', 'total_allowance'],
-            'gross_pay'       => ['gross', 'grosspay', 'gross_pay'],
-            'total_deductions'=> ['total_deductions',  'total_deduction'], // total_dues + total_ded
-            'total_dues_deductions'=> ['total_deductions',  'total_deduction'], // total_dues + total_ded
-            'net_pay'         => ['net', 'netpay', 'net_pay'],
+            'gross_pay' => ['gross', 'grosspay', 'gross_pay'],
+            'total_deductions' => ['total_deductions',  'total_deduction'], // total_dues + total_ded
+            'total_dues_deductions' => ['total_deductions',  'total_deduction'], // total_dues + total_ded
+            'net_pay' => ['net', 'netpay', 'net_pay'],
         ];
 
         foreach ($items as $key => $value) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +10,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property mixed id
@@ -17,13 +17,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property mixed last_name
  * @property mixed first_name
  * @property mixed email
+ *
  * @method static create(array $array)
  * @method static find(int $int)
  */
 class User extends Authenticatable
 {
+    use HasApiTokens, HasRoles, Notifiable, SoftDeletes;
     use HasFactory;
-    use HasApiTokens, Notifiable, HasRoles, SoftDeletes;
 
     protected $guarded = [];
 
@@ -35,7 +36,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function domain() : BelongsTo
+    public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class);
     }
@@ -50,12 +51,12 @@ class User extends Authenticatable
         return $this->hasMany(RequestLog::class);
     }
 
-    public function setPasswordAttribute(string $value) : string
+    public function setPasswordAttribute(string $value): string
     {
         return $this->attributes['password'] = Hash::make($value);
     }
 
-    public function getNameAttribute() : string
+    public function getNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }

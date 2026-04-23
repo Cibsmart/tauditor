@@ -6,7 +6,5 @@ use Exception;
 
 class WrongScheduleException extends Exception
 {
-    public function report()
-    {
-    }
+    public function report() {}
 }
