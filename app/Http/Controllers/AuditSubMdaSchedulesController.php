@@ -4,7 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditMdaSchedule;
 use App\Models\AuditSubMdaSchedule;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Redirector;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class AuditSubMdaSchedulesController extends Controller
 {
@@ -14,8 +18,7 @@ class AuditSubMdaSchedulesController extends Controller
     }
 
     /**
-     * @param  AuditMdaSchedule  $audit_mda_schedule
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Inertia\Response
+     * @return Application|RedirectResponse|Redirector|Response
      */
     public function index(AuditMdaSchedule $audit_mda_schedule)
     {
@@ -24,22 +27,22 @@ class AuditSubMdaSchedulesController extends Controller
         }
 
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
-                                        ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
-                                        ->paginate()
-                                        ->transform(fn (AuditSubMdaSchedule $schedule) => [
-                                            'id'           => $schedule->id,
-                                            'sub_mda_name' => $schedule->sub_mda_name,
-                                            'total_amount' => number_format($schedule->total_net_pay, 2), // 12,000.00
-                                            'head_count'   => number_format($schedule->head_count), //1,200
-                                            'month'        => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
-                                            'year'         => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
-                                            'uploaded'     => $schedule->uploaded,
-                                            'mda_name'     => $audit_mda_schedule->mda_name,
-                                            'archived'     => $this->isArchived($audit_mda_schedule),
-                                        ]);
+            ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
+            ->paginate()
+            ->transform(fn (AuditSubMdaSchedule $schedule) => [
+                'id' => $schedule->id,
+                'sub_mda_name' => $schedule->sub_mda_name,
+                'total_amount' => number_format($schedule->total_net_pay, 2), // 12,000.00
+                'head_count' => number_format($schedule->head_count), // 1,200
+                'month' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
+                'year' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
+                'uploaded' => $schedule->uploaded,
+                'mda_name' => $audit_mda_schedule->mda_name,
+                'archived' => $this->isArchived($audit_mda_schedule),
+            ]);
 
         return Inertia::render('AuditSubMdaSchedules/Index', [
-            'schedules'              => $schedules,
+            'schedules' => $schedules,
             'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
     }

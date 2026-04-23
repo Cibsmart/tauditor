@@ -15,17 +15,12 @@ class GenerateAutopaySchedules implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var AuditSubMdaSchedule
-     */
     public AuditSubMdaSchedule $schedule;
 
     public Domain $domain;
 
     /**
      * Create a new job instance.
-     *
-     * @param  AuditSubMdaSchedule  $schedule
      */
     public function __construct(Domain $domain, AuditSubMdaSchedule $schedule)
     {
@@ -37,7 +32,6 @@ class GenerateAutopaySchedules implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param  GenerateAutoPayScheduleAction  $auto_pay_schedule_action
      * @return void
      */
     public function handle(GenerateAutoPayScheduleAction $auto_pay_schedule_action)

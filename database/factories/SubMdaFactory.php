@@ -13,7 +13,7 @@ class SubMdaFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'   => $this->faker->country,
+            'name' => $this->faker->country,
             'mda_id' => Mda::factory(),
         ];
     }

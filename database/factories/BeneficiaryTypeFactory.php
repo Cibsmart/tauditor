@@ -13,8 +13,8 @@ class BeneficiaryTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'        => $this->faker->countryCode,
-            'name'      => $this->faker->country,
+            'id' => $this->faker->countryCode,
+            'name' => $this->faker->country,
             'domain_id' => Domain::factory(),
         ];
     }

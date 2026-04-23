@@ -19,29 +19,29 @@ class FidelityMandateController extends Controller
         $filters = Request::all('search', 'status', 'processed');
 
         $mandates = LoanMandate::query()
-                               ->orderBy('status')
-                               ->filter(Request::only('search', 'status', 'processed'))
-                               ->paginate()
-                               ->transform(fn ($m) => [
-                                   'id'                      => $m->id,
-                                   'name'                    => $m->beneficiary->name,
-                                   'verification_number'     => $m->staff_id,
-                                   'bvn'                     => $m->bvn,
-                                   'account_number'          => $m->account_number,
-                                   'reference'               => $m->reference,
-                                   'loan_amount'             => $m->formatted_loan_amount,
-                                   'collection_amount'       => $m->formatted_collection_amount,
-                                   'total_collection_amount' => $m->total_collection_amount,
-                                   'number_of_repayments'    => $m->number_of_repayments,
-                                   'number_repaid'           => $m->deductionCount(),
-                                   'status'                  => $m->loan_status->name,
-                                   'color'                   => $m->color,
-                                   'date_disbursed'          => $m->formatted_disbursement_date,
-                                   'processed'               => $m->processed,
-                               ]);
+            ->orderBy('status')
+            ->filter(Request::only('search', 'status', 'processed'))
+            ->paginate()
+            ->transform(fn ($m) => [
+                'id' => $m->id,
+                'name' => $m->beneficiary->name,
+                'verification_number' => $m->staff_id,
+                'bvn' => $m->bvn,
+                'account_number' => $m->account_number,
+                'reference' => $m->reference,
+                'loan_amount' => $m->formatted_loan_amount,
+                'collection_amount' => $m->formatted_collection_amount,
+                'total_collection_amount' => $m->total_collection_amount,
+                'number_of_repayments' => $m->number_of_repayments,
+                'number_repaid' => $m->deductionCount(),
+                'status' => $m->loan_status->name,
+                'color' => $m->color,
+                'date_disbursed' => $m->formatted_disbursement_date,
+                'processed' => $m->processed,
+            ]);
 
         return Inertia::render('Fidelity/Index', [
-            'filters'  => $filters,
+            'filters' => $filters,
             'mandates' => $mandates,
             'statuses' => LoanStatus::all(),
         ]);
@@ -51,21 +51,21 @@ class FidelityMandateController extends Controller
     {
         return Inertia::render('Fidelity/Show', [
             'mandate' => [
-                'id'                      => $mandate->id,
-                'name'                    => $mandate->beneficiary->name,
-                'verification_number'     => $mandate->staff_id,
-                'bvn'                     => $mandate->bvn,
-                'account_number'          => $mandate->account_number,
-                'reference'               => $mandate->reference,
-                'loan_amount'             => $mandate->formatted_loan_amount,
-                'collection_amount'       => $mandate->formatted_collection_amount,
+                'id' => $mandate->id,
+                'name' => $mandate->beneficiary->name,
+                'verification_number' => $mandate->staff_id,
+                'bvn' => $mandate->bvn,
+                'account_number' => $mandate->account_number,
+                'reference' => $mandate->reference,
+                'loan_amount' => $mandate->formatted_loan_amount,
+                'collection_amount' => $mandate->formatted_collection_amount,
                 'total_collection_amount' => $mandate->total_collection_amount,
-                'number_of_repayments'    => $mandate->number_of_repayments,
-                'number_repaid'           => 0,
-                'status'                  => $mandate->loan_status->name,
-                'color'                   => $mandate->color,
-                'date_disbursed'          => $mandate->formatted_disbursement_date,
-                'processed'               => $mandate->processed,
+                'number_of_repayments' => $mandate->number_of_repayments,
+                'number_repaid' => 0,
+                'status' => $mandate->loan_status->name,
+                'color' => $mandate->color,
+                'date_disbursed' => $mandate->formatted_disbursement_date,
+                'processed' => $mandate->processed,
             ],
         ]);
     }

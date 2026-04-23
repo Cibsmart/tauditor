@@ -16,11 +16,6 @@ class Address
 
     /**
      * Address constructor.
-     * @param $address_line_1
-     * @param $address_line_2
-     * @param $address_city
-     * @param $address_state
-     * @param $address_country
      */
     public function __construct($address_line_1, $address_line_2, $address_city, $address_state, $address_country)
     {

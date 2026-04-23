@@ -15,7 +15,7 @@ class AddNationalityIdColumn extends Migration
     {
         Schema::table('beneficiaries', function (Blueprint $table) {
             $table->string('nationality_id')
-                  ->after('marital_status_id');
+                ->after('marital_status_id');
 
             $table->foreign('nationality_id')->references('id')->on('nationalities');
         });

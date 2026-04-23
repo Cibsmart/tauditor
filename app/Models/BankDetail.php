@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class BankDetail extends Model
 {
@@ -17,13 +17,13 @@ class BankDetail extends Model
 
     protected $with = ['bankable'];
 
-    //A polymorphic relationship to either Bank or Microfinance
-    public function bankable() : MorphTo
+    // A polymorphic relationship to either Bank or Microfinance
+    public function bankable(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function beneficiary() : BelongsTo
+    public function beneficiary(): BelongsTo
     {
         return $this->belongsTo(Beneficiary::class);
     }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\LocalGovernment;
 use App\Models\State;
 use Illuminate\Database\Seeder;
@@ -17,10 +16,10 @@ class StateSeeder extends Seeder
      */
     public function run()
     {
-        //Get the content of of sub_mda.json
-        $json = file_get_contents(storage_path() . '/json/state_lga.json');
+        // Get the content of of sub_mda.json
+        $json = file_get_contents(storage_path().'/json/state_lga.json');
 
-        //Convert json to an array
+        // Convert json to an array
         $data = json_decode($json, true);
 
         foreach ($data as $states) {

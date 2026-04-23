@@ -8,21 +8,18 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+
 use function route;
 
 class MandateReceived extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @var LoanMandate
-     */
     private LoanMandate $mandate;
 
     /**
      * Create a new notification instance.
      *
-     * @param  LoanMandate  $mandate
      * @param  User  $user
      */
     public function __construct(LoanMandate $mandate)
@@ -45,7 +42,7 @@ class MandateReceived extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      *
      * @param  mixed  $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     public function toMail($notifiable)
     {

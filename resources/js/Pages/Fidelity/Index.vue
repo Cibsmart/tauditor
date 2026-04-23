@@ -1,16 +1,26 @@
 <template>
   <div>
     <Head title="Mandates" />
-    <h1 class="mb-8 font-bold text-3xl">Mandates</h1>
-    <div class="mb-6 flex justify-between items-center">
+    <h1 class="mb-8 text-3xl font-bold">Mandates</h1>
+    <div class="mb-6 flex items-center justify-between">
       <!-- Search Filter goes here -->
-      <search-filter v-model="form.search" class="w-full max-w-lg mr-4" @reset="reset">
-        <label class="block ">Mandate Status:</label>
+      <search-filter
+        v-model="form.search"
+        class="mr-4 w-full max-w-lg"
+        @reset="reset"
+      >
+        <label class="block">Mandate Status:</label>
         <select v-model="form.status" class="mt-1 w-full form-select">
           <option :value="null" />
-          <option v-for="status in statuses" :value="status.id">{{ status.name }}</option>
+          <option
+            v-for="status in statuses"
+            :key="status.id"
+            :value="status.id"
+          >
+            {{ status.name }}
+          </option>
         </select>
-        <label class="block  mt-5">Processed</label>
+        <label class="mt-5 block">Processed</label>
         <select v-model="form.processed" class="mt-1 w-full form-select">
           <option :value="null" />
           <option value="true">Processed</option>
@@ -41,13 +51,17 @@
               </div>
             </TableCell>
             <TableCell>
-              <div class="text-sm leading-5 font-medium uppercase">{{ mandate.name }}</div>
+              <div class="text-sm leading-5 font-medium uppercase">
+                {{ mandate.name }}
+              </div>
               <div class="text-sm leading-5 text-muted-foreground">
                 {{ mandate.verification_number }} ({{ mandate.reference }})
-                <span v-if="! mandate.processed"
-                      class="px-2 inline-flex text-xs lowercase leading-5 font-semibold text-red-800 rounded-full">
-                                    pending
-                                </span>
+                <span
+                  v-if="!mandate.processed"
+                  class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold text-red-800 lowercase"
+                >
+                  pending
+                </span>
               </div>
             </TableCell>
             <TableCell>
@@ -80,20 +94,31 @@
               </div>
             </TableCell>
             <TableCell>
-                            <span :class="mandate.color"
-                                  class="px-2 inline-flex text-xs lowercase leading-5 font-semibold rounded-full">
-                                {{ mandate.status }}
-                            </span>
+              <span
+                :class="mandate.color"
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold lowercase"
+              >
+                {{ mandate.status }}
+              </span>
             </TableCell>
             <TableCell class="text-right">
-              <Link :href="route('fidelity.show', {mandate: mandate.id })"
-                    class="focus:outline-none focus:underline">view
+              <Link
+                :href="
+                  route('fidelity.show', {
+                    mandate: mandate.id,
+                  })
+                "
+                class="focus:underline focus:outline-none"
+                >view
               </Link>
             </TableCell>
           </TableRow>
 
           <TableRow v-if="mandates.data.length === 0">
-            <TableCell class="text-xs font-medium  uppercase tracking-wider" colspan="6">
+            <TableCell
+              class="text-xs font-medium tracking-wider uppercase"
+              colspan="6"
+            >
               No Mandate
             </TableCell>
           </TableRow>
@@ -105,17 +130,21 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon';
-import pickBy from 'lodash/pickBy'
+import { Link, router } from '@inertiajs/vue3';
+import mapValues from 'lodash/mapValues';
+import pickBy from 'lodash/pickBy';
+import throttle from 'lodash/throttle';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
-import throttle from 'lodash/throttle'
-import mapValues from 'lodash/mapValues'
-import Pagination from '@/Shared/Pagination'
-import { Link, router } from '@inertiajs/vue3'
-import SelectInput from "@/Shared/SelectInput"
-import SearchFilter from '@/Shared/SearchFilter'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
-
+import Pagination from '@/Shared/Pagination';
+import SearchFilter from '@/Shared/SearchFilter';
 
 export default {
   layout: Layout,
@@ -127,10 +156,8 @@ export default {
   },
 
   components: {
-    Icon,
     Link,
     Pagination,
-    SelectInput,
     SearchFilter,
     Table,
     TableHeader,
@@ -147,22 +174,24 @@ export default {
         status: this.filters.status,
         processed: this.filters.processed,
       },
-    }
+    };
   },
 
   watch: {
     form: {
       handler: throttle(function () {
-        router.get(this.route('fidelity.index'), pickBy(this.form), { preserveState: true })
+        router.get(this.route('fidelity.index'), pickBy(this.form), {
+          preserveState: true,
+        });
       }, 150),
       deep: true,
-    }
+    },
   },
 
   methods: {
     reset() {
-      this.form = mapValues(this.form, () => null)
+      this.form = mapValues(this.form, () => null);
     },
   },
-}
+};
 </script>

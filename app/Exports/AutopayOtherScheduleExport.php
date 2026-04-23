@@ -2,7 +2,6 @@
 
 namespace App\Exports;
 
-use App\Models\AuditSubMdaSchedule;
 use App\Models\OtherAuditPayrollCategory;
 use Maatwebsite\Excel\Concerns\Exportable;
 use Maatwebsite\Excel\Concerns\FromQuery;
@@ -12,14 +11,14 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class AutopayOtherScheduleExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, ShouldAutoSize
+class AutopayOtherScheduleExport implements FromQuery, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     use Exportable;
 
     protected OtherAuditPayrollCategory $category;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function query()
     {
@@ -34,9 +33,9 @@ class AutopayOtherScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function map($schedule) : array
+    public function map($schedule): array
     {
         return [
             $schedule->payment_reference,
@@ -54,9 +53,9 @@ class AutopayOtherScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Payment Reference',
@@ -74,9 +73,9 @@ class AutopayOtherScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
             'B' => NumberFormat::FORMAT_TEXT,

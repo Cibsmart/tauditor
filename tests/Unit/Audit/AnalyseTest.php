@@ -15,7 +15,7 @@ use App\Models\AuditPaySchedule;
 use Illuminate\Container\Container;
 
 beforeEach(function () {
-    Container::setInstance(new Container());
+    Container::setInstance(new Container);
 });
 
 afterEach(function () {
@@ -24,7 +24,7 @@ afterEach(function () {
 });
 
 it('runs every registered check against the schedule', function () {
-    $schedule = new AuditPaySchedule();
+    $schedule = new AuditPaySchedule;
 
     $expected = [
         CheckNewBeneficiary::class,
@@ -40,7 +40,7 @@ it('runs every registered check against the schedule', function () {
     ];
 
     $property = (new ReflectionClass(Analyse::class))->getProperty('checks');
-    $registeredChecks = $property->getValue(new Analyse());
+    $registeredChecks = $property->getValue(new Analyse);
 
     expect($registeredChecks)->toBe($expected, 'Analyse::$checks list drifted — update the test or the Analyse class.');
 
@@ -50,5 +50,5 @@ it('runs every registered check against the schedule', function () {
         Container::getInstance()->instance($class, $mock);
     }
 
-    (new Analyse())->check($schedule);
+    (new Analyse)->check($schedule);
 });

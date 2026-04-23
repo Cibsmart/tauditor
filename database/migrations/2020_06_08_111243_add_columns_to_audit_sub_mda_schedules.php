@@ -15,8 +15,8 @@ class AddColumnsToAuditSubMdaSchedules extends Migration
     {
         Schema::table('audit_reports', function (Blueprint $table) {
             $table->unsignedBigInteger('audit_sub_mda_schedule_id')
-                  ->after('audit_payroll_category_id')
-                  ->default(1);
+                ->after('audit_payroll_category_id')
+                ->default(1);
             $table->softDeletes();
 
             $table->foreign('audit_sub_mda_schedule_id')->references('id')->on('audit_sub_mda_schedules');

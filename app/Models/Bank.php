@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static where(string $string, $bank_name)
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Bank extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     /*
@@ -19,7 +20,7 @@ class Bank extends Model
     | Relationship
     |-------------------------------------------------------------------------------
     */
-    public function beneficiaries() : MorphMany
+    public function beneficiaries(): MorphMany
     {
         return $this->morphMany(BankDetail::class, 'bankable');
     }

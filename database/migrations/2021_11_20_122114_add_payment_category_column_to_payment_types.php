@@ -15,8 +15,8 @@ class AddPaymentCategoryColumnToPaymentTypes extends Migration
     {
         Schema::table('payment_types', function (Blueprint $table) {
             $table->string('category')
-                  ->after('id')
-                  ->default('main');
+                ->after('id')
+                ->default('main');
 
             $table->index('category');
         });

@@ -13,7 +13,7 @@ class LocalGovernmentFactory extends Factory
     {
         return [
             'state_id' => 1,
-            'name'     => 'Aba',
+            'name' => 'Aba',
         ];
     }
 }

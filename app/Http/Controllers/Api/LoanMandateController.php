@@ -24,38 +24,38 @@ class LoanMandateController extends Controller
 
         if (! $auth) {
             return response()->json([
-                'hasData'      => false,
+                'hasData' => false,
                 'responseDate' => now()->format('d-m-Y H:i:s+0000'),
-                'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
+                'requestDate' => $request_date->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
-                'responseMsg'  => 'UNAUTHORIZED',
-                'data'         => [],
+                'responseMsg' => 'UNAUTHORIZED',
+                'data' => [],
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
         $beneficiary = Beneficiary::query()
-                                  ->where('verification_number', $staff_id)
-                                  ->first();
+            ->where('verification_number', $staff_id)
+            ->first();
 
         if (! $beneficiary) {
             return response()->json([
-                'hasData'      => false,
+                'hasData' => false,
                 'responseDate' => now()->format('d-m-Y H:i:s+0000'),
-                'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
+                'requestDate' => $request_date->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
-                'responseMsg'  => 'INVALID CUSTOMER ID',
-                'data'         => [],
+                'responseMsg' => 'INVALID CUSTOMER ID',
+                'data' => [],
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
         if ($beneficiary->bvn() !== $bvn) {
             return response()->json([
-                'hasData'      => false,
+                'hasData' => false,
                 'responseDate' => now()->format('d-m-Y H:i:s+0000'),
-                'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
+                'requestDate' => $request_date->format('d-m-Y H:i:s+0000'),
                 'responseCode' => '07',
-                'responseMsg'  => 'BVN MISMATCH',
-                'data'         => [],
+                'responseMsg' => 'BVN MISMATCH',
+                'data' => [],
             ])->setStatusCode(Response::HTTP_FORBIDDEN);
         }
 
@@ -84,12 +84,12 @@ class LoanMandateController extends Controller
         $bank = $beneficiary->bankDetail;
 
         return response()->json([
-            'hasData'      => true,
-            'responseDate'  => now()->format('d-m-Y H:i:s+0000'),
-            'requestDate'  => $request_date->format('d-m-Y H:i:s+0000'),
+            'hasData' => true,
+            'responseDate' => now()->format('d-m-Y H:i:s+0000'),
+            'requestDate' => $request_date->format('d-m-Y H:i:s+0000'),
             'responseCode' => '00',
-            'responseMsg'  => 'SUCCESS',
-            'data'         => [
+            'responseMsg' => 'SUCCESS',
+            'data' => [
                 'authorisationCode' => $auth,
                 'accountNumber' => $bank->account_number,
                 'bankCode' => $bank->bankable->code,

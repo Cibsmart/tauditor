@@ -1,46 +1,39 @@
 <template>
-    <div class="bg-white rounded">
-        <v-tabs>
-            <tab title="Photo Capture">
-                <photo-capture></photo-capture>
-            </tab>
+  <div class="rounded bg-white">
+    <v-tabs>
+      <tab title="Photo Capture">
+        <photo-capture></photo-capture>
+      </tab>
 
-            <tab title="Finger Prints">
-                <finger-prints></finger-prints>
-            </tab>
-        </v-tabs>
-    </div>
+      <tab title="Finger Prints">
+        <finger-prints></finger-prints>
+      </tab>
+    </v-tabs>
+  </div>
 </template>
 
 <script>
-    import Icon from "@/Shared/Icon";
-    import Tab from "@/Shared/Tab";
-    import VTabs from "@/Shared/VTabs";
-    import PhotoCapture from "@/Pages/Beneficiary/Tabs/PhotoCapture";
-    import FingerPrints from "@/Pages/Beneficiary/Tabs/FingerPrints";
+import FingerPrints from '@/Pages/Beneficiary/Tabs/FingerPrints';
+import PhotoCapture from '@/Pages/Beneficiary/Tabs/PhotoCapture';
+import Tab from '@/Shared/Tab';
+import VTabs from '@/Shared/VTabs';
 
-    export default {
-        props: {
-            // data: Object,
-        },
+export default {
+  props: {
+    // data: Object,
+  },
 
-        components: {
-            Tab,
-            Icon,
-            VTabs,
-            PhotoCapture,
-            FingerPrints,
-        },
+  components: {
+    Tab,
+    VTabs,
+    PhotoCapture,
+    FingerPrints,
+  },
 
-        data() {
-            return {
+  data() {
+    return {};
+  },
 
-            }
-        },
-
-        methods: {
-
-        }
-    }
+  methods: {},
+};
 </script>
-

@@ -43,14 +43,14 @@ class AppServiceProvider extends ServiceProvider
         Event::listen(Registered::class, SendEmailVerificationNotification::class);
 
         Relation::$morphMap = [
-            'domain'                 => Domain::class,
-            'commercial'             => Bank::class,
-            'user'                   => User::class,
-            'audit_payroll'          => AuditPayroll::class,
-            'micro_finance'          => MicroFinanceBank::class,
-            'beneficiary_type'       => BeneficiaryType::class,
-            'audit_pay_schedule'     => AuditPaySchedule::class,
-            'audit_mda_schedule'     => AuditMdaSchedule::class,
+            'domain' => Domain::class,
+            'commercial' => Bank::class,
+            'user' => User::class,
+            'audit_payroll' => AuditPayroll::class,
+            'micro_finance' => MicroFinanceBank::class,
+            'beneficiary_type' => BeneficiaryType::class,
+            'audit_pay_schedule' => AuditPaySchedule::class,
+            'audit_mda_schedule' => AuditMdaSchedule::class,
             'audit_sub_mda_schedule' => AuditSubMdaSchedule::class,
         ];
 
@@ -81,7 +81,7 @@ class AppServiceProvider extends ServiceProvider
                 public function toArray()
                 {
                     return [
-                        'data'  => $this->items->toArray(),
+                        'data' => $this->items->toArray(),
                         'links' => $this->links(),
                     ];
                 }
@@ -104,27 +104,27 @@ class AppServiceProvider extends ServiceProvider
                         if (is_array($item)) {
                             return Collection::make($item)->map(function ($url, $page) {
                                 return [
-                                    'url'    => $url,
-                                    'label'  => $page,
+                                    'url' => $url,
+                                    'label' => $page,
                                     'active' => $this->currentPage() === $page,
                                 ];
                             });
                         } else {
                             return [
                                 [
-                                    'url'    => null,
-                                    'label'  => '...',
+                                    'url' => null,
+                                    'label' => '...',
                                     'active' => false,
                                 ],
                             ];
                         }
                     })->prepend([
-                        'url'    => $this->previousPageUrl(),
-                        'label'  => 'Previous',
+                        'url' => $this->previousPageUrl(),
+                        'label' => 'Previous',
                         'active' => false,
                     ])->push([
-                        'url'    => $this->nextPageUrl(),
-                        'label'  => 'Next',
+                        'url' => $this->nextPageUrl(),
+                        'label' => 'Next',
                         'active' => false,
                     ]);
                 }

@@ -26,23 +26,23 @@ class PaymentHistoryController extends Controller
         if (! $domain) {
             return response()->json([
                 'is_staff_valid' => false,
-                'data'           => [],
-                'message'        => 'Invalid Domain',
+                'data' => [],
+                'message' => 'Invalid Domain',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
         $schedules = AuditPaySchedule::allSchedules()
-                                     ->orderByMonth()
-                                     ->where('verification_number', Str::of($verification_number)->trim())
-                                     ->where('domain_id', Str::of($domain->id)->trim())
-                                     ->limit(3)
-                                     ->get();
+            ->orderByMonth()
+            ->where('verification_number', Str::of($verification_number)->trim())
+            ->where('domain_id', Str::of($domain->id)->trim())
+            ->limit(3)
+            ->get();
 
         if ($schedules->isEmpty()) {
             return response()->json([
                 'is_staff_valid' => false,
-                'data'           => [],
-                'message'        => 'Staff ID Does not Exist',
+                'data' => [],
+                'message' => 'Staff ID Does not Exist',
             ])->setStatusCode(Response::HTTP_NOT_FOUND);
         }
 
@@ -52,14 +52,14 @@ class PaymentHistoryController extends Controller
         $mda_name = $mda_name === $sub_name ? $mda_name : "{$mda_name} ({$sub_name})";
 
         $data = [
-            'staff_id'    => $schedules[0]->verification_number,
-            'staff_name'  => $schedules[0]->beneficiary_name,
+            'staff_id' => $schedules[0]->verification_number,
+            'staff_name' => $schedules[0]->beneficiary_name,
             'staff_cadre' => $schedules[0]->beneficiary_cadre,
-            'staff_mda'   => $mda_name,
-            'schedules'   => $schedules->map(fn ($schedule) => [
-                'net_pay'        => number_format($schedule->net_pay, 2, '.', ','),
-                'month'          => "{$schedule->month_name} {$schedule->year}",
-                'bank_name'      => $schedule->bank_name,
+            'staff_mda' => $mda_name,
+            'schedules' => $schedules->map(fn ($schedule) => [
+                'net_pay' => number_format($schedule->net_pay, 2, '.', ','),
+                'month' => "{$schedule->month_name} {$schedule->year}",
+                'bank_name' => $schedule->bank_name,
                 'account_number' => $schedule->account_number,
             ]),
         ];
@@ -71,8 +71,8 @@ class PaymentHistoryController extends Controller
     {
         return response()->json([
             'is_staff_valid' => false,
-            'data'           => [],
-            'message'        => 'Invalid Request',
+            'data' => [],
+            'message' => 'Invalid Request',
         ])->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
@@ -80,8 +80,8 @@ class PaymentHistoryController extends Controller
     {
         $log = [
             'endpoint' => 'payment_history',
-            'data'     => collect(['domain' => $domain, 'verification_number' => $verification_number]),
-            'ip'       => request()->ip(),
+            'data' => collect(['domain' => $domain, 'verification_number' => $verification_number]),
+            'ip' => request()->ip(),
         ];
 
         Auth::user()->requests()->create($log);

@@ -18,7 +18,7 @@ class SendDeductionConfirmation
         $clientId = config('fidelity.client_id');
         $clientSecret = config('fidelity.client_secret');
 
-        //Get Fidelity Loan Access Token and cache the token for 3000 seconds (50 mins)
+        // Get Fidelity Loan Access Token and cache the token for 3000 seconds (50 mins)
         $token = Cache::remember(
             'fidelity_loan_token',
             3000,
@@ -33,9 +33,9 @@ class SendDeductionConfirmation
         $scheduleDate = $schedule->created_at;
 
         $date = $schedule->created_at
-                        ->setDay(26)
-                        ->setTime(23, 00)
-                        ->format('Y-m-d\TH:i:s+000Z');
+            ->setDay(26)
+            ->setTime(23, 00)
+            ->format('Y-m-d\TH:i:s+000Z');
 
         $total = $schedule->totalAmount();
         $data = $schedule->deductions->transform(fn (FidelityLoanDeduction $deduction) => [
@@ -44,12 +44,12 @@ class SendDeductionConfirmation
         ]);
 
         $response = Http::withToken($token)
-                        ->post($bulkUrl, [
-                            'Narration' => $schedule->narration,
-                            'TransactionDate' => $date,
-                            'TotalAmount' => $total,
-                            'Data' => $data,
-                        ]);
+            ->post($bulkUrl, [
+                'Narration' => $schedule->narration,
+                'TransactionDate' => $date,
+                'TotalAmount' => $total,
+                'Data' => $data,
+            ]);
 
         $payload = $response->json();
 

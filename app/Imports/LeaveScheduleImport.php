@@ -7,12 +7,14 @@ use App\Models\AuditSubMdaSchedule;
 use App\Models\Bank;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use function in_array;
 use Maatwebsite\Excel\Concerns\Importable;
 use Maatwebsite\Excel\Concerns\OnEachRow;
 use Maatwebsite\Excel\Row;
+
+use function in_array;
 
 class LeaveScheduleImport implements OnEachRow
 {
@@ -90,7 +92,7 @@ class LeaveScheduleImport implements OnEachRow
             $message
         );
 
-        //Combines each beneficiary record with the heading for identification
+        // Combines each beneficiary record with the heading for identification
         $beneficiary = array_combine($this->heading, $columns);
 
         if (! isset($beneficiary['employee_id']) || empty($beneficiary['employee_id'])) {
@@ -102,7 +104,6 @@ class LeaveScheduleImport implements OnEachRow
 
     /**
      * Extracts the MDA Name, Payment Month & Year from the First Row
-     * @param  string  $row_two
      */
     protected function processRowTwo(string $row_two)
     {
@@ -119,6 +120,7 @@ class LeaveScheduleImport implements OnEachRow
             if (in_array($row[0], $months)) {
                 $this->month = $row[0];
                 $this->year = $row[1];
+
                 continue;
             }
 
@@ -131,8 +133,8 @@ class LeaveScheduleImport implements OnEachRow
 
     /**
      * Extract Beneficiary's Info, Allowances, Deductions and Save in Audit Pay Schedule Table
-     * @param $beneficiary
-     * @return \Illuminate\Database\Eloquent\Model
+     *
+     * @return Model
      */
     protected function createAuditPaySchedule($beneficiary)
     {
@@ -142,7 +144,7 @@ class LeaveScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Name: ' . $beneficiary[$this->headers['bank_name']] . ' ' . $e->getMessage()
+                'Bank Name: '.$beneficiary[$this->headers['bank_name']].' '.$e->getMessage()
             );
         }
 
@@ -152,7 +154,7 @@ class LeaveScheduleImport implements OnEachRow
             throw_if(
                 true,
                 WrongScheduleException::class,
-                'Bank Named: ' . $beneficiary[$this->headers['bank_name']] . ' Does Not Exist'
+                'Bank Named: '.$beneficiary[$this->headers['bank_name']].' Does Not Exist'
             );
         }
         $bankable_type = $bankable->bankableType();
@@ -162,34 +164,34 @@ class LeaveScheduleImport implements OnEachRow
             : $beneficiary[$this->headers['account_number']];
 
         $others_info = [
-            'appointment_date'=> $beneficiary[$this->headers['appointment_date']],
-            'number_of_months'=> $beneficiary[$this->headers['number_of_months']],
-            'basic_annual'    => $beneficiary[$this->headers['basic_annual']],
-            'basic_monthly'   => $beneficiary[$this->headers['basic_monthly']]
+            'appointment_date' => $beneficiary[$this->headers['appointment_date']],
+            'number_of_months' => $beneficiary[$this->headers['number_of_months']],
+            'basic_annual' => $beneficiary[$this->headers['basic_annual']],
+            'basic_monthly' => $beneficiary[$this->headers['basic_monthly']],
         ];
 
         $attributes = [
             'verification_number' => $beneficiary[$this->headers['employee_id']],
-            'beneficiary_name'    => Str::upper($beneficiary[$this->headers['employee_name']]),
-            'beneficiary_cadre'   => $beneficiary[$this->headers['employee_grade']],
-            'designation'         => $beneficiary[$this->headers['designation']],
-            'basic_pay'           => 0,
-            'bank_name'           => $beneficiary[$this->headers['bank_name']],
-            'account_number'      => $account_number,
-            'bank_code'           => $this->pad($this->getBankCode($bankable), 3),
-            'total_allowance'     => 0,
-            'gross_pay'           => 0,
-            'total_deductions'    => 0,
-            'net_pay'             => $beneficiary[$this->headers['net_pay']],
-            'allowances'          => collect($others_info),
-            'deductions'          => [],
-            'month'               => $month,
-            'bankable_type'       => $bankable_type,
-            'bankable_id'         => $bankable->id,
-            'mda'                 => $this->mda,
-            'department'          => $this->department,
+            'beneficiary_name' => Str::upper($beneficiary[$this->headers['employee_name']]),
+            'beneficiary_cadre' => $beneficiary[$this->headers['employee_grade']],
+            'designation' => $beneficiary[$this->headers['designation']],
+            'basic_pay' => 0,
+            'bank_name' => $beneficiary[$this->headers['bank_name']],
+            'account_number' => $account_number,
+            'bank_code' => $this->pad($this->getBankCode($bankable), 3),
+            'total_allowance' => 0,
+            'gross_pay' => 0,
+            'total_deductions' => 0,
+            'net_pay' => $beneficiary[$this->headers['net_pay']],
+            'allowances' => collect($others_info),
+            'deductions' => [],
+            'month' => $month,
+            'bankable_type' => $bankable_type,
+            'bankable_id' => $bankable->id,
+            'mda' => $this->mda,
+            'department' => $this->department,
             'total_dues_deductions' => 0,
-            'dues'                => []
+            'dues' => [],
         ];
 
         $schedule = null;
@@ -238,34 +240,34 @@ class LeaveScheduleImport implements OnEachRow
         $bank_name = Str::upper(Str::of($bank_name)->replace('?', ''));
 
         $exceptions = [
-            'FIDELITY'                             => 'FIDELITY BANK PLC',
-            'POLARIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'POLORIS BANK OF NIGERIA PLC'          => 'SKYE BANK PLC',
-            'FIRST BANK PLC.'                      => 'FIRST BANK OF NIGERIA PLC',
-            'UNITED BANK FOR AFRICA'               => 'UNITED BANK FOR AFRICA PLC',
-            'NDIOLU MICRO FINANCE BANK'            => 'NDIOLU MICRO FINANCE BANK, AWKA',
-            'EZEBO MICRO FINANCE BANK LTD'         => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
-            'TOPCLASS MICRO FINANCE BANK LIMITED'  => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
-            'NDIOLU MICROFINANCE BANK'             => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'FIDELITY' => 'FIDELITY BANK PLC',
+            'POLARIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'POLORIS BANK OF NIGERIA PLC' => 'SKYE BANK PLC',
+            'FIRST BANK PLC.' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITED BANK FOR AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'NDIOLU MICRO FINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
+            'EZEBO MICRO FINANCE BANK LTD' => 'EZEBO MICRO FINANCE BANK, UMUDIOKA',
+            'TOPCLASS MICRO FINANCE BANK LIMITED' => 'TOP CLASS MICRO FINANCE BANK, ONITSHA',
+            'NDIOLU MICROFINANCE BANK' => 'NDIOLU MICRO FINANCE BANK, AWKA',
             'OLUCHUKWU MICRO FINANCE BANK,ONITSHA' => 'OLUCHUKWU MICRO FINANCE BANK, ONITSHA',
-            'UNITED BANK OF AFRICA'                => 'UNITED BANK FOR AFRICA PLC',
-            'HERITAGE BANK'                        => 'HERITAGE BANK LIMITED',
-            'UNION BANK'                           => 'UNION BANK OF NIGERIA PLC',
-            'FIRST BANK'                           => 'FIRST BANK OF NIGERIA PLC',
-            'UNITY BANK'                           => 'UNITY BANK PLC',
-            'POLARIS BANK PLC'                     => 'SKYE BANK PLC',
-            'MAYFRESH SAVINGS ANG LOAN'            => 'MAYFRESH SAVINGS AND LOAN',
-            'UNION BANK NIGERIA PLC'               => 'UNION BANK OF NIGERIA PLC',
-            'UNION BANK OF NIGERIA'                => 'UNION BANK OF NIGERIA PLC',
-            'ZENITH BANK'                          => 'ZENITH BANK PLC',
-            'EZNITH BANK PLC'                      => 'ZENITH BANK PLC',
-            'FIDELITY BBANK PLC'                   => 'FIDELITY BANK PLC',
-            'STANBIC IBTC BANK PLC'                => 'STANBIC-IBTC BANK PLC',
-            'ECOBANK'                              => 'ECOBANK NIGERIA PLC',
-            'ACCESS BANK'                          => 'ACCESS BANK PLC',
-            'STANBIC IBTC'                         => 'STANBIC-IBTC BANK PLC',
-            'FIRST CITY MONOMENT BANK PLC'         => 'FIRST CITY MONUMENT BANK PLC',
-            'UKWALA MICROFINANCE BANK LTD'         => 'UKWALA MICRO FINANCE BANK LTD',
+            'UNITED BANK OF AFRICA' => 'UNITED BANK FOR AFRICA PLC',
+            'HERITAGE BANK' => 'HERITAGE BANK LIMITED',
+            'UNION BANK' => 'UNION BANK OF NIGERIA PLC',
+            'FIRST BANK' => 'FIRST BANK OF NIGERIA PLC',
+            'UNITY BANK' => 'UNITY BANK PLC',
+            'POLARIS BANK PLC' => 'SKYE BANK PLC',
+            'MAYFRESH SAVINGS ANG LOAN' => 'MAYFRESH SAVINGS AND LOAN',
+            'UNION BANK NIGERIA PLC' => 'UNION BANK OF NIGERIA PLC',
+            'UNION BANK OF NIGERIA' => 'UNION BANK OF NIGERIA PLC',
+            'ZENITH BANK' => 'ZENITH BANK PLC',
+            'EZNITH BANK PLC' => 'ZENITH BANK PLC',
+            'FIDELITY BBANK PLC' => 'FIDELITY BANK PLC',
+            'STANBIC IBTC BANK PLC' => 'STANBIC-IBTC BANK PLC',
+            'ECOBANK' => 'ECOBANK NIGERIA PLC',
+            'ACCESS BANK' => 'ACCESS BANK PLC',
+            'STANBIC IBTC' => 'STANBIC-IBTC BANK PLC',
+            'FIRST CITY MONOMENT BANK PLC' => 'FIRST CITY MONUMENT BANK PLC',
+            'UKWALA MICROFINANCE BANK LTD' => 'UKWALA MICRO FINANCE BANK LTD',
             'NIGERIA POLICE FUND (NPF) MICROFINANCE BANK PLC (AWKA)' => 'NIGERIA POLICE FUND MICROFINANCE BANK PLC, AWKA',
         ];
 
@@ -289,18 +291,18 @@ class LeaveScheduleImport implements OnEachRow
     protected function setHeaders()
     {
         $items = [
-            'employee_id'     => ['id', 'employee_id'],
-            'employee_name'   => ['name', 'employee_name'],
-            'employee_grade'  => ['grade', 'employee_grade'],
-            'bank_name'       => ['bank', 'bank_name'],
-            'account_number'  => ['acct', 'account_number', 'account_no', 'bank_account'],
-            'bank_code'       => ['code', 'bank_code'],
-            'net_pay'         => ['net', 'netpay', 'net_pay', 'leave_allowance'],
-            'designation'     => ['designation'],
-            'appointment_date'=> ['date_of_first_appointment', 'appointment_date'],
-            'number_of_months'=> ['no_of_months', 'number_of_months'],
-            'basic_annual'    => ['basic_annual_salary', 'annual_salary'],
-            'basic_monthly'   => ['basic_monthly_salary', 'monthly_salary']
+            'employee_id' => ['id', 'employee_id'],
+            'employee_name' => ['name', 'employee_name'],
+            'employee_grade' => ['grade', 'employee_grade'],
+            'bank_name' => ['bank', 'bank_name'],
+            'account_number' => ['acct', 'account_number', 'account_no', 'bank_account'],
+            'bank_code' => ['code', 'bank_code'],
+            'net_pay' => ['net', 'netpay', 'net_pay', 'leave_allowance'],
+            'designation' => ['designation'],
+            'appointment_date' => ['date_of_first_appointment', 'appointment_date'],
+            'number_of_months' => ['no_of_months', 'number_of_months'],
+            'basic_annual' => ['basic_annual_salary', 'annual_salary'],
+            'basic_monthly' => ['basic_monthly_salary', 'monthly_salary'],
         ];
 
         foreach ($items as $key => $value) {

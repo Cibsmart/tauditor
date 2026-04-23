@@ -14,7 +14,7 @@ class MaritalStatusFactory extends Factory
         $status = $this->faker->randomElement(['S', 'M']);
 
         return [
-            'id'   => $status,
+            'id' => $status,
             'name' => $status === 'S' ? 'Single' : 'Married',
         ];
     }

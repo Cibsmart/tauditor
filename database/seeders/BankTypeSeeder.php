@@ -2,9 +2,7 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\BankType;
-use App\Models\QualificationType;
 use Illuminate\Database\Seeder;
 
 class BankTypeSeeder extends Seeder

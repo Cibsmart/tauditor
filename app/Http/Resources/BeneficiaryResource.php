@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources;
 
-use function array_key_exists;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+
+use function array_key_exists;
 use function number_format;
 
 class BeneficiaryResource extends JsonResource
@@ -11,25 +13,25 @@ class BeneficiaryResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @return array
      */
     public function toArray($request)
     {
         return [
-            'name'                 => $this->beneficiary_name,
-            'designation'          => $this->designation,
-            'mobile_phone'         => '',
-            'email'                => '',
+            'name' => $this->beneficiary_name,
+            'designation' => $this->designation,
+            'mobile_phone' => '',
+            'email' => '',
             'monthly_gross_income' => $this->formatValue($this->gross_pay),
-            'yearly_gross_income'  => $this->formatValue($this->gross_pay * 12),
-            'total_deductions'     => $this->formatValue($this->total_deduction),
-            'monthly_tax_paid'     => $this->getValue(['tax'], $this->deductions),
-            'pension'              => $this->getValue(['ansg_pen', 'pension'], $this->deductions),
-            'nhf'                  => $this->getValue(['nhf'], $this->deductions),
-            'nhis'                 => $this->getValue(['ashis', 'ashia'], $this->deductions),
-            'nsitf'                => '',
-            'life_assurance'       => '',
+            'yearly_gross_income' => $this->formatValue($this->gross_pay * 12),
+            'total_deductions' => $this->formatValue($this->total_deduction),
+            'monthly_tax_paid' => $this->getValue(['tax'], $this->deductions),
+            'pension' => $this->getValue(['ansg_pen', 'pension'], $this->deductions),
+            'nhf' => $this->getValue(['nhf'], $this->deductions),
+            'nhis' => $this->getValue(['ashis', 'ashia'], $this->deductions),
+            'nsitf' => '',
+            'life_assurance' => '',
         ];
     }
 

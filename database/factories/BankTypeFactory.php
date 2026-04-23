@@ -12,7 +12,7 @@ class BankTypeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'   => $this->faker->countryCode,
+            'id' => $this->faker->countryCode,
             'name' => $this->faker->country,
         ];
     }

@@ -14,15 +14,10 @@ class AnalysePaySchedules implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * @var AuditSubMdaSchedule
-     */
     public AuditSubMdaSchedule $schedule;
 
     /**
      * Create a new job instance.
-     *
-     * @param  AuditSubMdaSchedule  $schedule
      */
     public function __construct(AuditSubMdaSchedule $schedule)
     {
@@ -32,7 +27,6 @@ class AnalysePaySchedules implements ShouldQueue
     /**
      * Execute the job.
      *
-     * @param  AuditPayScheduleAction  $schedule_action
      * @return void
      */
     public function handle(AuditPayScheduleAction $schedule_action)

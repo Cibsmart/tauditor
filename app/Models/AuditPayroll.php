@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+
 use function in_array;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static first($payroll)
@@ -24,8 +24,8 @@ class AuditPayroll extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'timestamp'         => 'datetime',
-        'analysed'          => 'boolean',
+        'timestamp' => 'datetime',
+        'analysed' => 'boolean',
         'autopay_generated' => 'boolean',
     ];
 
@@ -34,7 +34,7 @@ class AuditPayroll extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function domain() : BelongsTo
+    public function domain(): BelongsTo
     {
         return $this->belongsTo(Domain::class);
     }
@@ -64,12 +64,12 @@ class AuditPayroll extends Model
         return $this->created_at->timezone('Africa/Lagos')->diffForHumans();
     }
 
-    public function setTotalNetPayAttribute(float $value) : int
+    public function setTotalNetPayAttribute(float $value): int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
     }
 
-    public function getTotalNetPayAttribute(?int $value = 0) : float
+    public function getTotalNetPayAttribute(?int $value = 0): float
     {
         return $value / 100;
     }
@@ -92,15 +92,15 @@ class AuditPayroll extends Model
     public function scopeWhereTimestampLessThan($query, $date, $domain_id)
     {
         return $query->where('domain_id', '=', $domain_id)
-                     ->whereRaw('date_format(timestamp, "%Y-%m") < ?', [$date->format('Y-m')]);
+            ->whereRaw('date_format(timestamp, "%Y-%m") < ?', [$date->format('Y-m')]);
     }
 
     public function scopePayrolls($query)
     {
         return $query->join('audit_payroll_categories', 'audit_payrolls.id', '=', 'audit_payroll_categories.audit_payroll_id')
-                     ->join('audit_mda_schedules', 'audit_payroll_categories.id', '=', 'audit_mda_schedules.audit_payroll_category_id')
-                     ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
-                     ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
+            ->join('audit_mda_schedules', 'audit_payroll_categories.id', '=', 'audit_mda_schedules.audit_payroll_category_id')
+            ->join('audit_sub_mda_schedules', 'audit_mda_schedules.id', '=', 'audit_sub_mda_schedules.audit_mda_schedule_id')
+            ->join('microfinance_bank_schedules', 'audit_sub_mda_schedules.id', '=', 'microfinance_bank_schedules.audit_sub_mda_schedule_id');
     }
 
     public function scopeOrderByMonth($query)
@@ -111,7 +111,7 @@ class AuditPayroll extends Model
     public function previousPayroll($domain_id)
     {
         return $this->where('domain_id', '=', $domain_id)
-                    ->whereRaw('date_format(timestamp, "%Y-%m") = ?', [$this->timestamp->subMonth()->format('Y-m')])->first();
+            ->whereRaw('date_format(timestamp, "%Y-%m") = ?', [$this->timestamp->subMonth()->format('Y-m')])->first();
     }
 
     public function month($abbreviation = false)
@@ -136,7 +136,7 @@ class AuditPayroll extends Model
         return
             in_array($this->month, [11, 12])
             && $this->auditPaymentCategories()
-                    ->where('payment_type_id', 'lev')
-                    ->doesntExist();
+                ->where('payment_type_id', 'lev')
+                ->doesntExist();
     }
 }

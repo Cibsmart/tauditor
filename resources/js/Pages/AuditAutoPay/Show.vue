@@ -1,15 +1,12 @@
 <template>
   <div>
     <Head title="Autopay MDA Schedules" />
-    <h1 class="mb-4 font-bold text-3xl">
-      <Link :href="route('audit_autopay.index')">
-        Audit Autopay
-      </Link>
+    <h1 class="mb-4 text-3xl font-bold">
+      <Link :href="route('audit_autopay.index')"> Audit Autopay</Link>
       <span class="font-medium">/</span> Autopay Schedules
     </h1>
 
-    <div class="mb-6 flex justify-between items-center">
-    </div>
+    <div class="mb-6 flex items-center justify-between"></div>
 
     <div class="rounded-md border">
       <Table>
@@ -27,19 +24,25 @@
             <TableCell>
               <div class="flex items-center">
                 <div class="ml-4">
-                  <div class="text-sm leading-5 font-medium  uppercase">
+                  <div class="text-sm leading-5 font-medium uppercase">
                     {{ schedule.mda_name }}
-                    <span :class="schedule.pension ? 'bg-pink-100 text-pink-800' : ''"
-                          class="px-2 text-xs leading-5 font-semibold rounded-full">
-                                            {{ schedule.pension ? 'Pension' : '' }}
-                                        </span>
+                    <span
+                      :class="
+                        schedule.pension ? 'bg-pink-100 text-pink-800' : ''
+                      "
+                      class="rounded-full px-2 text-xs leading-5 font-semibold"
+                    >
+                      {{ schedule.pension ? 'Pension' : '' }}
+                    </span>
                   </div>
-                  <div class="text-sm leading-5 text-muted-foreground">{{ schedule.domain }}</div>
+                  <div class="text-sm leading-5 text-muted-foreground">
+                    {{ schedule.domain }}
+                  </div>
                 </div>
               </div>
             </TableCell>
             <TableCell>
-              <div class="text-sm leading-5 ">
+              <div class="text-sm leading-5">
                 {{ schedule.month }}
               </div>
               <div class="text-sm leading-5 text-muted-foreground">
@@ -47,7 +50,7 @@
               </div>
             </TableCell>
             <TableCell>
-              <div class="text-sm leading-5 ">
+              <div class="text-sm leading-5">
                 <span class="line-through">N</span>
                 {{ schedule.total_amount }}
               </div>
@@ -58,46 +61,73 @@
             </TableCell>
 
             <TableCell>
-                            <span :class="schedule.uploaded
-                                  ? 'bg-green-100 text-green-800'
-                                  : 'bg-red-100 text-red-800'"
-                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
-                            </span>
+              <span
+                :class="
+                  schedule.uploaded
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+              >
+                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
+              </span>
             </TableCell>
 
             <TableCell class="text-right">
               <!--  View Sub MDA Details for MDA with Sub MDAs -->
-              <Link v-if="schedule.generated && schedule.uploaded && schedule.has_sub" class="px-5 py-3"
-                    href="#">
+              <Link
+                v-if="
+                  schedule.generated && schedule.uploaded && schedule.has_sub
+                "
+                class="px-5 py-3"
+                href="#"
+              >
                 View Details
               </Link>
 
-              <Link v-else-if="schedule.generated && schedule.has_sub"
-                    :href="route('audit_autopay.detail', {audit_mda_schedule: schedule.id})"
-                    class="px-5 py-3">
+              <Link
+                v-else-if="schedule.generated && schedule.has_sub"
+                :href="
+                  route('audit_autopay.detail', {
+                    audit_mda_schedule: schedule.id,
+                  })
+                "
+                class="px-5 py-3"
+              >
                 Upload
               </Link>
 
-              <form v-else-if="schedule.generated && ! schedule.uploaded && ! schedule.has_sub"
-                    :key="schedule.id"
-                    @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)">
-                <div class="px-5 flex items-center justify-end">
+              <form
+                v-else-if="
+                  schedule.generated && !schedule.uploaded && !schedule.has_sub
+                "
+                :key="schedule.id"
+                @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)"
+              >
+                <div class="flex items-center justify-end px-5">
                   <button
-                    class="px-4 py-1 h-1/2 bg-gray-600 hover:bg-gray-700 rounded-sm text-xs font-medium text-white focus:outline-none"
-                    type="submit">
+                    class="h-1/2 rounded-sm bg-gray-600 px-4 py-1 text-xs font-medium text-white hover:bg-gray-700 focus:outline-none"
+                    type="submit"
+                  >
                     Upload
                   </button>
                 </div>
               </form>
 
-              <form v-else-if="schedule.generated && schedule.uploaded && ! schedule.has_sub"
-                    :key="schedule.id"
-                    @submit.prevent="reupload(schedule.sub_mda_id, schedule.mda_name)">
-                <div class="px-5 flex items-center justify-end">
+              <form
+                v-else-if="
+                  schedule.generated && schedule.uploaded && !schedule.has_sub
+                "
+                :key="schedule.id"
+                @submit.prevent="
+                  reupload(schedule.sub_mda_id, schedule.mda_name)
+                "
+              >
+                <div class="flex items-center justify-end px-5">
                   <button
-                    class="px-4 py-1 h-1/2 bg-green-600 hover:bg-green-700 rounded-sm text-xs font-medium text-white focus:outline-none"
-                    type="submit">
+                    class="h-1/2 rounded-sm bg-green-600 px-4 py-1 text-xs font-medium text-white hover:bg-green-700 focus:outline-none"
+                    type="submit"
+                  >
                     Re-upload
                   </button>
                 </div>
@@ -106,7 +136,10 @@
           </TableRow>
 
           <TableRow v-if="schedules.data.length === 0">
-            <TableCell class="text-xs font-medium text-gray-700 uppercase tracking-wider" colspan="6">
+            <TableCell
+              class="text-xs font-medium tracking-wider text-gray-700 uppercase"
+              colspan="6"
+            >
               No Pay Schedule
             </TableCell>
           </TableRow>
@@ -118,11 +151,17 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3'
-import Icon from '@/Shared/Icon'
-import Layout from '@/Shared/Layout'
-import Pagination from '@/Shared/Pagination'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import { Link } from '@inertiajs/vue3';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
   layout: Layout,
@@ -132,7 +171,6 @@ export default {
   },
 
   components: {
-    Icon,
     Link,
     Pagination,
     Table,
@@ -144,37 +182,35 @@ export default {
   },
 
   data() {
-    return {}
+    return {};
   },
 
   methods: {
     upload(audit_sub_mda, mda_name) {
-
       let result = confirm('Confirm Autopay Upload for' + mda_name);
 
       if (result) {
         let data = new FormData();
-        data.append('audit_sub_mda', audit_sub_mda || '')
+        data.append('audit_sub_mda', audit_sub_mda || '');
 
         this.$inertia.post(this.route('interswitch.process'), data, {
           preserveScroll: true,
-        })
+        });
       }
     },
 
     reupload(audit_sub_mda, mda_name) {
-
       let result = confirm('Confirm Autopay Re-Upload for' + mda_name);
 
       if (result) {
         let data = new FormData();
-        data.append('audit_sub_mda', audit_sub_mda || '')
+        data.append('audit_sub_mda', audit_sub_mda || '');
 
         this.$inertia.post(this.route('interswitch.process'), data, {
           preserveScroll: true,
-        })
+        });
       }
     },
-  }
-}
+  },
+};
 </script>

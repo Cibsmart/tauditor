@@ -1,8 +1,8 @@
 <template>
   <div>
     <Head title="Audit Autopay" />
-    <h1 class="mb-8 font-bold text-3xl">Auto Pay Payrolls</h1>
-    <div class="mb-6 flex justify-between items-center">
+    <h1 class="mb-8 text-3xl font-bold">Auto Pay Payrolls</h1>
+    <div class="mb-6 flex items-center justify-between">
       <div></div>
     </div>
 
@@ -18,14 +18,30 @@
         <TableBody v-for="payroll in payrolls.data" :key="payroll.id">
           <TableRow :key="payroll.id">
             <TableCell>
-              <Link class="" href="#" preserve-scroll preserve-state @click="show(payroll.id)">
-                <div class="text-sm leading-5 font-medium  uppercase">{{ payroll.month }}</div>
-                <div class="text-sm leading-5 text-muted-foreground">{{ payroll.year }}</div>
+              <Link
+                class=""
+                href="#"
+                preserve-scroll
+                preserve-state
+                @click="show(payroll.id)"
+              >
+                <div class="text-sm leading-5 font-medium uppercase">
+                  {{ payroll.month }}
+                </div>
+                <div class="text-sm leading-5 text-muted-foreground">
+                  {{ payroll.year }}
+                </div>
               </Link>
             </TableCell>
             <TableCell>
-              <Link class="" href="#" preserve-scroll preserve-state @click="show(payroll.id)">
-                <div class="text-sm leading-5 ">
+              <Link
+                class=""
+                href="#"
+                preserve-scroll
+                preserve-state
+                @click="show(payroll.id)"
+              >
+                <div class="text-sm leading-5">
                   {{ payroll.created_by }}
                 </div>
                 <div class="text-sm leading-5 text-muted-foreground">
@@ -34,8 +50,17 @@
               </Link>
             </TableCell>
             <TableCell class="w-px text-sm leading-5 font-medium">
-              <Link class="px-6" href="#" preserve-scroll preserve-state @click="show(payroll.id)">
-                <icon class="block w-6 h-4 fill-gray-400" name="cheveron-right" />
+              <Link
+                class="px-6"
+                href="#"
+                preserve-scroll
+                preserve-state
+                @click="show(payroll.id)"
+              >
+                <icon
+                  class="block h-4 w-6 fill-gray-400"
+                  name="cheveron-right"
+                />
               </Link>
             </TableCell>
           </TableRow>
@@ -43,150 +68,256 @@
             <TableCell colspan="6">
               <Table>
                 <TableBody>
-                  <TableRow v-for="category in payroll.categories" :key="category.id">
+                  <TableRow
+                    v-for="category in payroll.categories"
+                    :key="category.id"
+                  >
                     <TableCell class="">
                       {{ category.payment_title }}
                       <span
-                        :class="category.payment_type_id === 'sal' ? 'bg-green-100 text-green-800' : 'bg-pink-100 text-pink-800'"
-                        class="px-2 text-xs leading-5 font-semibold rounded-full">
-                                                {{ category.payment_type }}
-                                            </span>
+                        :class="
+                          category.payment_type_id === 'sal'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-pink-100 text-pink-800'
+                        "
+                        class="rounded-full px-2 text-xs leading-5 font-semibold"
+                      >
+                        {{ category.payment_type }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
                       MDA Count:
                       <span class="font-bold">
-                                                {{ category.mda_count }}
-                                            </span>
+                        {{ category.mda_count }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
                       Uploaded:
                       <span class="font-bold">
-                                                {{ category.uploaded_count }}
-                                            </span>
+                        {{ category.uploaded_count }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
                       Generated:
                       <span class="font-bold">
-                                                {{ category.autopay_count }}
-                                            </span>
+                        {{ category.autopay_count }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
-                                            <span :class="status[category.autopay_status]"
-                                                  class="px-2 text-xs leading-5 font-semibold rounded-full uppercase">
-                                                {{ category.autopay_status }}
-                                            </span>
+                      <span
+                        :class="status[category.autopay_status]"
+                        class="rounded-full px-2 text-xs leading-5 font-semibold uppercase"
+                      >
+                        {{ category.autopay_status }}
+                      </span>
                     </TableCell>
-                    <TableCell class="text-right ">
-                      <Button v-show="category.can_generate" :as="Link"
-                              :href="route('audit_autopay.generate', { audit_payroll_category: category.id })"
-                              method="post" preserve-scroll preserve-state size="sm">
+                    <TableCell class="text-right">
+                      <Button
+                        v-show="category.can_generate"
+                        :as="Link"
+                        :href="
+                          route('audit_autopay.generate', {
+                            audit_payroll_category: category.id,
+                          })
+                        "
+                        method="post"
+                        preserve-scroll
+                        preserve-state
+                        size="sm"
+                      >
                         Generate
                       </Button>
 
-                      <Link v-show="category.refreshable"
-                            :href="route('audit_autopay.index')"
-                            class="px-5 py-3" preserve-scroll preserve-state>
+                      <Link
+                        v-show="category.refreshable"
+                        :href="route('audit_autopay.index')"
+                        class="px-5 py-3"
+                        preserve-scroll
+                        preserve-state
+                      >
                         Refresh
                       </Link>
 
-                      <a v-show="category.viewable"
-                         :href="route('audit_autopay.download', { audit_payroll_category: category.id })"
-                         class="px-5 py-3">
+                      <a
+                        v-show="category.viewable"
+                        :href="
+                          route('audit_autopay.download', {
+                            audit_payroll_category: category.id,
+                          })
+                        "
+                        class="px-5 py-3"
+                      >
                         Download Autopay
                       </a>
 
                       <span v-show="category.viewable"> | </span>
 
-                      <a v-show="category.viewable"
-                         :href="route('audit_autopay.downloadMfb', { audit_payroll_category: category.id })"
-                         class="px-5 py-3">
+                      <a
+                        v-show="category.viewable"
+                        :href="
+                          route('audit_autopay.downloadMfb', {
+                            audit_payroll_category: category.id,
+                          })
+                        "
+                        class="px-5 py-3"
+                      >
                         Download MFB
                       </a>
 
                       <span v-show="category.viewable"> | </span>
 
-                      <Link v-show="category.viewable"
-                            :href="route('audit_autopay.show', {audit_payroll_category: category.id})"
-                            class="px-5 py-3" preserve-scroll preserve-state>
+                      <Link
+                        v-show="category.viewable"
+                        :href="
+                          route('audit_autopay.show', {
+                            audit_payroll_category: category.id,
+                          })
+                        "
+                        class="px-5 py-3"
+                        preserve-scroll
+                        preserve-state
+                      >
                         View MDAs
                       </Link>
                     </TableCell>
                   </TableRow>
 
-                  <TableRow v-for="category in payroll.other_categories" :key="category.id">
+                  <TableRow
+                    v-for="category in payroll.other_categories"
+                    :key="category.id"
+                  >
                     <TableCell class="">
-                      <div class="text-sm leading-5 ">
+                      <div class="text-sm leading-5">
                         {{ category.payment_title }}
-                        <span :class="category.color" class="px-2 text-xs leading-5 font-semibold rounded-full">
-                                                    {{ category.payment_type }}
-                                                </span>
+                        <span
+                          :class="category.color"
+                          class="rounded-full px-2 text-xs leading-5 font-semibold"
+                        >
+                          {{ category.payment_type }}
+                        </span>
                       </div>
-                      <div class="text-sm leading-5 ">
-                        <span v-if="!category.tenece && !category.fidelity" class="italic text-green-900">No Charge Applied</span>
-                        <span v-if="category.tenece && category.fidelity" class="italic text-pink-900">All Charges Applied</span>
-                        <span v-if="category.tenece && !category.fidelity" class="italic text-blue-900">Fidelity Charge not Applied</span>
+                      <div class="text-sm leading-5">
+                        <span
+                          v-if="!category.tenece && !category.fidelity"
+                          class="text-green-900 italic"
+                          >No Charge Applied</span
+                        >
+                        <span
+                          v-if="category.tenece && category.fidelity"
+                          class="text-pink-900 italic"
+                          >All Charges Applied</span
+                        >
+                        <span
+                          v-if="category.tenece && !category.fidelity"
+                          class="text-blue-900 italic"
+                          >Fidelity Charge not Applied</span
+                        >
                       </div>
                     </TableCell>
                     <TableCell class="">
                       Line Items:
                       <span class="font-bold">
-                                                {{ category.line_items }}
-                                            </span>
+                        {{ category.line_items }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
-                                            <span :class="category.uploaded
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-red-100 text-red-800'"
-                                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                {{ category.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
-                                            </span>
+                      <span
+                        :class="
+                          category.uploaded
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        "
+                        class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+                      >
+                        {{ category.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
-                                            <span :class="category.autopay_generated
-                                                    ? 'bg-green-100 text-green-800'
-                                                    : 'bg-red-100 text-red-800'"
-                                                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                                                {{ category.autopay_generated ? 'GENERATED' : 'NOT-GENERATED' }}
-                                            </span>
+                      <span
+                        :class="
+                          category.autopay_generated
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        "
+                        class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+                      >
+                        {{
+                          category.autopay_generated
+                            ? 'GENERATED'
+                            : 'NOT-GENERATED'
+                        }}
+                      </span>
                     </TableCell>
                     <TableCell class="">
-                                            <span :class="status[category.autopay_status]"
-                                                  class="px-2 text-xs leading-5 font-semibold rounded-full uppercase">
-                                                {{ category.autopay_status }}
-                                            </span>
+                      <span
+                        :class="status[category.autopay_status]"
+                        class="rounded-full px-2 text-xs leading-5 font-semibold uppercase"
+                      >
+                        {{ category.autopay_status }}
+                      </span>
                     </TableCell>
-                    <TableCell class="text-right ">
-                      <Button v-show="category.can_generate" :as="Link"
-                              :href="route('other_audit_autopay.generate', { other_audit_payroll_category: category.id })"
-                              method="post" preserve-scroll preserve-state size="sm">
+                    <TableCell class="text-right">
+                      <Button
+                        v-show="category.can_generate"
+                        :as="Link"
+                        :href="
+                          route('other_audit_autopay.generate', {
+                            other_audit_payroll_category: category.id,
+                          })
+                        "
+                        method="post"
+                        preserve-scroll
+                        preserve-state
+                        size="sm"
+                      >
                         Generate
                       </Button>
 
-                      <Link v-show="category.refreshable"
-                            :href="route('audit_autopay.index')"
-                            class="px-5 py-3" preserve-scroll preserve-state>
+                      <Link
+                        v-show="category.refreshable"
+                        :href="route('audit_autopay.index')"
+                        class="px-5 py-3"
+                        preserve-scroll
+                        preserve-state
+                      >
                         Refresh
                       </Link>
 
-                      <a v-show="category.viewable"
-                         :href="route('other_audit_autopay.download', { other_audit_payroll_category: category.id })"
-                         class="px-5 py-3">
+                      <a
+                        v-show="category.viewable"
+                        :href="
+                          route('other_audit_autopay.download', {
+                            other_audit_payroll_category: category.id,
+                          })
+                        "
+                        class="px-5 py-3"
+                      >
                         Download Autopay
                       </a>
 
                       <span v-show="category.viewable"> | </span>
 
-                      <a v-show="category.viewable"
-                         :href="route('other_audit_autopay.downloadMfb', { other_audit_payroll_category: category.id })"
-                         class="px-5 py-3">
+                      <a
+                        v-show="category.viewable"
+                        :href="
+                          route('other_audit_autopay.downloadMfb', {
+                            other_audit_payroll_category: category.id,
+                          })
+                        "
+                        class="px-5 py-3"
+                      >
                         Download MFB
                       </a>
 
                       <span v-show="category.viewable"> | </span>
 
-                      <Link v-show="category.viewable"
-                            class="px-5 py-3"
-                            href="#" preserve-scroll preserve-state>
+                      <Link
+                        v-show="category.viewable"
+                        class="px-5 py-3"
+                        href="#"
+                        preserve-scroll
+                        preserve-state
+                      >
                         View Schedule
                       </Link>
                     </TableCell>
@@ -199,7 +330,10 @@
 
         <TableBody>
           <TableRow v-if="payrolls.data.length === 0">
-            <TableCell class="text-xs font-medium text-gray-700 uppercase tracking-wider" colspan="6">
+            <TableCell
+              class="text-xs font-medium tracking-wider text-gray-700 uppercase"
+              colspan="6"
+            >
               No Payroll
             </TableCell>
           </TableRow>
@@ -211,12 +345,19 @@
 </template>
 
 <script>
-import Icon from '@/Shared/Icon'
-import Layout from '@/Shared/Layout'
-import Pagination from '@/Shared/Pagination'
-import { Link } from '@inertiajs/vue3'
-import { Button } from '@/Components/ui/button'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/Components/ui/table'
+import { Link } from '@inertiajs/vue3';
+import { Button } from '@/Components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
+import Icon from '@/Shared/Icon';
+import Layout from '@/Shared/Layout';
+import Pagination from '@/Shared/Pagination';
 
 export default {
   layout: Layout,
@@ -247,13 +388,13 @@ export default {
         incomplete: 'bg-blue-100 text-blue-800',
       },
       show_detail: [],
-    }
+    };
   },
 
   methods: {
     show(payroll) {
-      this.show_detail[payroll] = !this.show_detail[payroll]
-    }
+      this.show_detail[payroll] = !this.show_detail[payroll];
+    },
   },
-}
+};
 </script>

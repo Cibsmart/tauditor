@@ -4,8 +4,9 @@ namespace App\Audit;
 
 use App\Classes\AuditCheckable;
 use App\Models\AuditPaySchedule;
-use function collect;
 use Illuminate\Support\Collection;
+
+use function collect;
 
 class CheckDeductions extends AuditCheckable
 {

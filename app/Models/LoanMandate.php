@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Notifications\MandateReceived;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Notifications\Notification;
 
 class LoanMandate extends Model
 {
@@ -163,18 +161,18 @@ class LoanMandate extends Model
                     $query->whereIn('loan_mandates.id', function ($query) use ($term) {
                         $query->select('id')->from(function ($query) use ($term) {
                             $query->select('m.id as id')
-                                  ->from('loan_mandates as m')
-                                  ->join('loan_statuses as s', 'm.status', '=', 's.id')
-                                  ->join('beneficiaries as b', 'm.beneficiary_id', '=', 'b.id')
-                                  ->where('m.staff_id', 'like', $term)
-                                  ->orWhere('m.account_number', 'like', $term)
-                                  ->orWhere('m.reference', 'like', $term)
-                                  ->orWhere('m.bvn', 'like', $term)
-                                  ->orWhere('m.phone_number', 'like', $term)
-                                  ->orWhere('b.last_name', 'like', $term)
-                                  ->orWhere('b.first_name', 'like', $term)
-                                  ->orWhere('b.middle_name', 'like', $term)
-                                  ->orWhere('s.name', 'like', $term);
+                                ->from('loan_mandates as m')
+                                ->join('loan_statuses as s', 'm.status', '=', 's.id')
+                                ->join('beneficiaries as b', 'm.beneficiary_id', '=', 'b.id')
+                                ->where('m.staff_id', 'like', $term)
+                                ->orWhere('m.account_number', 'like', $term)
+                                ->orWhere('m.reference', 'like', $term)
+                                ->orWhere('m.bvn', 'like', $term)
+                                ->orWhere('m.phone_number', 'like', $term)
+                                ->orWhere('b.last_name', 'like', $term)
+                                ->orWhere('b.first_name', 'like', $term)
+                                ->orWhere('b.middle_name', 'like', $term)
+                                ->orWhere('s.name', 'like', $term);
                         }, 'matches');
                     });
                 });

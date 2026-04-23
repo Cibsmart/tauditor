@@ -12,7 +12,7 @@ class CreateUserTokenController extends Controller
         $registration_token = request()->query('create_token');
         $token = base64_encode(hash('sha1', 'anambra'));
 
-//        dd($token);
+        //        dd($token);
 
         if ($registration_token != $token) {
             abort(Response::HTTP_FORBIDDEN);
@@ -20,8 +20,8 @@ class CreateUserTokenController extends Controller
 
         $user = Auth::user();
 
-//        $token = $user->createToken('state_airs');
-//        $token = $user->createToken('loans');
+        //        $token = $user->createToken('state_airs');
+        //        $token = $user->createToken('loans');
         $token = $user->createToken('fidelity');
 
         return $token->plainTextToken;

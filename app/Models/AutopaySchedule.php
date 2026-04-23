@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AutopaySchedule extends Model
 {
@@ -18,12 +18,12 @@ class AutopaySchedule extends Model
         'updated_at',
     ];
 
-    public function setAmountAttribute(float $value) : int
+    public function setAmountAttribute(float $value): int
     {
         return $this->attributes['amount'] = $value * 100;
     }
 
-    public function getAmountAttribute(int $value) : float
+    public function getAmountAttribute(int $value): float
     {
         return $value / 100;
     }

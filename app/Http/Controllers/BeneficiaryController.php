@@ -34,7 +34,7 @@ class BeneficiaryController extends Controller
         try {
             (new BeneficiariesImport)->import($file_path);
         } catch (Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
         }
 
         return redirect()->back()->with('success', 'Beneficiaries Successfully Uploaded');

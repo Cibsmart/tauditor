@@ -35,13 +35,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [WelcomeController::class, 'index'])
-     ->middleware('guest')
-     ->name('welcome');
+    ->middleware('guest')
+    ->name('welcome');
 
 Route::prefix('{domain}')->group(function () {
     Route::get('login', [LoginController::class, 'showLoginForm'])
-         ->middleware('guest')
-         ->name('login');
+        ->middleware('guest')
+        ->name('login');
 });
 
 Route::get(

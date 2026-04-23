@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -20,7 +19,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        //Roles
+        // Roles
         $super_admin = Role::create(['name' => 'super_admin']);
         $admin = Role::create(['name' => 'admin']);
         $hod = Role::create(['name' => 'hod']);
@@ -28,7 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $mfb = Role::create(['name' => 'mfb']);
         $beneficiary = Role::create(['name' => 'beneficiary']);
 
-        //Permissions
+        // Permissions
         $permissions = [
             'create_payroll',
             'create_allowance',
@@ -59,7 +58,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'download_mfb_schedule',
             'update_salary_structure',
 
-            //Users, Roles & Permissions
+            // Users, Roles & Permissions
             'view_users',
             'create_users',
             'create_super_admin',

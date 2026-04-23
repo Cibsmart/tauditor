@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PaymentCredential extends Model
 {
     use HasFactory;
+
     protected $casts = [
         'is_single_debit' => 'boolean',
     ];

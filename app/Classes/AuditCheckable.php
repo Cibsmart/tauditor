@@ -90,10 +90,10 @@ abstract class AuditCheckable
     protected function report($category, $message, $current = null, $previous = null)
     {
         $this->setCategory($category)
-             ->setMessage($message)
-             ->setCurrent($current)
-             ->setPrevious($previous)
-             ->thenReport();
+            ->setMessage($message)
+            ->setCurrent($current)
+            ->setPrevious($previous)
+            ->thenReport();
     }
 
     private function thenReport()
@@ -139,10 +139,10 @@ abstract class AuditCheckable
     protected function previousSchedules()
     {
         return AuditPaySchedule::where('verification_number', $this->schedule->verification_number)
-                                ->whereMonthLessThan($this->month)
-                                ->orderByMonth()
-                                ->take(12)
-                                ->get();
+            ->whereMonthLessThan($this->month)
+            ->orderByMonth()
+            ->take(12)
+            ->get();
     }
 
     protected function hasNoPreviousSchedule()

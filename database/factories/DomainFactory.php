@@ -12,7 +12,7 @@ class DomainFactory extends Factory
     public function definition(): array
     {
         return [
-            'id'   => $this->faker->slug,
+            'id' => $this->faker->slug,
             'name' => $this->faker->name,
         ];
     }

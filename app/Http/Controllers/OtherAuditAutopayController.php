@@ -33,7 +33,7 @@ class OtherAuditAutopayController extends Controller
 
         GenerateAutopayForOtherSchedule::dispatch($category);
 
-//        (new GenerateAutopayOtherScheduleAction())->execute($category);
+        //        (new GenerateAutopayOtherScheduleAction())->execute($category);
 
         $message = "Autopay Schedule Generation for $title is Running, Refresh for Update";
 
@@ -60,7 +60,7 @@ class OtherAuditAutopayController extends Controller
         $headers = ['Content-Type' => 'application/zip'];
 
         return response()->download(public_path($zipped_file), null, $headers)
-                         ->deleteFileAfterSend();
+            ->deleteFileAfterSend();
     }
 
     public function createFiles(OtherAuditPayrollCategory $category)
@@ -77,11 +77,11 @@ class OtherAuditAutopayController extends Controller
 
         $autopay_file_exists = Storage::disk('local')->exists($path);
 
-//                if ($autopay_file_exists) {
-//                    continue;
-//                }
+        //                if ($autopay_file_exists) {
+        //                    continue;
+        //                }
 
-        (new AutopayOtherScheduleExport())->forOtherSchedules($category)->store($path);
+        (new AutopayOtherScheduleExport)->forOtherSchedules($category)->store($path);
 
         return $directory;
     }
@@ -121,7 +121,7 @@ class OtherAuditAutopayController extends Controller
         $headers = ['Content-Type' => 'application/zip'];
 
         return response()->download(public_path($zipped_file), null, $headers)
-                         ->deleteFileAfterSend();
+            ->deleteFileAfterSend();
     }
 
     public function createMfbFiles(OtherAuditPayrollCategory $category)
@@ -133,9 +133,9 @@ class OtherAuditAutopayController extends Controller
         $directory = "autopay/$title - MFB SCHEDULE - $month_year";
 
         $mfbs = $category->microfinanceSchedules()->with('microfinanceBank')
-                        ->select(DB::raw('other_audit_payroll_category_id, micro_finance_bank_id'))
-                        ->groupBy('other_audit_payroll_category_id', 'micro_finance_bank_id')
-                        ->get();
+            ->select(DB::raw('other_audit_payroll_category_id, micro_finance_bank_id'))
+            ->groupBy('other_audit_payroll_category_id', 'micro_finance_bank_id')
+            ->get();
 
         foreach ($mfbs as $mfb) {
             $mfb = $mfb->microfinanceBank;
@@ -146,11 +146,11 @@ class OtherAuditAutopayController extends Controller
 
             $path = "$directory/$mfb_name/$file_name";
 
-//            $mfb_file_exists = Storage::disk('local')->exists($path);
-//
-//                    if ($mfb_file_exists) {
-//                        continue;
-//                    }
+            //            $mfb_file_exists = Storage::disk('local')->exists($path);
+            //
+            //                    if ($mfb_file_exists) {
+            //                        continue;
+            //                    }
 
             (new MfbOtherScheduleExport)->forMfbs($mfb)->inCategory($category)->store($path);
         }

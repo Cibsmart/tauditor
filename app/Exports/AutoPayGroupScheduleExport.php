@@ -13,15 +13,16 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
-class AutoPayGroupScheduleExport implements FromQuery, WithMapping, WithHeadings, WithColumnFormatting, ShouldAutoSize
+class AutoPayGroupScheduleExport implements FromQuery, ShouldAutoSize, WithColumnFormatting, WithHeadings, WithMapping
 {
     use Exportable;
 
     protected AuditPayrollCategory $category;
+
     protected BeneficiaryType $beneficiaryType;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function query()
     {
@@ -56,9 +57,9 @@ class AutoPayGroupScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function map($schedule) : array
+    public function map($schedule): array
     {
         return [
             $schedule->payment_reference,
@@ -76,9 +77,9 @@ class AutoPayGroupScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function headings() : array
+    public function headings(): array
     {
         return [
             'Payment Reference',
@@ -96,9 +97,9 @@ class AutoPayGroupScheduleExport implements FromQuery, WithMapping, WithHeadings
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function columnFormats() : array
+    public function columnFormats(): array
     {
         return [
             'B' => NumberFormat::FORMAT_TEXT,

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Traits\CanBeReported;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 use function number_format;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static schedules(\Illuminate\Database\Eloquent\Builder|Model|object $payroll, $type)
@@ -17,22 +18,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  */
 class AuditPaySchedule extends Model
 {
+    use CanBeReported, SoftDeletes;
     use HasFactory;
-    use SoftDeletes, CanBeReported;
 
     protected $guarded = [];
 
     protected $casts = [
-        'paid'       => 'boolean',
-        'pension'    => 'boolean',
-        'dues'       => 'array',
+        'paid' => 'boolean',
+        'pension' => 'boolean',
+        'dues' => 'array',
         'allowances' => 'array',
         'deductions' => 'array',
-        'month'      => 'datetime',
+        'month' => 'datetime',
     ];
 
-    //A polymorphic relationship to either Bank or Microfinance
-    public function bankable() : MorphTo
+    // A polymorphic relationship to either Bank or Microfinance
+    public function bankable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -75,20 +76,20 @@ class AuditPaySchedule extends Model
     public function scopeAllSchedules($query)
     {
         return $query->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-                     ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-                     ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
-                     ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
-                     ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id');
+            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+            ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
+            ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
+            ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id');
     }
 
     public static function scopeSchedules($query, $payroll, $staff_type)
     {
         return $query->join('audit_sub_mda_schedules', 'audit_pay_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-                      ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-                      ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
-                      ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id')
-                      ->where('audit_payrolls.id', '=', $payroll->id)
-                      ->where('audit_payroll_categories.staff_type', '=', $staff_type);
+            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
+            ->join('audit_payroll_categories', 'audit_mda_schedules.audit_payroll_category_id', '=', 'audit_payroll_categories.id')
+            ->join('audit_payrolls', 'audit_payroll_categories.audit_payroll_id', '=', 'audit_payrolls.id')
+            ->where('audit_payrolls.id', '=', $payroll->id)
+            ->where('audit_payroll_categories.staff_type', '=', $staff_type);
     }
 
     public function scopeOrderByMonth($query)
@@ -111,62 +112,62 @@ class AuditPaySchedule extends Model
         return $this->attributes['bank_code'] = self::pad($value, 3);
     }
 
-    public function setBasicPayAttribute(float $value) : int
+    public function setBasicPayAttribute(float $value): int
     {
         return $this->attributes['basic_pay'] = $value * 100;
     }
 
-    public function getBasicPayAttribute(int $value) : float
+    public function getBasicPayAttribute(int $value): float
     {
         return $value / 100;
     }
 
-    public function setTotalAllowanceAttribute(float $value) : int
+    public function setTotalAllowanceAttribute(float $value): int
     {
         return $this->attributes['total_allowance'] = $value * 100;
     }
 
-    public function getTotalAllowanceAttribute(int $value) : float
+    public function getTotalAllowanceAttribute(int $value): float
     {
         return $value / 100;
     }
 
-    public function setTotalDeductionsAttribute(float $value) : int
+    public function setTotalDeductionsAttribute(float $value): int
     {
         return $this->attributes['total_deductions'] = $value * 100;
     }
 
-    public function getTotalDeductionsAttribute(int $value) : float
+    public function getTotalDeductionsAttribute(int $value): float
     {
         return $value / 100;
     }
 
-    public function setTotalDuesDeductionsAttribute(float $value) : int
+    public function setTotalDuesDeductionsAttribute(float $value): int
     {
         return $this->attributes['total_dues_deductions'] = $value * 100;
     }
 
-    public function getTotalDuesDeductionsAttribute(int $value) : float
+    public function getTotalDuesDeductionsAttribute(int $value): float
     {
         return $value / 100;
     }
 
-    public function setGrossPayAttribute(float $value) : int
+    public function setGrossPayAttribute(float $value): int
     {
         return $this->attributes['gross_pay'] = $value * 100;
     }
 
-    public function getGrossPayAttribute(int $value) : float
+    public function getGrossPayAttribute(int $value): float
     {
         return $value / 100;
     }
 
-    public function setNetPayAttribute(float $value) : int
+    public function setNetPayAttribute(float $value): int
     {
         return $this->attributes['net_pay'] = $value * 100;
     }
 
-    public function getNetPayAttribute(int $value) : float
+    public function getNetPayAttribute(int $value): float
     {
         return $value / 100;
     }

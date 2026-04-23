@@ -23,9 +23,9 @@ class CreateBeneficiaryTypesTable extends Migration
             $table->unique(['name', 'domain_id'], 'unique_beneficiary_type');
 
             $table->foreign('domain_id')
-                  ->references('id')
-                  ->on('domains')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('domains')
+                ->onDelete('cascade');
         });
     }
 

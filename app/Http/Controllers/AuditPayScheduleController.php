@@ -8,11 +8,13 @@ use App\Imports\PayScheduleImport;
 use App\Imports\PensionPayScheduleImport;
 use App\Models\AuditPaySchedule;
 use App\Models\AuditSubMdaSchedule;
-use function back;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+
+use function back;
 
 class AuditPayScheduleController extends Controller
 {
@@ -25,28 +27,28 @@ class AuditPayScheduleController extends Controller
     {
         $audit_mda_schedule = $audit_sub_mda_schedule->auditMdaSchedule;
         $schedules = $audit_sub_mda_schedule->auditPaySchedules()
-                                            ->paginate()
-                                            ->transform(fn (AuditPaySchedule $schedule) => [
-                                                'id'                  => $schedule->id,
-                                                'verification_number' => $schedule->verification_number,
-                                                'beneficiary_name'    => $schedule->beneficiary_name,
-                                                'bank_name'           => $schedule->bank_name,
-                                                'account_number'      => $schedule->account_number,
-                                                'cadre'               => $schedule->beneficiary_cadre,
-                                                'designation'         => $schedule->designation,
-                                                'net_pay'             => number_format($schedule->net_pay, 2),
-                                                // 12,000.00
-                                                'paid'                => $schedule->paid,
-                                                'month'               => $schedule->month,
-                                                'year'                => $schedule->year,
-                                                'mda_name'            => $schedule->mda_name,
-                                                'department_name'     => $schedule->department_name,
-                                            ]);
+            ->paginate()
+            ->transform(fn (AuditPaySchedule $schedule) => [
+                'id' => $schedule->id,
+                'verification_number' => $schedule->verification_number,
+                'beneficiary_name' => $schedule->beneficiary_name,
+                'bank_name' => $schedule->bank_name,
+                'account_number' => $schedule->account_number,
+                'cadre' => $schedule->beneficiary_cadre,
+                'designation' => $schedule->designation,
+                'net_pay' => number_format($schedule->net_pay, 2),
+                // 12,000.00
+                'paid' => $schedule->paid,
+                'month' => $schedule->month,
+                'year' => $schedule->year,
+                'mda_name' => $schedule->mda_name,
+                'department_name' => $schedule->department_name,
+            ]);
 
         return Inertia::render('AuditPaySchedules/Index', [
-            'schedules'          => $schedules,
+            'schedules' => $schedules,
             'audit_mda_schedule' => $audit_mda_schedule->id,
-            'audit_payroll_category'      => $audit_mda_schedule->auditPayrollCategory->id,
+            'audit_payroll_category' => $audit_mda_schedule->auditPayrollCategory->id,
         ]);
     }
 
@@ -82,9 +84,9 @@ class AuditPayScheduleController extends Controller
         } catch (WrongScheduleException $e) {
             return back()->with('error', $e->getMessage());
         } catch (\ErrorException $e) {
-            return back()->with('error', 'Attached File is not a valid Pay Schedule ' . $e->getMessage());
+            return back()->with('error', 'Attached File is not a valid Pay Schedule '.$e->getMessage());
         } catch (\Exception $e) {
-            return back()->with('error', 'Something Went Wrong! Please Contact Administrator ' . $e->getMessage());
+            return back()->with('error', 'Something Went Wrong! Please Contact Administrator '.$e->getMessage());
         }
 
         $confirm_upload = $audit_sub_mda->auditPaySchedules;
@@ -117,8 +119,7 @@ class AuditPayScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  AuditSubMdaSchedule  $audit_sub_mda_schedule
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
     public function destroy(AuditSubMdaSchedule $audit_sub_mda_schedule)
     {
@@ -126,13 +127,13 @@ class AuditPayScheduleController extends Controller
             return redirect()->back()->with('error', 'You Cannot Re-Upload Archived Pay Schedules');
         }
 
-        //Delete Pay Schedules, Autopay and Analysis Report
+        // Delete Pay Schedules, Autopay and Analysis Report
         $audit_sub_mda_schedule->auditPaySchedules()->delete();
         $audit_sub_mda_schedule->autopaySchedules()->delete();
         $audit_sub_mda_schedule->microfinanceSchedules()->delete();
         $audit_sub_mda_schedule->auditReports()->delete();
 
-        //Notify Sub MDA Schedule that there is an update
+        // Notify Sub MDA Schedule that there is an update
         $audit_sub_mda_schedule->payScheduleWasCleared();
 
         return redirect()->back()->with('success', 'Pay Schedule Successfully Cleared and Ready for Re-Upload');

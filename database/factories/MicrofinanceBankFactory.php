@@ -14,10 +14,10 @@ class MicrofinanceBankFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'           => $this->faker->company,
+            'name' => $this->faker->company,
             'account_number' => $this->faker->bankAccountNumber,
-            'bank_id'        => Bank::factory(),
-            'domain_id'      => Domain::factory(),
+            'bank_id' => Bank::factory(),
+            'domain_id' => Domain::factory(),
         ];
     }
 }

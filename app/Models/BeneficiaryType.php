@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property mixed code
@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class BeneficiaryType extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public $incrementing = false;
@@ -27,12 +28,12 @@ class BeneficiaryType extends Model
         'updated_at',
     ];
 
-    public function designations() : HasMany
+    public function designations(): HasMany
     {
         return $this->hasMany(Designation::class);
     }
 
-    public function mdas() : HasMany
+    public function mdas(): HasMany
     {
         return $this->hasMany(Mda::class);
     }
@@ -53,5 +54,4 @@ class BeneficiaryType extends Model
             $query->where('payment_type_id', $payment_type);
         });
     }
-
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\Bank;
 use App\Models\PaymentCredential;
 use Illuminate\Database\Seeder;
@@ -21,105 +20,105 @@ class PaymentCredentialSeeder extends Seeder
         /**
          * STATE
          */
-        //Civil Servants
+        // Civil Servants
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TPA',
-            'payment_type_id'     => 'sal',
-            'terminal_id'         => '3TPA0001',
-            'account_number'      => '5030101791',
-            'account_name'        => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
-            'pan'                 => '6280510107035825320',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TPA',
+            'payment_type_id' => 'sal',
+            'terminal_id' => '3TPA0001',
+            'account_number' => '5030101791',
+            'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
+            'pan' => '6280510107035825320',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'cv',
-            'domain_id'           => 'state',
+            'domain_id' => 'state',
         ]);
 
-        //Statutory Commission and Officers
+        // Statutory Commission and Officers
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TPA',
-            'payment_type_id'     => 'sal',
-            'terminal_id'         => '3TPA0001',
-            'account_number'      => '5030101791',
-            'account_name'        => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
-            'pan'                 => '6280510107035825320',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TPA',
+            'payment_type_id' => 'sal',
+            'terminal_id' => '3TPA0001',
+            'account_number' => '5030101791',
+            'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
+            'pan' => '6280510107035825320',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'sco',
-            'domain_id'           => 'state',
+            'domain_id' => 'state',
         ]);
 
-        //political appointees
+        // political appointees
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TPA',
-            'payment_type_id'     => 'sal',
-            'terminal_id'         => '3TPA0001',
-            'account_number'      => '5030101791',
-            'account_name'        => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
-            'pan'                 => '6280510107035825320',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TPA',
+            'payment_type_id' => 'sal',
+            'terminal_id' => '3TPA0001',
+            'account_number' => '5030101791',
+            'account_name' => 'ANSG-SALARY ADMINISTRATION ACCOUNT 2',
+            'pan' => '6280510107035825320',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'pa',
-            'domain_id'           => 'state',
+            'domain_id' => 'state',
         ]);
 
-        //Anambra State Government Pensioners
+        // Anambra State Government Pensioners
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TPA',
-            'payment_type_id'     => 'pen',
-            'terminal_id'         => '3TPA0001',
-            'account_number'      => '5030101801',
-            'account_name'        => 'ANSG-Pension Administration Account 2',
-            'pan'                 => '6280510107035825379',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TPA',
+            'payment_type_id' => 'pen',
+            'terminal_id' => '3TPA0001',
+            'account_number' => '5030101801',
+            'account_name' => 'ANSG-Pension Administration Account 2',
+            'pan' => '6280510107035825379',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'anpen',
-            'domain_id'           => 'state',
+            'domain_id' => 'state',
         ]);
 
         /**
          * JAAC
          */
-        //Local Government Education Authority
+        // Local Government Education Authority
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TLA',
-            'payment_type_id'     => 'sal',
-            'terminal_id'         => '3TLA0001',
-            'account_number'      => '5030090220',
-            'account_name'        => 'ANS-LGEA SALARY ADMIN1-TEACHERS',
-            'pan'                 => '6280510107035528080',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TLA',
+            'payment_type_id' => 'sal',
+            'terminal_id' => '3TLA0001',
+            'account_number' => '5030090220',
+            'account_name' => 'ANS-LGEA SALARY ADMIN1-TEACHERS',
+            'pan' => '6280510107035528080',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'lgea',
-            'domain_id'           => 'jaac',
+            'domain_id' => 'jaac',
         ]);
 
-        //Local Government Service Commission
+        // Local Government Service Commission
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TLA',
-            'payment_type_id'     => 'sal',
-            'terminal_id'         => '3TLA0001',
-            'account_number'      => '5030090237',
-            'account_name'        => 'ANS-LGA SALARY ADMIN2-LGA WORKERS',
-            'pan'                 => '6280510107035528106',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TLA',
+            'payment_type_id' => 'sal',
+            'terminal_id' => '3TLA0001',
+            'account_number' => '5030090237',
+            'account_name' => 'ANS-LGA SALARY ADMIN2-LGA WORKERS',
+            'pan' => '6280510107035528106',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'lgsc',
-            'domain_id'           => 'jaac',
+            'domain_id' => 'jaac',
         ]);
 
         // Anambra State Local Government Pensioners
         factory(PaymentCredential::class)->create([
-            'corporate_code'      => 'TLA',
-            'payment_type_id'     => 'pen',
-            'terminal_id'         => '3TLA0001',
-            'account_number'      => '5030090244',
-            'account_name'        => 'ANS-LGA PENSION ADMIN SALARY',
-            'pan'                 => '6280510107035528114',
-            'account_type'        => '20',
-            'bank_id'             => $bank,
+            'corporate_code' => 'TLA',
+            'payment_type_id' => 'pen',
+            'terminal_id' => '3TLA0001',
+            'account_number' => '5030090244',
+            'account_name' => 'ANS-LGA PENSION ADMIN SALARY',
+            'pan' => '6280510107035528114',
+            'account_type' => '20',
+            'bank_id' => $bank,
             'beneficiary_type_id' => 'lgpen',
-            'domain_id'           => 'jaac',
+            'domain_id' => 'jaac',
         ]);
     }
 }

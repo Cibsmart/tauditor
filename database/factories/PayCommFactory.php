@@ -13,13 +13,13 @@ class PayCommFactory extends Factory
     public function definition(): array
     {
         return [
-            'code'           => $this->faker->countryCode,
-            'name'           => $this->faker->country,
+            'code' => $this->faker->countryCode,
+            'name' => $this->faker->country,
             'account_number' => $this->faker->bankAccountNumber,
-            'commission'     => $this->faker->numberBetween(50, 200),
-            'bankable_type'  => $this->faker->randomElement(['commercial', 'micro_finance']),
-            'bankable_id'    => $this->faker->numberBetween(1, 15),
-            'domain_id'      => Domain::factory(),
+            'commission' => $this->faker->numberBetween(50, 200),
+            'bankable_type' => $this->faker->randomElement(['commercial', 'micro_finance']),
+            'bankable_id' => $this->faker->numberBetween(1, 15),
+            'domain_id' => Domain::factory(),
         ];
     }
 }

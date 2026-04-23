@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-
 use App\Models\BeneficiaryType;
 use App\Models\Mda;
 use Illuminate\Database\Seeder;
@@ -19,10 +18,10 @@ class MdaSeeder extends Seeder
     {
         $types = BeneficiaryType::all();
 
-        //Get the content of of sub_mda.json
-        $json = file_get_contents(storage_path() . '/json/mda.json');
+        // Get the content of of sub_mda.json
+        $json = file_get_contents(storage_path().'/json/mda.json');
 
-        //Convert json to an array
+        // Convert json to an array
         $data = json_decode($json, true);
 
         foreach ($data as $beneficiary_type => $mdas) {
@@ -32,7 +31,7 @@ class MdaSeeder extends Seeder
                 $code = key($mda);
                 $attributes = ['code' => $code, 'name' => $mda[$code], 'beneficiary_type_id' => $beneficiary_type];
 
-                //LGEA, LGSC, SEC have Sub_MDAs, so we set the flag for those
+                // LGEA, LGSC, SEC have Sub_MDAs, so we set the flag for those
                 $attributes = in_array($beneficiary_type, ['lgea', 'lgsc']) || in_array($code, ['SEC'])
                     ? array_merge($attributes, ['has_sub' => 1])
                     : $attributes;

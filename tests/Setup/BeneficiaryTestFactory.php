@@ -9,8 +9,6 @@ use App\Models\MicroFinanceBank;
 use Facades\BeneficiaryFactory;
 use Faker\Generator;
 
-use function factory;
-
 class BeneficiaryTestFactory
 {
     private Generator $faker;
@@ -23,17 +21,16 @@ class BeneficiaryTestFactory
     }
 
     /**
-     * @param MicroFinanceBank|null $micro_finance_bank
      * @return $this
      */
-    public function withMfb(MicroFinanceBank $micro_finance_bank = null)
+    public function withMfb(?MicroFinanceBank $micro_finance_bank = null)
     {
         $this->bank = $micro_finance_bank ?? MicroFinanceBank::factory()->create();
 
         return $this;
     }
 
-    public function withBank(Bank $bank = null)
+    public function withBank(?Bank $bank = null)
     {
         $this->bank = $bank ?? Bank::factory()->create();
 

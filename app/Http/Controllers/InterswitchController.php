@@ -72,22 +72,22 @@ class InterswitchController extends Controller
         );
 
         $row_one_data = [
-            'batch_reference'   => $batch_reference,
+            'batch_reference' => $batch_reference,
             'batch_description' => $batch_description,
-            'is_single_debit'   => $is_single_debit,
-            'terminal_id'       => $terminal_id,
+            'is_single_debit' => $is_single_debit,
+            'terminal_id' => $terminal_id,
         ];
 
         $row_one_content = $this->formatContent($row_one_data);
         Storage::disk('local')->put($file_name, $row_one_content);
 
         $row_two_data = [
-            'secure_data'           => '',
+            'secure_data' => '',
             'source_account_number' => $account_number,
-            'source_account_type'   => $account_type,
-            'bank_cbn_code'         => $bank_code,
-            'encrypted_pin'         => '',
-            'mac_data'              => $mac_data,
+            'source_account_type' => $account_type,
+            'bank_cbn_code' => $bank_code,
+            'encrypted_pin' => '',
+            'mac_data' => $mac_data,
         ];
         $row_two_content = $this->formatContent($row_two_data);
         Storage::disk('local')->append($file_name, $row_two_content);
@@ -97,24 +97,24 @@ class InterswitchController extends Controller
         foreach ($schedules as $schedule) {
             $data = [
                 'payment_reference' => $this->generatePaymentReference($schedule->id),
-                'amount'            => $schedule->amount * 100,
-                'narration'         => $this->generateNarration($schedule->narration),
-                'beneficiary_code'  => $schedule->beneficiary_code,
+                'amount' => $schedule->amount * 100,
+                'narration' => $this->generateNarration($schedule->narration),
+                'beneficiary_code' => $schedule->beneficiary_code,
                 'beneficiary_email' => 'test@test.com',
-                'cbn_code'          => $schedule->cbn_code,
-                'account_number'    => $schedule->account_number,
-                'account_type'      => $schedule->account_type,
-                'is_prepaid_load'   => 'false',
-                'currency_code'     => $schedule->currency,
-                'beneficiary_name'  => Str::of($schedule->beneficiary_name)->replace(',', ''),
-                'mobile_number'     => '08080808080',
+                'cbn_code' => $schedule->cbn_code,
+                'account_number' => $schedule->account_number,
+                'account_type' => $schedule->account_type,
+                'is_prepaid_load' => 'false',
+                'currency_code' => $schedule->currency,
+                'beneficiary_name' => Str::of($schedule->beneficiary_name)->replace(',', ''),
+                'mobile_number' => '08080808080',
             ];
 
             $content = $this->formatContent($data);
             Storage::disk('local')->append($file_name, $content);
         }
 
-        $autopay_file_name = 'IN/' . basename($file_name);
+        $autopay_file_name = 'IN/'.basename($file_name);
 
         $content = Storage::disk('local')->get($file_name);
 
@@ -142,7 +142,7 @@ class InterswitchController extends Controller
 
     private function macData($terminal_id, $beneficiary_codes, $total_amount, $beneficiary_account_numbers)
     {
-        $data = $terminal_id . $beneficiary_codes . $total_amount . $beneficiary_account_numbers;
+        $data = $terminal_id.$beneficiary_codes.$total_amount.$beneficiary_account_numbers;
 
         return hash('sha512', $data);
     }
@@ -157,8 +157,8 @@ class InterswitchController extends Controller
         $unique_id = uniqid();
 
         return Str::upper(Str::of($narration)
-                             ->append($unique_id)
-                             ->replace(' ', ''));
+            ->append($unique_id)
+            ->replace(' ', ''));
     }
 
     private function generateBatchReference($sub_mda)
@@ -166,7 +166,7 @@ class InterswitchController extends Controller
         $unique_id = uniqid();
 
         return Str::upper(Str::of($sub_mda)->append($unique_id)
-                             ->replace(' ', ''));
+            ->replace(' ', ''));
     }
 
     private function generatePaymentReference($pay_schedule_id)
@@ -174,7 +174,7 @@ class InterswitchController extends Controller
         $unique_id = uniqid();
 
         return Str::upper(Str::of($pay_schedule_id)->append($unique_id)
-                             ->replace(' ', ''));
+            ->replace(' ', ''));
     }
 
     private function getBatchDescription($payment_type, $sub_mda_name, $month_full)
@@ -182,12 +182,12 @@ class InterswitchController extends Controller
         $unique_id = uniqid();
 
         return Str::upper(Str::of($payment_type)
-                             ->append($month_full)
-                             ->upper()->append('_')
-                             ->replace(' ', '')
-                             ->append(Str::of($sub_mda_name)->slug('_'))
-                             ->append('_')
-                             ->append($unique_id));
+            ->append($month_full)
+            ->upper()->append('_')
+            ->replace(' ', '')
+            ->append(Str::of($sub_mda_name)->slug('_'))
+            ->append('_')
+            ->append($unique_id));
     }
 
     protected static function pad($string, $padding)

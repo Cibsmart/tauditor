@@ -3,25 +3,25 @@
 namespace App\Models;
 
 use App\Traits\CanBeReported;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @method static find($audit_sub_mda)
  */
 class AuditSubMdaSchedule extends Model
 {
-    use HasFactory;
     use CanBeReported;
+    use HasFactory;
 
     protected $guarded = [];
 
     protected $casts = [
         'uploaded' => 'boolean',
         'analysed' => 'datetime',
-        'autopay_generated'  => 'datetime',
-        'autopay_uploaded'  => 'datetime',
+        'autopay_generated' => 'datetime',
+        'autopay_uploaded' => 'datetime',
     ];
 
     public function auditMdaSchedule()
@@ -109,12 +109,12 @@ class AuditSubMdaSchedule extends Model
         return $this->autopaySchedules()->sum('amount');
     }
 
-    public function setTotalNetPayAttribute(float $value) : int
+    public function setTotalNetPayAttribute(float $value): int
     {
         return $this->attributes['total_net_pay'] = $value * 100;
     }
 
-    public function getTotalNetPayAttribute(?int $value = 0) : float
+    public function getTotalNetPayAttribute(?int $value = 0): float
     {
         return $value / 100;
     }
