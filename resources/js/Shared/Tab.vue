@@ -23,11 +23,11 @@ export default {
     data() {
         return {
             isActive: this.active,
-        }
+        };
     },
 
     mounted() {
-        this.registerTab(this)
+        this.registerTab(this);
     },
-}
+};
 </script>

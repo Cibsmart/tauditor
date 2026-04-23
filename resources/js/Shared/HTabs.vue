@@ -2,8 +2,12 @@
     <div>
         <div class="sm:hidden">
             <select-input @update:modelValue="selectedTab">
-                <option v-for="(tab, index) in tabs" :key="index" :value="index"
-                        class="mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 border-gray-300 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 sm:text-sm sm:leading-5 transition ease-in-out duration-150">
+                <option
+                    v-for="(tab, index) in tabs"
+                    :key="index"
+                    :value="index"
+                    class="focus:shadow-outline-blue mt-1 block w-full form-select border-gray-300 py-2 pr-10 pl-3 text-base leading-6 transition duration-150 ease-in-out focus:border-blue-300 focus:outline-none sm:text-sm sm:leading-5"
+                >
                     {{ tab.title }}
                 </option>
             </select-input>
@@ -12,13 +16,20 @@
             <div class="border-b border-gray-200">
                 <nav class="-mb-px flex">
                     <Link
-                        v-for="(tab, index) in tabs" role="tab" href="#"
-                        @click="activeTab = tab" :key="index"
-                        :class="tab.isActive
-                       ? 'border-indigo-700 text-indigo-800 focus:text-indigo-900 focus:border-indigo-800'
-                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:text-gray-700 focus:border-gray-300'"
-                        class="whitespace-no-wrap mr-8 py-4 px-1 border-b-2 font-extrabold text-sm leading-5 focus:outline-none"
-                        preserve-state preserve-scroll>
+                        v-for="(tab, index) in tabs"
+                        role="tab"
+                        href="#"
+                        @click="activeTab = tab"
+                        :key="index"
+                        :class="
+                            tab.isActive
+                                ? 'border-indigo-700 text-indigo-800 focus:border-indigo-800 focus:text-indigo-900'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 focus:border-gray-300 focus:text-gray-700'
+                        "
+                        class="whitespace-no-wrap mr-8 border-b-2 px-1 py-4 text-sm leading-5 font-extrabold focus:outline-none"
+                        preserve-state
+                        preserve-scroll
+                    >
                         {{ tab.title }}
                     </Link>
                 </nav>
@@ -30,47 +41,47 @@
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue3'
-    import SelectInput from '@/Shared/SelectInput'
+import { Link } from '@inertiajs/vue3';
+import SelectInput from '@/Shared/SelectInput';
 
-    export default {
-        components: {
-            Link,
-            SelectInput,
+export default {
+    components: {
+        Link,
+        SelectInput,
+    },
+
+    provide() {
+        return {
+            registerTab: this.registerTab,
+        };
+    },
+
+    data() {
+        return {
+            tabs: [],
+            activeTab: null,
+        };
+    },
+
+    watch: {
+        activeTab(activeTab) {
+            this.tabs.forEach((tab) => {
+                tab.isActive = tab === activeTab;
+            });
         },
+    },
 
-        provide() {
-            return {
-                registerTab: this.registerTab,
+    methods: {
+        registerTab(tab) {
+            this.tabs.push(tab);
+            if (this.tabs.length === 1 || tab.active) {
+                this.activeTab = tab;
             }
         },
 
-        data() {
-            return {
-                tabs: [],
-                activeTab: null,
-            }
+        selectedTab(value) {
+            this.activeTab = this.tabs[value];
         },
-
-        watch: {
-            activeTab(activeTab) {
-                this.tabs.forEach(tab => {
-                    tab.isActive = tab === activeTab
-                })
-            },
-        },
-
-        methods: {
-            registerTab(tab) {
-                this.tabs.push(tab)
-                if (this.tabs.length === 1 || tab.active) {
-                    this.activeTab = tab
-                }
-            },
-
-            selectedTab(value) {
-                this.activeTab = this.tabs[value]
-            },
-        },
-    }
+    },
+};
 </script>

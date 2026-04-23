@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { Button } from '@/Components/ui/button'
+import { Button } from '@/Components/ui/button';
 
-defineProps({ loading: Boolean })
+defineProps({ loading: Boolean });
 </script>

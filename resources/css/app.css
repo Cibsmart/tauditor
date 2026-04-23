@@ -1,8 +1,8 @@
-@import "tailwindcss";
-@import "nprogress/nprogress.css";
+@import 'tailwindcss';
+@import 'nprogress/nprogress.css';
 
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
 
 @variant dark (&:where(.dark, .dark *));
 
@@ -68,10 +68,11 @@
 }
 
 @theme {
-    --font-family-sans: "Inter var", ui-sans-serif, system-ui, -apple-system,
-        BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-        "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-        "Segoe UI Symbol", "Noto Color Emoji";
+    --font-family-sans:
+        'Inter var', ui-sans-serif, system-ui, -apple-system,
+        BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+        'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
 
     /* shadcn-vue color utilities — resolved at runtime via CSS custom properties */
     --color-background: hsl(var(--background));
@@ -112,23 +113,41 @@
 }
 
 @layer components {
-    .btn-white { @apply w-full inline-flex justify-center whitespace-nowrap rounded-md border border-gray-300 shadow-sm px-2 py-1 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm; }
+    .btn-white {
+        @apply inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-2 py-1 text-base font-medium whitespace-nowrap text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm;
+    }
 
-    .btn { @apply flex items-center rounded text-sm font-bold whitespace-nowrap; }
+    .btn {
+        @apply flex items-center rounded text-sm font-bold whitespace-nowrap;
+    }
 
-    .btn-big{ @apply px-6 py-3; }
+    .btn-big {
+        @apply px-6 py-3;
+    }
 
-    .btn-small{ @apply px-2 py-1; }
+    .btn-small {
+        @apply px-2 py-1;
+    }
 
-    .btn-primary { @apply bg-primary text-primary-foreground hover:bg-primary/90; }
+    .btn-primary {
+        @apply bg-primary text-primary-foreground hover:bg-primary/90;
+    }
 
-    .btn-success { @apply bg-emerald-600 text-white hover:bg-emerald-700; }
+    .btn-success {
+        @apply bg-emerald-600 text-white hover:bg-emerald-700;
+    }
 
-    .btn-danger { @apply bg-destructive text-destructive-foreground hover:bg-destructive/90; }
+    .btn-danger {
+        @apply bg-destructive text-destructive-foreground hover:bg-destructive/90;
+    }
 
-    .error{ @apply border-red-500; }
+    .error {
+        @apply border-red-500;
+    }
 
-    .error:focus{ @apply border-red-700; }
+    .error:focus {
+        @apply border-red-700;
+    }
 
     .btn-spinner,
     .btn-spinner:after {
@@ -141,16 +160,20 @@
         font-size: 10px;
         position: relative;
         text-indent: -9999em;
-        border-top: .2em solid white;
-        border-right: .2em solid white;
-        border-bottom: .2em solid white;
-        border-left: .2em solid transparent;
+        border-top: 0.2em solid white;
+        border-right: 0.2em solid white;
+        border-bottom: 0.2em solid white;
+        border-left: 0.2em solid transparent;
         transform: translateZ(0);
         animation: spinning 1s infinite linear;
     }
 
     @keyframes spinning {
-        0% { transform: rotate(0deg) }
-        100% { transform: rotate(360deg) }
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 }

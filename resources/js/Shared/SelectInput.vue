@@ -1,50 +1,60 @@
 <template>
-  <div>
-    <label v-if="label" :for="id" class="mb-2 block select-none ">
-      {{ label }}<span v-show="required && label" class="text-red-600 ml-1 font-bold">*</span>
-    </label>
+    <div>
+        <label v-if="label" :for="id" class="mb-2 block select-none">
+            {{ label
+            }}<span
+                v-show="required && label"
+                class="ml-1 font-bold text-red-600"
+                >*</span
+            >
+        </label>
 
-    <select :id="id" ref="input" v-model="selected" :class="{ 'pt-px rounded border border-red-500' : errors.length }"
-            class="mt-1 form-select block w-full pl-3 pr-10 py-2 text-base leading-6 focus:outline-none focus:shadow sm:text-sm sm:leading-5 transition ease-in-out duration-150"
-            v-bind="$attrs">
-      <slot />
-    </select>
+        <select
+            :id="id"
+            ref="input"
+            v-model="selected"
+            :class="{ 'rounded border border-red-500 pt-px': errors.length }"
+            class="mt-1 block w-full form-select py-2 pr-10 pl-3 text-base leading-6 transition duration-150 ease-in-out focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+            v-bind="$attrs"
+        >
+            <slot />
+        </select>
 
-    <div v-if="errors.length" class="text-red-800 mt-2 text-sm">
-      {{ errors[0] }}
+        <div v-if="errors.length" class="mt-2 text-sm text-red-800">
+            {{ errors[0] }}
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
-let counter = 0
+let counter = 0;
 
 export default {
-  inheritAttrs: false,
+    inheritAttrs: false,
 
-  props: {
-    modelValue: [String, Number, Boolean],
-    label: String,
-    errors: { type: Array, default: () => [] },
-    id: { type: String, default: () => `select-input-${counter++}` },
-    required: { type: Boolean, default: false },
-  },
-
-  emits: ['update:modelValue'],
-
-  data() {
-    return {
-      selected: this.modelValue,
-    }
-  },
-
-  watch: {
-    selected(selected) {
-      this.$emit('update:modelValue', selected)
+    props: {
+        modelValue: [String, Number, Boolean],
+        label: String,
+        errors: { type: Array, default: () => [] },
+        id: { type: String, default: () => `select-input-${counter++}` },
+        required: { type: Boolean, default: false },
     },
-    modelValue(value) {
-      this.selected = value
+
+    emits: ['update:modelValue'],
+
+    data() {
+        return {
+            selected: this.modelValue,
+        };
     },
-  },
-}
+
+    watch: {
+        selected(selected) {
+            this.$emit('update:modelValue', selected);
+        },
+        modelValue(value) {
+            this.selected = value;
+        },
+    },
+};
 </script>

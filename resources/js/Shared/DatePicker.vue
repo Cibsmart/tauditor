@@ -1,44 +1,89 @@
 <template>
     <div>
         <fieldset>
-            <legend v-if="label" :for="id" class="mb-2 block text-sm text-gray-800">
-                {{ label }} <span v-show="required && label" class="text-red-600 ml-1 font-bold">*</span>
+            <legend
+                v-if="label"
+                :for="id"
+                class="mb-2 block text-sm text-gray-800"
+            >
+                {{ label }}
+                <span
+                    v-show="required && label"
+                    class="ml-1 font-bold text-red-600"
+                    >*</span
+                >
             </legend>
-            <div class="mt-1 bg-white rounded-md shadow-sm" :class="{ 'pt-px rounded border border-red-500' : errors.length }" ref="input">
+            <div
+                class="mt-1 rounded-md bg-white shadow-sm"
+                :class="{
+                    'rounded border border-red-500 pt-px': errors.length,
+                }"
+                ref="input"
+            >
                 <div class="-mt-px flex">
-                    <div class="w-1/4 flex min-w-0">
-                        <select v-model="day" id="day"
-                                class="form-select relative block w-full rounded-none rounded-l-md bg-transparent focus:outline-none focus:border-indigo-500 focus:shadow focus:z-10 sm:text-sm sm:leading-5 transition ease-in-out duration-150">
-                            <option value="" selected disabled>{{ 'Day' }}</option>
-                            <option v-for="(day, index) in days" :key="index" :value="day" v-text="day"></option>
+                    <div class="flex w-1/4 min-w-0">
+                        <select
+                            v-model="day"
+                            id="day"
+                            class="relative block w-full form-select rounded-none rounded-l-md bg-transparent transition duration-150 ease-in-out focus:z-10 focus:border-indigo-500 focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+                        >
+                            <option value="" selected disabled>
+                                {{ 'Day' }}
+                            </option>
+                            <option
+                                v-for="(day, index) in days"
+                                :key="index"
+                                :value="day"
+                                v-text="day"
+                            ></option>
                         </select>
                     </div>
-                    <div class="-ml-px w-2/4 flex-1 min-w-0">
-                        <select v-model="month" id="month"
-                                class="form-select relative block w-full rounded-none bg-transparent focus:outline-none focus:border-indigo-500 focus:shadow focus:z-10 sm:text-sm sm:leading-5 transition ease-in-out duration-150">
-                            <option value="" selected disabled>{{ 'Month' }}</option>
-                            <option v-for="(month, index) in month_names" :key="index" :value="month" v-text="month"></option>
+                    <div class="-ml-px w-2/4 min-w-0 flex-1">
+                        <select
+                            v-model="month"
+                            id="month"
+                            class="relative block w-full form-select rounded-none bg-transparent transition duration-150 ease-in-out focus:z-10 focus:border-indigo-500 focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+                        >
+                            <option value="" selected disabled>
+                                {{ 'Month' }}
+                            </option>
+                            <option
+                                v-for="(month, index) in month_names"
+                                :key="index"
+                                :value="month"
+                                v-text="month"
+                            ></option>
                         </select>
                     </div>
-                    <div class="-ml-px flex-1 min-w-0">
-                        <select v-model="year" id="year"
-                                class="form-select relative block w-full rounded-none rounded-r-md bg-transparent focus:outline-none focus:border-indigo-500 focus:shadow focus:z-10 sm:text-sm sm:leading-5 transition ease-in-out duration-150">
-                            <option value="" selected disabled>{{ 'Year' }}</option>
-                            <option v-for="(year, index) in years" :key="index" :value="year" v-text="year"></option>
+                    <div class="-ml-px min-w-0 flex-1">
+                        <select
+                            v-model="year"
+                            id="year"
+                            class="relative block w-full form-select rounded-none rounded-r-md bg-transparent transition duration-150 ease-in-out focus:z-10 focus:border-indigo-500 focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+                        >
+                            <option value="" selected disabled>
+                                {{ 'Year' }}
+                            </option>
+                            <option
+                                v-for="(year, index) in years"
+                                :key="index"
+                                :value="year"
+                                v-text="year"
+                            ></option>
                         </select>
                     </div>
                 </div>
             </div>
         </fieldset>
 
-        <div v-if="errors.length" class="text-red-800 mt-2 text-sm">
+        <div v-if="errors.length" class="mt-2 text-sm text-red-800">
             {{ errors[0] }}
         </div>
     </div>
 </template>
 
 <script>
-let counter = 0
+let counter = 0;
 
 export default {
     name: 'DatePicker',
@@ -65,52 +110,65 @@ export default {
 
             days: [],
             years: [],
-            month_names: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        }
+            month_names: [
+                'January',
+                'February',
+                'March',
+                'April',
+                'May',
+                'June',
+                'July',
+                'August',
+                'September',
+                'October',
+                'November',
+                'December',
+            ],
+        };
     },
 
     mounted() {
-        this.initDate()
+        this.initDate();
     },
 
     watch: {
         day() {
-            this.setDate()
+            this.setDate();
         },
 
         month() {
-            this.setDate()
+            this.setDate();
         },
 
         year() {
-            this.setDate()
+            this.setDate();
         },
 
         date(date) {
-            this.$emit('update:modelValue', date)
+            this.$emit('update:modelValue', date);
         },
     },
 
     methods: {
         setDate() {
-            this.date = this.day + ' ' + this.month + ' ' + this.year
+            this.date = this.day + ' ' + this.month + ' ' + this.year;
         },
 
         initDate() {
-            let today = new Date()
-            let year = today.getFullYear()
+            let today = new Date();
+            let year = today.getFullYear();
 
             for (let i = 1; i <= 31; i++) {
-                this.days.push(i)
+                this.days.push(i);
             }
 
-            let start = this.from == null ? year - 40 : this.from
-            let end = this.to == null ? year : this.to
+            let start = this.from == null ? year - 40 : this.from;
+            let end = this.to == null ? year : this.to;
 
             for (let i = end; i >= start; i--) {
-                this.years.push(i)
+                this.years.push(i);
             }
         },
     },
-}
+};
 </script>

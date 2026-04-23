@@ -14,13 +14,13 @@
 </template>
 
 <script>
-import Tab from "@/Shared/Tab";
-import Icon from "@/Shared/Icon";
-import HTabs from "@/Shared/HTabs";
-import Layout from "@/Shared/Layout";
-import Salary from "@/Pages/Beneficiary/NavTab/Salary";
-import General from "@/Pages/Beneficiary/NavTab/General";
-import Biometrics from "@/Pages/Beneficiary/NavTab/Biometrics";
+import Tab from '@/Shared/Tab';
+import Icon from '@/Shared/Icon';
+import HTabs from '@/Shared/HTabs';
+import Layout from '@/Shared/Layout';
+import Salary from '@/Pages/Beneficiary/NavTab/Salary';
+import General from '@/Pages/Beneficiary/NavTab/General';
+import Biometrics from '@/Pages/Beneficiary/NavTab/Biometrics';
 
 export default {
     layout: Layout,
@@ -42,11 +42,9 @@ export default {
         return {
             beneficiary: this.beneficiary_view_model.beneficiary,
             general: {
-                'basic': this.beneficiary_view_model,
+                basic: this.beneficiary_view_model,
             },
-        }
+        };
     },
-
-}
+};
 </script>
-
