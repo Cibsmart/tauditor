@@ -6,10 +6,10 @@
       <span class="font-medium">/</span>
       <Link
         :href="
-                    route('audit_mda_schedules.index', {
-                        audit_payroll_category,
-                    })
-                "
+          route('audit_mda_schedules.index', {
+            audit_payroll_category,
+          })
+        "
       >
         MDA Schedules
       </Link>
@@ -32,21 +32,14 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="schedule in schedules.data"
-            :key="schedule.id"
-          >
+          <TableRow v-for="schedule in schedules.data" :key="schedule.id">
             <TableCell>
               <div class="flex items-center">
                 <div class="ml-4">
-                  <div
-                    class="text-sm leading-5 font-medium uppercase"
-                  >
+                  <div class="text-sm leading-5 font-medium uppercase">
                     {{ schedule.sub_mda_name }}
                   </div>
-                  <div
-                    class="text-sm leading-5 text-muted-foreground"
-                  >
+                  <div class="text-sm leading-5 text-muted-foreground">
                     {{ schedule.mda_name }}
                   </div>
                 </div>
@@ -56,9 +49,7 @@
               <div class="text-sm leading-5">
                 {{ schedule.month }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ schedule.year }}
               </div>
             </TableCell>
@@ -67,25 +58,23 @@
                 <span class="line-through">N</span>
                 {{ schedule.total_amount }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 <span>Head Count: </span>
                 {{ schedule.head_count }}
               </div>
             </TableCell>
 
             <TableCell>
-                            <span
-                              :class="
-                                    schedule.uploaded
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                "
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold uppercase"
-                            >
-                                {{ schedule.uploaded ? 'uploaded' : 'pending' }}
-                            </span>
+              <span
+                :class="
+                  schedule.uploaded
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold uppercase"
+              >
+                {{ schedule.uploaded ? 'uploaded' : 'pending' }}
+              </span>
             </TableCell>
 
             <TableCell class="text-right">
@@ -93,9 +82,7 @@
                 v-show="schedule.uploaded && !schedule.archived"
                 :key="schedule.sub_mda_name"
                 class="inline"
-                @submit.prevent="
-                                    reupload(schedule.id, schedule.sub_mda_name)
-                                "
+                @submit.prevent="reupload(schedule.id, schedule.sub_mda_name)"
               >
                 <Button size="sm" type="submit" variant="ghost">
                   Re-upload
@@ -105,10 +92,10 @@
               <Link
                 v-if="schedule.uploaded"
                 :href="
-                                    route('audit_pay_schedules.index', {
-                                        audit_sub_mda_schedule: schedule.id,
-                                    })
-                                "
+                  route('audit_pay_schedules.index', {
+                    audit_sub_mda_schedule: schedule.id,
+                  })
+                "
                 class="px-5 py-3"
               >
                 View Details
@@ -121,17 +108,13 @@
               >
                 <div class="flex items-center">
                   <file-input
-                    v-model="
-                                            form.schedule_file[schedule.id]
-                                        "
+                    v-model="form.schedule_file[schedule.id]"
                     :errors="form.errors.schedule_file"
                     accept="file/*"
                     class="w-full pr-6"
                     type="file"
                   />
-                  <Button size="sm" type="submit">
-                    Upload
-                  </Button>
+                  <Button size="sm" type="submit"> Upload </Button>
                 </div>
               </form>
             </TableCell>
@@ -155,7 +138,14 @@
 <script>
 import { Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import FileInput from '@/Shared/FileInput';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
@@ -205,12 +195,9 @@ export default {
       let result = confirm('Confirm Re-Upload for' + mda_name);
 
       if (result) {
-        this.form.post(
-          `/audit_pay_schedules/${audit_sub_mda}/destroy`,
-          {
-            preserveScroll: true,
-          },
-        );
+        this.form.post(`/audit_pay_schedules/${audit_sub_mda}/destroy`, {
+          preserveScroll: true,
+        });
       }
     },
   },

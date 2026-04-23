@@ -5,9 +5,8 @@
       <Link
         :href="route('manage_users.index')"
         class="text-indigo-400 hover:text-indigo-600"
-      >Users
-      </Link
-      >
+        >Users
+      </Link>
       <span class="font-medium text-indigo-400">/</span> Create
     </h1>
     <div class="max-w-3xl overflow-hidden rounded bg-white shadow">
@@ -41,14 +40,8 @@
             label="Role"
             required
           >
-            <option class="text-gray-100" disabled value="">
-              Select Role
-            </option>
-            <option
-              v-for="role in roles"
-              :key="role.id"
-              :value="role.id"
-            >
+            <option class="text-gray-100" disabled value="">Select Role</option>
+            <option v-for="role in roles" :key="role.id" :value="role.id">
               {{ role.name }}
             </option>
           </select-input>
@@ -62,11 +55,7 @@
             <option class="text-gray-100" disabled value="">
               Select Microfinance Bank
             </option>
-            <option
-              v-for="mfb in mfbs"
-              :key="mfb.id"
-              :value="mfb.id"
-            >
+            <option v-for="mfb in mfbs" :key="mfb.id" :value="mfb.id">
               {{ mfb.name }}
             </option>
           </select-input>
@@ -81,9 +70,8 @@
           class="flex items-center justify-end border-t border-gray-200 bg-gray-100 px-8 py-4"
         >
           <loading-button :loading="sending" type="submit"
-          >Create User
-          </loading-button
-          >
+            >Create User
+          </loading-button>
         </div>
       </form>
     </div>

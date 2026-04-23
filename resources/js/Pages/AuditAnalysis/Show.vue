@@ -6,10 +6,10 @@
       <div></div>
       <Button
         :href="
-                    route('audit_analysis.pdf_report', {
-                        audit_payroll_category: audit_payroll_category,
-                    })
-                "
+          route('audit_analysis.pdf_report', {
+            audit_payroll_category: audit_payroll_category,
+          })
+        "
         as="a"
         size="lg"
       >
@@ -22,11 +22,7 @@
         <TableHeader>
           <TableRow>
             <TableHead>Beneficiary Name</TableHead>
-            <TableHead
-            >Report(s) | Current Value | Previous
-              Value
-            </TableHead
-            >
+            <TableHead>Report(s) | Current Value | Previous Value </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -35,9 +31,7 @@
               <div class="text-sm leading-5 font-medium">
                 {{ report.schedule.beneficiary_name }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ report.schedule.verification_number }}
               </div>
             </TableCell>
@@ -67,9 +61,7 @@
                       <div
                         class="text-sm leading-5 font-medium text-muted-foreground"
                       >
-                        {{
-                          audit_report.previous_value
-                        }}
+                        {{ audit_report.previous_value }}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -95,7 +87,14 @@
 
 <script>
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 

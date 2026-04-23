@@ -26,7 +26,7 @@
         </TableHeader>
         <TableBody>
           <TableRow
-            v-for="(beneficiary) in beneficiaries.data"
+            v-for="beneficiary in beneficiaries.data"
             :key="beneficiary.id"
           >
             <TableCell>
@@ -65,22 +65,22 @@
               </div>
             </TableCell>
             <TableCell>
-                            <span
-                              :class="
-                                    beneficiary.active
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                "
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
-                            >
-                                {{ beneficiary.active ? 'Active' : 'Inactive' }}
-                            </span>
+              <span
+                :class="
+                  beneficiary.active
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+              >
+                {{ beneficiary.active ? 'Active' : 'Inactive' }}
+              </span>
             </TableCell>
             <TableCell class="text-right">
               <a
                 class="text-indigo-600 hover:text-indigo-900 focus:underline focus:outline-none"
                 href="#"
-              >Edit</a
+                >Edit</a
               >
             </TableCell>
           </TableRow>
@@ -104,11 +104,17 @@
 import pickBy from 'lodash/pickBy';
 import throttle from 'lodash/throttle';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 import SearchFilter from '@/Shared/SearchFilter';
-
 
 export default {
   layout: Layout,
@@ -145,9 +151,7 @@ export default {
         this.$inertia.visit(
           this.route(
             'beneficiaries.index',
-            Object.keys(query).length
-              ? query
-              : { remember: 'forget' },
+            Object.keys(query).length ? query : { remember: 'forget' },
           ),
           { replace: true },
         );

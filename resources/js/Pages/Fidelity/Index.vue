@@ -12,15 +12,16 @@
         <label class="block">Mandate Status:</label>
         <select v-model="form.status" class="mt-1 w-full form-select">
           <option :value="null" />
-          <option v-for="status in statuses" :key="status.id" :value="status.id">
+          <option
+            v-for="status in statuses"
+            :key="status.id"
+            :value="status.id"
+          >
             {{ status.name }}
           </option>
         </select>
         <label class="mt-5 block">Processed</label>
-        <select
-          v-model="form.processed"
-          class="mt-1 w-full form-select"
-        >
+        <select v-model="form.processed" class="mt-1 w-full form-select">
           <option :value="null" />
           <option value="true">Processed</option>
           <option value="false">Pending</option>
@@ -43,42 +44,31 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="(mandate, index) in mandates.data"
-            :key="mandate.id"
-          >
+          <TableRow v-for="(mandate, index) in mandates.data" :key="mandate.id">
             <TableCell>
               <div class="text-sm leading-5">
                 {{ index + 1 }}
               </div>
             </TableCell>
             <TableCell>
-              <div
-                class="text-sm leading-5 font-medium uppercase"
-              >
+              <div class="text-sm leading-5 font-medium uppercase">
                 {{ mandate.name }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
-                {{ mandate.verification_number }} ({{
-                  mandate.reference
-                }})
+              <div class="text-sm leading-5 text-muted-foreground">
+                {{ mandate.verification_number }} ({{ mandate.reference }})
                 <span
                   v-if="!mandate.processed"
                   class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold text-red-800 lowercase"
                 >
-                                    pending
-                                </span>
+                  pending
+                </span>
               </div>
             </TableCell>
             <TableCell>
               <div class="text-sm leading-5">
                 {{ mandate.account_number }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ mandate.bvn }}
               </div>
             </TableCell>
@@ -104,22 +94,22 @@
               </div>
             </TableCell>
             <TableCell>
-                            <span
-                              :class="mandate.color"
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold lowercase"
-                            >
-                                {{ mandate.status }}
-                            </span>
+              <span
+                :class="mandate.color"
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold lowercase"
+              >
+                {{ mandate.status }}
+              </span>
             </TableCell>
             <TableCell class="text-right">
               <Link
                 :href="
-                                    route('fidelity.show', {
-                                        mandate: mandate.id,
-                                    })
-                                "
+                  route('fidelity.show', {
+                    mandate: mandate.id,
+                  })
+                "
                 class="focus:underline focus:outline-none"
-              >view
+                >view
               </Link>
             </TableCell>
           </TableRow>
@@ -144,7 +134,14 @@ import { Link, router } from '@inertiajs/vue3';
 import mapValues from 'lodash/mapValues';
 import pickBy from 'lodash/pickBy';
 import throttle from 'lodash/throttle';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 import SearchFilter from '@/Shared/SearchFilter';

@@ -20,11 +20,7 @@
         label="Last Name"
       />
 
-      <label-input
-        :model-value="user.email"
-        class="mt-10"
-        label="Email"
-      />
+      <label-input :model-value="user.email" class="mt-10" label="Email" />
 
       <text-input
         v-model="form.password"
@@ -42,11 +38,7 @@
         type="password"
       />
 
-      <label-input
-        :model-value="domain.name"
-        class="mt-10"
-        label="Domain"
-      />
+      <label-input :model-value="domain.name" class="mt-10" label="Domain" />
     </div>
 
     <div class="flex items-center justify-between border-t px-10 py-4">
@@ -55,8 +47,7 @@
         class="hover:underline"
       >
         Login
-      </Link
-      >
+      </Link>
       <Button>Register</Button>
     </div>
   </form>

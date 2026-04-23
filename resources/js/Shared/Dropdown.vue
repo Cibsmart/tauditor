@@ -1,15 +1,15 @@
 <template>
   <div class="relative inline-block text-left" @click="show = true">
     <div>
-            <span class="rounded-md shadow-sm">
-                <button
-                  class="inline-flex w-full justify-center px-4 py-2 text-sm leading-5 font-medium text-gray-700 transition duration-150 ease-in-out hover:text-gray-500 focus:outline-none active:bg-gray-50 active:text-gray-800"
-                  type="button"
-                  @click="show = !show"
-                >
-                    <slot></slot>
-                </button>
-            </span>
+      <span class="rounded-md shadow-sm">
+        <button
+          class="inline-flex w-full justify-center px-4 py-2 text-sm leading-5 font-medium text-gray-700 transition duration-150 ease-in-out hover:text-gray-500 focus:outline-none active:bg-gray-50 active:text-gray-800"
+          type="button"
+          @click="show = !show"
+        >
+          <slot></slot>
+        </button>
+      </span>
     </div>
 
     <div

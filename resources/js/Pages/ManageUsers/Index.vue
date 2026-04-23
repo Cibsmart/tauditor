@@ -10,9 +10,7 @@
         label="Payroll Month"
         @update:modelValue="roleChanged"
       >
-        <option class="text-gray-100" disabled value="">
-          Select Role
-        </option>
+        <option class="text-gray-100" disabled value="">Select Role</option>
         <option v-for="role in roles" :key="role.id" :value="role.id">
           {{ role.name }}
         </option>
@@ -58,24 +56,24 @@
                 </div>
               </TableCell>
               <TableCell>
-                                <span
-                                  class="inline-flex rounded-full bg-green-100 px-2 text-xs leading-5 font-semibold text-green-800"
-                                >
-                                    {{ user.role }}
-                                </span>
+                <span
+                  class="inline-flex rounded-full bg-green-100 px-2 text-xs leading-5 font-semibold text-green-800"
+                >
+                  {{ user.role }}
+                </span>
               </TableCell>
               <TableCell class="text-right">
                 <a
                   class="text-indigo-600 hover:text-indigo-900 focus:underline focus:outline-none"
                   href="#"
-                >Edit</a
+                  >Edit</a
                 >
               </TableCell>
               <TableCell class="text-right">
                 <a
                   class="text-red-600 hover:text-red-900 focus:underline focus:outline-none"
                   href="#"
-                >Delete</a
+                  >Delete</a
                 >
               </TableCell>
             </TableRow>
@@ -138,17 +136,17 @@
                 </div>
               </TableCell>
               <TableCell>
-                                <span
-                                  class="inline-flex rounded-full bg-red-100 px-2 text-xs leading-5 font-semibold text-red-800"
-                                >
-                                    {{ user.status }}
-                                </span>
+                <span
+                  class="inline-flex rounded-full bg-red-100 px-2 text-xs leading-5 font-semibold text-red-800"
+                >
+                  {{ user.status }}
+                </span>
               </TableCell>
               <TableCell class="text-right">
                 <a
                   class="text-indigo-600 hover:text-indigo-900 focus:underline focus:outline-none"
                   href="#"
-                >Edit</a
+                  >Edit</a
                 >
               </TableCell>
             </TableRow>
@@ -171,7 +169,14 @@
 <script>
 import { router } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 import SelectInput from '@/Shared/SelectInput';

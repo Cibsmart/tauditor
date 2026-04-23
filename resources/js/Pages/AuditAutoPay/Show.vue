@@ -20,35 +20,22 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="schedule in schedules.data"
-            :key="schedule.id"
-          >
+          <TableRow v-for="schedule in schedules.data" :key="schedule.id">
             <TableCell>
               <div class="flex items-center">
                 <div class="ml-4">
-                  <div
-                    class="text-sm leading-5 font-medium uppercase"
-                  >
+                  <div class="text-sm leading-5 font-medium uppercase">
                     {{ schedule.mda_name }}
                     <span
                       :class="
-                                                schedule.pension
-                                                    ? 'bg-pink-100 text-pink-800'
-                                                    : ''
-                                            "
+                        schedule.pension ? 'bg-pink-100 text-pink-800' : ''
+                      "
                       class="rounded-full px-2 text-xs leading-5 font-semibold"
                     >
-                                            {{
-                        schedule.pension
-                          ? 'Pension'
-                          : ''
-                      }}
-                                        </span>
+                      {{ schedule.pension ? 'Pension' : '' }}
+                    </span>
                   </div>
-                  <div
-                    class="text-sm leading-5 text-muted-foreground"
-                  >
+                  <div class="text-sm leading-5 text-muted-foreground">
                     {{ schedule.domain }}
                   </div>
                 </div>
@@ -58,9 +45,7 @@
               <div class="text-sm leading-5">
                 {{ schedule.month }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ schedule.year }}
               </div>
             </TableCell>
@@ -69,39 +54,31 @@
                 <span class="line-through">N</span>
                 {{ schedule.total_amount }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 <span>Item Count: </span>
                 {{ schedule.head_count }}
               </div>
             </TableCell>
 
             <TableCell>
-                            <span
-                              :class="
-                                    schedule.uploaded
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                "
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
-                            >
-                                {{
-                                schedule.uploaded
-                                  ? 'UPLOADED'
-                                  : 'NOT-UPLOADED'
-                              }}
-                            </span>
+              <span
+                :class="
+                  schedule.uploaded
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+              >
+                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
+              </span>
             </TableCell>
 
             <TableCell class="text-right">
               <!--  View Sub MDA Details for MDA with Sub MDAs -->
               <Link
                 v-if="
-                                    schedule.generated &&
-                                    schedule.uploaded &&
-                                    schedule.has_sub
-                                "
+                  schedule.generated && schedule.uploaded && schedule.has_sub
+                "
                 class="px-5 py-3"
                 href="#"
               >
@@ -109,14 +86,12 @@
               </Link>
 
               <Link
-                v-else-if="
-                                    schedule.generated && schedule.has_sub
-                                "
+                v-else-if="schedule.generated && schedule.has_sub"
                 :href="
-                                    route('audit_autopay.detail', {
-                                        audit_mda_schedule: schedule.id,
-                                    })
-                                "
+                  route('audit_autopay.detail', {
+                    audit_mda_schedule: schedule.id,
+                  })
+                "
                 class="px-5 py-3"
               >
                 Upload
@@ -124,17 +99,10 @@
 
               <form
                 v-else-if="
-                                    schedule.generated &&
-                                    !schedule.uploaded &&
-                                    !schedule.has_sub
-                                "
+                  schedule.generated && !schedule.uploaded && !schedule.has_sub
+                "
                 :key="schedule.id"
-                @submit.prevent="
-                                    upload(
-                                        schedule.sub_mda_id,
-                                        schedule.mda_name,
-                                    )
-                                "
+                @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)"
               >
                 <div class="flex items-center justify-end px-5">
                   <button
@@ -148,17 +116,12 @@
 
               <form
                 v-else-if="
-                                    schedule.generated &&
-                                    schedule.uploaded &&
-                                    !schedule.has_sub
-                                "
+                  schedule.generated && schedule.uploaded && !schedule.has_sub
+                "
                 :key="schedule.id"
                 @submit.prevent="
-                                    reupload(
-                                        schedule.sub_mda_id,
-                                        schedule.mda_name,
-                                    )
-                                "
+                  reupload(schedule.sub_mda_id, schedule.mda_name)
+                "
               >
                 <div class="flex items-center justify-end px-5">
                   <button
@@ -189,7 +152,14 @@
 
 <script>
 import { Link } from '@inertiajs/vue3';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 

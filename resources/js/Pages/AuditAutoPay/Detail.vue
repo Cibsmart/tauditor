@@ -2,9 +2,7 @@
   <div>
     <Head title="Autopay Sub MDA Schedules" />
     <h1 class="mb-4 text-3xl font-bold">
-      <Link :href="route('audit_autopay.index')" class="">
-        Audit Autopay
-      </Link>
+      <Link :href="route('audit_autopay.index')" class=""> Audit Autopay </Link>
       <span class="font-medium">/</span> Autopay Sub MDA Schedules
     </h1>
 
@@ -22,35 +20,22 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="schedule in schedules.data"
-            :key="schedule.id"
-          >
+          <TableRow v-for="schedule in schedules.data" :key="schedule.id">
             <TableCell>
               <div class="flex items-center">
                 <div class="ml-4">
-                  <div
-                    class="text-sm leading-5 font-medium uppercase"
-                  >
+                  <div class="text-sm leading-5 font-medium uppercase">
                     {{ schedule.sub_mda_name }}
                     <span
                       :class="
-                                                schedule.pension
-                                                    ? 'bg-pink-100 text-pink-800'
-                                                    : ''
-                                            "
+                        schedule.pension ? 'bg-pink-100 text-pink-800' : ''
+                      "
                       class="rounded-full px-2 text-xs leading-5 font-semibold"
                     >
-                                            {{
-                        schedule.pension
-                          ? 'Pension'
-                          : ''
-                      }}
-                                        </span>
+                      {{ schedule.pension ? 'Pension' : '' }}
+                    </span>
                   </div>
-                  <div
-                    class="text-sm leading-5 text-muted-foreground"
-                  >
+                  <div class="text-sm leading-5 text-muted-foreground">
                     {{ schedule.mda_name }}
                   </div>
                 </div>
@@ -60,9 +45,7 @@
               <div class="text-sm leading-5">
                 {{ schedule.month }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ schedule.year }}
               </div>
             </TableCell>
@@ -71,71 +54,47 @@
                 <span class="line-through">N</span>
                 {{ schedule.total_amount }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 <span>Item Count: </span>
                 {{ schedule.item_count }}
               </div>
             </TableCell>
 
             <TableCell>
-                            <span
-                              :class="
-                                    schedule.uploaded
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                "
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
-                            >
-                                {{
-                                schedule.uploaded
-                                  ? 'UPLOADED'
-                                  : 'NOT-UPLOADED'
-                              }}
-                            </span>
+              <span
+                :class="
+                  schedule.uploaded
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
+              >
+                {{ schedule.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
+              </span>
             </TableCell>
 
             <TableCell class="text-right">
               <form
                 v-if="schedule.generated && !schedule.uploaded"
                 :key="schedule.id"
-                @submit.prevent="
-                                    upload(
-                                        schedule.sub_mda_id,
-                                        schedule.mda_name,
-                                    )
-                                "
+                @submit.prevent="upload(schedule.sub_mda_id, schedule.mda_name)"
               >
                 <div class="flex items-center justify-end px-5">
-                  <Button
-                    size="sm"
-                    type="submit"
-                    variant="outline"
-                  >
+                  <Button size="sm" type="submit" variant="outline">
                     Upload
                   </Button>
                 </div>
               </form>
 
               <form
-                v-else-if="
-                                    schedule.generated && schedule.uploaded
-                                "
+                v-else-if="schedule.generated && schedule.uploaded"
                 :key="schedule.id"
                 @submit.prevent="
-                                    reupload(
-                                        schedule.sub_mda_id,
-                                        schedule.mda_name,
-                                    )
-                                "
+                  reupload(schedule.sub_mda_id, schedule.mda_name)
+                "
               >
                 <div class="flex items-center justify-end px-5">
-                  <Button
-                    size="sm"
-                    type="submit"
-                    variant="outline"
-                  >
+                  <Button size="sm" type="submit" variant="outline">
                     Re-upload
                   </Button>
                 </div>
@@ -161,7 +120,14 @@
 <script>
 import { Link } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 

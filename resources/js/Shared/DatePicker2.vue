@@ -1,7 +1,7 @@
 <template>
   <div class="mb-5 w-64">
     <label class="mb-1 block font-bold text-gray-700" for="datepicker"
-    >Select Date</label
+      >Select Date</label
     >
     <div class="relative">
       <input ref="date" name="date" type="hidden" />
@@ -41,10 +41,10 @@
 
         <div class="mb-2 flex items-center justify-between">
           <div>
-                        <span
-                          class="text-lg font-bold text-gray-800"
-                          v-text="month_names[month]"
-                        ></span>
+            <span
+              class="text-lg font-bold text-gray-800"
+              v-text="month_names[month]"
+            ></span>
             <span
               class="ml-1 text-lg font-normal text-gray-600"
               v-text="year"
@@ -53,8 +53,8 @@
           <div>
             <button
               :class="{
-                                'cursor-not-allowed opacity-25': month === 0,
-                            }"
+                'cursor-not-allowed opacity-25': month === 0,
+              }"
               :disabled="month === 0"
               class="inline-flex cursor-pointer rounded-full p-1 transition duration-100 ease-in-out hover:bg-gray-200"
               type="button"
@@ -76,8 +76,8 @@
             </button>
             <button
               :class="{
-                                'cursor-not-allowed opacity-25': month === 11,
-                            }"
+                'cursor-not-allowed opacity-25': month === 11,
+              }"
               :disabled="month === 11"
               class="inline-flex cursor-pointer rounded-full p-1 transition duration-100 ease-in-out hover:bg-gray-200"
               type="button"
@@ -113,17 +113,12 @@
 
         <div class="-mx-1 flex flex-wrap">
           <template v-for="(date, dateIndex) in no_of_days" :key="dateIndex">
-            <div
-              class="mb-1 px-1"
-              style="width: 14.28%"
-            >
+            <div class="mb-1 px-1" style="width: 14.28%">
               <div
                 :class="{
-                                    'bg-blue-500 text-white':
-                                        isToday(date) === true,
-                                    'text-gray-700 hover:bg-blue-200':
-                                        isToday(date) === false,
-                                }"
+                  'bg-blue-500 text-white': isToday(date) === true,
+                  'text-gray-700 hover:bg-blue-200': isToday(date) === false,
+                }"
                 class="cursor-pointer rounded-full text-center text-sm leading-loose leading-none transition duration-100 ease-in-out"
                 @click="getDateValue(date)"
                 v-text="date"

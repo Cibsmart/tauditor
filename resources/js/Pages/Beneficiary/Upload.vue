@@ -4,9 +4,7 @@
     <h1 class="mb-8 text-3xl font-bold">Upload Beneficiaries</h1>
 
     <div class="flex flex-col">
-      <div
-        class="-my-2 overflow-x-auto py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
-      >
+      <div class="-my-2 overflow-x-auto py-2 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div
           class="inline-block min-w-full overflow-hidden border-b align-middle shadow sm:rounded-lg"
         >

@@ -12,9 +12,9 @@
       </div>
 
       <div class="border-t border-gray-200 px-4 py-4 sm:px-6">
-                <span class="flex justify-end">
-                    <Button size="lg" type="submit"> Save & Continue </Button>
-                </span>
+        <span class="flex justify-end">
+          <Button size="lg" type="submit"> Save & Continue </Button>
+        </span>
       </div>
     </form>
   </div>

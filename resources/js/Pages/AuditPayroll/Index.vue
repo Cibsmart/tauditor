@@ -36,14 +36,10 @@
                 preserve-state
                 @click="show(payroll.id)"
               >
-                <div
-                  class="pt-0 text-sm leading-5 font-medium uppercase"
-                >
+                <div class="pt-0 text-sm leading-5 font-medium uppercase">
                   {{ payroll.month }}
                 </div>
-                <div
-                  class="text-sm leading-5 text-muted-foreground"
-                >
+                <div class="text-sm leading-5 text-muted-foreground">
                   {{ payroll.year }}
                 </div>
               </Link>
@@ -59,9 +55,7 @@
                 <div class="text-sm leading-5">
                   {{ payroll.created_by }}
                 </div>
-                <div
-                  class="text-sm leading-5 text-muted-foreground"
-                >
+                <div class="text-sm leading-5 text-muted-foreground">
                   {{ payroll.date_created }}
                 </div>
               </Link>
@@ -69,9 +63,7 @@
 
             <TableCell class="w-px">
               <Button
-                v-if="
-                                    payroll.is_current && payroll.can_add_leave
-                                "
+                v-if="payroll.is_current && payroll.can_add_leave"
                 :as="Link"
                 href="#"
                 preserve-state
@@ -123,40 +115,35 @@
                       {{ category.payment_title }}
                       <span
                         :class="
-                                                    category.payment_type_id ===
-                                                    'sal'
-                                                        ? 'bg-green-100 text-green-800'
-                                                        : 'bg-pink-100 text-pink-800'
-                                                "
+                          category.payment_type_id === 'sal'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-pink-100 text-pink-800'
+                        "
                         class="rounded-full px-2 text-xs leading-5 font-semibold"
                       >
-                                                {{ category.payment_type }}
-                                            </span>
+                        {{ category.payment_type }}
+                      </span>
                     </TableCell>
                     <TableCell>
                       Total Amount:
                       <span class="line-through">N</span>
                       <span class="font-bold">
-                                                {{ category.total_amount }}
-                                            </span>
+                        {{ category.total_amount }}
+                      </span>
                     </TableCell>
                     <TableCell>
                       Head Count:
                       <span class="font-bold">
-                                                {{ category.head_count }}
-                                            </span>
+                        {{ category.head_count }}
+                      </span>
                     </TableCell>
                     <TableCell class="text-right">
                       <Link
                         :href="
-                                                    route(
-                                                        'audit_mda_schedules.index',
-                                                        {
-                                                            audit_payroll_category:
-                                                                category.id,
-                                                        },
-                                                    )
-                                                "
+                          route('audit_mda_schedules.index', {
+                            audit_payroll_category: category.id,
+                          })
+                        "
                         class="px-5 py-3"
                         preserve-scroll
                         preserve-state
@@ -177,34 +164,24 @@
                           :class="category.color"
                           class="rounded-full px-2 text-xs leading-5 font-semibold"
                         >
-                                                    {{ category.payment_type }}
-                                                </span>
+                          {{ category.payment_type }}
+                        </span>
                       </div>
                       <div class="text-sm leading-5">
-                                                <span
-                                                  v-if="
-                                                        !category.tenece &&
-                                                        !category.fidelity
-                                                    "
-                                                  class="text-green-900 italic"
-                                                >No Charge Applied</span
-                                                >
                         <span
-                          v-if="
-                                                        category.tenece &&
-                                                        category.fidelity
-                                                    "
-                          class="text-pink-900 italic"
-                        >All Charges Applied</span
+                          v-if="!category.tenece && !category.fidelity"
+                          class="text-green-900 italic"
+                          >No Charge Applied</span
                         >
                         <span
-                          v-if="
-                                                        category.tenece &&
-                                                        !category.fidelity
-                                                    "
+                          v-if="category.tenece && category.fidelity"
+                          class="text-pink-900 italic"
+                          >All Charges Applied</span
+                        >
+                        <span
+                          v-if="category.tenece && !category.fidelity"
                           class="text-blue-900 italic"
-                        >Fidelity Charge not
-                                                    Applied</span
+                          >Fidelity Charge not Applied</span
                         >
                       </div>
                     </TableCell>
@@ -212,14 +189,14 @@
                       Total Amount:
                       <span class="line-through">N</span>
                       <span class="font-bold">
-                                                {{ category.total_amount }}
-                                            </span>
+                        {{ category.total_amount }}
+                      </span>
                     </TableCell>
                     <TableCell>
                       Head Count:
                       <span class="font-bold">
-                                                {{ category.head_count }}
-                                            </span>
+                        {{ category.head_count }}
+                      </span>
                     </TableCell>
                     <TableCell class="text-right">
                       <Link
@@ -235,30 +212,17 @@
                       <form
                         v-else
                         :key="category.id"
-                        @submit.prevent="
-                                                    upload(category.id)
-                                                "
+                        @submit.prevent="upload(category.id)"
                       >
                         <div class="flex items-center">
                           <file-input
-                            v-model="
-                                                            file.schedule_file[
-                                                                category.id
-                                                            ]
-                                                        "
-                            :errors="
-                                                            file.errors
-                                                                .schedule_file
-                                                        "
+                            v-model="file.schedule_file[category.id]"
+                            :errors="file.errors.schedule_file"
                             accept="file/*"
                             class="w-full pr-6"
                             type="file"
                           />
-                          <Button
-                            size="sm"
-                            type="submit"
-                            variant="secondary"
-                          >
+                          <Button size="sm" type="submit" variant="secondary">
                             Upload
                           </Button>
                         </div>
@@ -302,13 +266,8 @@
         >
           <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div class="">
-              <div
-                class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left"
-              >
-                <h3
-                  id="modal-title"
-                  class="text-lg leading-6 font-medium"
-                >
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 id="modal-title" class="text-lg leading-6 font-medium">
                   Create Other Schedule
                 </h3>
                 <div class="mt-5">
@@ -319,11 +278,7 @@
                     label="Payment Type"
                     required
                   >
-                    <option
-                      class="text-gray-100"
-                      disabled
-                      value=""
-                    >
+                    <option class="text-gray-100" disabled value="">
                       Select Payment Type
                     </option>
                     <option
@@ -344,16 +299,12 @@
                   />
 
                   <fieldset class="flex justify-between">
-                    <legend class="sr-only">
-                      Pay Commission Charges
-                    </legend>
+                    <legend class="sr-only">Pay Commission Charges</legend>
                     <div class="relative flex items-start">
                       <div class="flex h-5 items-center">
                         <input
                           id="paycomm_tenece"
-                          v-model="
-                                                        form.paycomm_tenece
-                                                    "
+                          v-model="form.paycomm_tenece"
                           aria-describedby="paycomm-tenece-description"
                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                           name="paycomm_tenece"
@@ -364,7 +315,7 @@
                         <label
                           class="font-medium text-gray-700"
                           for="paycomm_tenece"
-                        >Apply Charges</label
+                          >Apply Charges</label
                         >
                         <p
                           id="paycomm-tenece-description"
@@ -381,9 +332,7 @@
                       <div class="flex h-5 items-center">
                         <input
                           id="paycomm_fidelity"
-                          v-model="
-                                                        form.paycomm_fidelity
-                                                    "
+                          v-model="form.paycomm_fidelity"
                           aria-describedby="paycomm_fidelity-description"
                           class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                           name="paycomm_fidelity"
@@ -394,8 +343,7 @@
                         <label
                           class="font-medium text-gray-700"
                           for="paycomm_fidelity"
-                        >Apply Fidelity
-                          Charges</label
+                          >Apply Fidelity Charges</label
                         >
                         <p
                           id="paycomm_fidelity-description"
@@ -410,14 +358,8 @@
               </div>
             </div>
           </div>
-          <div
-            class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
-          >
-            <Button
-              class="sm:ml-3"
-              type="button"
-              @click="saveSchedule"
-            >
+          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <Button class="sm:ml-3" type="button" @click="saveSchedule">
               Save
             </Button>
             <Button
@@ -438,7 +380,14 @@
 <script>
 import { Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import FileInput from '@/Shared/FileInput';
 import Icon from '@/Shared/Icon';
 import Layout from '@/Shared/Layout';

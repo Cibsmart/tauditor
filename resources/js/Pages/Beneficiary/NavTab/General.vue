@@ -1,10 +1,7 @@
 <template>
   <div class="rounded bg-white">
     <v-tabs>
-      <tab
-        :completed="basic_information_completed"
-        title="Basic Information"
-      >
+      <tab :completed="basic_information_completed" title="Basic Information">
         <basic-information :data="data.basic"></basic-information>
       </tab>
 

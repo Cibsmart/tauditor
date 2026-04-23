@@ -6,20 +6,20 @@
       <span class="font-medium">/</span>
       <Link
         :href="
-                    route('audit_mda_schedules.index', {
-                        audit_payroll_category,
-                    })
-                "
+          route('audit_mda_schedules.index', {
+            audit_payroll_category,
+          })
+        "
       >
         MDA Schedules
       </Link>
       <span class="font-medium">/</span>
       <Link
         :href="
-                    route('audit_sub_mda_schedules.index', {
-                        audit_mda_schedule,
-                    })
-                "
+          route('audit_sub_mda_schedules.index', {
+            audit_mda_schedule,
+          })
+        "
       >
         Sub MDA Schedules
       </Link>
@@ -34,10 +34,7 @@
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead
-            >Beneficiary Name/Verification Number
-            </TableHead
-            >
+            <TableHead>Beneficiary Name/Verification Number </TableHead>
             <TableHead>Cadre/Designation</TableHead>
             <TableHead>Bank Details</TableHead>
             <TableHead>Net Pay</TableHead>
@@ -46,21 +43,14 @@
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow
-            v-for="schedule in schedules.data"
-            :key="schedule.id"
-          >
+          <TableRow v-for="schedule in schedules.data" :key="schedule.id">
             <TableCell>
               <div class="flex items-center">
                 <div class="ml-4">
-                  <div
-                    class="text-sm leading-5 font-medium uppercase"
-                  >
+                  <div class="text-sm leading-5 font-medium uppercase">
                     {{ schedule.beneficiary_name }}
                   </div>
-                  <div
-                    class="text-sm leading-5 text-muted-foreground"
-                  >
+                  <div class="text-sm leading-5 text-muted-foreground">
                     {{ schedule.verification_number }}
                   </div>
                 </div>
@@ -70,9 +60,7 @@
               <div class="text-sm leading-5">
                 {{ schedule.cadre }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ schedule.designation }}
               </div>
             </TableCell>
@@ -80,9 +68,7 @@
               <div class="text-sm leading-5">
                 {{ schedule.bank_name }}
               </div>
-              <div
-                class="text-sm leading-5 text-muted-foreground"
-              >
+              <div class="text-sm leading-5 text-muted-foreground">
                 {{ schedule.account_number }}
               </div>
             </TableCell>
@@ -95,22 +81,20 @@
             </TableCell>
 
             <TableCell>
-                            <span
-                              :class="
-                                    schedule.paid
-                                        ? 'bg-green-100 text-green-800'
-                                        : 'bg-red-100 text-red-800'
-                                "
-                              class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold uppercase"
-                            >
-                                {{ schedule.paid ? 'Paid' : 'Pending' }}
-                            </span>
+              <span
+                :class="
+                  schedule.paid
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-red-100 text-red-800'
+                "
+                class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold uppercase"
+              >
+                {{ schedule.paid ? 'Paid' : 'Pending' }}
+              </span>
             </TableCell>
 
             <TableCell class="text-right">
-              <Link class="px-5 py-3" href="#">
-                View Details
-              </Link>
+              <Link class="px-5 py-3" href="#"> View Details </Link>
             </TableCell>
           </TableRow>
 
@@ -131,7 +115,14 @@
 
 <script>
 import { Link } from '@inertiajs/vue3';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 

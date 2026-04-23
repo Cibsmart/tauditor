@@ -11,19 +11,19 @@
       >
         <icon
           :class="
-                        isActive('')
-                            ? 'text-white group-hover:text-orange-800'
-                            : 'text-indigo-800 group-hover:text-orange-800'
-                    "
+            isActive('')
+              ? 'text-white group-hover:text-orange-800'
+              : 'text-indigo-800 group-hover:text-orange-800'
+          "
           class="mr-2 h-4 w-4"
           name="dashboard"
         />
         <div
           :class="
-                        isActive('')
-                            ? 'text-white group-hover:text-orange-800'
-                            : 'text-indigo-800 group-hover:text-orange-800'
-                    "
+            isActive('')
+              ? 'text-white group-hover:text-orange-800'
+              : 'text-indigo-800 group-hover:text-orange-800'
+          "
           class="font-bold"
         >
           Dashboard
@@ -47,19 +47,19 @@
             >
               <icon
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 :name="menu.icon"
                 class="mr-2 h-4 w-4"
               />
               <div
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="font-bold"
                 v-text="menu.label"
               ></div>
@@ -67,20 +67,20 @@
               <icon
                 v-if="menu.active"
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="ml-2"
                 name="cheveron-down"
               />
               <icon
                 v-else
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="ml-2"
                 name="cheveron-right"
               />
@@ -89,10 +89,7 @@
           <div>
             <template v-for="sub in menu.subs">
               <sub-menu
-                v-if="
-                                    menu.active &&
-                                    $page.props.permissions[sub.permission]
-                                "
+                v-if="menu.active && $page.props.permissions[sub.permission]"
                 :key="sub.id"
                 :icon="sub.icon"
                 :label="sub.label"
@@ -116,19 +113,19 @@
             >
               <icon
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 :name="menu.icon"
                 class="mr-2 h-4 w-4"
               />
               <div
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="font-bold"
                 v-text="menu.label"
               ></div>
@@ -136,20 +133,20 @@
               <icon
                 v-if="menu.active"
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="ml-2"
                 name="cheveron-down"
               />
               <icon
                 v-else
                 :class="
-                                    isActive(menu.name)
-                                        ? 'text-white group-hover:text-orange-800'
-                                        : 'text-indigo-800 group-hover:text-orange-800'
-                                "
+                  isActive(menu.name)
+                    ? 'text-white group-hover:text-orange-800'
+                    : 'text-indigo-800 group-hover:text-orange-800'
+                "
                 class="ml-2"
                 name="cheveron-right"
               />
@@ -158,10 +155,7 @@
           <div>
             <template v-for="sub in menu.subs">
               <sub-menu
-                v-if="
-                                    menu.active &&
-                                    $page.props.permissions[sub.permission]
-                                "
+                v-if="menu.active && $page.props.permissions[sub.permission]"
                 :key="sub.id"
                 :icon="sub.icon"
                 :label="sub.label"
@@ -187,19 +181,19 @@
           >
             <icon
               :class="
-                                isActive(menu.name)
-                                    ? 'text-white group-hover:text-orange-800'
-                                    : 'text-indigo-800 group-hover:text-orange-800'
-                            "
+                isActive(menu.name)
+                  ? 'text-white group-hover:text-orange-800'
+                  : 'text-indigo-800 group-hover:text-orange-800'
+              "
               :name="menu.icon"
               class="mr-2 h-4 w-4"
             />
             <div
               :class="
-                                isActive(menu.name)
-                                    ? 'text-white group-hover:text-orange-800'
-                                    : 'text-indigo-800 group-hover:text-orange-800'
-                            "
+                isActive(menu.name)
+                  ? 'text-white group-hover:text-orange-800'
+                  : 'text-indigo-800 group-hover:text-orange-800'
+              "
               class="font-bold"
               v-text="menu.label"
             ></div>
