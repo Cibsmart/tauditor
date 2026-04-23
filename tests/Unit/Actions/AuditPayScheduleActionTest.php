@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Actions;
+
 use App\Actions\AuditPayScheduleAction;
 use App\Audit\CheckAccountNumber;
 use App\Audit\CheckAllowances;
@@ -15,6 +17,7 @@ use App\Models\AuditPaySchedule;
 use App\Models\AuditSubMdaSchedule;
 use Illuminate\Container\Container;
 use Illuminate\Support\Collection;
+use Mockery;
 
 class SpySubMda extends AuditSubMdaSchedule
 {

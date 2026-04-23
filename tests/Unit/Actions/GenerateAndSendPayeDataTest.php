@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Actions;
+
 use App\Actions\GenerateAndSendPayeData;
 
 /**

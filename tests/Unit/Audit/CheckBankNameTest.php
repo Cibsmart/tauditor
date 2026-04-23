@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Unit\Audit;
+
 use App\Audit\CheckBankName;
 use App\Models\AuditPaySchedule;
 use Carbon\Carbon;
