@@ -112,73 +112,103 @@
                       </span>
                     </TableCell>
                     <TableCell class="text-right">
-                      <Button
-                        v-show="category.can_generate"
-                        :as="Link"
-                        :href="
-                          route('audit_autopay.generate', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
-                        method="post"
-                        preserve-scroll
-                        preserve-state
-                        size="sm"
-                      >
-                        Generate
-                      </Button>
+                      <div class="whitespace-nowrap">
+                        <Button
+                          v-show="category.can_generate"
+                          asChild
+                          size="sm"
+                        >
+                          <Link
+                            :href="
+                              route('audit_autopay.generate', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                            method="post"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            Generate
+                          </Link>
+                        </Button>
 
-                      <Link
-                        v-show="category.refreshable"
-                        :href="route('audit_autopay.index')"
-                        class="px-5 py-3"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        Refresh
-                      </Link>
+                        <Button
+                          v-show="category.refreshable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <Link
+                            :href="route('audit_autopay.index')"
+                            class="px-5 py-3"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            Refresh
+                          </Link>
+                        </Button>
 
-                      <a
-                        v-show="category.viewable"
-                        :href="
-                          route('audit_autopay.download', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
-                      >
-                        Download Autopay
-                      </a>
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <a
+                            :href="
+                              route('audit_autopay.download', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                            class="px-5 py-3"
+                          >
+                            Download Autopay
+                          </a>
+                        </Button>
 
-                      <span v-show="category.viewable"> | </span>
+                        <span v-show="category.viewable"> | </span>
 
-                      <a
-                        v-show="category.viewable"
-                        :href="
-                          route('audit_autopay.downloadMfb', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
-                      >
-                        Download MFB
-                      </a>
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <a
+                            :href="
+                              route('audit_autopay.downloadMfb', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                            class="px-5 py-3"
+                          >
+                            Download MFB
+                          </a>
+                        </Button>
 
-                      <span v-show="category.viewable"> | </span>
+                        <span v-show="category.viewable"> | </span>
 
-                      <Link
-                        v-show="category.viewable"
-                        :href="
-                          route('audit_autopay.show', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        View MDAs
-                      </Link>
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <Link
+                            v-show="category.viewable"
+                            :href="
+                              route('audit_autopay.show', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                            class="px-5 py-3"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            View MDAs
+                          </Link>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
 
