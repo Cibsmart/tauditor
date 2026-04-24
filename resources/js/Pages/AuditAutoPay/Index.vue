@@ -305,7 +305,6 @@
                       <Link
                         v-show="category.refreshable"
                         :href="route('audit_autopay.index')"
-                        class="px-5 py-3"
                         preserve-scroll
                         preserve-state
                       >
@@ -324,7 +323,6 @@
                               other_audit_payroll_category: category.id,
                             })
                           "
-                          class="px-5 py-3"
                         >
                           Download Autopay
                         </a>
@@ -344,7 +342,6 @@
                               other_audit_payroll_category: category.id,
                             })
                           "
-                          class="px-5 py-3"
                         >
                           Download MFB
                         </a>
