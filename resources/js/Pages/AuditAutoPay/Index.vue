@@ -124,6 +124,7 @@
                                 audit_payroll_category: category.id,
                               })
                             "
+                            as="button"
                             method="post"
                             preserve-scroll
                             preserve-state
@@ -287,20 +288,20 @@
                       </span>
                     </TableCell>
                     <TableCell class="text-right">
-                      <Button
-                        v-show="category.can_generate"
-                        :as="Link"
-                        :href="
-                          route('other_audit_autopay.generate', {
-                            other_audit_payroll_category: category.id,
-                          })
-                        "
-                        method="post"
-                        preserve-scroll
-                        preserve-state
-                        size="sm"
-                      >
-                        Generate
+                      <Button v-show="category.can_generate" asChild size="sm">
+                        <Link
+                          :href="
+                            route('other_audit_autopay.generate', {
+                              other_audit_payroll_category: category.id,
+                            })
+                          "
+                          as="button"
+                          method="post"
+                          preserve-scroll
+                          preserve-state
+                        >
+                          Generate
+                        </Link>
                       </Button>
 
                       <Link
