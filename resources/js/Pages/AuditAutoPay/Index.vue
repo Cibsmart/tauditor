@@ -113,13 +113,17 @@
                     </TableCell>
                     <TableCell class="text-right">
                       <div class="whitespace-nowrap">
-                        <Button v-show="category.can_generate" asChild size="sm">
+                        <Button
+                          v-show="category.can_generate"
+                          asChild
+                          size="sm"
+                        >
                           <Link
                             :href="
-                          route('audit_autopay.generate', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
+                              route('audit_autopay.generate', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
                             method="post"
                             preserve-scroll
                             preserve-state
@@ -128,7 +132,12 @@
                           </Link>
                         </Button>
 
-                        <Button v-show="category.refreshable" asChild size="sm" variant="outline">
+                        <Button
+                          v-show="category.refreshable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
                           <Link
                             :href="route('audit_autopay.index')"
                             class="px-5 py-3"
@@ -139,13 +148,18 @@
                           </Link>
                         </Button>
 
-                        <Button v-show="category.viewable" asChild size="sm" variant="outline">
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
                           <a
                             :href="
-                          route('audit_autopay.download', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
+                              route('audit_autopay.download', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
                             class="px-5 py-3"
                           >
                             Download Autopay
@@ -154,13 +168,18 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <Button v-show="category.viewable" asChild size="sm" variant="outline">
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
                           <a
                             :href="
-                          route('audit_autopay.downloadMfb', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
+                              route('audit_autopay.downloadMfb', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
                             class="px-5 py-3"
                           >
                             Download MFB
@@ -169,14 +188,19 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <Button v-show="category.viewable" asChild size="sm" variant="outline">
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
                           <Link
                             v-show="category.viewable"
                             :href="
-                          route('audit_autopay.show', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
+                              route('audit_autopay.show', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
                             class="px-5 py-3"
                             preserve-scroll
                             preserve-state
@@ -206,17 +230,17 @@
                         <span
                           v-if="!category.tenece && !category.fidelity"
                           class="text-green-900 italic"
-                        >No Charge Applied</span
+                          >No Charge Applied</span
                         >
                         <span
                           v-if="category.tenece && category.fidelity"
                           class="text-pink-900 italic"
-                        >All Charges Applied</span
+                          >All Charges Applied</span
                         >
                         <span
                           v-if="category.tenece && !category.fidelity"
                           class="text-blue-900 italic"
-                        >Fidelity Charge not Applied</span
+                          >Fidelity Charge not Applied</span
                         >
                       </div>
                     </TableCell>
@@ -353,7 +377,14 @@
 <script>
 import { Link } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/Components/ui/table';
 import Icon from '@/Shared/Icon';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
