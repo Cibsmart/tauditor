@@ -124,6 +124,7 @@
                                 audit_payroll_category: category.id,
                               })
                             "
+                            as="button"
                             method="post"
                             preserve-scroll
                             preserve-state
@@ -168,23 +169,17 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <Button
+                        <a
                           v-show="category.viewable"
-                          asChild
-                          size="sm"
-                          variant="outline"
+                          :href="
+                            route('audit_autopay.downloadMfb', {
+                              audit_payroll_category: category.id,
+                            })
+                          "
+                          class="px-5 py-3"
                         >
-                          <a
-                            :href="
-                              route('audit_autopay.downloadMfb', {
-                                audit_payroll_category: category.id,
-                              })
-                            "
-                            class="px-5 py-3"
-                          >
-                            Download MFB
-                          </a>
-                        </Button>
+                          Download MFB
+                        </a>
 
                         <span v-show="category.viewable"> | </span>
 
@@ -287,20 +282,20 @@
                       </span>
                     </TableCell>
                     <TableCell class="text-right">
-                      <Button
-                        v-show="category.can_generate"
-                        :as="Link"
-                        :href="
-                          route('other_audit_autopay.generate', {
-                            other_audit_payroll_category: category.id,
-                          })
-                        "
-                        method="post"
-                        preserve-scroll
-                        preserve-state
-                        size="sm"
-                      >
-                        Generate
+                      <Button v-show="category.can_generate" asChild size="sm">
+                        <Link
+                          :href="
+                            route('other_audit_autopay.generate', {
+                              other_audit_payroll_category: category.id,
+                            })
+                          "
+                          as="button"
+                          method="post"
+                          preserve-scroll
+                          preserve-state
+                        >
+                          Generate
+                        </Link>
                       </Button>
 
                       <Link

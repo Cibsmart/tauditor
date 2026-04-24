@@ -8,7 +8,20 @@
     "format:check": "prettier --check resources/",
     "lint": "eslint . --fix",
     "lint:check": "eslint .",
-    "types:check": "vue-tsc --noEmit"
+    "types:check": "vue-tsc --noEmit",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.php": [
+      "vendor/bin/pint"
+    ],
+    "*.{js,vue,css}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -20,7 +33,9 @@
     "eslint-plugin-import-x": "^4.16.2",
     "eslint-plugin-vue": "^10.9.0",
     "globals": "^17.5.0",
+    "husky": "^9.1.7",
     "laravel-vite-plugin": "^3.0.0",
+    "lint-staged": "^16.4.0",
     "lodash": "^4.17.20",
     "popper.js": "^1.12",
     "prettier": "^3.8.3",
