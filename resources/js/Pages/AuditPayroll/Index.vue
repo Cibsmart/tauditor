@@ -4,14 +4,13 @@
     <h1 class="mb-8 text-3xl font-bold">Audit Payrolls</h1>
     <div class="mb-6 flex items-center justify-between">
       <div></div>
-      <Button
-        :as="Link"
-        :href="route('audit_payroll.store')"
-        method="post"
-        preserve-state
-        size="lg"
-      >
-        Add <span class="hidden md:inline"> &nbsp; Payroll</span>
+      <Button asChild size="lg">
+        <Link
+          :href="route('audit_payroll.store')"
+          method="post"
+          preserve-state>
+          Add <span class="hidden md:inline"> &nbsp; Payroll</span>
+        </Link>
       </Button>
     </div>
 
@@ -171,17 +170,17 @@
                         <span
                           v-if="!category.tenece && !category.fidelity"
                           class="text-green-900 italic"
-                          >No Charge Applied</span
+                        >No Charge Applied</span
                         >
                         <span
                           v-if="category.tenece && category.fidelity"
                           class="text-pink-900 italic"
-                          >All Charges Applied</span
+                        >All Charges Applied</span
                         >
                         <span
                           v-if="category.tenece && !category.fidelity"
                           class="text-blue-900 italic"
-                          >Fidelity Charge not Applied</span
+                        >Fidelity Charge not Applied</span
                         >
                       </div>
                     </TableCell>
@@ -315,7 +314,7 @@
                         <label
                           class="font-medium text-gray-700"
                           for="paycomm_tenece"
-                          >Apply Charges</label
+                        >Apply Charges</label
                         >
                         <p
                           id="paycomm-tenece-description"
@@ -343,7 +342,7 @@
                         <label
                           class="font-medium text-gray-700"
                           for="paycomm_fidelity"
-                          >Apply Fidelity Charges</label
+                        >Apply Fidelity Charges</label
                         >
                         <p
                           id="paycomm_fidelity-description"
@@ -380,14 +379,7 @@
 <script>
 import { Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/Components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, } from '@/Components/ui/table';
 import FileInput from '@/Shared/FileInput';
 import Icon from '@/Shared/Icon';
 import Layout from '@/Shared/Layout';
