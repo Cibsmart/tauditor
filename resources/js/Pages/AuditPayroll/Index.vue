@@ -4,14 +4,10 @@
     <h1 class="mb-8 text-3xl font-bold">Audit Payrolls</h1>
     <div class="mb-6 flex items-center justify-between">
       <div></div>
-      <Button
-        :as="Link"
-        :href="route('audit_payroll.store')"
-        method="post"
-        preserve-state
-        size="lg"
-      >
-        Add <span class="hidden md:inline"> &nbsp; Payroll</span>
+      <Button asChild size="lg">
+        <Link :href="route('audit_payroll.store')" method="post" preserve-state>
+          Add <span class="hidden md:inline"> &nbsp; Payroll</span>
+        </Link>
       </Button>
     </div>
 
