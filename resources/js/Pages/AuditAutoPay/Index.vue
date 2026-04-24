@@ -169,23 +169,17 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <Button
+                        <a
                           v-show="category.viewable"
-                          asChild
-                          size="sm"
-                          variant="outline"
+                          :href="
+                            route('audit_autopay.downloadMfb', {
+                              audit_payroll_category: category.id,
+                            })
+                          "
+                          class="px-5 py-3"
                         >
-                          <a
-                            :href="
-                              route('audit_autopay.downloadMfb', {
-                                audit_payroll_category: category.id,
-                              })
-                            "
-                            class="px-5 py-3"
-                          >
-                            Download MFB
-                          </a>
-                        </Button>
+                          Download MFB
+                        </a>
 
                         <span v-show="category.viewable"> | </span>
 
