@@ -175,6 +175,7 @@
                             v-if="category.mfb_zip_status === 'none'"
                             asChild
                             size="sm"
+                            variant="outline"
                           >
                             <Link
                               :href="
@@ -225,7 +226,7 @@
                             :class="
                               recentlyReady[category.id]
                                 ? 'animate-pulse ring-2 ring-green-400'
-                                : 'border-green-500 text-green-700'
+                                : 'border-green-500'
                             "
                             asChild
                             size="sm"
