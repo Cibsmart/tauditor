@@ -130,6 +130,7 @@ class BuildMfbScheduleZip implements ShouldQueue
                 'audit_sub_mda_schedules.id')
             ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=',
                 'audit_mda_schedules.id')
+            ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
             ->where('audit_mda_schedules.audit_payroll_category_id', $category->id)
             ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
             ->groupBy('beneficiary_type_id', 'micro_finance_bank_id')
