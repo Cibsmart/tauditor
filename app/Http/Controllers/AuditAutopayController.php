@@ -14,14 +14,13 @@ use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
-use App\Models\MicroFinanceBank;
 use App\Models\MicrofinanceBankSchedule;
 use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use ZipStream\ZipStream;
 
 class AuditAutopayController extends Controller
 {
@@ -311,81 +310,116 @@ class AuditAutopayController extends Controller
             return back()->with('error', "No Beneficiary Used Microfinance in $month_year Payment Schedule");
         }
 
-        $zipName = "{$category->payment_title} - MFB SCHEDULE - {$category->id}.zip";
+        $directory = $domain->group
+            ? $this->createGroupMfbFiles($category)
+            : $this->createMfbFiles($category);
 
-        return response()->streamDownload(function () use ($category, $domain): void {
-            @set_time_limit(0);
+        $zipped_file = $this->prepareDownload($directory);
 
-            $zip = new ZipStream(
-                sendHttpHeaders: false,
-                flushOutput: true,
-            );
+        $headers = ['Content-Type' => 'application/zip'];
 
-            $domain->group
-                ? $this->streamGroupMfbFiles($zip, $category)
-                : $this->streamMfbFiles($zip, $category);
-
-            $zip->finish();
-        }, $zipName, ['Content-Type' => 'application/zip']);
+        return response()->download(public_path($zipped_file), null, $headers)
+            ->deleteFileAfterSend();
     }
 
-    private function streamMfbFiles(ZipStream $zip, AuditPayrollCategory $category): void
+    public function createGroupMfbFiles(AuditPayrollCategory $category)
     {
-        $month_year = $category->monthYear();
-        $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
+        $title = $category->payment_title;
 
-        $pairs = MicrofinanceBankSchedule::query()
-            ->select('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
-            ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-            ->where('audit_mda_schedules.audit_payroll_category_id', $category->id)
+        $month_year = $category->monthYear();
+
+        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
+
+        $beneficiaryTypes = $category->auditMdaSchedules()
+            ->mfbSchedules()
             ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
-            ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
+            ->select('beneficiary_type_id', 'audit_sub_mda_schedules.id')
+            ->groupBy(['beneficiary_type_id', 'audit_sub_mda_schedules.id'])
             ->get();
 
-        $subMdas = AuditSubMdaSchedule::whereIn('id', $pairs->pluck('audit_sub_mda_schedule_id')->unique())
-            ->get()->keyBy('id');
-        $mfbs = MicroFinanceBank::whereIn('id', $pairs->pluck('micro_finance_bank_id')->unique())
-            ->get()->keyBy('id');
+        $groups = $beneficiaryTypes->groupBy('beneficiary_type_id');
 
-        foreach ($pairs as $pair) {
-            $sub_mda = $subMdas[$pair->audit_sub_mda_schedule_id];
-            $mfb = $mfbs[$pair->micro_finance_bank_id];
+        foreach ($groups as $beneficiaryType => $subMdas) {
+            $type = BeneficiaryType::find($beneficiaryType);
 
-            $path = "$directory/{$mfb->name}/{$sub_mda->sub_mda_name} $month_year MFB SCHEDULE.xlsx";
-            $xlsx = (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->raw('Xlsx');
+            $mfbs = MicrofinanceBankSchedule::with('microfinanceBank')
+                ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=',
+                    'audit_sub_mda_schedules.id')
+                ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=',
+                    'audit_mda_schedules.id')
+                ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
+                ->select('micro_finance_bank_id')
+                ->where('beneficiary_type_id', $type->id)
+                ->whereIn('audit_sub_mda_schedules.id', $subMdas->pluck('id'))
+                ->groupBy('micro_finance_bank_id')
+                ->get();
 
-            $zip->addFile(fileName: $path, data: $xlsx);
+            foreach ($mfbs as $mfb) {
+                $mfb = $mfb->microfinanceBank;
+
+                $mfb_name = $mfb->name;
+
+                $file_name = "$type->name $month_year MFB SCHEDULE.xlsx";
+
+                $path = "$directory/$mfb_name/$file_name";
+
+                $mfb_file_exists = Storage::disk('local')->exists($path);
+
+                //                    if ($mfb_file_exists) {
+                //                        continue;
+                //                    }
+
+                (new MfbGroupScheduleExport)->forMfbs($mfb)->inBeneficiaryType($category, $type)->store($path);
+            }
         }
+
+        return $directory;
     }
 
-    private function streamGroupMfbFiles(ZipStream $zip, AuditPayrollCategory $category): void
+    public function createMfbFiles(AuditPayrollCategory $category)
     {
+        $title = $category->payment_title;
+
+        $mdas = $category->auditMdaSchedules;
+
         $month_year = $category->monthYear();
-        $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
 
-        $rows = MicrofinanceBankSchedule::query()
-            ->select('beneficiary_type_id', 'micro_finance_bank_id')
-            ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-            ->where('audit_mda_schedules.audit_payroll_category_id', $category->id)
-            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
-            ->groupBy('beneficiary_type_id', 'micro_finance_bank_id')
-            ->get();
+        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
 
-        $types = BeneficiaryType::whereIn('id', $rows->pluck('beneficiary_type_id')->unique())
-            ->get()->keyBy('id');
-        $mfbs = MicroFinanceBank::whereIn('id', $rows->pluck('micro_finance_bank_id')->unique())
-            ->get()->keyBy('id');
+        foreach ($mdas as $mda) {
+            $sub_mdas = $mda->auditSubMdaSchedules()
+                ->autopayGenerated()
+                ->hasMicrofinance()
+                ->get();
 
-        foreach ($rows as $row) {
-            $type = $types[$row->beneficiary_type_id];
-            $mfb = $mfbs[$row->micro_finance_bank_id];
+            foreach ($sub_mdas as $sub_mda) {
+                $mfbs = $sub_mda->microfinanceSchedules()->with('microfinanceBank')
+                    ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
+                    ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
+                    ->get();
 
-            $path = "$directory/{$mfb->name}/{$type->name} $month_year MFB SCHEDULE.xlsx";
-            $xlsx = (new MfbGroupScheduleExport)->forMfbs($mfb)->inBeneficiaryType($category, $type)->raw('Xlsx');
+                $sub_mda_name = $sub_mda->sub_mda_name;
 
-            $zip->addFile(fileName: $path, data: $xlsx);
+                foreach ($mfbs as $mfb) {
+                    $mfb = $mfb->microfinanceBank;
+
+                    $mfb_name = $mfb->name;
+
+                    $file_name = "$sub_mda_name $month_year MFB SCHEDULE.xlsx";
+
+                    $path = "$directory/$mfb_name/$file_name";
+
+                    $mfb_file_exists = Storage::disk('local')->exists($path);
+
+                    //                    if ($mfb_file_exists) {
+                    //                        continue;
+                    //                    }
+
+                    (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->store($path);
+                }
+            }
         }
+
+        return $directory;
     }
 }
