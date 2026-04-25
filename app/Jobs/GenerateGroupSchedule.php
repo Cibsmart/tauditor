@@ -16,6 +16,8 @@ class GenerateGroupSchedule implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public bool $deleteWhenMissingModels = true;
+
     public Domain $domain;
 
     public AuditPayrollCategory $category;

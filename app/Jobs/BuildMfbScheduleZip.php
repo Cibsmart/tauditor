@@ -22,6 +22,8 @@ class BuildMfbScheduleZip implements ShouldQueue
 
     public int $timeout = 0;
 
+    public bool $deleteWhenMissingModels = true;
+
     public function __construct(public AuditPayrollCategory $category) {}
 
     public static function statusKey(AuditPayrollCategory $category): string
