@@ -18,23 +18,16 @@ class GenerateGroupSchedule implements ShouldQueue
 
     public bool $deleteWhenMissingModels = true;
 
-    public Domain $domain;
-
-    public AuditPayrollCategory $category;
-
-    public BeneficiaryType $beneficiaryType;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Domain $domain, AuditPayrollCategory $category, BeneficiaryType $beneficiaryType)
-    {
-        $this->domain = $domain;
-        $this->category = $category;
-        $this->beneficiaryType = $beneficiaryType;
-    }
+    public function __construct(
+        public Domain $domain,
+        public AuditPayrollCategory $category,
+        public BeneficiaryType $beneficiaryType,
+    ) {}
 
     /**
      * Execute the job.

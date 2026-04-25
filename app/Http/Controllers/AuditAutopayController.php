@@ -321,7 +321,7 @@ class AuditAutopayController extends Controller
         if (Cache::get($statusKey) === 'running') {
             return back()->with(
                 'success',
-                "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
+                "MFB Schedule for {$category->payment_title} {$month_year} is being prepared. Refresh and click again in a moment to download.",
             );
         }
 
@@ -330,7 +330,7 @@ class AuditAutopayController extends Controller
 
         return back()->with(
             'success',
-            "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
+            "MFB Schedule for {$category->payment_title} {$month_year} is being prepared. Refresh and click again in a moment to download.",
         );
     }
 }
