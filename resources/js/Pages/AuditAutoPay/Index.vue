@@ -161,7 +161,6 @@
                                 audit_payroll_category: category.id,
                               })
                             "
-                            class="px-5 py-3"
                           >
                             Download Autopay
                           </a>
@@ -169,17 +168,22 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <a
+                        <Button
                           v-show="category.viewable"
-                          :href="
-                            route('audit_autopay.downloadMfb', {
-                              audit_payroll_category: category.id,
-                            })
-                          "
-                          class="px-5 py-3"
+                          asChild
+                          size="sm"
+                          variant="outline"
                         >
-                          Download MFB
-                        </a>
+                          <a
+                            :href="
+                              route('audit_autopay.downloadMfb', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                          >
+                            Download MFB
+                          </a>
+                        </Button>
 
                         <span v-show="category.viewable"> | </span>
 
@@ -301,38 +305,47 @@
                       <Link
                         v-show="category.refreshable"
                         :href="route('audit_autopay.index')"
-                        class="px-5 py-3"
                         preserve-scroll
                         preserve-state
                       >
                         Refresh
                       </Link>
 
-                      <a
+                      <Button
                         v-show="category.viewable"
-                        :href="
-                          route('other_audit_autopay.download', {
-                            other_audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
+                        asChild
+                        size="sm"
+                        variant="outline"
                       >
-                        Download Autopay
-                      </a>
+                        <a
+                          :href="
+                            route('other_audit_autopay.download', {
+                              other_audit_payroll_category: category.id,
+                            })
+                          "
+                        >
+                          Download Autopay
+                        </a>
+                      </Button>
 
                       <span v-show="category.viewable"> | </span>
 
-                      <a
+                      <Button
                         v-show="category.viewable"
-                        :href="
-                          route('other_audit_autopay.downloadMfb', {
-                            other_audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
+                        asChild
+                        size="sm"
+                        variant="outline"
                       >
-                        Download MFB
-                      </a>
+                        <a
+                          :href="
+                            route('other_audit_autopay.downloadMfb', {
+                              other_audit_payroll_category: category.id,
+                            })
+                          "
+                        >
+                          Download MFB
+                        </a>
+                      </Button>
 
                       <span v-show="category.viewable"> | </span>
 
