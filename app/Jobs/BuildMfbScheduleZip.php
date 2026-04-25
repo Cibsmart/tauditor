@@ -28,7 +28,7 @@ class BuildMfbScheduleZip implements ShouldQueue
 
     public static function statusKey(AuditPayrollCategory $category): string
     {
-        return "mfb_zip:{$category->id}";
+        return "mfb_zip:audit:{$category->id}";
     }
 
     public static function zipPath(AuditPayrollCategory $category): string
@@ -49,7 +49,7 @@ class BuildMfbScheduleZip implements ShouldQueue
         $zip = new ZipArchive;
 
         if ($zip->open($tmpPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            Cache::forget(self::statusKey($this->category));
+            $this->markFailed();
             throw new RuntimeException("Cannot open MFB zip archive at {$tmpPath}");
         }
 
@@ -65,18 +65,24 @@ class BuildMfbScheduleZip implements ShouldQueue
             }
 
             rename($tmpPath, $finalPath);
+
+            Cache::forget(self::statusKey($this->category));
         } catch (Throwable $e) {
             @$zip->close();
             @unlink($tmpPath);
+            $this->markFailed();
             throw $e;
-        } finally {
-            Cache::forget(self::statusKey($this->category));
         }
     }
 
     public function failed(Throwable $exception): void
     {
-        Cache::forget(self::statusKey($this->category));
+        $this->markFailed();
+    }
+
+    private function markFailed(): void
+    {
+        Cache::put(self::statusKey($this->category), 'failed', now()->addMinutes(5));
     }
 
     private function addFiles(ZipArchive $zip): void

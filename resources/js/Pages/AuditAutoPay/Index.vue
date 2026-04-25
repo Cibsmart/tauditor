@@ -168,22 +168,105 @@
 
                         <span v-show="category.viewable"> | </span>
 
-                        <Button
-                          v-show="category.viewable"
-                          asChild
-                          size="sm"
-                          variant="outline"
+                        <template
+                          v-if="category.viewable && category.has_mfb_schedule"
                         >
-                          <a
-                            :href="
-                              route('audit_autopay.downloadMfb', {
-                                audit_payroll_category: category.id,
-                              })
-                            "
+                          <Button
+                            v-if="category.mfb_zip_status === 'none'"
+                            asChild
+                            size="sm"
                           >
-                            Download MFB
-                          </a>
-                        </Button>
+                            <Link
+                              :href="
+                                route('audit_autopay.buildMfb', {
+                                  audit_payroll_category: category.id,
+                                })
+                              "
+                              as="button"
+                              method="post"
+                              preserve-scroll
+                              preserve-state
+                            >
+                              Build MFB
+                            </Link>
+                          </Button>
+
+                          <Button
+                            v-else-if="category.mfb_zip_status === 'building'"
+                            disabled
+                            size="sm"
+                            variant="outline"
+                          >
+                            <svg
+                              class="mr-2 h-3 w-3 animate-spin"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                              />
+                              <path
+                                class="opacity-75"
+                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            Preparing MFB…
+                          </Button>
+
+                          <Button
+                            v-else-if="category.mfb_zip_status === 'ready'"
+                            :class="
+                              recentlyReady[category.id]
+                                ? 'animate-pulse ring-2 ring-green-400'
+                                : 'border-green-500 text-green-700'
+                            "
+                            asChild
+                            size="sm"
+                            variant="outline"
+                          >
+                            <a
+                              :href="
+                                route('audit_autopay.downloadMfb', {
+                                  audit_payroll_category: category.id,
+                                })
+                              "
+                            >
+                              Download MFB
+                            </a>
+                          </Button>
+
+                          <Button
+                            v-else-if="category.mfb_zip_status === 'failed'"
+                            asChild
+                            class="border-red-500 text-red-700"
+                            size="sm"
+                            variant="outline"
+                          >
+                            <Link
+                              :href="
+                                route('audit_autopay.buildMfb', {
+                                  audit_payroll_category: category.id,
+                                })
+                              "
+                              as="button"
+                              method="post"
+                              preserve-scroll
+                              preserve-state
+                            >
+                              Retry MFB
+                            </Link>
+                          </Button>
+                        </template>
+                        <span v-else class="text-xs text-muted-foreground"
+                          >No MFB</span
+                        >
 
                         <span v-show="category.viewable"> | </span>
 
@@ -383,7 +466,7 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
 import {
   Table,
@@ -426,12 +509,228 @@ export default {
         incomplete: 'bg-blue-100 text-blue-800',
       },
       show_detail: [],
+      pollDelay: 4000,
+      pollTimeoutId: null,
+      pollInFlight: false,
+      prevMfbStatus: {},
+      recentlyReady: {},
+      firstSeenBuildingAt: {},
     };
+  },
+
+  computed: {
+    anyMfbBuilding() {
+      return this.payrolls.data.some((p) =>
+        (p.categories || []).some((c) => c.mfb_zip_status === 'building'),
+      );
+    },
+  },
+
+  watch: {
+    payrolls: {
+      handler() {
+        this.detectMfbTransitions();
+      },
+      deep: true,
+    },
+  },
+
+  mounted() {
+    this.snapshotMfbStatus();
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
+
+    if (this.anyMfbBuilding) {
+      this.schedulePoll();
+    }
+  },
+
+  beforeUnmount() {
+    if (this.pollTimeoutId) {
+      clearTimeout(this.pollTimeoutId);
+      this.pollTimeoutId = null;
+    }
+
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
   },
 
   methods: {
     show(payroll) {
       this.show_detail[payroll] = !this.show_detail[payroll];
+    },
+
+    relativeTime(iso) {
+      if (!iso) {
+        return '';
+      }
+
+      const diffSec = Math.max(
+        0,
+        Math.floor((Date.now() - new Date(iso)) / 1000),
+      );
+
+      if (diffSec < 60) {
+        return 'just now';
+      }
+
+      if (diffSec < 3600) {
+        return `${Math.floor(diffSec / 60)}m ago`;
+      }
+
+      if (diffSec < 86400) {
+        return `${Math.floor(diffSec / 3600)}h ago`;
+      }
+
+      return `${Math.floor(diffSec / 86400)}d ago`;
+    },
+
+    snapshotMfbStatus() {
+      const snap = {};
+      this.payrolls.data.forEach((p) => {
+        (p.categories || []).forEach((c) => {
+          snap[c.id] = c.mfb_zip_status;
+
+          if (
+            c.mfb_zip_status === 'building' &&
+            !this.firstSeenBuildingAt[c.id]
+          ) {
+            this.firstSeenBuildingAt[c.id] = Date.now();
+          }
+        });
+      });
+      this.prevMfbStatus = snap;
+    },
+
+    detectMfbTransitions() {
+      let transitioned = false;
+      const nextSnap = {};
+      this.payrolls.data.forEach((p) => {
+        (p.categories || []).forEach((c) => {
+          const prev = this.prevMfbStatus[c.id];
+          nextSnap[c.id] = c.mfb_zip_status;
+
+          if (prev !== undefined && prev !== c.mfb_zip_status) {
+            transitioned = true;
+
+            if (prev === 'building' && c.mfb_zip_status === 'ready') {
+              this.recentlyReady = { ...this.recentlyReady, [c.id]: true };
+              setTimeout(() => {
+                const next = { ...this.recentlyReady };
+                delete next[c.id];
+                this.recentlyReady = next;
+              }, 3000);
+            }
+          }
+
+          if (
+            c.mfb_zip_status === 'building' &&
+            !this.firstSeenBuildingAt[c.id]
+          ) {
+            this.firstSeenBuildingAt[c.id] = Date.now();
+          }
+
+          if (
+            c.mfb_zip_status !== 'building' &&
+            this.firstSeenBuildingAt[c.id]
+          ) {
+            delete this.firstSeenBuildingAt[c.id];
+          }
+        });
+      });
+      this.prevMfbStatus = nextSnap;
+
+      if (transitioned) {
+        this.pollDelay = 4000;
+      }
+
+      if (this.anyMfbBuilding && !this.pollTimeoutId && !this.pollInFlight) {
+        this.schedulePoll();
+      }
+    },
+
+    schedulePoll() {
+      if (this.pollTimeoutId) {
+        clearTimeout(this.pollTimeoutId);
+      }
+
+      this.pollTimeoutId = setTimeout(() => this.poll(), this.pollDelay);
+    },
+
+    poll() {
+      this.pollTimeoutId = null;
+
+      if (document.visibilityState !== 'visible') {
+        return;
+      }
+
+      if (!this.anyMfbBuilding) {
+        return;
+      }
+
+      if (!this.hasFreshBuilding()) {
+        return;
+      }
+
+      if (this.pollInFlight) {
+        return;
+      }
+
+      this.pollInFlight = true;
+      router.reload({
+        only: ['payrolls'],
+        preserveScroll: true,
+        preserveState: true,
+        onSuccess: () => {
+          this.pollDelay = Math.min(10000, this.pollDelay + 2000);
+
+          if (this.anyMfbBuilding && document.visibilityState === 'visible') {
+            this.schedulePoll();
+          }
+        },
+        onError: () => {
+          this.pollDelay = 10000;
+
+          if (this.anyMfbBuilding && document.visibilityState === 'visible') {
+            this.schedulePoll();
+          }
+        },
+        onFinish: () => {
+          this.pollInFlight = false;
+        },
+      });
+    },
+
+    hasFreshBuilding() {
+      const cap = 10 * 60 * 1000;
+      const buildingIds = [];
+      this.payrolls.data.forEach((p) => {
+        (p.categories || []).forEach((c) => {
+          if (c.mfb_zip_status === 'building') {
+            buildingIds.push(c.id);
+          }
+        });
+      });
+
+      if (buildingIds.length === 0) {
+        return false;
+      }
+
+      return buildingIds.some((id) => {
+        const ts = this.firstSeenBuildingAt[id];
+
+        return !ts || Date.now() - ts < cap;
+      });
+    },
+
+    onVisibilityChange() {
+      if (
+        document.visibilityState === 'visible' &&
+        this.anyMfbBuilding &&
+        !this.pollTimeoutId &&
+        !this.pollInFlight
+      ) {
+        this.pollDelay = 4000;
+        this.schedulePoll();
+      }
     },
   },
 };

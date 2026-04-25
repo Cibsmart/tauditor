@@ -169,6 +169,10 @@ Route::middleware('auth')->group(function () {
             'audit_autopay/{audit_payroll_category}/download',
             [AuditAutopayController::class, 'download']
         )->name('download');
+        Route::post(
+            'audit_autopay/{audit_payroll_category}/buildMfb',
+            [AuditAutopayController::class, 'buildMfb']
+        )->name('buildMfb');
         Route::get(
             'audit_autopay/{audit_payroll_category}/downloadMfb',
             [AuditAutopayController::class, 'downloadMfb']
