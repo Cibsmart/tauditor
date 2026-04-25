@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ZipDirectory;
 use App\Exports\AutoPayGroupScheduleExport;
 use App\Exports\AutoPayScheduleExport;
-use App\Exports\MfbGroupScheduleExport;
-use App\Exports\MfbScheduleExport;
+use App\Jobs\BuildMfbScheduleZip;
 use App\Jobs\GenerateAutopaySchedules;
 use App\Jobs\GenerateGroupSchedule;
 use App\Models\AuditMdaSchedule;
@@ -14,14 +13,12 @@ use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
-use App\Models\MicroFinanceBank;
-use App\Models\MicrofinanceBankSchedule;
 use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use ZipStream\ZipStream;
 
 class AuditAutopayController extends Controller
 {
@@ -297,7 +294,6 @@ class AuditAutopayController extends Controller
     public function downloadMfb(AuditPayrollCategory $audit_payroll_category)
     {
         $category = $audit_payroll_category;
-        $domain = $category->domain();
         $month_year = $category->monthYear();
 
         if ($category->noAutopaySchedule()) {
@@ -311,81 +307,30 @@ class AuditAutopayController extends Controller
             return back()->with('error', "No Beneficiary Used Microfinance in $month_year Payment Schedule");
         }
 
-        $zipName = "{$category->payment_title} - MFB SCHEDULE - {$category->id}.zip";
+        $zipPath = BuildMfbScheduleZip::zipPath($category);
 
-        return response()->streamDownload(function () use ($category, $domain): void {
-            @set_time_limit(0);
+        if (file_exists($zipPath)) {
+            $downloadName = "{$category->payment_title} - MFB SCHEDULE - {$category->id}.zip";
 
-            $zip = new ZipStream(
-                sendHttpHeaders: false,
-                flushOutput: true,
+            return response()->download($zipPath, $downloadName, ['Content-Type' => 'application/zip'])
+                ->deleteFileAfterSend();
+        }
+
+        $statusKey = BuildMfbScheduleZip::statusKey($category);
+
+        if (Cache::get($statusKey) === 'running') {
+            return back()->with(
+                'success',
+                "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
             );
-
-            $domain->group
-                ? $this->streamGroupMfbFiles($zip, $category)
-                : $this->streamMfbFiles($zip, $category);
-
-            $zip->finish();
-        }, $zipName, ['Content-Type' => 'application/zip']);
-    }
-
-    private function streamMfbFiles(ZipStream $zip, AuditPayrollCategory $category): void
-    {
-        $month_year = $category->monthYear();
-        $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
-
-        $pairs = MicrofinanceBankSchedule::query()
-            ->select('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
-            ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-            ->where('audit_mda_schedules.audit_payroll_category_id', $category->id)
-            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
-            ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
-            ->get();
-
-        $subMdas = AuditSubMdaSchedule::whereIn('id', $pairs->pluck('audit_sub_mda_schedule_id')->unique())
-            ->get()->keyBy('id');
-        $mfbs = MicroFinanceBank::whereIn('id', $pairs->pluck('micro_finance_bank_id')->unique())
-            ->get()->keyBy('id');
-
-        foreach ($pairs as $pair) {
-            $sub_mda = $subMdas[$pair->audit_sub_mda_schedule_id];
-            $mfb = $mfbs[$pair->micro_finance_bank_id];
-
-            $path = "$directory/{$mfb->name}/{$sub_mda->sub_mda_name} $month_year MFB SCHEDULE.xlsx";
-            $xlsx = (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->raw('Xlsx');
-
-            $zip->addFile(fileName: $path, data: $xlsx);
         }
-    }
 
-    private function streamGroupMfbFiles(ZipStream $zip, AuditPayrollCategory $category): void
-    {
-        $month_year = $category->monthYear();
-        $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
+        Cache::put($statusKey, 'running', now()->addHour());
+        BuildMfbScheduleZip::dispatch($category);
 
-        $rows = MicrofinanceBankSchedule::query()
-            ->select('beneficiary_type_id', 'micro_finance_bank_id')
-            ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=', 'audit_sub_mda_schedules.id')
-            ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=', 'audit_mda_schedules.id')
-            ->where('audit_mda_schedules.audit_payroll_category_id', $category->id)
-            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
-            ->groupBy('beneficiary_type_id', 'micro_finance_bank_id')
-            ->get();
-
-        $types = BeneficiaryType::whereIn('id', $rows->pluck('beneficiary_type_id')->unique())
-            ->get()->keyBy('id');
-        $mfbs = MicroFinanceBank::whereIn('id', $rows->pluck('micro_finance_bank_id')->unique())
-            ->get()->keyBy('id');
-
-        foreach ($rows as $row) {
-            $type = $types[$row->beneficiary_type_id];
-            $mfb = $mfbs[$row->micro_finance_bank_id];
-
-            $path = "$directory/{$mfb->name}/{$type->name} $month_year MFB SCHEDULE.xlsx";
-            $xlsx = (new MfbGroupScheduleExport)->forMfbs($mfb)->inBeneficiaryType($category, $type)->raw('Xlsx');
-
-            $zip->addFile(fileName: $path, data: $xlsx);
-        }
+        return back()->with(
+            'success',
+            "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
+        );
     }
 }
