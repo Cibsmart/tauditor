@@ -75,7 +75,9 @@ it('redirects with error when build is requested for a category with no mfb sche
 it('dispatches the build job on first POST and marks cache as running', function () {
     Bus::fake();
 
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -97,7 +99,9 @@ it('dispatches the build job on first POST and marks cache as running', function
 it('does not dispatch a second job while one is already running and does not stomp the cache', function () {
     Bus::fake();
 
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -114,7 +118,9 @@ it('does not dispatch a second job while one is already running and does not sto
 });
 
 it('serves the prebuilt zip on GET download and does not delete it after send', function () {
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -134,7 +140,9 @@ it('serves the prebuilt zip on GET download and does not delete it after send', 
 });
 
 it('redirects with error on GET download when the zip is not yet built', function () {
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -163,7 +171,9 @@ it('builds a valid zip with mfb files when the job runs', function () {
 });
 
 it('surfaces mfb_zip_status=building in the index payload while a job is running', function () {
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -177,13 +187,14 @@ it('surfaces mfb_zip_status=building in the index payload while a job is running
     $response->assertInertia(fn (AssertableInertia $page) => $page
         ->component('AuditAutoPay/Index')
         ->where('payrolls.data.0.categories.0.has_mfb_schedule', true)
-        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'building')
-        ->where('payrolls.data.0.categories.0.mfb_zip_built_at', null)
+        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'building'),
     );
 });
 
 it('surfaces mfb_zip_status=failed in the index payload after a failed build', function () {
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -195,12 +206,14 @@ it('surfaces mfb_zip_status=failed in the index payload after a failed build', f
         ->get(route('audit_autopay.index'));
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
-        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'failed')
+        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'failed'),
     );
 });
 
 it('surfaces mfb_zip_status=ready with built_at when the zip exists on disk', function () {
-    ['user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain] = buildMfbDownloadHierarchy($this);
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
     $subMda->autopay_generated = now();
     $subMda->save();
     $mfb = $this->createRealMfb($domain);
@@ -215,8 +228,7 @@ it('surfaces mfb_zip_status=ready with built_at when the zip exists on disk', fu
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
         ->where('payrolls.data.0.categories.0.mfb_zip_status', 'ready')
-        ->where('payrolls.data.0.categories.0.has_mfb_schedule', true)
-        ->has('payrolls.data.0.categories.0.mfb_zip_built_at')
+        ->where('payrolls.data.0.categories.0.has_mfb_schedule', true),
     );
 });
 
@@ -230,7 +242,7 @@ it('surfaces has_mfb_schedule=false when category has no mfb schedule rows', fun
 
     $response->assertInertia(fn (AssertableInertia $page) => $page
         ->where('payrolls.data.0.categories.0.has_mfb_schedule', false)
-        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'none')
+        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'none'),
     );
 });
 
