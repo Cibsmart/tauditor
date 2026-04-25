@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\ZipDirectory;
 use App\Exports\AutoPayGroupScheduleExport;
 use App\Exports\AutoPayScheduleExport;
-use App\Exports\MfbGroupScheduleExport;
-use App\Exports\MfbScheduleExport;
+use App\Jobs\BuildMfbScheduleZip;
 use App\Jobs\GenerateAutopaySchedules;
 use App\Jobs\GenerateGroupSchedule;
 use App\Models\AuditMdaSchedule;
@@ -14,10 +13,9 @@ use App\Models\AuditPayroll;
 use App\Models\AuditPayrollCategory;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
-use App\Models\MicrofinanceBankSchedule;
 use App\Models\OtherAuditPayrollCategory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -296,7 +294,6 @@ class AuditAutopayController extends Controller
     public function downloadMfb(AuditPayrollCategory $audit_payroll_category)
     {
         $category = $audit_payroll_category;
-        $domain = $category->domain();
         $month_year = $category->monthYear();
 
         if ($category->noAutopaySchedule()) {
@@ -310,116 +307,30 @@ class AuditAutopayController extends Controller
             return back()->with('error', "No Beneficiary Used Microfinance in $month_year Payment Schedule");
         }
 
-        $directory = $domain->group
-            ? $this->createGroupMfbFiles($category)
-            : $this->createMfbFiles($category);
+        $zipPath = BuildMfbScheduleZip::zipPath($category);
 
-        $zipped_file = $this->prepareDownload($directory);
+        if (file_exists($zipPath)) {
+            $downloadName = "{$category->payment_title} - MFB SCHEDULE - {$category->id}.zip";
 
-        $headers = ['Content-Type' => 'application/zip'];
-
-        return response()->download(public_path($zipped_file), null, $headers)
-            ->deleteFileAfterSend();
-    }
-
-    public function createGroupMfbFiles(AuditPayrollCategory $category)
-    {
-        $title = $category->payment_title;
-
-        $month_year = $category->monthYear();
-
-        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
-
-        $beneficiaryTypes = $category->auditMdaSchedules()
-            ->mfbSchedules()
-            ->whereNotNull('audit_sub_mda_schedules.autopay_generated')
-            ->select('beneficiary_type_id', 'audit_sub_mda_schedules.id')
-            ->groupBy(['beneficiary_type_id', 'audit_sub_mda_schedules.id'])
-            ->get();
-
-        $groups = $beneficiaryTypes->groupBy('beneficiary_type_id');
-
-        foreach ($groups as $beneficiaryType => $subMdas) {
-            $type = BeneficiaryType::find($beneficiaryType);
-
-            $mfbs = MicrofinanceBankSchedule::with('microfinanceBank')
-                ->join('audit_sub_mda_schedules', 'microfinance_bank_schedules.audit_sub_mda_schedule_id', '=',
-                    'audit_sub_mda_schedules.id')
-                ->join('audit_mda_schedules', 'audit_sub_mda_schedules.audit_mda_schedule_id', '=',
-                    'audit_mda_schedules.id')
-                ->join('mdas', 'audit_mda_schedules.mda_id', '=', 'mdas.id')
-                ->select('micro_finance_bank_id')
-                ->where('beneficiary_type_id', $type->id)
-                ->whereIn('audit_sub_mda_schedules.id', $subMdas->pluck('id'))
-                ->groupBy('micro_finance_bank_id')
-                ->get();
-
-            foreach ($mfbs as $mfb) {
-                $mfb = $mfb->microfinanceBank;
-
-                $mfb_name = $mfb->name;
-
-                $file_name = "$type->name $month_year MFB SCHEDULE.xlsx";
-
-                $path = "$directory/$mfb_name/$file_name";
-
-                $mfb_file_exists = Storage::disk('local')->exists($path);
-
-                //                    if ($mfb_file_exists) {
-                //                        continue;
-                //                    }
-
-                (new MfbGroupScheduleExport)->forMfbs($mfb)->inBeneficiaryType($category, $type)->store($path);
-            }
+            return response()->download($zipPath, $downloadName, ['Content-Type' => 'application/zip'])
+                ->deleteFileAfterSend();
         }
 
-        return $directory;
-    }
+        $statusKey = BuildMfbScheduleZip::statusKey($category);
 
-    public function createMfbFiles(AuditPayrollCategory $category)
-    {
-        $title = $category->payment_title;
-
-        $mdas = $category->auditMdaSchedules;
-
-        $month_year = $category->monthYear();
-
-        $directory = "autopay/$title - MFB SCHEDULE - $category->id";
-
-        foreach ($mdas as $mda) {
-            $sub_mdas = $mda->auditSubMdaSchedules()
-                ->autopayGenerated()
-                ->hasMicrofinance()
-                ->get();
-
-            foreach ($sub_mdas as $sub_mda) {
-                $mfbs = $sub_mda->microfinanceSchedules()->with('microfinanceBank')
-                    ->select(DB::raw(' audit_sub_mda_schedule_id, micro_finance_bank_id'))
-                    ->groupBy('audit_sub_mda_schedule_id', 'micro_finance_bank_id')
-                    ->get();
-
-                $sub_mda_name = $sub_mda->sub_mda_name;
-
-                foreach ($mfbs as $mfb) {
-                    $mfb = $mfb->microfinanceBank;
-
-                    $mfb_name = $mfb->name;
-
-                    $file_name = "$sub_mda_name $month_year MFB SCHEDULE.xlsx";
-
-                    $path = "$directory/$mfb_name/$file_name";
-
-                    $mfb_file_exists = Storage::disk('local')->exists($path);
-
-                    //                    if ($mfb_file_exists) {
-                    //                        continue;
-                    //                    }
-
-                    (new MfbScheduleExport)->forMfbs($mfb)->inSubMda($sub_mda)->store($path);
-                }
-            }
+        if (Cache::get($statusKey) === 'running') {
+            return back()->with(
+                'success',
+                "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
+            );
         }
 
-        return $directory;
+        Cache::put($statusKey, 'running', now()->addHour());
+        BuildMfbScheduleZip::dispatch($category);
+
+        return back()->with(
+            'success',
+            "MFB Schedule for $month_year is being prepared. Refresh and click again in a moment to download.",
+        );
     }
 }
