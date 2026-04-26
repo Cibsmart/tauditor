@@ -346,9 +346,7 @@
             </div>
 
             <p class="mt-2 pr-2 text-right text-sm text-muted-foreground">
-              {{
-                payroll.categories.length + payroll.other_categories.length
-              }}
+              {{ payroll.categories.length + payroll.other_categories.length }}
               categories &middot; {{ payrollHeadcount(payroll) }} total
               headcount
             </p>
