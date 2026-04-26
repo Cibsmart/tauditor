@@ -249,7 +249,7 @@
       :open="showCreateModal"
       @update:open="(open) => !open && closeModal()"
     >
-      <DialogContent>
+      <DialogContent class="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create Other Schedule</DialogTitle>
         </DialogHeader>
