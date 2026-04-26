@@ -223,11 +223,6 @@
 
                           <Button
                             v-else-if="category.mfb_zip_status === 'ready'"
-                            :class="
-                              recentlyReady[category.id]
-                                ? 'animate-pulse ring-2 ring-green-400'
-                                : 'border-green-500'
-                            "
                             asChild
                             size="sm"
                             variant="outline"
