@@ -244,138 +244,110 @@
       </Table>
     </div>
     <pagination :links="payrolls.links" />
-    <div
-      v-if="showCreateModal"
-      aria-modal="true"
-      class="fixed inset-0 z-10 overflow-y-auto"
-      role="dialog"
+
+    <Dialog
+      :open="showCreateModal"
+      @update:open="(open) => !open && closeModal()"
     >
-      <div
-        class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0"
-      >
-        <div
-          class="bg-opacity-75 fixed inset-0 bg-gray-500"
-          @click="closeModal"
-        ></div>
-        <div
-          class="inline-block overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:align-middle"
-        >
-          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div class="">
-              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <h3 id="modal-title" class="text-lg leading-6 font-medium">
-                  Create Other Schedule
-                </h3>
-                <div class="mt-5">
-                  <select-input
-                    v-model="form.payment_type_id"
-                    :errors="form.errors.payment_type_id"
-                    class="w-full pr-6 pb-6"
-                    label="Payment Type"
-                    required
-                  >
-                    <option class="text-gray-100" disabled value="">
-                      Select Payment Type
-                    </option>
-                    <option
-                      v-for="payment_type in payment_types"
-                      :key="payment_type.id"
-                      :value="payment_type.id"
-                    >
-                      {{ payment_type.name }}
-                    </option>
-                  </select-input>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create Other Schedule</DialogTitle>
+        </DialogHeader>
 
-                  <text-input
-                    v-model="form.payment_title"
-                    :errors="form.errors.payment_title"
-                    class="w-full pr-6 pb-6 uppercase"
-                    label="Payment Title"
-                    required
-                  />
+        <div class="space-y-4">
+          <select-input
+            v-model="form.payment_type_id"
+            :errors="form.errors.payment_type_id"
+            class="w-full"
+            label="Payment Type"
+            required
+          >
+            <option class="text-gray-100" disabled value="">
+              Select Payment Type
+            </option>
+            <option
+              v-for="payment_type in payment_types"
+              :key="payment_type.id"
+              :value="payment_type.id"
+            >
+              {{ payment_type.name }}
+            </option>
+          </select-input>
 
-                  <fieldset class="flex justify-between">
-                    <legend class="sr-only">Pay Commission Charges</legend>
-                    <div class="relative flex items-start">
-                      <div class="flex h-5 items-center">
-                        <input
-                          id="paycomm_tenece"
-                          v-model="form.paycomm_tenece"
-                          aria-describedby="paycomm-tenece-description"
-                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          name="paycomm_tenece"
-                          type="checkbox"
-                        />
-                      </div>
-                      <div class="ml-3 text-sm">
-                        <label
-                          class="font-medium text-gray-700"
-                          for="paycomm_tenece"
-                          >Apply Charges</label
-                        >
-                        <p
-                          id="paycomm-tenece-description"
-                          class="text-gray-500"
-                        >
-                          Adds Paycomm II Line Item
-                        </p>
-                      </div>
-                    </div>
-                    <div
-                      v-if="form.paycomm_tenece"
-                      class="relative flex items-start"
-                    >
-                      <div class="flex h-5 items-center">
-                        <input
-                          id="paycomm_fidelity"
-                          v-model="form.paycomm_fidelity"
-                          aria-describedby="paycomm_fidelity-description"
-                          class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                          name="paycomm_fidelity"
-                          type="checkbox"
-                        />
-                      </div>
-                      <div class="ml-3 text-sm">
-                        <label
-                          class="font-medium text-gray-700"
-                          for="paycomm_fidelity"
-                          >Apply Fidelity Charges</label
-                        >
-                        <p
-                          id="paycomm_fidelity-description"
-                          class="text-gray-500"
-                        >
-                          Adds Paycomm I Line Item
-                        </p>
-                      </div>
-                    </div>
-                  </fieldset>
-                </div>
+          <text-input
+            v-model="form.payment_title"
+            :errors="form.errors.payment_title"
+            class="w-full uppercase"
+            label="Payment Title"
+            required
+          />
+
+          <fieldset class="flex justify-between">
+            <legend class="sr-only">Pay Commission Charges</legend>
+            <div class="relative flex items-start">
+              <div class="flex h-5 items-center">
+                <input
+                  id="paycomm_tenece"
+                  v-model="form.paycomm_tenece"
+                  aria-describedby="paycomm-tenece-description"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  name="paycomm_tenece"
+                  type="checkbox"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <label class="font-medium text-gray-700" for="paycomm_tenece"
+                  >Apply Charges</label
+                >
+                <p id="paycomm-tenece-description" class="text-gray-500">
+                  Adds Paycomm II Line Item
+                </p>
               </div>
             </div>
-          </div>
-          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <Button class="sm:ml-3" type="button" @click="saveSchedule">
-              Save
-            </Button>
-            <Button
-              class="sm:ml-3"
-              type="button"
-              variant="outline"
-              @click="closeModal"
-            >
-              Cancel
-            </Button>
-          </div>
+            <div v-if="form.paycomm_tenece" class="relative flex items-start">
+              <div class="flex h-5 items-center">
+                <input
+                  id="paycomm_fidelity"
+                  v-model="form.paycomm_fidelity"
+                  aria-describedby="paycomm_fidelity-description"
+                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  name="paycomm_fidelity"
+                  type="checkbox"
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <label class="font-medium text-gray-700" for="paycomm_fidelity"
+                  >Apply Fidelity Charges</label
+                >
+                <p id="paycomm_fidelity-description" class="text-gray-500">
+                  Adds Paycomm I Line Item
+                </p>
+              </div>
+            </div>
+          </fieldset>
         </div>
-      </div>
-    </div>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" @click="closeModal">
+            Cancel
+          </Button>
+          <Button type="button" @click="saveSchedule"> Save </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
 <script>
 import { Link, useForm } from '@inertiajs/vue3';
 import { Button } from '@/Components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/Components/ui/dialog';
 import {
   Table,
   TableBody,
@@ -408,6 +380,11 @@ export default {
     Pagination,
     SelectInput,
     Button,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
     Table,
     TableHeader,
     TableBody,
