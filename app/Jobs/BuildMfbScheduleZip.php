@@ -9,9 +9,10 @@ use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
 use App\Models\MicroFinanceBank;
 use App\Models\MicrofinanceBankSchedule;
+use App\Models\ScheduleZip;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use RuntimeException;
 use Throwable;
 use ZipArchive;
@@ -26,22 +27,24 @@ class BuildMfbScheduleZip implements ShouldQueue
 
     public function __construct(public AuditPayrollCategory $category) {}
 
-    public static function statusKey(AuditPayrollCategory $category): string
-    {
-        return "mfb_zip:audit:{$category->id}";
-    }
-
-    public static function zipPath(AuditPayrollCategory $category): string
-    {
-        return storage_path("app/mfb_exports/{$category->id}.zip");
-    }
-
     /**
      * @throws Throwable
      */
     public function handle(): void
     {
-        $finalPath = self::zipPath($this->category);
+        ScheduleZip::updateOrCreate(
+            [
+                'audit_payroll_category_id' => $this->category->id,
+                'type' => ScheduleZip::TYPE_MFB,
+            ],
+            [
+                'status' => ScheduleZip::STATUS_BUILDING,
+                'failed_at' => null,
+                'failure_reason' => null,
+            ],
+        );
+
+        $finalPath = ScheduleZip::pathFor($this->category->id, ScheduleZip::TYPE_MFB);
         $tmpPath = $finalPath.'.building';
 
         @mkdir(dirname($finalPath), 0755, true);
@@ -49,8 +52,9 @@ class BuildMfbScheduleZip implements ShouldQueue
         $zip = new ZipArchive;
 
         if ($zip->open($tmpPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            $this->markFailed();
-            throw new RuntimeException("Cannot open MFB zip archive at {$tmpPath}");
+            $exception = new RuntimeException("Cannot open MFB zip archive at {$tmpPath}");
+            $this->recordFailure($exception);
+            throw $exception;
         }
 
         try {
@@ -66,23 +70,40 @@ class BuildMfbScheduleZip implements ShouldQueue
 
             rename($tmpPath, $finalPath);
 
-            Cache::forget(self::statusKey($this->category));
+            ScheduleZip::where('audit_payroll_category_id', $this->category->id)
+                ->where('type', ScheduleZip::TYPE_MFB)
+                ->update([
+                    'status' => ScheduleZip::STATUS_READY,
+                    'built_at' => now(),
+                    'failed_at' => null,
+                    'failure_reason' => null,
+                ]);
         } catch (Throwable $e) {
             @$zip->close();
             @unlink($tmpPath);
-            $this->markFailed();
+            $this->recordFailure($e);
             throw $e;
         }
     }
 
     public function failed(Throwable $exception): void
     {
-        $this->markFailed();
+        $this->recordFailure($exception);
     }
 
-    private function markFailed(): void
+    private function recordFailure(Throwable $e): void
     {
-        Cache::put(self::statusKey($this->category), 'failed', now()->addMinutes(5));
+        ScheduleZip::updateOrCreate(
+            [
+                'audit_payroll_category_id' => $this->category->id,
+                'type' => ScheduleZip::TYPE_MFB,
+            ],
+            [
+                'status' => ScheduleZip::STATUS_FAILED,
+                'failed_at' => now(),
+                'failure_reason' => Str::limit($e->getMessage(), 1000),
+            ],
+        );
     }
 
     private function addFiles(ZipArchive $zip): void

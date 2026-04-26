@@ -14,8 +14,8 @@ use App\Models\AuditPayrollCategory;
 use App\Models\AuditSubMdaSchedule;
 use App\Models\BeneficiaryType;
 use App\Models\OtherAuditPayrollCategory;
+use App\Models\ScheduleZip;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -30,6 +30,7 @@ class AuditAutopayController extends Controller
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()
+            ->with('auditPaymentCategories.mfbScheduleZip')
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->paginate()
@@ -302,29 +303,45 @@ class AuditAutopayController extends Controller
 
         $month_year = $category->monthYear();
 
+        $paymentTitle = $category->payment_title;
+
         if ($category->noAutopaySchedule()) {
             return back()->with(
                 'error',
-                "Autopay Schedule for $month_year yet to be Generated, Click on Generate Schedules Below",
+                "Autopay Schedule for {$paymentTitle} {$month_year} yet to be Generated, Click on Generate Schedules Below",
             );
         }
 
         if ($category->noMfbSchedule()) {
-            return back()->with('error', "No Beneficiary Used Microfinance in $month_year Payment Schedule");
+            return back()->with('error',
+                "No Beneficiary Used Microfinance in {$paymentTitle} {$month_year} Payment Schedule");
         }
 
-        $statusKey = BuildMfbScheduleZip::statusKey($category);
+        $zip = ScheduleZip::firstOrCreate(
+            [
+                'audit_payroll_category_id' => $category->id,
+                'type' => ScheduleZip::TYPE_MFB,
+            ],
+            ['status' => ScheduleZip::STATUS_BUILDING],
+        );
 
-        if (file_exists(BuildMfbScheduleZip::zipPath($category)) || Cache::get($statusKey) === 'running') {
-            return back();
+        if (! $zip->wasRecentlyCreated) {
+            if ($zip->isBuilding() || $zip->isReady()) {
+                return back();
+            }
+
+            $zip->update([
+                'status' => ScheduleZip::STATUS_BUILDING,
+                'failed_at' => null,
+                'failure_reason' => null,
+            ]);
         }
 
-        Cache::put($statusKey, 'running', now()->addHour());
         BuildMfbScheduleZip::dispatch($category);
 
         return back()->with(
             'success',
-            "MFB Schedule for {$category->payment_title} {$month_year} is being prepared.",
+            "MFB Schedule for {$paymentTitle} {$month_year} is being prepared.",
         );
     }
 
@@ -336,15 +353,15 @@ class AuditAutopayController extends Controller
             return redirect(route('audit_autopay.index'));
         }
 
-        $zipPath = BuildMfbScheduleZip::zipPath($category);
+        $zip = $category->mfbScheduleZip;
 
-        if (! file_exists($zipPath)) {
+        if (! $zip || ! $zip->isReady() || ! file_exists($zip->zipPath())) {
             return back()->with('error', 'MFB Schedule zip is not ready yet.');
         }
 
         $downloadName = "{$category->payment_title} - MFB SCHEDULE - {$category->id}.zip";
 
-        return response()->download($zipPath, $downloadName, ['Content-Type' => 'application/zip']);
+        return response()->download($zip->zipPath(), $downloadName, ['Content-Type' => 'application/zip']);
     }
 
     private function mfbZipState(AuditPayrollCategory $category): array
@@ -356,22 +373,29 @@ class AuditAutopayController extends Controller
             ];
         }
 
-        $zipPath = BuildMfbScheduleZip::zipPath($category);
+        $zip = $category->mfbScheduleZip;
 
-        if (file_exists($zipPath)) {
+        if ($zip?->isReady()) {
+            if (! file_exists($zip->zipPath())) {
+                $zip->delete();
+
+                return [
+                    'has_mfb_schedule' => true,
+                    'mfb_zip_status' => 'none',
+                ];
+            }
+
             return [
                 'has_mfb_schedule' => true,
                 'mfb_zip_status' => 'ready',
             ];
         }
 
-        $cached = Cache::get(BuildMfbScheduleZip::statusKey($category));
-
         return [
             'has_mfb_schedule' => true,
-            'mfb_zip_status' => match ($cached) {
-                'running' => 'building',
-                'failed' => 'failed',
+            'mfb_zip_status' => match ($zip?->status) {
+                ScheduleZip::STATUS_BUILDING => 'building',
+                ScheduleZip::STATUS_FAILED => 'failed',
                 default => 'none',
             },
         ];
