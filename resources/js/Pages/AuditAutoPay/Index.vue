@@ -260,9 +260,15 @@
                             </Link>
                           </Button>
                         </template>
-                        <span v-else class="text-xs text-muted-foreground"
-                          >No MFB</span
+
+                        <span
+                          v-show="
+                            category.viewable && !category.has_mfb_schedule
+                          "
+                          class="text-xs text-muted-foreground"
                         >
+                          No MFB
+                        </span>
 
                         <span v-show="category.viewable"> | </span>
 

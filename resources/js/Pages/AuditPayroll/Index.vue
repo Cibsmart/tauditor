@@ -234,7 +234,7 @@
         <TableBody>
           <TableRow v-if="payrolls.data.length === 0">
             <TableCell
-              class="text-xs font-medium tracking-wider text-gray-700 uppercase"
+              class="text-xs font-medium tracking-wider uppercase"
               colspan="3"
             >
               No Payroll
@@ -262,9 +262,7 @@
             label="Payment Type"
             required
           >
-            <option class="text-gray-100" disabled value="">
-              Select Payment Type
-            </option>
+            <option disabled value="">Select Payment Type</option>
             <option
               v-for="payment_type in payment_types"
               :key="payment_type.id"
@@ -290,16 +288,19 @@
                   id="paycomm_tenece"
                   v-model="form.paycomm_tenece"
                   aria-describedby="paycomm-tenece-description"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  class="h-4 w-4 rounded"
                   name="paycomm_tenece"
                   type="checkbox"
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label class="font-medium text-gray-700" for="paycomm_tenece"
+                <label class="font-medium" for="paycomm_tenece"
                   >Apply Charges</label
                 >
-                <p id="paycomm-tenece-description" class="text-gray-500">
+                <p
+                  id="paycomm-tenece-description"
+                  class="text-muted-foreground"
+                >
                   Adds Paycomm II Line Item
                 </p>
               </div>
@@ -310,16 +311,19 @@
                   id="paycomm_fidelity"
                   v-model="form.paycomm_fidelity"
                   aria-describedby="paycomm_fidelity-description"
-                  class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  class="h-4 w-4 rounded"
                   name="paycomm_fidelity"
                   type="checkbox"
                 />
               </div>
               <div class="ml-3 text-sm">
-                <label class="font-medium text-gray-700" for="paycomm_fidelity"
+                <label class="font-medium" for="paycomm_fidelity"
                   >Apply Fidelity Charges</label
                 >
-                <p id="paycomm_fidelity-description" class="text-gray-500">
+                <p
+                  id="paycomm_fidelity-description"
+                  class="text-muted-foreground"
+                >
                   Adds Paycomm I Line Item
                 </p>
               </div>
@@ -331,7 +335,7 @@
           <Button type="button" variant="outline" @click="closeModal">
             Cancel
           </Button>
-          <Button type="button" @click="saveSchedule"> Save </Button>
+          <Button type="button" @click="saveSchedule"> Save</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
