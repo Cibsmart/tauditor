@@ -52,6 +52,8 @@ class AuditPayrollController extends Controller
                     'tenece' => $category->paycomm_tenece,
                     'fidelity' => $category->paycomm_fidelity,
                     'color' => $category->color,
+                    'totalAmount' => $category->total_net_pay,
+                    'headCount' => $category->head_count,
                 ]),
             ]);
 
@@ -112,6 +114,47 @@ class AuditPayrollController extends Controller
 
         return redirect()->route('audit_payroll.index')
             ->with('success', $message);
+    }
+
+    protected function createAuditMdaSchedules($beneficiary_type, $category)
+    {
+        $mdas = $beneficiary_type->mdas()->isActive()->get();
+
+        $pensioners = $beneficiary_type->pensioners;
+
+        foreach ($mdas as $mda) {
+            $attributes = [
+                'mda_id' => $mda->id,
+                'mda_name' => $mda->name,
+                'pension' => $pensioners,
+            ];
+
+            $audit_mda_schedule = $category->auditMdaSchedules()->create($attributes);
+
+            $this->createAuditSubMdaSchedules($mda, $audit_mda_schedule);
+        }
+    }
+
+    protected function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
+    {
+        // Only State Education Commission should have add subs
+        if ($mda->code !== 'PPSSC') {
+            $audit_mda_schedule->auditSubMdaSchedules()
+                ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
+
+            return;
+        }
+
+        $sub_mdas = $mda->subs;
+
+        $audit_mda_schedule->has_sub = 1;
+        $audit_mda_schedule->save();
+
+        foreach ($sub_mdas as $sub_mda) {
+            $audit_mda_schedule->auditSubMdaSchedules()
+                ->create(['sub_mda_name' => $sub_mda->name]);
+        }
+
     }
 
     private function createPaymentCategories(AuditPayroll $payroll)
@@ -208,46 +251,5 @@ class AuditPayrollController extends Controller
                 $this->createAuditMdaSchedules($beneficiary_type, $category);
             }
         }
-    }
-
-    protected function createAuditMdaSchedules($beneficiary_type, $category)
-    {
-        $mdas = $beneficiary_type->mdas()->isActive()->get();
-
-        $pensioners = $beneficiary_type->pensioners;
-
-        foreach ($mdas as $mda) {
-            $attributes = [
-                'mda_id' => $mda->id,
-                'mda_name' => $mda->name,
-                'pension' => $pensioners,
-            ];
-
-            $audit_mda_schedule = $category->auditMdaSchedules()->create($attributes);
-
-            $this->createAuditSubMdaSchedules($mda, $audit_mda_schedule);
-        }
-    }
-
-    protected function createAuditSubMdaSchedules($mda, $audit_mda_schedule)
-    {
-        // Only State Education Commission should have add subs
-        if ($mda->code !== 'PPSSC') {
-            $audit_mda_schedule->auditSubMdaSchedules()
-                ->create(['sub_mda_name' => $audit_mda_schedule->mda_name]);
-
-            return;
-        }
-
-        $sub_mdas = $mda->subs;
-
-        $audit_mda_schedule->has_sub = 1;
-        $audit_mda_schedule->save();
-
-        foreach ($sub_mdas as $sub_mda) {
-            $audit_mda_schedule->auditSubMdaSchedules()
-                ->create(['sub_mda_name' => $sub_mda->name]);
-        }
-
     }
 }
