@@ -40,6 +40,8 @@ class AuditPayrollController extends Controller
                     'payment_title' => $category->payment_title,
                     'total_amount' => number_format($category->total_net_pay, 2),
                     'head_count' => number_format($category->head_count),
+                    'totalAmount' => $category->total_net_pay,
+                    'headCount' => $category->head_count,
                 ]),
                 'other_categories' => $payroll->otherPaymentCategories->transform(fn ($category) => [
                     'id' => $category->id,
