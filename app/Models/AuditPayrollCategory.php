@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @method static find($category)
@@ -35,6 +36,12 @@ class AuditPayrollCategory extends Model
     public function payeData()
     {
         return $this->hasMany(PayeDataUpload::class);
+    }
+
+    public function mfbScheduleZip(): HasOne
+    {
+        return $this->hasOne(ScheduleZip::class)
+            ->where('type', ScheduleZip::TYPE_MFB);
     }
 
     public function paymentTypeName()

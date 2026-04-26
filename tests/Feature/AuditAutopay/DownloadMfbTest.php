@@ -2,8 +2,8 @@
 
 use App\Jobs\BuildMfbScheduleZip;
 use App\Models\MicrofinanceBankSchedule;
+use App\Models\ScheduleZip;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Testing\AssertableInertia;
 use Tests\Feature\Actions\AutopayTestSetup;
 
@@ -72,7 +72,7 @@ it('redirects with error when build is requested for a category with no mfb sche
     expect(session('error'))->toContain('No Beneficiary Used Microfinance');
 });
 
-it('dispatches the build job on first POST and marks cache as running', function () {
+it('dispatches the build job on first POST and marks status as building', function () {
     Bus::fake();
 
     [
@@ -93,10 +93,12 @@ it('dispatches the build job on first POST and marks cache as running', function
         BuildMfbScheduleZip::class,
         fn (BuildMfbScheduleZip $job) => $job->category->id === $category->id,
     );
-    expect(Cache::get(BuildMfbScheduleZip::statusKey($category)))->toBe('running');
+    expect(ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first()?->status)
+        ->toBe(ScheduleZip::STATUS_BUILDING);
 });
 
-it('does not dispatch a second job while one is already running and does not stomp the cache', function () {
+it('does not dispatch a second job while one is already running and does not stomp the row', function () {
     Bus::fake();
 
     [
@@ -107,14 +109,20 @@ it('does not dispatch a second job while one is already running and does not sto
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
-    Cache::put(BuildMfbScheduleZip::statusKey($category), 'running', now()->addHour());
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_BUILDING,
+    ]);
 
     $response = $this->actingAs($user)
         ->post(route('audit_autopay.buildMfb', $category));
 
     $response->assertRedirect();
     Bus::assertNothingDispatched();
-    expect(Cache::get(BuildMfbScheduleZip::statusKey($category)))->toBe('running');
+    expect(ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first()?->status)
+        ->toBe(ScheduleZip::STATUS_BUILDING);
 });
 
 it('serves the prebuilt zip on GET download and does not delete it after send', function () {
@@ -126,9 +134,16 @@ it('serves the prebuilt zip on GET download and does not delete it after send', 
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
-    $zipPath = BuildMfbScheduleZip::zipPath($category);
+    $zipPath = ScheduleZip::pathFor($category->id, ScheduleZip::TYPE_MFB);
     @mkdir(dirname($zipPath), 0755, true);
     file_put_contents($zipPath, "PK\x03\x04fake-zip-payload");
+
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_READY,
+        'built_at' => now(),
+    ]);
 
     $response = $this->actingAs($user)
         ->get(route('audit_autopay.downloadMfb', $category));
@@ -162,12 +177,22 @@ it('builds a valid zip with mfb files when the job runs', function () {
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_BUILDING,
+    ]);
+
     (new BuildMfbScheduleZip($category))->handle();
 
-    $path = BuildMfbScheduleZip::zipPath($category);
+    $path = ScheduleZip::pathFor($category->id, ScheduleZip::TYPE_MFB);
     expect(file_exists($path))->toBeTrue();
     expect(substr(file_get_contents($path), 0, 4))->toBe("PK\x03\x04");
-    expect(Cache::get(BuildMfbScheduleZip::statusKey($category)))->toBeNull();
+
+    $row = ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first();
+    expect($row->status)->toBe(ScheduleZip::STATUS_READY);
+    expect($row->built_at)->not->toBeNull();
 });
 
 it('surfaces mfb_zip_status=building in the index payload while a job is running', function () {
@@ -179,7 +204,11 @@ it('surfaces mfb_zip_status=building in the index payload while a job is running
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
-    Cache::put(BuildMfbScheduleZip::statusKey($category), 'running', now()->addHour());
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_BUILDING,
+    ]);
 
     $response = $this->actingAs($user)
         ->get(route('audit_autopay.index'));
@@ -200,7 +229,13 @@ it('surfaces mfb_zip_status=failed in the index payload after a failed build', f
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
-    Cache::put(BuildMfbScheduleZip::statusKey($category), 'failed', now()->addMinutes(5));
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_FAILED,
+        'failed_at' => now(),
+        'failure_reason' => 'boom',
+    ]);
 
     $response = $this->actingAs($user)
         ->get(route('audit_autopay.index'));
@@ -210,7 +245,7 @@ it('surfaces mfb_zip_status=failed in the index payload after a failed build', f
     );
 });
 
-it('surfaces mfb_zip_status=ready with built_at when the zip exists on disk', function () {
+it('surfaces mfb_zip_status=ready when the zip exists on disk', function () {
     [
         'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
     ] = buildMfbDownloadHierarchy($this);
@@ -219,9 +254,16 @@ it('surfaces mfb_zip_status=ready with built_at when the zip exists on disk', fu
     $mfb = $this->createRealMfb($domain);
     createMfbSchedule($subMda->id, $mfb->id);
 
-    $zipPath = BuildMfbScheduleZip::zipPath($category);
+    $zipPath = ScheduleZip::pathFor($category->id, ScheduleZip::TYPE_MFB);
     @mkdir(dirname($zipPath), 0755, true);
     file_put_contents($zipPath, "PK\x03\x04fake-zip-payload");
+
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_READY,
+        'built_at' => now(),
+    ]);
 
     $response = $this->actingAs($user)
         ->get(route('audit_autopay.index'));
@@ -246,11 +288,107 @@ it('surfaces has_mfb_schedule=false when category has no mfb schedule rows', fun
     );
 });
 
-it('marks cache as failed when the job failed() lifecycle hook fires', function () {
+it('marks status as failed when the job failed() lifecycle hook fires', function () {
     ['category' => $category] = buildMfbDownloadHierarchy($this);
 
     $job = new BuildMfbScheduleZip($category);
     $job->failed(new RuntimeException('boom'));
 
-    expect(Cache::get(BuildMfbScheduleZip::statusKey($category)))->toBe('failed');
+    $row = ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first();
+    expect($row->status)->toBe(ScheduleZip::STATUS_FAILED);
+    expect($row->failure_reason)->toContain('boom');
+});
+
+it('falls back to mfb_zip_status=none when DB row says ready but file is missing on disk', function () {
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
+    $subMda->autopay_generated = now();
+    $subMda->save();
+    $mfb = $this->createRealMfb($domain);
+    createMfbSchedule($subMda->id, $mfb->id);
+
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_READY,
+        'built_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)
+        ->get(route('audit_autopay.index'));
+
+    $response->assertInertia(fn (AssertableInertia $page) => $page
+        ->where('payrolls.data.0.categories.0.mfb_zip_status', 'none'),
+    );
+    expect(ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->count())->toBe(0);
+});
+
+it('retries from a failed status by flipping the row back to building', function () {
+    Bus::fake();
+
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
+    $subMda->autopay_generated = now();
+    $subMda->save();
+    $mfb = $this->createRealMfb($domain);
+    createMfbSchedule($subMda->id, $mfb->id);
+
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_FAILED,
+        'failed_at' => now(),
+        'failure_reason' => 'previous attempt blew up',
+    ]);
+
+    $response = $this->actingAs($user)
+        ->post(route('audit_autopay.buildMfb', $category));
+
+    $response->assertRedirect();
+    Bus::assertDispatched(BuildMfbScheduleZip::class);
+
+    $row = ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first();
+    expect($row->status)->toBe(ScheduleZip::STATUS_BUILDING);
+    expect($row->failed_at)->toBeNull();
+    expect($row->failure_reason)->toBeNull();
+});
+
+it('is a no-op when buildMfb is POSTed and status is already ready', function () {
+    Bus::fake();
+
+    [
+        'user' => $user, 'category' => $category, 'subMda' => $subMda, 'domain' => $domain,
+    ] = buildMfbDownloadHierarchy($this);
+    $subMda->autopay_generated = now();
+    $subMda->save();
+    $mfb = $this->createRealMfb($domain);
+    createMfbSchedule($subMda->id, $mfb->id);
+
+    $zipPath = ScheduleZip::pathFor($category->id, ScheduleZip::TYPE_MFB);
+    @mkdir(dirname($zipPath), 0755, true);
+    file_put_contents($zipPath, "PK\x03\x04fake-zip-payload");
+
+    $builtAt = now()->subMinutes(10);
+    ScheduleZip::create([
+        'audit_payroll_category_id' => $category->id,
+        'type' => ScheduleZip::TYPE_MFB,
+        'status' => ScheduleZip::STATUS_READY,
+        'built_at' => $builtAt,
+    ]);
+
+    $response = $this->actingAs($user)
+        ->post(route('audit_autopay.buildMfb', $category));
+
+    $response->assertRedirect();
+    Bus::assertNothingDispatched();
+
+    $row = ScheduleZip::where('audit_payroll_category_id', $category->id)
+        ->where('type', ScheduleZip::TYPE_MFB)->first();
+    expect($row->status)->toBe(ScheduleZip::STATUS_READY);
+    expect($row->built_at->timestamp)->toBe($builtAt->timestamp);
 });
