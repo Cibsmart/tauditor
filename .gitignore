@@ -25,3 +25,4 @@ _ide_helper_models.php
 .php-cs-fixer.cache
 phpstan-neon
 /.phpunit.cache
+PR_DESCRIPTION.md

@@ -1,248 +1,360 @@
 <template>
   <div>
     <Head title="Audit Payroll" />
-    <h1 class="mb-8 text-3xl font-bold">Audit Payrolls</h1>
-    <div class="mb-6 flex items-center justify-between">
-      <div></div>
+
+    <div class="mb-6 flex items-start justify-between gap-4">
+      <div>
+        <h1 class="text-3xl font-bold">Audit Payrolls</h1>
+        <p class="text-sm text-muted-foreground">
+          Manage monthly payroll schedules and categories
+        </p>
+      </div>
       <Button asChild size="lg">
         <Link :href="route('audit_payroll.store')" method="post" preserve-state>
-          Add <span class="hidden md:inline"> &nbsp; Payroll</span>
+          Add <span class="hidden md:inline">&nbsp;Payroll</span>
         </Link>
       </Button>
     </div>
 
-    <div class="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Month</TableHead>
-            <TableHead>Created By</TableHead>
-            <TableHead>&nbsp;</TableHead>
-            <TableHead>&nbsp;</TableHead>
-            <TableHead class="text-right">Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody v-for="payroll in payrolls.data" :key="payroll.id">
-          <TableRow :key="payroll.id">
-            <TableCell>
-              <Link
-                class=""
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
-              >
-                <div class="pt-0 text-sm leading-5 font-medium uppercase">
-                  {{ payroll.month }}
-                </div>
-                <div class="text-sm leading-5 text-muted-foreground">
-                  {{ payroll.year }}
-                </div>
-              </Link>
-            </TableCell>
-            <TableCell>
-              <Link
-                class=""
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
-              >
-                <div class="text-sm leading-5">
-                  {{ payroll.created_by }}
-                </div>
-                <div class="text-sm leading-5 text-muted-foreground">
-                  {{ payroll.date_created }}
-                </div>
-              </Link>
-            </TableCell>
+    <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <Card>
+        <CardContent class="flex items-center gap-4 p-6">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary"
+          >
+            <LayoutList class="h-6 w-6" />
+          </div>
+          <div>
+            <div class="text-2xl font-bold">{{ totalPayrolls }}</div>
+            <p class="text-xs text-muted-foreground">Total Payrolls</p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent class="flex items-center gap-4 p-6">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary"
+          >
+            <FolderOpen class="h-6 w-6" />
+          </div>
+          <div>
+            <div class="text-2xl font-bold">{{ totalCategories }}</div>
+            <p class="text-xs text-muted-foreground">Total Categories</p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent class="flex items-center gap-4 p-6">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary"
+          >
+            <CalendarDays class="h-6 w-6" />
+          </div>
+          <div>
+            <div class="text-2xl font-bold">{{ mostRecentPeriod }}</div>
+            <p class="text-xs text-muted-foreground">Most Recent Period</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
 
-            <TableCell class="w-px">
+    <Card class="mb-6">
+      <CardContent class="flex flex-col gap-3 p-4 md:flex-row md:items-center">
+        <div class="relative flex-1">
+          <Search
+            class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            v-model="searchQuery"
+            class="pl-9"
+            placeholder="Search by category name..."
+            type="text"
+          />
+        </div>
+        <Select v-model="filterMonth">
+          <SelectTrigger class="md:w-44">
+            <SelectValue placeholder="All months" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem
+              v-for="month in monthOptions"
+              :key="month.value"
+              :value="month.value"
+            >
+              {{ month.label }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <Select v-model="filterYear">
+          <SelectTrigger class="md:w-32">
+            <SelectValue placeholder="All years" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem
+              v-for="year in yearOptions"
+              :key="year"
+              :value="String(year)"
+            >
+              {{ year }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <Button
+          v-if="hasActiveFilters"
+          size="sm"
+          variant="ghost"
+          @click="clearFilters"
+        >
+          Clear
+        </Button>
+      </CardContent>
+    </Card>
+
+    <div v-if="payrolls.data.length === 0">
+      <Card>
+        <CardContent
+          class="flex flex-col items-center justify-center gap-3 py-16 text-center"
+        >
+          <CalendarDays class="h-10 w-10 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">
+            No payroll schedules yet. Use the "Add Payroll" button to create
+            one.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    <div v-else-if="filteredPayrolls.length === 0">
+      <Card>
+        <CardContent
+          class="flex flex-col items-center justify-center gap-3 py-16 text-center"
+        >
+          <Search class="h-10 w-10 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">
+            No payrolls match your filters.
+          </p>
+          <Button size="sm" variant="ghost" @click="clearFilters">
+            Clear Filters
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+
+    <div v-else class="space-y-4">
+      <Card v-for="payroll in filteredPayrolls" :key="payroll.id">
+        <CardHeader>
+          <div
+            class="flex cursor-pointer flex-col gap-3 md:flex-row md:items-center md:justify-between"
+            @click="show(payroll.id)"
+          >
+            <div class="flex items-center gap-3">
+              <ChevronUp v-if="show_detail[payroll.id]" class="h-5 w-5" />
+              <ChevronDown v-else class="h-5 w-5" />
+              <div>
+                <div class="text-base font-semibold uppercase">
+                  {{ payroll.month }} {{ payroll.year }}
+                </div>
+                <div class="text-xs text-muted-foreground">
+                  {{ payroll.created_by }} &middot; {{ payroll.date_created }}
+                </div>
+              </div>
+              <Badge variant="secondary">
+                {{
+                  payroll.categories.length + payroll.other_categories.length
+                }}
+                categories
+              </Badge>
+            </div>
+            <div class="flex flex-wrap items-center gap-2" @click.stop>
               <Button
                 v-if="payroll.is_current && payroll.can_add_leave"
-                :as="Link"
-                href="#"
-                preserve-state
                 size="sm"
                 variant="outline"
                 @click.prevent="addLeaveAllowance(payroll.id)"
               >
                 Add Annual Leave Allowance
               </Button>
-            </TableCell>
-            <TableCell class="w-px">
               <Button
-                :as="Link"
-                href="#"
-                preserve-state
                 size="sm"
                 variant="outline"
                 @click.prevent="showModal(payroll.id)"
               >
                 Add Schedule
               </Button>
-            </TableCell>
+            </div>
+          </div>
+        </CardHeader>
 
-            <TableCell class="w-px text-sm leading-5 font-medium">
-              <Link
-                class="px-6"
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
+        <Transition name="slide">
+          <CardContent v-if="show_detail[payroll.id]">
+            <div v-if="payroll.categories.length > 0">
+              <p
+                v-if="payroll.other_categories.length > 0"
+                class="mb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase"
               >
-                <icon
-                  class="block h-4 w-6 fill-gray-400"
-                  name="cheveron-right"
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-
-          <TableRow v-if="show_detail[payroll.id]">
-            <TableCell colspan="6">
-              <Table>
-                <TableBody>
-                  <TableRow
-                    v-for="category in payroll.categories"
-                    :key="category.id"
-                  >
-                    <TableCell>
-                      {{ category.payment_title }}
-                      <span
-                        :class="
-                          category.payment_type_id === 'sal'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-pink-100 text-pink-800'
-                        "
-                        class="rounded-full px-2 text-xs leading-5 font-semibold"
-                      >
-                        {{ category.payment_type }}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      Total Amount:
-                      <span class="line-through">N</span>
-                      <span class="font-bold">
-                        {{ category.total_amount }}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      Head Count:
-                      <span class="font-bold">
-                        {{ category.head_count }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="text-right">
-                      <Link
-                        :href="
-                          route('audit_mda_schedules.index', {
-                            audit_payroll_category: category.id,
-                          })
-                        "
-                        class="px-5 py-3"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        View Mdas
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-
-                  <TableRow
-                    v-for="category in payroll.other_categories"
-                    :key="category.id"
-                  >
-                    <TableCell>
-                      <div class="text-sm leading-5">
+                Standard Categories
+              </p>
+              <div class="overflow-x-auto rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Category Name</TableHead>
+                      <TableHead>Payment Type</TableHead>
+                      <TableHead>Total Amount</TableHead>
+                      <TableHead>Headcount</TableHead>
+                      <TableHead class="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow
+                      v-for="category in payroll.categories"
+                      :key="category.id"
+                    >
+                      <TableCell class="font-medium">
                         {{ category.payment_title }}
-                        <span
-                          :class="category.color"
-                          class="rounded-full px-2 text-xs leading-5 font-semibold"
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          :class="
+                            category.payment_type_id === 'sal'
+                              ? 'bg-green-100 text-green-800 hover:bg-green-100'
+                              : 'bg-pink-100 text-pink-800 hover:bg-pink-100'
+                          "
+                          :variant="
+                            category.payment_type_id === 'sal'
+                              ? 'default'
+                              : 'destructive'
+                          "
                         >
                           {{ category.payment_type }}
-                        </span>
-                      </div>
-                      <div class="text-sm leading-5">
+                        </Badge>
+                      </TableCell>
+                      <TableCell class="font-bold">
+                        ₦{{ category.total_amount }}
+                      </TableCell>
+                      <TableCell>{{ category.head_count }}</TableCell>
+                      <TableCell class="text-right">
+                        <Button asChild size="sm" variant="outline">
+                          <Link
+                            :href="
+                              route('audit_mda_schedules.index', {
+                                audit_payroll_category: category.id,
+                              })
+                            "
+                            preserve-scroll
+                            preserve-state
+                          >
+                            View MDAs
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+
+            <div v-if="payroll.other_categories.length > 0">
+              <p
+                v-if="payroll.categories.length > 0"
+                class="mt-4 mb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+              >
+                Other Categories
+              </p>
+              <div class="overflow-x-auto rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Category Name</TableHead>
+                      <TableHead>Payment Type</TableHead>
+                      <TableHead>Total Amount</TableHead>
+                      <TableHead>Headcount</TableHead>
+                      <TableHead class="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    <TableRow
+                      v-for="category in payroll.other_categories"
+                      :key="category.id"
+                    >
+                      <TableCell>
+                        <div class="font-medium">
+                          {{ category.payment_title }}
+                        </div>
                         <span
                           v-if="!category.tenece && !category.fidelity"
-                          class="text-green-900 italic"
-                          >No Charge Applied</span
+                          class="text-xs text-green-900 italic"
                         >
+                          No Charge Applied
+                        </span>
                         <span
-                          v-if="category.tenece && category.fidelity"
-                          class="text-pink-900 italic"
-                          >All Charges Applied</span
+                          v-else-if="category.tenece && category.fidelity"
+                          class="text-xs text-pink-900 italic"
                         >
+                          All Charges Applied
+                        </span>
                         <span
-                          v-if="category.tenece && !category.fidelity"
-                          class="text-blue-900 italic"
-                          >Fidelity Charge not Applied</span
+                          v-else-if="category.tenece && !category.fidelity"
+                          class="text-xs text-blue-900 italic"
                         >
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      Total Amount:
-                      <span class="line-through">N</span>
-                      <span class="font-bold">
-                        {{ category.total_amount }}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      Head Count:
-                      <span class="font-bold">
-                        {{ category.head_count }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="text-right">
-                      <Link
-                        v-if="category.uploaded"
-                        class="px-5 py-3"
-                        href="#"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        View Schedule
-                      </Link>
+                          Fidelity Charge not Applied
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge :class="category.color">
+                          {{ category.payment_type }}
+                        </Badge>
+                      </TableCell>
+                      <TableCell class="font-bold">
+                        ₦{{ category.total_amount }}
+                      </TableCell>
+                      <TableCell>{{ category.head_count }}</TableCell>
+                      <TableCell class="text-right">
+                        <Button
+                          v-if="category.uploaded"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <Link href="#" preserve-scroll preserve-state>
+                            View Schedule
+                          </Link>
+                        </Button>
+                        <form
+                          v-else
+                          :key="category.id"
+                          @submit.prevent="upload(category.id)"
+                        >
+                          <div class="flex items-center justify-end gap-2">
+                            <file-input
+                              v-model="file.schedule_file[category.id]"
+                              :errors="file.errors.schedule_file"
+                              accept="file/*"
+                              class="w-full"
+                              type="file"
+                            />
+                            <Button size="sm" type="submit" variant="secondary">
+                              Upload
+                            </Button>
+                          </div>
+                        </form>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
 
-                      <form
-                        v-else
-                        :key="category.id"
-                        @submit.prevent="upload(category.id)"
-                      >
-                        <div class="flex items-center">
-                          <file-input
-                            v-model="file.schedule_file[category.id]"
-                            :errors="file.errors.schedule_file"
-                            accept="file/*"
-                            class="w-full pr-6"
-                            type="file"
-                          />
-                          <Button size="sm" type="submit" variant="secondary">
-                            Upload
-                          </Button>
-                        </div>
-                      </form>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-
-        <TableBody>
-          <TableRow v-if="payrolls.data.length === 0">
-            <TableCell
-              class="text-xs font-medium tracking-wider uppercase"
-              colspan="3"
-            >
-              No Payroll
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            <p class="mt-2 pr-2 text-right text-sm text-muted-foreground">
+              {{ payroll.categories.length + payroll.other_categories.length }}
+              categories &middot; {{ payrollHeadcount(payroll) }} total
+              headcount
+            </p>
+          </CardContent>
+        </Transition>
+      </Card>
     </div>
+
     <pagination :links="payrolls.links" />
 
     <Dialog
@@ -344,7 +456,17 @@
 
 <script>
 import { Link, useForm } from '@inertiajs/vue3';
+import {
+  CalendarDays,
+  ChevronDown,
+  ChevronUp,
+  FolderOpen,
+  LayoutList,
+  Search,
+} from 'lucide-vue-next';
+import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader } from '@/Components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -352,6 +474,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/Components/ui/dialog';
+import { Input } from '@/Components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/Components/ui/select';
 import {
   Table,
   TableBody,
@@ -361,7 +491,6 @@ import {
   TableRow,
 } from '@/Components/ui/table';
 import FileInput from '@/Shared/FileInput';
-import Icon from '@/Shared/Icon';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 import SelectInput from '@/Shared/SelectInput';
@@ -377,24 +506,39 @@ export default {
   },
 
   components: {
-    Icon,
     Link,
     TextInput,
     FileInput,
     Pagination,
     SelectInput,
+    Badge,
     Button,
+    Card,
+    CardContent,
+    CardHeader,
     Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
+    Input,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
     Table,
     TableHeader,
     TableBody,
     TableRow,
     TableHead,
     TableCell,
+    CalendarDays,
+    ChevronDown,
+    ChevronUp,
+    FolderOpen,
+    LayoutList,
+    Search,
   },
 
   setup() {
@@ -413,15 +557,113 @@ export default {
 
   data() {
     return {
-      show_detail: [],
+      show_detail: {},
       payroll_id: null,
       showCreateModal: false,
+      searchQuery: '',
+      filterMonth: '',
+      filterYear: '',
     };
+  },
+
+  computed: {
+    totalPayrolls() {
+      return this.payrolls.data.length;
+    },
+    totalCategories() {
+      return this.payrolls.data.reduce(
+        (sum, p) => sum + p.categories.length + p.other_categories.length,
+        0,
+      );
+    },
+    mostRecentPeriod() {
+      if (!this.payrolls.data.length) {
+        return '—';
+      }
+
+      const first = this.payrolls.data[0];
+
+      return `${first.month} ${first.year}`;
+    },
+    monthOptions() {
+      return [
+        'JANUARY',
+        'FEBRUARY',
+        'MARCH',
+        'APRIL',
+        'MAY',
+        'JUNE',
+        'JULY',
+        'AUGUST',
+        'SEPTEMBER',
+        'OCTOBER',
+        'NOVEMBER',
+        'DECEMBER',
+      ].map((m) => ({
+        value: m,
+        label: m.charAt(0) + m.slice(1).toLowerCase(),
+      }));
+    },
+    yearOptions() {
+      const current = new Date().getFullYear();
+
+      return [0, 1, 2, 3, 4].map((i) => current - i);
+    },
+    hasActiveFilters() {
+      return !!(this.searchQuery || this.filterMonth || this.filterYear);
+    },
+    filteredPayrolls() {
+      return this.payrolls.data
+        .map((payroll) => {
+          const allCats = [
+            ...payroll.categories.map((c) => ({ ...c, _type: 'standard' })),
+            ...payroll.other_categories.map((c) => ({ ...c, _type: 'other' })),
+          ];
+          const filtered = !this.searchQuery
+            ? allCats
+            : allCats.filter((c) =>
+                c.payment_title
+                  .toLowerCase()
+                  .includes(this.searchQuery.toLowerCase()),
+              );
+
+          return { ...payroll, _filteredCategories: filtered };
+        })
+        .filter((payroll) => {
+          const monthMatch =
+            !this.filterMonth || payroll.month === this.filterMonth;
+          const yearMatch =
+            !this.filterYear || String(payroll.year) === this.filterYear;
+          const hasCategories =
+            !this.searchQuery || payroll._filteredCategories.length > 0;
+
+          return monthMatch && yearMatch && hasCategories;
+        });
+    },
   },
 
   methods: {
     show(payroll) {
       this.show_detail[payroll] = !this.show_detail[payroll];
+    },
+
+    payrollHeadcount(payroll) {
+      const sumCount = (cats) =>
+        cats.reduce(
+          (sum, c) =>
+            sum + (parseInt(String(c.head_count).replace(/,/g, ''), 10) || 0),
+          0,
+        );
+      const total =
+        sumCount(payroll.categories) + sumCount(payroll.other_categories);
+
+      return total.toLocaleString();
+    },
+
+    clearFilters() {
+      this.searchQuery = '';
+      this.filterMonth = '';
+      this.filterYear = '';
     },
 
     saveSchedule() {
@@ -471,3 +713,23 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
+  max-height: 2000px;
+}
+</style>
