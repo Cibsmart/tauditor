@@ -344,6 +344,7 @@
                             </div>
                           </form>
                           <Button
+                            v-if="!category.uploaded"
                             size="sm"
                             variant="destructive"
                             @click="destroy(category.id)"
