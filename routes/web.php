@@ -94,6 +94,10 @@ Route::middleware('auth')->group(function () {
             'other_audit_schedule/store',
             [OtherAuditPayrollController::class, 'storeSchedule']
         )->name('store.schedule');
+        Route::post(
+            'other_audit_payroll/{other_audit_payroll_category}/destroy',
+            [OtherAuditPayrollController::class, 'destroy']
+        )->name('destroy');
     });
 });
 

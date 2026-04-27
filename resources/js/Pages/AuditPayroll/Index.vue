@@ -320,24 +320,38 @@
                             View Schedule
                           </Link>
                         </Button>
-                        <form
-                          v-else
-                          :key="category.id"
-                          @submit.prevent="upload(category.id)"
-                        >
-                          <div class="flex items-center justify-end gap-2">
-                            <file-input
-                              v-model="file.schedule_file[category.id]"
-                              :errors="file.errors.schedule_file"
-                              accept="file/*"
-                              class="w-full"
-                              type="file"
-                            />
-                            <Button size="sm" type="submit" variant="secondary">
-                              Upload
-                            </Button>
-                          </div>
-                        </form>
+                        <div v-else class="flex items-center justify-end gap-2">
+                          <form
+                            :key="category.id"
+                            class="flex-1"
+                            @submit.prevent="upload(category.id)"
+                          >
+                            <div class="flex items-center justify-end gap-2">
+                              <file-input
+                                v-model="file.schedule_file[category.id]"
+                                :errors="file.errors.schedule_file"
+                                accept="file/*"
+                                class="w-full"
+                                type="file"
+                              />
+                              <Button
+                                size="sm"
+                                type="submit"
+                                variant="secondary"
+                              >
+                                Upload
+                              </Button>
+                            </div>
+                          </form>
+                          <Button
+                            v-if="!category.uploaded"
+                            size="sm"
+                            variant="destructive"
+                            @click="destroy(category.id)"
+                          >
+                            Delete
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   </TableBody>
@@ -346,9 +360,10 @@
             </div>
 
             <p class="mt-2 pr-2 text-right text-sm text-muted-foreground">
+              ₦{{ payrollTotalAmount(payroll) }} &middot;
+              {{ payrollHeadcount(payroll) }} headcount &middot;
               {{ payroll.categories.length + payroll.other_categories.length }}
-              categories &middot; {{ payrollHeadcount(payroll) }} total
-              headcount
+              categories
             </p>
           </CardContent>
         </Transition>
@@ -447,7 +462,14 @@
           <Button type="button" variant="outline" @click="closeModal">
             Cancel
           </Button>
-          <Button type="button" @click="saveSchedule"> Save</Button>
+          <Button
+            :disabled="form.processing"
+            type="button"
+            @click="saveSchedule"
+          >
+            <Spinner v-if="form.processing" class="mr-2" />
+            Save
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -482,6 +504,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/Components/ui/select';
+import { Spinner } from '@/Components/ui/spinner';
 import {
   Table,
   TableBody,
@@ -539,6 +562,7 @@ export default {
     FolderOpen,
     LayoutList,
     Search,
+    Spinner,
   },
 
   setup() {
@@ -648,16 +672,22 @@ export default {
     },
 
     payrollHeadcount(payroll) {
-      const sumCount = (cats) =>
-        cats.reduce(
-          (sum, c) =>
-            sum + (parseInt(String(c.head_count).replace(/,/g, ''), 10) || 0),
-          0,
-        );
-      const total =
-        sumCount(payroll.categories) + sumCount(payroll.other_categories);
+      const sum = (cats) =>
+        cats.reduce((s, c) => s + (Number(c.headCount) || 0), 0);
+      const total = sum(payroll.categories) + sum(payroll.other_categories);
 
       return total.toLocaleString();
+    },
+
+    payrollTotalAmount(payroll) {
+      const sum = (cats) =>
+        cats.reduce((s, c) => s + (Number(c.totalAmount) || 0), 0);
+      const total = sum(payroll.categories) + sum(payroll.other_categories);
+
+      return total.toLocaleString('en-NG', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     },
 
     clearFilters() {
@@ -687,6 +717,24 @@ export default {
         .post('/other_audit_schedule/store', {
           preserveScroll: true,
         });
+    },
+
+    destroy(category_id) {
+      if (
+        !confirm(
+          'Are you sure you want to delete this category? This cannot be undone from the UI.',
+        )
+      ) {
+        return;
+      }
+
+      this.$inertia.post(
+        route('other_audit_payroll.destroy', {
+          other_audit_payroll_category: category_id,
+        }),
+        {},
+        { preserveScroll: true },
+      );
     },
 
     showModal(payroll_id) {
