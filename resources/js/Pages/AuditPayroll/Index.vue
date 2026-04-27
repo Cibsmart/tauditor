@@ -346,9 +346,10 @@
             </div>
 
             <p class="mt-2 pr-2 text-right text-sm text-muted-foreground">
+              ₦{{ payrollTotalAmount(payroll) }} &middot;
+              {{ payrollHeadcount(payroll) }} headcount &middot;
               {{ payroll.categories.length + payroll.other_categories.length }}
-              categories &middot; {{ payrollHeadcount(payroll) }} total
-              headcount
+              categories
             </p>
           </CardContent>
         </Transition>
@@ -648,16 +649,22 @@ export default {
     },
 
     payrollHeadcount(payroll) {
-      const sumCount = (cats) =>
-        cats.reduce(
-          (sum, c) =>
-            sum + (parseInt(String(c.head_count).replace(/,/g, ''), 10) || 0),
-          0,
-        );
-      const total =
-        sumCount(payroll.categories) + sumCount(payroll.other_categories);
+      const sum = (cats) =>
+        cats.reduce((s, c) => s + (Number(c.headCount) || 0), 0);
+      const total = sum(payroll.categories) + sum(payroll.other_categories);
 
       return total.toLocaleString();
+    },
+
+    payrollTotalAmount(payroll) {
+      const sum = (cats) =>
+        cats.reduce((s, c) => s + (Number(c.totalAmount) || 0), 0);
+      const total = sum(payroll.categories) + sum(payroll.other_categories);
+
+      return total.toLocaleString('en-NG', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     },
 
     clearFilters() {
