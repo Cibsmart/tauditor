@@ -75,4 +75,22 @@ class OtherAuditPayrollController extends Controller
 
         return redirect()->back()->with('success', 'Other Payment Schedule Successfully Uploaded');
     }
+
+    public function destroy(OtherAuditPayrollCategory $other_audit_payroll_category)
+    {
+        if ($other_audit_payroll_category->uploaded) {
+            return back()->with(
+                'error',
+                "Cannot Delete: Schedule Already Uploaded for {$other_audit_payroll_category->payment_title}"
+            );
+        }
+
+        $title = $other_audit_payroll_category->payment_title;
+
+        $other_audit_payroll_category->delete();
+
+        return redirect()
+            ->route('audit_payroll.index')
+            ->with('success', "Other Payroll Category {$title} Deleted Successfully");
+    }
 }
