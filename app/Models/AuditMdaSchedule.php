@@ -39,6 +39,11 @@ class AuditMdaSchedule extends Model
         return $this->hasMany(AuditSubMdaSchedule::class);
     }
 
+    public function microfinanceBankSchedules()
+    {
+        return $this->hasManyThrough(MicrofinanceBankSchedule::class, AuditSubMdaSchedule::class);
+    }
+
     public function auditPaySchedules()
     {
         return $this->hasManyThrough(AuditPaySchedule::class, AuditSubMdaSchedule::class);

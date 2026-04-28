@@ -38,10 +38,7 @@ class AuditAutopayController extends Controller
                         'auditMdaSchedules',
                         'auditMdaSchedules as mda_uploaded_count' => fn ($q) => $q->where('uploaded', 1),
                         'auditMdaSchedules as mda_autopay_count' => fn ($q) => $q->where('autopay_generated', 1),
-                        'auditMdaSchedules as mda_mfb_count' => fn ($q) => $q->whereHas(
-                            'auditSubMdaSchedules',
-                            fn ($q) => $q->whereHas('microfinanceSchedules')
-                        ),
+                        'auditMdaSchedules as mda_mfb_count' => fn ($q) => $q->has('microfinanceBankSchedules'),
                     ]),
                 'otherPaymentCategories' => fn ($q) => $q
                     ->with('paymentType')
@@ -117,25 +114,35 @@ class AuditAutopayController extends Controller
         }
 
         $schedules = $audit_payroll_category->auditMdaSchedules()->orderBy('mda_name')
-            ->with(['mda', 'auditPayrollCategory.auditPayroll.domain'])
+            ->with([
+                'mda',
+                'auditPayrollCategory.auditPayroll.domain',
+                'auditSubMdaSchedules' => fn ($q) => $q
+                    ->withSum('autopaySchedules', 'amount')
+                    ->withCount('autopaySchedules'),
+            ])
             ->orderBy('mda_id')
             ->paginate()
-            ->transform(fn (AuditMdaSchedule $schedule) => [
-                'id' => $schedule->id,
-                'sub_mda_id' => $schedule->auditSubMdaSchedules()->first()->id,
-                'payroll_id' => $audit_payroll_category->id,
-                'mda_id' => $schedule->mda_id,
-                'mda_name' => $schedule->mda->name,
-                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
-                'head_count' => number_format($schedule->autopayItemCount()),
-                'month' => $audit_payroll_category->auditPayroll->month_name,
-                'year' => $audit_payroll_category->auditPayroll->year,
-                'uploaded' => $schedule->autopay_uploaded,
-                'generated' => $schedule->autopay_generated,
-                'pension' => $schedule->pension,
-                'has_sub' => $schedule->has_sub,
-                'domain' => $schedule->auditPayrollCategory->auditPayroll->domain->name,
-            ]);
+            ->transform(function (AuditMdaSchedule $schedule) use ($audit_payroll_category) {
+                $firstSubMda = $schedule->auditSubMdaSchedules->first();
+
+                return [
+                    'id' => $schedule->id,
+                    'sub_mda_id' => $firstSubMda?->id,
+                    'payroll_id' => $audit_payroll_category->id,
+                    'mda_id' => $schedule->mda_id,
+                    'mda_name' => $schedule->mda->name,
+                    'total_amount' => number_format($firstSubMda?->autopay_schedules_sum_amount ?? 0, 2),
+                    'head_count' => number_format($firstSubMda?->autopay_schedules_count ?? 0),
+                    'month' => $audit_payroll_category->auditPayroll->month_name,
+                    'year' => $audit_payroll_category->auditPayroll->year,
+                    'uploaded' => $schedule->autopay_uploaded,
+                    'generated' => $schedule->autopay_generated,
+                    'pension' => $schedule->pension,
+                    'has_sub' => $schedule->has_sub,
+                    'domain' => $schedule->auditPayrollCategory->auditPayroll->domain->name,
+                ];
+            });
 
         return Inertia::render('AuditAutoPay/Show', [
             'schedules' => $schedules,
@@ -150,12 +157,14 @@ class AuditAutopayController extends Controller
 
         $schedules = $audit_mda_schedule->auditSubMdaSchedules()->orderBy('sub_mda_name')
             ->with('auditMdaSchedule.auditPayrollCategory.auditPayroll')
+            ->withSum('autopaySchedules', 'amount')
+            ->withCount('autopaySchedules')
             ->paginate()
             ->transform(fn (AuditSubMdaSchedule $schedule) => [
                 'id' => $schedule->id,
                 'sub_mda_name' => $schedule->sub_mda_name,
-                'total_amount' => number_format($schedule->autopayTotalAmount(), 2),
-                'item_count' => number_format($schedule->autopayItemCount()),
+                'total_amount' => number_format($schedule->autopay_schedules_sum_amount ?? 0, 2),
+                'item_count' => number_format($schedule->autopay_schedules_count ?? 0),
                 'month' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->month_name,
                 'year' => $audit_mda_schedule->auditPayrollCategory->auditPayroll->year,
                 'uploaded' => $schedule->autopay_uploaded,
