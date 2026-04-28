@@ -1,109 +1,150 @@
 <template>
   <div>
     <Head title="Audit Autopay" />
-    <h1 class="mb-8 text-3xl font-bold">Auto Pay Payrolls</h1>
-    <div class="mb-6 flex items-center justify-between">
-      <div></div>
+    <h1 class="mb-6 text-3xl font-bold">Auto Pay Payrolls</h1>
+
+    <!-- Filter bar -->
+    <div class="mb-6 flex flex-wrap items-center gap-3">
+      <Input
+        v-model="searchQuery"
+        class="w-64"
+        placeholder="Search payrolls…"
+      />
+      <Select v-model="filterMonth">
+        <SelectTrigger class="w-40">
+          <SelectValue placeholder="All Months" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">All Months</SelectItem>
+          <SelectItem v-for="month in uniqueMonths" :key="month" :value="month">
+            {{ month.toUpperCase() }}
+          </SelectItem>
+        </SelectContent>
+      </Select>
+      <Select v-model="filterYear">
+        <SelectTrigger class="w-32">
+          <SelectValue placeholder="All Years" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">All Years</SelectItem>
+          <SelectItem v-for="year in uniqueYears" :key="year" :value="year">
+            {{ year }}
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </div>
 
-    <div class="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Month</TableHead>
-            <TableHead>Created By</TableHead>
-            <TableHead class="text-right">Details</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody v-for="payroll in payrolls.data" :key="payroll.id">
-          <TableRow :key="payroll.id">
-            <TableCell>
-              <Link
-                class=""
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
+    <!-- Empty: no payrolls in the dataset at all -->
+    <div v-if="payrolls.data.length === 0" class="flex justify-center py-16">
+      <Card class="w-full max-w-sm">
+        <CardContent class="flex flex-col items-center gap-3 py-10 text-center">
+          <CalendarDays class="h-10 w-10 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">
+            No autopay payrolls available.
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- Empty: filters produced no results -->
+    <div
+      v-else-if="filteredPayrolls.length === 0"
+      class="flex justify-center py-16"
+    >
+      <Card class="w-full max-w-sm">
+        <CardContent class="flex flex-col items-center gap-3 py-10 text-center">
+          <Search class="h-10 w-10 text-muted-foreground" />
+          <p class="text-sm text-muted-foreground">
+            No payrolls match your filters.
+          </p>
+          <Button size="sm" variant="ghost" @click="clearFilters">
+            Clear Filters
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
+
+    <!-- Payroll cards -->
+    <div v-else class="space-y-4">
+      <Card
+        v-for="payroll in filteredPayrolls"
+        :key="payroll.id"
+        class="overflow-hidden"
+      >
+        <!-- Always-visible header — click to toggle -->
+        <CardHeader>
+          <div
+            class="flex cursor-pointer flex-col gap-3 md:flex-row md:items-center md:justify-between"
+            @click="show(payroll.id)"
+          >
+            <div class="flex items-center gap-3">
+              <ChevronUp v-if="show_detail[payroll.id]" class="h-5 w-5" />
+              <ChevronDown v-else class="h-5 w-5" />
+              <div>
+                <div class="text-base font-semibold uppercase">
+                  {{ payroll.month }} {{ payroll.year }}
+                </div>
+                <div class="text-xs text-muted-foreground">
+                  {{ payroll.created_by }} &middot; {{ payroll.date_created }}
+                </div>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2" @click.stop>
+              <Badge variant="secondary">
+                {{
+                  payroll.categories.length + payroll.other_categories.length
+                }}
+                categories
+              </Badge>
+            </div>
+          </div>
+        </CardHeader>
+
+        <!-- Collapsible detail -->
+        <Transition name="slide">
+          <CardContent v-if="show_detail[payroll.id]" class="pt-0">
+            <!-- Section A: Standard Categories -->
+            <div class="overflow-x-auto">
+              <p
+                class="mb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase"
               >
-                <div class="text-sm leading-5 font-medium uppercase">
-                  {{ payroll.month }}
-                </div>
-                <div class="text-sm leading-5 text-muted-foreground">
-                  {{ payroll.year }}
-                </div>
-              </Link>
-            </TableCell>
-            <TableCell>
-              <Link
-                class=""
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
-              >
-                <div class="text-sm leading-5">
-                  {{ payroll.created_by }}
-                </div>
-                <div class="text-sm leading-5 text-muted-foreground">
-                  {{ payroll.date_created }}
-                </div>
-              </Link>
-            </TableCell>
-            <TableCell class="w-px text-sm leading-5 font-medium">
-              <Link
-                class="px-6"
-                href="#"
-                preserve-scroll
-                preserve-state
-                @click="show(payroll.id)"
-              >
-                <icon
-                  class="block h-4 w-6 fill-gray-400"
-                  name="cheveron-right"
-                />
-              </Link>
-            </TableCell>
-          </TableRow>
-          <TableRow v-if="show_detail[payroll.id]">
-            <TableCell colspan="6">
+                Standard Categories
+              </p>
               <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Category</TableHead>
+                    <TableHead>MDA Count</TableHead>
+                    <TableHead>Uploaded</TableHead>
+                    <TableHead>Generated</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead class="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
                 <TableBody>
                   <TableRow
                     v-for="category in payroll.categories"
                     :key="category.id"
                   >
-                    <TableCell class="">
-                      {{ category.payment_title }}
-                      <span
+                    <TableCell>
+                      <div class="font-medium">
+                        {{ category.payment_title }}
+                      </div>
+                      <Badge
                         :class="
                           category.payment_type_id === 'sal'
                             ? 'bg-green-100 text-green-800'
                             : 'bg-pink-100 text-pink-800'
                         "
-                        class="rounded-full px-2 text-xs leading-5 font-semibold"
+                        variant="secondary"
                       >
                         {{ category.payment_type }}
-                      </span>
+                      </Badge>
                     </TableCell>
-                    <TableCell class="">
-                      MDA Count:
-                      <span class="font-bold">
-                        {{ category.mda_count }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="">
-                      Uploaded:
-                      <span class="font-bold">
-                        {{ category.uploaded_count }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="">
-                      Generated:
-                      <span class="font-bold">
-                        {{ category.autopay_count }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="">
+                    <TableCell>{{ category.mda_count }}</TableCell>
+                    <TableCell>{{ category.uploaded_count }}</TableCell>
+                    <TableCell>{{ category.autopay_count }}</TableCell>
+                    <TableCell>
                       <span
                         :class="status[category.autopay_status]"
                         class="rounded-full px-2 text-xs leading-5 font-semibold uppercase"
@@ -111,8 +152,8 @@
                         {{ category.autopay_status }}
                       </span>
                     </TableCell>
-                    <TableCell class="text-right">
-                      <div class="whitespace-nowrap">
+                    <TableCell>
+                      <div class="flex flex-wrap justify-end gap-1">
                         <Button
                           v-show="category.can_generate"
                           asChild
@@ -141,7 +182,6 @@
                         >
                           <Link
                             :href="route('audit_autopay.index')"
-                            class="px-5 py-3"
                             preserve-scroll
                             preserve-state
                           >
@@ -285,7 +325,6 @@
                                 audit_payroll_category: category.id,
                               })
                             "
-                            class="px-5 py-3"
                             preserve-scroll
                             preserve-state
                           >
@@ -295,74 +334,89 @@
                       </div>
                     </TableCell>
                   </TableRow>
+                </TableBody>
+              </Table>
+            </div>
 
+            <!-- Section B: Other Categories -->
+            <div
+              v-if="payroll.other_categories.length > 0"
+              class="overflow-x-auto"
+            >
+              <p
+                class="mt-4 mb-2 text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+              >
+                Other Categories
+              </p>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Line Items</TableHead>
+                    <TableHead>Uploaded</TableHead>
+                    <TableHead>Generated</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead class="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   <TableRow
                     v-for="category in payroll.other_categories"
                     :key="category.id"
                   >
-                    <TableCell class="">
-                      <div class="text-sm leading-5">
+                    <TableCell>
+                      <div class="font-medium">
                         {{ category.payment_title }}
-                        <span
-                          :class="category.color"
-                          class="rounded-full px-2 text-xs leading-5 font-semibold"
-                        >
-                          {{ category.payment_type }}
-                        </span>
                       </div>
-                      <div class="text-sm leading-5">
+                      <Badge :class="category.color">
+                        {{ category.payment_type }}
+                      </Badge>
+                      <div class="mt-1">
                         <span
                           v-if="!category.tenece && !category.fidelity"
-                          class="text-green-900 italic"
+                          class="text-xs text-green-900 italic"
                           >No Charge Applied</span
                         >
                         <span
                           v-if="category.tenece && category.fidelity"
-                          class="text-pink-900 italic"
+                          class="text-xs text-pink-900 italic"
                           >All Charges Applied</span
                         >
                         <span
                           v-if="category.tenece && !category.fidelity"
-                          class="text-blue-900 italic"
+                          class="text-xs text-blue-900 italic"
                           >Fidelity Charge not Applied</span
                         >
                       </div>
                     </TableCell>
-                    <TableCell class="">
-                      Line Items:
-                      <span class="font-bold">
-                        {{ category.line_items }}
-                      </span>
-                    </TableCell>
-                    <TableCell class="">
-                      <span
+                    <TableCell>{{ category.line_items }}</TableCell>
+                    <TableCell>
+                      <Badge
                         :class="
                           category.uploaded
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                         "
-                        class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
                       >
                         {{ category.uploaded ? 'UPLOADED' : 'NOT-UPLOADED' }}
-                      </span>
+                      </Badge>
                     </TableCell>
-                    <TableCell class="">
-                      <span
+                    <TableCell>
+                      <Badge
                         :class="
                           category.autopay_generated
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
                         "
-                        class="inline-flex rounded-full px-2 text-xs leading-5 font-semibold"
                       >
                         {{
                           category.autopay_generated
                             ? 'GENERATED'
                             : 'NOT-GENERATED'
                         }}
-                      </span>
+                      </Badge>
                     </TableCell>
-                    <TableCell class="">
+                    <TableCell>
                       <span
                         :class="status[category.autopay_status]"
                         class="rounded-full px-2 text-xs leading-5 font-semibold uppercase"
@@ -370,106 +424,126 @@
                         {{ category.autopay_status }}
                       </span>
                     </TableCell>
-                    <TableCell class="text-right">
-                      <Button v-show="category.can_generate" asChild size="sm">
-                        <Link
-                          :href="
-                            route('other_audit_autopay.generate', {
-                              other_audit_payroll_category: category.id,
-                            })
-                          "
-                          as="button"
-                          method="post"
-                          preserve-scroll
-                          preserve-state
+                    <TableCell>
+                      <div class="flex flex-wrap justify-end gap-1">
+                        <Button
+                          v-show="category.can_generate"
+                          asChild
+                          size="sm"
                         >
-                          Generate
-                        </Link>
-                      </Button>
+                          <Link
+                            :href="
+                              route('other_audit_autopay.generate', {
+                                other_audit_payroll_category: category.id,
+                              })
+                            "
+                            as="button"
+                            method="post"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            Generate
+                          </Link>
+                        </Button>
 
-                      <Link
-                        v-show="category.refreshable"
-                        :href="route('audit_autopay.index')"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        Refresh
-                      </Link>
-
-                      <Button
-                        v-show="category.viewable"
-                        asChild
-                        size="sm"
-                        variant="outline"
-                      >
-                        <a
-                          :href="
-                            route('other_audit_autopay.download', {
-                              other_audit_payroll_category: category.id,
-                            })
-                          "
+                        <Button
+                          v-show="category.refreshable"
+                          asChild
+                          size="sm"
+                          variant="ghost"
                         >
-                          Download Autopay
-                        </a>
-                      </Button>
+                          <Link
+                            :href="route('audit_autopay.index')"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            Refresh
+                          </Link>
+                        </Button>
 
-                      <span v-show="category.viewable"> | </span>
-
-                      <Button
-                        v-show="category.viewable"
-                        asChild
-                        size="sm"
-                        variant="outline"
-                      >
-                        <a
-                          :href="
-                            route('other_audit_autopay.downloadMfb', {
-                              other_audit_payroll_category: category.id,
-                            })
-                          "
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
                         >
-                          Download MFB
-                        </a>
-                      </Button>
+                          <a
+                            :href="
+                              route('other_audit_autopay.download', {
+                                other_audit_payroll_category: category.id,
+                              })
+                            "
+                          >
+                            Download Autopay
+                          </a>
+                        </Button>
 
-                      <span v-show="category.viewable"> | </span>
+                        <span v-show="category.viewable"> | </span>
 
-                      <Link
-                        v-show="category.viewable"
-                        class="px-5 py-3"
-                        href="#"
-                        preserve-scroll
-                        preserve-state
-                      >
-                        View Schedule
-                      </Link>
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="outline"
+                        >
+                          <a
+                            :href="
+                              route('other_audit_autopay.downloadMfb', {
+                                other_audit_payroll_category: category.id,
+                              })
+                            "
+                          >
+                            Download MFB
+                          </a>
+                        </Button>
+
+                        <span v-show="category.viewable"> | </span>
+
+                        <Button
+                          v-show="category.viewable"
+                          asChild
+                          size="sm"
+                          variant="ghost"
+                        >
+                          <Link
+                            v-show="category.viewable"
+                            class="px-5 py-3"
+                            href="#"
+                            preserve-scroll
+                            preserve-state
+                          >
+                            View Schedule
+                          </Link>
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-
-        <TableBody>
-          <TableRow v-if="payrolls.data.length === 0">
-            <TableCell
-              class="text-xs font-medium tracking-wider text-gray-700 uppercase"
-              colspan="6"
-            >
-              No Payroll
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
+            </div>
+          </CardContent>
+        </Transition>
+      </Card>
     </div>
+
     <pagination :links="payrolls.links" />
   </div>
 </template>
 
 <script>
-import { Link, router } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { CalendarDays, ChevronDown, ChevronUp, Search } from 'lucide-vue-next';
+import { Badge } from '@/Components/ui/badge';
 import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardHeader } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/Components/ui/select';
 import {
   Table,
   TableBody,
@@ -478,7 +552,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/Components/ui/table';
-import Icon from '@/Shared/Icon';
 import Layout from '@/Shared/Layout';
 import Pagination from '@/Shared/Pagination';
 
@@ -490,16 +563,30 @@ export default {
   },
 
   components: {
-    Icon,
+    Head,
     Link,
     Pagination,
+    Badge,
     Button,
+    Card,
+    CardContent,
+    CardHeader,
+    Input,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
     Table,
     TableHeader,
     TableBody,
     TableRow,
     TableHead,
     TableCell,
+    CalendarDays,
+    ChevronDown,
+    ChevronUp,
+    Search,
   },
 
   data() {
@@ -511,6 +598,9 @@ export default {
         incomplete: 'bg-blue-100 text-blue-800',
       },
       show_detail: [],
+      searchQuery: '',
+      filterMonth: '',
+      filterYear: '',
       pollDelay: 4000,
       pollTimeoutId: null,
       pollInFlight: false,
@@ -525,6 +615,39 @@ export default {
       return this.payrolls.data.some((p) =>
         (p.categories || []).some((c) => c.mfb_zip_status === 'building'),
       );
+    },
+
+    uniqueMonths() {
+      const months = this.payrolls.data.map((p) => p.month).filter(Boolean);
+
+      return [...new Set(months)];
+    },
+
+    uniqueYears() {
+      const years = this.payrolls.data
+        .map((p) => String(p.year))
+        .filter(Boolean);
+
+      return [...new Set(years)];
+    },
+
+    filteredPayrolls() {
+      const q = this.searchQuery.toLowerCase().trim();
+
+      return this.payrolls.data.filter((p) => {
+        const matchesSearch =
+          !q ||
+          (p.month || '').toLowerCase().includes(q) ||
+          String(p.year || '').includes(q) ||
+          (p.created_by || '').toLowerCase().includes(q);
+        const matchesMonth =
+          !this.filterMonth ||
+          (p.month || '').toLowerCase() === this.filterMonth.toLowerCase();
+        const matchesYear =
+          !this.filterYear || String(p.year || '') === String(this.filterYear);
+
+        return matchesSearch && matchesMonth && matchesYear;
+      });
     },
   },
 
@@ -558,6 +681,12 @@ export default {
   methods: {
     show(payroll) {
       this.show_detail[payroll] = !this.show_detail[payroll];
+    },
+
+    clearFilters() {
+      this.searchQuery = '';
+      this.filterMonth = '';
+      this.filterYear = '';
     },
 
     relativeTime(iso) {
@@ -737,3 +866,23 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.slide-enter-from,
+.slide-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.slide-enter-to,
+.slide-leave-from {
+  opacity: 1;
+  max-height: 3000px;
+}
+</style>

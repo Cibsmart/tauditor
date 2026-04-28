@@ -30,7 +30,23 @@ class AuditAutopayController extends Controller
     public function index()
     {
         $payrolls = Auth::user()->auditPayrolls()
-            ->with('auditPaymentCategories.mfbScheduleZip')
+            ->with([
+                'user',
+                'auditPaymentCategories' => fn ($q) => $q
+                    ->with(['mfbScheduleZip', 'paymentType'])
+                    ->withCount([
+                        'auditMdaSchedules',
+                        'auditMdaSchedules as mda_uploaded_count' => fn ($q) => $q->where('uploaded', 1),
+                        'auditMdaSchedules as mda_autopay_count' => fn ($q) => $q->where('autopay_generated', 1),
+                        'auditMdaSchedules as mda_mfb_count' => fn ($q) => $q->whereHas(
+                            'auditSubMdaSchedules',
+                            fn ($q) => $q->whereHas('microfinanceSchedules')
+                        ),
+                    ]),
+                'otherPaymentCategories' => fn ($q) => $q
+                    ->with('paymentType')
+                    ->withCount('autopaySchedules'),
+            ])
             ->orderBy('year', 'desc')
             ->orderBy('month', 'desc')
             ->paginate()
@@ -38,23 +54,23 @@ class AuditAutopayController extends Controller
                 'id' => $payroll->id,
                 'month' => $payroll->month_name,
                 'year' => $payroll->year,
-                'created_by' => $payroll->createdBy(),
+                'created_by' => $payroll->user->name,
                 'date_created' => $payroll->dateCreated(),
                 'autopay_generated' => $payroll->autopay_generated,
                 'categories' => $payroll->auditPaymentCategories
                     ->transform(function (AuditPayrollCategory $category) {
-                        $uploaded_count = $category->countOfMdasSchedulesUploaded();
-                        $autopay_count = $category->countOfMdasAutopayGenerated();
+                        $uploaded_count = $category->mda_uploaded_count;
+                        $autopay_count = $category->mda_autopay_count;
                         $status = $category->autopay_status;
                         $available = $uploaded_count - $autopay_count > 0;
 
                         return [
                             'id' => $category->id,
                             'payment_type_id' => $category->payment_type_id,
-                            'payment_type' => $category->paymentTypeName(),
+                            'payment_type' => $category->paymentType->name,
                             'payment_title' => $category->payment_title,
                             'autopay_status' => $category->autopay_status,
-                            'mda_count' => $category->mdaCount(),
+                            'mda_count' => $category->audit_mda_schedules_count,
                             'uploaded_count' => $uploaded_count,
                             'autopay_count' => $autopay_count,
                             'can_generate' => $available && $status !== 'running',
@@ -73,9 +89,9 @@ class AuditAutopayController extends Controller
                         return [
                             'id' => $category->id,
                             'payment_type_id' => $category->payment_type_id,
-                            'payment_type' => $category->paymentTypeName(),
+                            'payment_type' => $category->paymentType->name,
                             'payment_title' => $category->payment_title,
-                            'line_items' => $category->autopaySchedules->count(),
+                            'line_items' => $category->autopay_schedules_count,
                             'autopay_status' => $status,
                             'autopay_generated' => $generated,
                             'uploaded' => $uploaded,
@@ -326,7 +342,7 @@ class AuditAutopayController extends Controller
         );
 
         if (! $zip->wasRecentlyCreated) {
-            if ($zip->isBuilding() || $zip->isReady()) {
+            if ($zip->isReady() || $zip->isBuilding()) {
                 return back();
             }
 
@@ -366,7 +382,7 @@ class AuditAutopayController extends Controller
 
     private function mfbZipState(AuditPayrollCategory $category): array
     {
-        if ($category->noMfbSchedule()) {
+        if ($category->mda_mfb_count === 0) {
             return [
                 'has_mfb_schedule' => false,
                 'mfb_zip_status' => 'none',
