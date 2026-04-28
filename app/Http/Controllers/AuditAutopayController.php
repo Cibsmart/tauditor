@@ -326,7 +326,7 @@ class AuditAutopayController extends Controller
         );
 
         if (! $zip->wasRecentlyCreated) {
-            if ($zip->isBuilding() || $zip->isReady()) {
+            if ($zip->isReady()) {
                 return back();
             }
 
