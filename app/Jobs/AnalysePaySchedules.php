@@ -11,8 +11,6 @@ class AnalysePaySchedules implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 0;
-
     public function __construct(public AuditSubMdaSchedule $schedule) {}
 
     public function handle(AuditPayScheduleAction $schedule_action)

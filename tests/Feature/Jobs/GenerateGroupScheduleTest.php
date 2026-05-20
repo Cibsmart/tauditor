@@ -7,7 +7,7 @@ use Tests\Feature\Actions\AutopayTestSetup;
 
 uses(AutopayTestSetup::class);
 
-it('declares deleteWhenMissingModels so a removed AuditPayrollCategory does not produce a failed job', function () {
+it('does not silently discard missing models so failures are visible in Horizon', function () {
     $domain = $this->createDomain();
     $payroll = $this->createAuditPayroll($domain, $this->createUser($domain));
     $job = new GenerateGroupSchedule(
@@ -16,10 +16,10 @@ it('declares deleteWhenMissingModels so a removed AuditPayrollCategory does not 
         $this->createBeneficiaryType($domain),
     );
 
-    expect($job->deleteWhenMissingModels)->toBeTrue();
+    expect(isset($job->deleteWhenMissingModels) && $job->deleteWhenMissingModels)->toBeFalse();
 });
 
-it('is silently deleted by the worker when the AuditPayrollCategory is gone before processing', function () {
+it('fails visibly when the AuditPayrollCategory is gone before processing', function () {
     $domain = $this->createDomain();
     $user = $this->createUser($domain);
     $paymentType = $this->createPaymentType();
@@ -29,23 +29,20 @@ it('is silently deleted by the worker when the AuditPayrollCategory is gone befo
 
     $serialized = serialize(new GenerateGroupSchedule($domain, $category, $beneficiaryType));
 
-    // Simulate the dev-environment scenario: the row vanishes after the job
-    // is queued but before the worker restores the model.
     $category->delete();
 
     $payload = [
         'displayName' => GenerateGroupSchedule::class,
         'job' => 'Illuminate\\Queue\\CallQueuedHandler@call',
         'data' => ['commandName' => GenerateGroupSchedule::class, 'command' => $serialized],
-        'deleteWhenMissingModels' => true,
     ];
 
     $queueJob = Mockery::mock(Job::class);
     $queueJob->shouldReceive('payload')->andReturn($payload);
     $queueJob->shouldReceive('resolveQueuedJobClass')->andReturn(GenerateGroupSchedule::class);
     $queueJob->shouldReceive('uuid')->andReturn(null);
-    $queueJob->shouldReceive('delete')->once();
-    $queueJob->shouldNotReceive('fail');
+    $queueJob->shouldReceive('fail')->once();
+    $queueJob->shouldNotReceive('delete');
 
     app(CallQueuedHandler::class)->call($queueJob, $payload['data']);
 });

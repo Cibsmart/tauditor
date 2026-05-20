@@ -13,10 +13,6 @@ class GenerateGroupSchedule implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 0;
-
-    public bool $deleteWhenMissingModels = true;
-
     public function __construct(
         public Domain $domain,
         public AuditPayrollCategory $category,

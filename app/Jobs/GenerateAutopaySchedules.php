@@ -12,8 +12,6 @@ class GenerateAutopaySchedules implements ShouldQueue
 {
     use Queueable;
 
-    public int $timeout = 0;
-
     public function __construct(public Domain $domain, public AuditSubMdaSchedule $schedule) {}
 
     public function handle(GenerateAutoPayScheduleAction $auto_pay_schedule_action)
