@@ -4,35 +4,47 @@
     <h1 class="mb-6 text-3xl font-bold">Auto Pay Payrolls</h1>
 
     <!-- Filter bar -->
-    <div class="mb-6 flex flex-wrap items-center gap-3">
-      <Input
-        v-model="searchQuery"
-        class="w-64"
-        placeholder="Search payrolls…"
-      />
-      <Select v-model="filterMonth">
-        <SelectTrigger class="w-40">
-          <SelectValue placeholder="All Months" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="">All Months</SelectItem>
-          <SelectItem v-for="month in uniqueMonths" :key="month" :value="month">
-            {{ month.toUpperCase() }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
-      <Select v-model="filterYear">
-        <SelectTrigger class="w-32">
-          <SelectValue placeholder="All Years" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="">All Years</SelectItem>
-          <SelectItem v-for="year in uniqueYears" :key="year" :value="year">
-            {{ year }}
-          </SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+    <Card class="mb-6">
+      <CardContent class="flex flex-col gap-3 p-4 md:flex-row md:items-center">
+        <div class="relative flex-1">
+          <Search
+            class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            v-model="searchQuery"
+            class="pl-9"
+            placeholder="Search payrolls…"
+            type="text"
+          />
+        </div>
+        <Select v-model="filterMonth">
+          <SelectTrigger class="w-40">
+            <SelectValue placeholder="All Months" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All Months</SelectItem>
+            <SelectItem
+              v-for="month in uniqueMonths"
+              :key="month"
+              :value="month"
+            >
+              {{ month.toUpperCase() }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+        <Select v-model="filterYear">
+          <SelectTrigger class="w-32">
+            <SelectValue placeholder="All Years" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All Years</SelectItem>
+            <SelectItem v-for="year in uniqueYears" :key="year" :value="year">
+              {{ year }}
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </CardContent>
+    </Card>
 
     <!-- Empty: no payrolls in the dataset at all -->
     <div v-if="payrolls.data.length === 0" class="flex justify-center py-16">

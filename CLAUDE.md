@@ -4,25 +4,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Laravel 8 application for processing and auditing payroll in Anambra State, Nigeria. Despite the directory name `anambra_tauditor`, `composer.json`/`README.md` identify this as the Anambra Payroll project; the current branch (`taudit_staging`) focuses on the audit side.
+Laravel 13 application for processing and auditing payroll in Anambra State, Nigeria. Despite the directory name `anambra_tauditor`, `composer.json`/`README.md` identify this as the Anambra Payroll project; the active branch is `dev`.
 
-Stack: Laravel 8 (PHP ^8.0) · Inertia.js + Vue 2 · Tailwind CSS · MySQL/MariaDB (production) / SQLite in-memory (tests) · Redis + Laravel Horizon for queues · `maatwebsite/excel` for Excel I/O · `spatie/laravel-permission` for roles · `lorisleiva/laravel-actions`.
+Stack: Laravel 13 (PHP ^8.5) · Inertia.js v2 + Vue 3 · Tailwind CSS v4 · MySQL/MariaDB (production) / SQLite in-memory (tests) · Redis + Laravel Horizon for queues · `maatwebsite/excel` for Excel I/O · `spatie/laravel-permission` for roles · `lorisleiva/laravel-actions` · `laravel/nightwatch` for monitoring · `sentry/sentry-laravel` for error tracking · `barryvdh/laravel-snappy` for PDF generation.
 
 ## Common commands
 
 Backend:
+
 - `composer install` — install PHP deps
 - `php artisan serve` — run dev server
 - `php artisan migrate` / `php artisan db:seed`
 - `php artisan horizon` — run queue workers (Redis)
-- `php artisan test` or `./vendor/bin/pest` — run all tests
-- `./vendor/bin/pest --filter "test name"` or `./vendor/bin/pest tests/Unit/Foo/BarTest.php` — single test
-- `vendor/bin/phpstan analyse` — static analysis (larastan, level 0, baseline in `phpstan-baseline.neon`)
+- `php artisan test --compact` or `./vendor/bin/pest` — run all tests
+- `php artisan test --compact --filter "test name"` or `./vendor/bin/pest tests/Unit/Foo/BarTest.php` — single test
 
-Frontend (Laravel Mix / webpack):
-- `npm ci` then `npm run dev` — build assets
-- `npm run watch` — rebuild on change
-- `npm run prod` — production build
+Frontend (Vite):
+
+- `npm ci` then `npm run dev` — start Vite dev server
+- `npm run build` — production build
+- `composer run dev` — run all dev services concurrently (server + queue + logs + vite)
 
 Tests run against an in-memory SQLite DB (see `phpunit.xml`); no MySQL needed for the suite.
 
@@ -40,7 +41,7 @@ The app is a classic Laravel + Inertia monolith, but the payroll/audit domain lo
 - `app/ViewModels/` — view-model objects returned to Inertia pages, keeping controllers thin.
 - `app/Jobs/` + Horizon — long-running work (audits, sending PAYE data, deduction confirmations) is dispatched to queues; `InitiateSendDeductionConfirmation` / `SendDeductionConfirmation` illustrate the initiate-then-fan-out pattern.
 - `app/Http/` — standard Controllers / Requests / Resources / Middleware. Routes split across `routes/web.php` (Inertia pages) and `routes/api.php`.
-- Frontend lives in `resources/js` (Vue 2 + Inertia pages) and `resources/views` (Blade shells); Ziggy exposes named routes to JS.
+- Frontend lives in `resources/js` (Vue 3 + Inertia pages under `resources/js/Pages/`) and `resources/views` (Blade shells); Ziggy exposes named routes to JS. Vite handles bundling via `vite.config.js`.
 
 When touching a schedule flow, the typical call chain is: **Import (`app/Imports`) → Audit (`app/Audit/Analyse` + `Check*`) → Action (`app/Actions/*`) → Export (`app/Exports`) / Job dispatch**. Bug fixes in this area should usually land in the specific `Check*` class or the corresponding `*Import` — not in the controller.
 
@@ -239,6 +240,7 @@ This project has domain-specific skills available. You MUST activate the relevan
 # Inertia + Vue
 
 Vue components must have a single root element.
+
 - IMPORTANT: Activate `inertia-vue-development` when working with Inertia Vue client-side patterns.
 
 </laravel-boost-guidelines>
