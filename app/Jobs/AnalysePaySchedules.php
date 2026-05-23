@@ -11,10 +11,28 @@ class AnalysePaySchedules implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public AuditSubMdaSchedule $schedule) {}
+    public int $tries = 5;
 
-    public function handle(AuditPayScheduleAction $schedule_action)
+    public function __construct(public int $scheduleId) {}
+
+    public function handle(AuditPayScheduleAction $schedule_action): void
     {
-        $schedule_action->execute($this->schedule);
+        $schedule = AuditSubMdaSchedule::find($this->scheduleId);
+
+        // Under a burst dispatch the row can be momentarily invisible to this
+        // worker; release and retry rather than failing. A row that is truly
+        // gone still surfaces once $tries is exhausted.
+        if ($schedule === null) {
+            $this->release(5);
+
+            return;
+        }
+
+        // A retry may land after a prior attempt already analysed the schedule.
+        if ($schedule->analysed !== null) {
+            return;
+        }
+
+        $schedule_action->execute($schedule);
     }
 }

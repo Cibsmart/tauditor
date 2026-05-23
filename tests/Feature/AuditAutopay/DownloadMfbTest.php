@@ -91,7 +91,7 @@ it('dispatches the build job on first POST and marks status as building', functi
 
     Bus::assertDispatched(
         BuildMfbScheduleZip::class,
-        fn (BuildMfbScheduleZip $job) => $job->category->id === $category->id,
+        fn (BuildMfbScheduleZip $job) => $job->categoryId === $category->id,
     );
     expect(ScheduleZip::where('audit_payroll_category_id', $category->id)
         ->where('type', ScheduleZip::TYPE_MFB)->first()?->status)
@@ -183,7 +183,7 @@ it('builds a valid zip with mfb files when the job runs', function () {
         'status' => ScheduleZip::STATUS_BUILDING,
     ]);
 
-    (new BuildMfbScheduleZip($category))->handle();
+    (new BuildMfbScheduleZip($category->id))->handle();
 
     $path = ScheduleZip::pathFor($category->id, ScheduleZip::TYPE_MFB);
     expect(file_exists($path))->toBeTrue();
@@ -291,7 +291,7 @@ it('surfaces has_mfb_schedule=false when category has no mfb schedule rows', fun
 it('marks status as failed when the job failed() lifecycle hook fires', function () {
     ['category' => $category] = buildMfbDownloadHierarchy($this);
 
-    $job = new BuildMfbScheduleZip($category);
+    $job = new BuildMfbScheduleZip($category->id);
     $job->failed(new RuntimeException('boom'));
 
     $row = ScheduleZip::where('audit_payroll_category_id', $category->id)

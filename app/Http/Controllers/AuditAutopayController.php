@@ -198,7 +198,7 @@ class AuditAutopayController extends Controller
 
             foreach ($beneficiaryTypes as $beneficiaryType) {
                 $type = BeneficiaryType::find($beneficiaryType);
-                GenerateGroupSchedule::dispatch($domain, $category, $type);
+                GenerateGroupSchedule::dispatch($domain->id, $category->id, $type->id);
             }
         } else {
             $mdas = $category->auditMdaSchedules;
@@ -207,7 +207,7 @@ class AuditAutopayController extends Controller
                 $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->autopayNotGenerated()->get();
 
                 foreach ($sub_mdas as $sub_mda) {
-                    GenerateAutopaySchedules::dispatch($domain, $sub_mda);
+                    GenerateAutopaySchedules::dispatch($domain, $sub_mda->id);
                     $count++;
                 }
             }
@@ -362,7 +362,7 @@ class AuditAutopayController extends Controller
             ]);
         }
 
-        BuildMfbScheduleZip::dispatch($category);
+        BuildMfbScheduleZip::dispatch($category->id);
 
         return back()->with(
             'success',
