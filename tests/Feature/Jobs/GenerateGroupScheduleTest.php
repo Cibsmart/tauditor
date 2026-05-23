@@ -1,48 +1,37 @@
 <?php
 
+use App\Actions\GenerateGroupAutopayScheduleAction;
 use App\Jobs\GenerateGroupSchedule;
-use Illuminate\Contracts\Queue\Job;
-use Illuminate\Queue\CallQueuedHandler;
+use Illuminate\Contracts\Queue\Job as QueueJob;
 use Tests\Feature\Actions\AutopayTestSetup;
 
 uses(AutopayTestSetup::class);
 
-it('does not silently discard missing models so failures are visible in Horizon', function () {
-    $domain = $this->createDomain();
-    $payroll = $this->createAuditPayroll($domain, $this->createUser($domain));
-    $job = new GenerateGroupSchedule(
-        $domain,
-        $this->createAuditPayrollCategory($payroll, $this->createPaymentType()),
-        $this->createBeneficiaryType($domain),
-    );
+it('releases for a later attempt when a bound row is not yet visible', function () {
+    $job = new GenerateGroupSchedule('missing-domain', 999999, 'missing-type');
 
-    expect(isset($job->deleteWhenMissingModels) && $job->deleteWhenMissingModels)->toBeFalse();
+    $queueJob = Mockery::mock(QueueJob::class);
+    $queueJob->shouldReceive('release')->once()->with(5);
+    $job->setJob($queueJob);
+
+    $action = Mockery::mock(GenerateGroupAutopayScheduleAction::class);
+    $action->shouldNotReceive('execute');
+
+    $job->handle($action);
 });
 
-it('fails visibly when the AuditPayrollCategory is gone before processing', function () {
+it('generates the group schedule when the bound rows exist and are not yet generated', function () {
     $domain = $this->createDomain();
     $user = $this->createUser($domain);
     $paymentType = $this->createPaymentType();
-    $beneficiaryType = $this->createBeneficiaryType($domain);
     $payroll = $this->createAuditPayroll($domain, $user);
     $category = $this->createAuditPayrollCategory($payroll, $paymentType);
+    $beneficiaryType = $this->createBeneficiaryType($domain);
 
-    $serialized = serialize(new GenerateGroupSchedule($domain, $category, $beneficiaryType));
+    $job = new GenerateGroupSchedule($domain->id, $category->id, $beneficiaryType->id);
 
-    $category->delete();
+    $action = Mockery::mock(GenerateGroupAutopayScheduleAction::class);
+    $action->shouldReceive('execute')->once();
 
-    $payload = [
-        'displayName' => GenerateGroupSchedule::class,
-        'job' => 'Illuminate\\Queue\\CallQueuedHandler@call',
-        'data' => ['commandName' => GenerateGroupSchedule::class, 'command' => $serialized],
-    ];
-
-    $queueJob = Mockery::mock(Job::class);
-    $queueJob->shouldReceive('payload')->andReturn($payload);
-    $queueJob->shouldReceive('resolveQueuedJobClass')->andReturn(GenerateGroupSchedule::class);
-    $queueJob->shouldReceive('uuid')->andReturn(null);
-    $queueJob->shouldReceive('fail')->once();
-    $queueJob->shouldNotReceive('delete');
-
-    app(CallQueuedHandler::class)->call($queueJob, $payload['data']);
+    $job->handle($action);
 });

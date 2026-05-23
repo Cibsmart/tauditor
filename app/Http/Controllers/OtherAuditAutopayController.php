@@ -31,7 +31,7 @@ class OtherAuditAutopayController extends Controller
 
         $category->setAutopayStatus('running');
 
-        GenerateAutopayForOtherSchedule::dispatch($category);
+        GenerateAutopayForOtherSchedule::dispatch($category->id);
 
         //        (new GenerateAutopayOtherScheduleAction())->execute($category);
 

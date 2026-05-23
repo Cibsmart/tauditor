@@ -11,10 +11,29 @@ class GenerateAutopayForOtherSchedule implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public OtherAuditPayrollCategory $category) {}
+    public int $tries = 5;
 
-    public function handle(GenerateAutopayOtherScheduleAction $action)
+    public function __construct(public int $categoryId) {}
+
+    public function handle(GenerateAutopayOtherScheduleAction $action): void
     {
-        $action->execute($this->category);
+        $category = OtherAuditPayrollCategory::find($this->categoryId);
+
+        // Under a burst dispatch the row can be momentarily invisible to this
+        // worker; release and retry rather than failing. A row that is truly
+        // gone still surfaces once $tries is exhausted.
+        if ($category === null) {
+            $this->release(5);
+
+            return;
+        }
+
+        // A retry may land after a prior attempt already generated the autopay;
+        // skip to avoid creating duplicate schedule rows.
+        if ($category->autopay_generated !== null) {
+            return;
+        }
+
+        $action->execute($category);
     }
 }

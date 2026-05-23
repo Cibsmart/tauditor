@@ -21,16 +21,29 @@ class BuildMfbScheduleZip implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(public AuditPayrollCategory $category) {}
+    public int $tries = 5;
+
+    public function __construct(public int $categoryId) {}
 
     /**
      * @throws Throwable
      */
     public function handle(): void
     {
+        $category = AuditPayrollCategory::find($this->categoryId);
+
+        // Under a burst dispatch the row can be momentarily invisible to this
+        // worker; release and retry rather than failing. A row that is truly
+        // gone still surfaces once $tries is exhausted.
+        if ($category === null) {
+            $this->release(5);
+
+            return;
+        }
+
         ScheduleZip::updateOrCreate(
             [
-                'audit_payroll_category_id' => $this->category->id,
+                'audit_payroll_category_id' => $this->categoryId,
                 'type' => ScheduleZip::TYPE_MFB,
             ],
             [
@@ -40,7 +53,7 @@ class BuildMfbScheduleZip implements ShouldQueue
             ],
         );
 
-        $finalPath = ScheduleZip::pathFor($this->category->id, ScheduleZip::TYPE_MFB);
+        $finalPath = ScheduleZip::pathFor($this->categoryId, ScheduleZip::TYPE_MFB);
         $tmpPath = $finalPath.'.building';
 
         @mkdir(dirname($finalPath), 0755, true);
@@ -54,9 +67,9 @@ class BuildMfbScheduleZip implements ShouldQueue
         }
 
         try {
-            $this->category->domain()->group
-                ? $this->addGroupFiles($zip)
-                : $this->addFiles($zip);
+            $category->domain()->group
+                ? $this->addGroupFiles($zip, $category)
+                : $this->addFiles($zip, $category);
 
             $zip->close();
 
@@ -66,7 +79,7 @@ class BuildMfbScheduleZip implements ShouldQueue
 
             rename($tmpPath, $finalPath);
 
-            ScheduleZip::where('audit_payroll_category_id', $this->category->id)
+            ScheduleZip::where('audit_payroll_category_id', $this->categoryId)
                 ->where('type', ScheduleZip::TYPE_MFB)
                 ->update([
                     'status' => ScheduleZip::STATUS_READY,
@@ -91,7 +104,7 @@ class BuildMfbScheduleZip implements ShouldQueue
     {
         ScheduleZip::updateOrCreate(
             [
-                'audit_payroll_category_id' => $this->category->id,
+                'audit_payroll_category_id' => $this->categoryId,
                 'type' => ScheduleZip::TYPE_MFB,
             ],
             [
@@ -102,9 +115,8 @@ class BuildMfbScheduleZip implements ShouldQueue
         );
     }
 
-    private function addFiles(ZipArchive $zip): void
+    private function addFiles(ZipArchive $zip, AuditPayrollCategory $category): void
     {
-        $category = $this->category;
         $month_year = $category->monthYear();
         $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
 
@@ -135,9 +147,8 @@ class BuildMfbScheduleZip implements ShouldQueue
         }
     }
 
-    private function addGroupFiles(ZipArchive $zip): void
+    private function addGroupFiles(ZipArchive $zip, AuditPayrollCategory $category): void
     {
-        $category = $this->category;
         $month_year = $category->monthYear();
         $directory = "{$category->payment_title} - MFB SCHEDULE - {$category->id}";
 

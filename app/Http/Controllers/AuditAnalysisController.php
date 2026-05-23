@@ -107,7 +107,7 @@ class AuditAnalysisController extends Controller
             $sub_mdas = $mda->auditSubMdaSchedules()->uploaded()->notAnalysed()->get();
 
             foreach ($sub_mdas as $sub_mda) {
-                AnalysePaySchedules::dispatch($sub_mda);
+                AnalysePaySchedules::dispatch($sub_mda->id);
                 //                (new AuditPayScheduleAction)->execute($sub_mda); //Run Synchronously
                 $count++;
             }
