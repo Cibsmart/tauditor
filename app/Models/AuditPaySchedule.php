@@ -112,9 +112,9 @@ class AuditPaySchedule extends Model
         return $this->attributes['bank_code'] = self::pad($value, 3);
     }
 
-    public function setBasicPayAttribute(float $value): int
+    public function setBasicPayAttribute($value): int
     {
-        return $this->attributes['basic_pay'] = $value * 100;
+        return $this->attributes['basic_pay'] = (float) $value * 100;
     }
 
     public function getBasicPayAttribute(int $value): float
@@ -122,9 +122,9 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setTotalAllowanceAttribute(float $value): int
+    public function setTotalAllowanceAttribute($value): int
     {
-        return $this->attributes['total_allowance'] = $value * 100;
+        return $this->attributes['total_allowance'] = (float) $value * 100;
     }
 
     public function getTotalAllowanceAttribute(int $value): float
@@ -132,9 +132,9 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setTotalDeductionsAttribute(float $value): int
+    public function setTotalDeductionsAttribute($value): int
     {
-        return $this->attributes['total_deductions'] = $value * 100;
+        return $this->attributes['total_deductions'] = (float) $value * 100;
     }
 
     public function getTotalDeductionsAttribute(int $value): float
@@ -142,9 +142,9 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setTotalDuesDeductionsAttribute(float $value): int
+    public function setTotalDuesDeductionsAttribute($value): int
     {
-        return $this->attributes['total_dues_deductions'] = $value * 100;
+        return $this->attributes['total_dues_deductions'] = (float) $value * 100;
     }
 
     public function getTotalDuesDeductionsAttribute(int $value): float
@@ -152,9 +152,9 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setGrossPayAttribute(float $value): int
+    public function setGrossPayAttribute($value): int
     {
-        return $this->attributes['gross_pay'] = $value * 100;
+        return $this->attributes['gross_pay'] = (float) $value * 100;
     }
 
     public function getGrossPayAttribute(int $value): float
@@ -162,9 +162,9 @@ class AuditPaySchedule extends Model
         return $value / 100;
     }
 
-    public function setNetPayAttribute(float $value): int
+    public function setNetPayAttribute($value): int
     {
-        return $this->attributes['net_pay'] = $value * 100;
+        return $this->attributes['net_pay'] = (float) $value * 100;
     }
 
     public function getNetPayAttribute(int $value): float
