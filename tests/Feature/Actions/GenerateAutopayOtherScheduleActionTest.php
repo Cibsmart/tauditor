@@ -128,6 +128,29 @@ it('skips cash payment mfb beneficiaries', function () {
     expect(MicrofinanceOtherSchedule::all())->toHaveCount(0);
 });
 
+it('does not duplicate autopay rows when invoked twice for the same category', function () {
+    ['domain' => $domain, 'category' => $category] = buildOtherHierarchy($this, paycommEnabled: true);
+    $bank = Bank::factory()->create(['code' => '058']);
+
+    AuditOtherPaySchedule::create([
+        'other_audit_payroll_category_id' => $category->id,
+        'serial_number' => 1,
+        'beneficiary_name' => 'JOHN DOE',
+        'narration' => 'SALARY',
+        'amount' => 50000,
+        'account_number' => '1234567890',
+        'bank_name' => $bank->name,
+        'bank_code' => $bank->code,
+        'bankable_type' => 'commercial',
+        'bankable_id' => $bank->id,
+    ]);
+
+    (new GenerateAutopayOtherScheduleAction)->execute($category);
+    (new GenerateAutopayOtherScheduleAction)->execute($category->fresh());
+
+    expect(AutopayOtherSchedule::all())->toHaveCount(3);
+});
+
 // ── helpers ────────────────────────────────────────────────────────────
 
 function buildOtherHierarchy(object $test, bool $paycommEnabled): array
