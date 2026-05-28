@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Actions\GenerateAutopayOtherScheduleAction;
 use App\Models\OtherAuditPayrollCategory;
+use DateTimeInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 
@@ -11,9 +12,17 @@ class GenerateAutopayForOtherSchedule implements ShouldQueue
 {
     use Queueable;
 
-    public int $tries = 5;
+    public int $timeout = 180;
 
     public function __construct(public int $categoryId) {}
+
+    // Bound retries on wall-clock instead of attempt count so a worker
+    // restart or release-on-missing-row doesn't burn the budget; must
+    // be < redis retry_after (210s) to avoid concurrent re-issue.
+    public function retryUntil(): DateTimeInterface
+    {
+        return now()->addMinutes(15);
+    }
 
     public function handle(GenerateAutopayOtherScheduleAction $action): void
     {

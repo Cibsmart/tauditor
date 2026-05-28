@@ -58,6 +58,17 @@ class GenerateAutopayOtherScheduleAction
 
     private function generateAutoPaySchedule()
     {
+        // Re-fetch under a row lock so a concurrent re-issue of the job
+        // waits here and observes autopay_generated once we commit,
+        // preventing duplicate autopaySchedules rows.
+        $locked = OtherAuditPayrollCategory::lockForUpdate()->find($this->category->id);
+
+        if ($locked === null || $locked->autopay_generated !== null) {
+            return;
+        }
+
+        $this->category = $locked;
+
         $schedules = $this->category->auditOtherPaySchedules;
 
         $payroll = $this->category->auditPayroll;
