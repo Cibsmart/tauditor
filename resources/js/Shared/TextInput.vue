@@ -13,7 +13,7 @@
       :class="{ error: errors.length }"
       :type="type"
       :value="modelValue"
-      class="form-input block w-full rounded focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+      class="form-input block w-full rounded border border-input bg-background text-foreground placeholder:text-muted-foreground focus:shadow focus:outline-none sm:text-sm sm:leading-5"
       v-bind="$attrs"
       @input="$emit('update:modelValue', $event.target.value)"
     />

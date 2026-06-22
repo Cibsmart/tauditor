@@ -58,6 +58,10 @@ class RolesAndPermissionsSeeder extends Seeder
             'download_mfb_schedule',
             'update_salary_structure',
 
+            // MDAs
+            'view_mdas',
+            'create_mdas',
+
             // Users, Roles & Permissions
             'view_users',
             'create_users',
@@ -98,6 +102,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'view_payment_summary',
             'view_category_report',
             'view_beneficiary_report',
+            'view_mdas',
+            'create_mdas',
         );
 
         $hod->givePermissionTo($permissions);

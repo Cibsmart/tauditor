@@ -52,10 +52,10 @@ trait AutopayTestSetup
         ]);
     }
 
-    public function createMda(BeneficiaryType $beneficiaryType): Mda
+    public function createMda(BeneficiaryType $beneficiaryType, string $code = 'MDA01'): Mda
     {
         return Mda::create([
-            'code' => 'MDA01',
+            'code' => $code,
             'name' => 'Test MDA',
             'beneficiary_type_id' => $beneficiaryType->id,
         ]);
