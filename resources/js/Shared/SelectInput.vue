@@ -12,7 +12,7 @@
       ref="input"
       v-model="selected"
       :class="{ 'rounded border border-red-500 pt-px': errors.length }"
-      class="mt-1 block w-full form-select py-2 pr-10 pl-3 text-base leading-6 transition duration-150 ease-in-out focus:shadow focus:outline-none sm:text-sm sm:leading-5"
+      class="mt-1 block w-full form-select border border-input bg-background py-2 pr-10 pl-3 text-base leading-6 text-foreground transition duration-150 ease-in-out focus:shadow focus:outline-none sm:text-sm sm:leading-5"
       v-bind="$attrs"
     >
       <slot />
