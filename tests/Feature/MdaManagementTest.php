@@ -34,7 +34,9 @@ it('creates an MDA without sub-MDAs', function () {
 
     $mda = Mda::where('code', 'EDU')->first();
     expect($mda)->not->toBeNull();
-    expect($mda->name)->toBe('Ministry of Education');
+    // Code and name are stored capitalized.
+    expect($mda->code)->toBe('EDU');
+    expect($mda->name)->toBe('MINISTRY OF EDUCATION');
     expect($mda->has_sub)->toBeFalse();
     expect($mda->active)->toBeTrue();
     expect($mda->subs()->count())->toBe(0);
@@ -59,6 +61,26 @@ it('creates an MDA with its sub-MDAs in one submit', function () {
     $subs = SubMda::where('mda_id', $mda->id)->pluck('name')->all();
     expect($subs)->toHaveCount(2);
     expect($subs)->toContain('Primary Healthcare', 'Hospital Management Board');
+});
+
+it('rejects a duplicate MDA code regardless of case', function () {
+    ['user' => $user, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    Mda::create([
+        'code' => 'EDU',
+        'name' => 'EXISTING MDA',
+        'beneficiary_type_id' => $beneficiaryType->id,
+    ]);
+
+    $response = $this->actingAs($user)->post(route('mdas.store'), [
+        'code' => 'edu',
+        'name' => 'Ministry of Education',
+        'beneficiary_type_id' => $beneficiaryType->id,
+        'has_sub' => false,
+    ]);
+
+    $response->assertSessionHasErrors('code');
+    expect(Mda::where('code', 'EDU')->count())->toBe(1);
 });
 
 it('fails validation when has_sub is true but no sub-MDAs are given', function () {

@@ -54,8 +54,13 @@ class MdaController extends Controller
 
         $domain = Auth::user()->domain;
 
+        $request->merge([
+            'code' => Str::upper(trim((string) $request->code)),
+            'name' => Str::upper(trim((string) $request->name)),
+        ]);
+
         $request->validate([
-            'code' => ['required', 'string', 'max:20'],
+            'code' => ['required', 'string', 'max:20', Rule::unique('mdas', 'code')],
             'name' => ['required', 'string'],
             'beneficiary_type_id' => [
                 'required',
@@ -70,7 +75,7 @@ class MdaController extends Controller
 
         DB::transaction(function () use ($request) {
             $mda = Mda::create([
-                'code' => Str::upper($request->code),
+                'code' => $request->code,
                 'name' => $request->name,
                 'beneficiary_type_id' => $request->beneficiary_type_id,
                 'has_sub' => $request->has_sub,

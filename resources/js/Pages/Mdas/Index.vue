@@ -99,7 +99,7 @@
           <text-input
             v-model="form.name"
             :errors="form.errors.name"
-            class="w-full"
+            class="w-full uppercase"
             label="MDA Name"
             required
           />
