@@ -107,7 +107,7 @@ it('only processes schedules matching the given beneficiary type', function () {
 
     // A second sub_mda under a different MDA whose beneficiary type differs
     $otherType = createSecondBeneficiaryType($domain);
-    $otherMda = $this->createMda($otherType);
+    $otherMda = $this->createMda($otherType, 'MDA02');
     $otherMdaSchedule = $this->createAuditMdaSchedule($category, $otherMda);
     $otherSubMda = $this->createAuditSubMdaSchedule($otherMdaSchedule);
 

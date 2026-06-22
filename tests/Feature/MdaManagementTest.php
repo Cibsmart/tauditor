@@ -157,3 +157,125 @@ it('forbids a user with only view_mdas from storing an MDA', function () {
     $response->assertForbidden();
     expect(Mda::where('code', 'NOACCESS')->exists())->toBeFalse();
 });
+
+it('updates an MDA name and stores it capitalized', function () {
+    ['user' => $user, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    $mda = Mda::create([
+        'code' => 'EDU',
+        'name' => 'OLD NAME',
+        'beneficiary_type_id' => $beneficiaryType->id,
+    ]);
+
+    $response = $this->actingAs($user)->patch(route('mdas.update', ['mda' => $mda->id]), [
+        'name' => 'Ministry of Education',
+    ]);
+
+    $response->assertRedirect(route('mdas.index'));
+    expect($mda->fresh()->name)->toBe('MINISTRY OF EDUCATION');
+    // Code is untouched by an update.
+    expect($mda->fresh()->code)->toBe('EDU');
+});
+
+it('toggles an MDA between active and inactive', function () {
+    ['user' => $user, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    $mda = Mda::create([
+        'code' => 'EDU',
+        'name' => 'EDU MDA',
+        'beneficiary_type_id' => $beneficiaryType->id,
+        'active' => true,
+    ]);
+
+    $this->actingAs($user)->post(route('mdas.toggle_active', ['mda' => $mda->id]));
+    expect($mda->fresh()->active)->toBeFalse();
+
+    $this->actingAs($user)->post(route('mdas.toggle_active', ['mda' => $mda->id]));
+    expect($mda->fresh()->active)->toBeTrue();
+});
+
+it('adds sub-MDAs to an existing MDA and flips has_sub', function () {
+    ['user' => $user, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    $mda = Mda::create([
+        'code' => 'HEALTH',
+        'name' => 'HEALTH MDA',
+        'beneficiary_type_id' => $beneficiaryType->id,
+        'has_sub' => false,
+    ]);
+
+    $response = $this->actingAs($user)->post(route('mdas.subs.store', ['mda' => $mda->id]), [
+        'sub_mdas' => ['Primary Healthcare', 'Hospital Management Board'],
+    ]);
+
+    $response->assertRedirect(route('mdas.index'));
+    expect($mda->fresh()->has_sub)->toBeTrue();
+
+    $subs = SubMda::where('mda_id', $mda->id)->pluck('name')->all();
+    expect($subs)->toHaveCount(2);
+    expect($subs)->toContain('Primary Healthcare', 'Hospital Management Board');
+});
+
+it('fails validation when adding sub-MDAs with an empty list', function () {
+    ['user' => $user, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    $mda = Mda::create([
+        'code' => 'WORKS',
+        'name' => 'WORKS MDA',
+        'beneficiary_type_id' => $beneficiaryType->id,
+    ]);
+
+    $response = $this->actingAs($user)->post(route('mdas.subs.store', ['mda' => $mda->id]), [
+        'sub_mdas' => [],
+    ]);
+
+    $response->assertSessionHasErrors('sub_mdas');
+    expect(SubMda::where('mda_id', $mda->id)->count())->toBe(0);
+});
+
+it('forbids managing an MDA from another domain', function () {
+    ['user' => $user] = mdaManagerWithDomain($this);
+
+    $otherDomain = Domain::create(['id' => 'other-domain', 'name' => 'Other Domain']);
+    $otherType = BeneficiaryType::create([
+        'id' => 'bt-other',
+        'name' => 'Staff',
+        'domain_id' => $otherDomain->id,
+    ]);
+    $foreignMda = Mda::create([
+        'code' => 'FOREIGN',
+        'name' => 'FOREIGN MDA',
+        'beneficiary_type_id' => $otherType->id,
+    ]);
+
+    $this->actingAs($user)
+        ->patch(route('mdas.update', ['mda' => $foreignMda->id]), ['name' => 'Hijacked'])
+        ->assertForbidden();
+
+    $this->actingAs($user)
+        ->post(route('mdas.toggle_active', ['mda' => $foreignMda->id]))
+        ->assertForbidden();
+
+    $this->actingAs($user)
+        ->post(route('mdas.subs.store', ['mda' => $foreignMda->id]), ['sub_mdas' => ['X']])
+        ->assertForbidden();
+
+    expect($foreignMda->fresh()->name)->toBe('FOREIGN MDA');
+});
+
+it('forbids a user with only view_mdas from editing an MDA', function () {
+    ['domain' => $domain, 'beneficiaryType' => $beneficiaryType] = mdaManagerWithDomain($this);
+
+    $viewer = $this->createUser($domain);
+    $viewer->givePermissionTo('view_mdas');
+
+    $mda = Mda::create([
+        'code' => 'EDU',
+        'name' => 'EDU MDA',
+        'beneficiary_type_id' => $beneficiaryType->id,
+    ]);
+
+    $this->actingAs($viewer)
+        ->patch(route('mdas.update', ['mda' => $mda->id]), ['name' => 'No Access'])
+        ->assertForbidden();
+});

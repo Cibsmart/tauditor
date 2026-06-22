@@ -28,6 +28,7 @@ class MdaController extends Controller
         $mdas = Mda::query()
             ->whereIn('beneficiary_type_id', $domain->beneficiaryTypes()->pluck('id'))
             ->withCount('subs')
+            ->with('subs:id,mda_id,name')
             ->orderBy('name')
             ->paginate(30)
             ->through(fn (Mda $mda) => [
@@ -37,6 +38,10 @@ class MdaController extends Controller
                 'has_sub' => $mda->has_sub,
                 'active' => $mda->active,
                 'subs_count' => $mda->subs_count,
+                'subs' => $mda->subs->map(fn ($sub) => [
+                    'id' => $sub->id,
+                    'name' => $sub->name,
+                ]),
             ]);
 
         return Inertia::render('Mdas/Index', [
@@ -93,6 +98,72 @@ class MdaController extends Controller
         });
 
         return redirect()->route('mdas.index')->with('success', 'New MDA created successfully.');
+    }
+
+    public function update(Request $request, Mda $mda)
+    {
+        $this->authorizeManage($mda);
+
+        $request->merge([
+            'name' => Str::upper(trim((string) $request->name)),
+        ]);
+
+        $request->validate([
+            'name' => ['required', 'string'],
+        ]);
+
+        $mda->update(['name' => $request->name]);
+
+        return redirect()->route('mdas.index')->with('success', 'MDA updated successfully.');
+    }
+
+    public function toggleActive(Mda $mda)
+    {
+        $this->authorizeManage($mda);
+
+        $mda->update(['active' => ! $mda->active]);
+
+        $state = $mda->active ? 'activated' : 'deactivated';
+
+        return redirect()->route('mdas.index')->with('success', "MDA {$state} successfully.");
+    }
+
+    public function addSubs(Request $request, Mda $mda)
+    {
+        $this->authorizeManage($mda);
+
+        $request->validate([
+            'sub_mdas' => ['required', 'array', 'min:1'],
+            'sub_mdas.*' => ['required', 'string'],
+        ]);
+
+        DB::transaction(function () use ($request, $mda) {
+            foreach ($request->sub_mdas as $name) {
+                $mda->subs()->create([
+                    'name' => $name,
+                    'active' => true,
+                ]);
+            }
+
+            if (! $mda->has_sub) {
+                $mda->update(['has_sub' => true]);
+            }
+        });
+
+        return redirect()->route('mdas.index')->with('success', 'Sub-MDAs added successfully.');
+    }
+
+    /**
+     * Ensure the current user may manage the given MDA: they must hold the
+     * create_mdas ability and the MDA must belong to their domain.
+     */
+    protected function authorizeManage(Mda $mda): void
+    {
+        abort_unless(Auth::user()->can('create_mdas'), 403);
+
+        $domainTypeIds = Auth::user()->domain->beneficiaryTypes()->pluck('id');
+
+        abort_unless($domainTypeIds->contains($mda->beneficiary_type_id), 403);
     }
 
     protected function getBeneficiaryTypes(Domain $domain)

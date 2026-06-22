@@ -20,6 +20,9 @@
               <TableHead>Has Sub-MDAs</TableHead>
               <TableHead>Sub-MDAs</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead v-if="can.create_mda" class="text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -63,11 +66,36 @@
                   {{ mda.active ? 'Active' : 'Inactive' }}
                 </span>
               </TableCell>
+              <TableCell v-if="can.create_mda" class="text-right">
+                <div class="flex justify-end gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    @click="openEditModal(mda)"
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    @click="openSubsModal(mda)"
+                  >
+                    Add Sub-MDAs
+                  </Button>
+                  <Button
+                    :variant="mda.active ? 'destructive' : 'secondary'"
+                    size="sm"
+                    @click="toggleActive(mda)"
+                  >
+                    {{ mda.active ? 'Deactivate' : 'Activate' }}
+                  </Button>
+                </div>
+              </TableCell>
             </TableRow>
             <TableRow v-if="mdas.data && mdas.data.length === 0">
               <TableCell
-                class="text-xs font-medium tracking-wider text-gray-700 uppercase"
-                colspan="5"
+                :colspan="can.create_mda ? 6 : 5"
+                class="text-xs font-medium tracking-wider uppercase"
               >
                 No MDA Found
               </TableCell>
@@ -165,6 +193,117 @@
         </DialogFooter>
       </DialogContent>
     </Dialog>
+
+    <Dialog
+      :open="showEditModal"
+      @update:open="(open) => !open && closeEditModal()"
+    >
+      <DialogContent class="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Edit MDA</DialogTitle>
+        </DialogHeader>
+
+        <div class="space-y-4">
+          <text-input
+            :model-value="selectedCode"
+            class="w-full uppercase"
+            disabled
+            label="MDA Code"
+          />
+
+          <text-input
+            v-model="editForm.name"
+            :errors="editForm.errors.name"
+            class="w-full uppercase"
+            label="MDA Name"
+            required
+          />
+        </div>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" @click="closeEditModal">
+            Cancel
+          </Button>
+          <Button
+            :disabled="editForm.processing"
+            type="button"
+            @click="updateMda"
+          >
+            <Spinner v-if="editForm.processing" class="mr-2" />
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
+    <Dialog
+      :open="showSubsModal"
+      @update:open="(open) => !open && closeSubsModal()"
+    >
+      <DialogContent class="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Add Sub-MDAs to {{ selectedCode }}</DialogTitle>
+        </DialogHeader>
+
+        <div class="space-y-4">
+          <div v-if="selectedExistingSubs.length">
+            <label class="mb-2 block select-none">Existing Sub-MDAs</label>
+            <ul class="list-inside list-disc text-sm uppercase">
+              <li v-for="sub in selectedExistingSubs" :key="sub.id">
+                {{ sub.name }}
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <label class="mb-2 block select-none">New Sub-MDAs</label>
+            <div
+              v-for="(sub, index) in subsForm.sub_mdas"
+              :key="index"
+              class="mb-3 flex items-start gap-3"
+            >
+              <text-input
+                v-model="subsForm.sub_mdas[index]"
+                :errors="subsForm.errors[`sub_mdas.${index}`]"
+                :label="null"
+                class="flex-1"
+              />
+              <Button
+                size="sm"
+                type="button"
+                variant="outline"
+                @click="removeNewSub(index)"
+              >
+                Remove
+              </Button>
+            </div>
+            <div
+              v-if="subsForm.errors.sub_mdas"
+              class="mb-3 text-sm text-red-800"
+            >
+              {{ subsForm.errors.sub_mdas }}
+            </div>
+            <Button type="button" variant="outline" @click="addNewSub">
+              Add Sub-MDA
+            </Button>
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button type="button" variant="outline" @click="closeSubsModal">
+            Cancel
+          </Button>
+          <Button
+            :disabled="subsForm.processing"
+            type="button"
+            @click="saveSubs"
+          >
+            <Spinner v-if="subsForm.processing" class="mr-2" />
+            Save
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   </div>
 </template>
 
@@ -231,12 +370,25 @@ export default {
       sub_mdas: [],
     });
 
-    return { form };
+    const editForm = useForm({
+      name: null,
+    });
+
+    const subsForm = useForm({
+      sub_mdas: [],
+    });
+
+    return { form, editForm, subsForm };
   },
 
   data() {
     return {
       showCreateModal: false,
+      showEditModal: false,
+      showSubsModal: false,
+      selectedMdaId: null,
+      selectedCode: '',
+      selectedExistingSubs: [],
     };
   },
 
@@ -276,6 +428,78 @@ export default {
         preserveScroll: true,
         onSuccess: () => this.closeModal(),
       });
+    },
+
+    openEditModal(mda) {
+      this.selectedMdaId = mda.id;
+      this.selectedCode = mda.code;
+      this.editForm.clearErrors();
+      this.editForm.name = mda.name;
+      this.showEditModal = true;
+    },
+
+    closeEditModal() {
+      this.showEditModal = false;
+      this.editForm.reset();
+      this.editForm.clearErrors();
+    },
+
+    updateMda() {
+      this.editForm.patch(
+        this.route('mdas.update', { mda: this.selectedMdaId }),
+        {
+          preserveScroll: true,
+          onSuccess: () => this.closeEditModal(),
+        },
+      );
+    },
+
+    openSubsModal(mda) {
+      this.selectedMdaId = mda.id;
+      this.selectedCode = mda.code;
+      this.selectedExistingSubs = mda.subs || [];
+      this.subsForm.reset();
+      this.subsForm.clearErrors();
+      this.subsForm.sub_mdas = [''];
+      this.showSubsModal = true;
+    },
+
+    closeSubsModal() {
+      this.showSubsModal = false;
+      this.subsForm.reset();
+      this.subsForm.clearErrors();
+    },
+
+    addNewSub() {
+      this.subsForm.sub_mdas.push('');
+    },
+
+    removeNewSub(index) {
+      this.subsForm.sub_mdas.splice(index, 1);
+    },
+
+    saveSubs() {
+      this.subsForm.post(
+        this.route('mdas.subs.store', { mda: this.selectedMdaId }),
+        {
+          preserveScroll: true,
+          onSuccess: () => this.closeSubsModal(),
+        },
+      );
+    },
+
+    toggleActive(mda) {
+      const action = mda.active ? 'deactivate' : 'activate';
+
+      if (!confirm(`Are you sure you want to ${action} ${mda.code}?`)) {
+        return;
+      }
+
+      this.$inertia.post(
+        this.route('mdas.toggle_active', { mda: mda.id }),
+        {},
+        { preserveScroll: true },
+      );
     },
   },
 };

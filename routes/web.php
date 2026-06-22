@@ -298,6 +298,9 @@ Route::group(['middleware' => ['auth', 'can:view_mdas']], function () {
     Route::name('mdas.')->group(function () {
         Route::get('mdas', [MdaController::class, 'index'])->name('index');
         Route::post('mdas/store', [MdaController::class, 'store'])->name('store');
+        Route::patch('mdas/{mda}', [MdaController::class, 'update'])->name('update');
+        Route::post('mdas/{mda}/toggle-active', [MdaController::class, 'toggleActive'])->name('toggle_active');
+        Route::post('mdas/{mda}/subs', [MdaController::class, 'addSubs'])->name('subs.store');
     });
 });
 
