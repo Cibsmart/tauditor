@@ -75,6 +75,7 @@ class HandleInertiaRequests extends Middleware
                         'canViewBeneficiaryReport' => $user->can('view_beneficiary_report'),
                         'canViewUsers' => $user->can('view_users'),
                         'canCreateUsers' => $user->can('create_users'),
+                        'canViewMdas' => $user->can('view_mdas'),
                     ] : null;
             },
         ]);

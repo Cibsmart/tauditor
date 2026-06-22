@@ -15,6 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FidelityMandateController;
 use App\Http\Controllers\InterswitchController;
 use App\Http\Controllers\ManageUserController;
+use App\Http\Controllers\MdaController;
 use App\Http\Controllers\MfbScheduleController;
 use App\Http\Controllers\OtherAuditAutopayController;
 use App\Http\Controllers\OtherAuditPayrollController;
@@ -285,6 +286,18 @@ Route::group(['middleware' => ['auth', 'can:view_users']], function () {
         Route::get('manage_users', [ManageUserController::class, 'index'])->name('index');
         Route::get('manage_users/create', [ManageUserController::class, 'create'])->name('create');
         Route::post('manage_users/store', [ManageUserController::class, 'store'])->name('store');
+    });
+});
+
+/*
+|-------------------------------------------------------------------------------
+| MDA Management Routes
+|-------------------------------------------------------------------------------
+*/
+Route::group(['middleware' => ['auth', 'can:view_mdas']], function () {
+    Route::name('mdas.')->group(function () {
+        Route::get('mdas', [MdaController::class, 'index'])->name('index');
+        Route::post('mdas/store', [MdaController::class, 'store'])->name('store');
     });
 });
 

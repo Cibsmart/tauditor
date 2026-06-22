@@ -97,6 +97,14 @@ const permissions = computed(() => page.props.permissions);
                   Manage Users
                 </Link>
               </DropdownMenuItem>
+              <DropdownMenuItem v-if="permissions.canViewMdas" as-child>
+                <Link
+                  :href="route('mdas.index')"
+                  class="flex cursor-pointer items-center gap-2"
+                >
+                  Manage MDAs
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem as-child>
                 <Link
