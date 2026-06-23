@@ -81,6 +81,21 @@ it('skips cash payment mfb beneficiaries', function () {
     expect(AutopaySchedule::all())->toHaveCount(0);
 });
 
+it('does not duplicate autopay rows when invoked twice for the same sub mda', function () {
+    ['domain' => $domain, 'subMda' => $subMda] = buildAutoPayHierarchy($this);
+    $this->createPayComms($domain);
+    $this->createCashPaymentMfb($domain);
+
+    $bank = Bank::factory()->create(['code' => '058']);
+    createAutoPaySchedule($subMda->id, $bank, '1234567890', 50000);
+
+    (new GenerateAutoPayScheduleAction)->execute($domain, $subMda);
+    (new GenerateAutoPayScheduleAction)->execute($domain, $subMda->fresh());
+
+    // Beneficiary + PayComm I + PayComm II = 3 entries, not doubled.
+    expect(AutopaySchedule::all())->toHaveCount(3);
+});
+
 // ── helpers ────────────────────────────────────────────────────────────
 
 function buildAutoPayHierarchy(object $test): array
