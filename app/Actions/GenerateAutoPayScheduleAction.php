@@ -53,12 +53,21 @@ class GenerateAutoPayScheduleAction
         DB::transaction(function () {
             $this->generateAutoPaySchedule();
         });
-
-        $this->sub_mda->autopayGenerated();
     }
 
     private function generateAutoPaySchedule()
     {
+        // Re-fetch under a row lock so a concurrent re-issue of the job
+        // waits here and observes autopay_generated once we commit,
+        // preventing duplicate autopaySchedules rows.
+        $locked = AuditSubMdaSchedule::lockForUpdate()->find($this->sub_mda->id);
+
+        if ($locked === null || $locked->autopay_generated !== null) {
+            return;
+        }
+
+        $this->sub_mda = $locked;
+
         $schedules = $this->sub_mda->auditPaySchedules;
 
         $schedule = $schedules->first();
