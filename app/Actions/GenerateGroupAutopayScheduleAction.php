@@ -88,6 +88,17 @@ class GenerateGroupAutopayScheduleAction
 
     private function generateAutoPaySchedule()
     {
+        // Re-fetch the category under a row lock so a concurrent re-issue of
+        // the job waits here and observes this beneficiary type as generated
+        // once we commit, preventing duplicate autopaySchedules rows.
+        $locked = AuditPayrollCategory::lockForUpdate()->find($this->category->id);
+
+        if ($locked === null || $locked->generatedBeneficiaryTypes()->contains($this->beneficiaryType->id)) {
+            return;
+        }
+
+        $this->category = $locked;
+
         $query = AuditPaySchedule::query()
             ->allSchedules()
             ->select(

@@ -174,6 +174,48 @@ it('only processes schedules matching the given beneficiary type', function () {
     expect($accounts)->not->toContain('9876543210');
 });
 
+it('does not duplicate autopay rows when invoked twice for the same beneficiary type', function () {
+    [
+        'domain' => $domain,
+        'category' => $category,
+        'beneficiaryType' => $beneficiaryType,
+        'subMda' => $subMda,
+    ] = buildGroupHierarchy($this);
+
+    $bank = Bank::factory()->create(['code' => '058']);
+
+    AuditPaySchedule::create([
+        'audit_sub_mda_schedule_id' => $subMda->id,
+        'verification_number' => 'VN001',
+        'beneficiary_name' => 'JOHN DOE',
+        'designation' => 'Officer',
+        'mda' => 'Test MDA',
+        'department' => 'Test Dept',
+        'basic_pay' => 30000,
+        'bank_name' => $bank->name,
+        'account_number' => '1234567890',
+        'bank_code' => $bank->code,
+        'total_allowance' => 0,
+        'total_deductions' => 0,
+        'total_dues' => 0,
+        'total_dues_deductions' => 0,
+        'gross_pay' => 50000,
+        'net_pay' => 50000,
+        'allowances' => [],
+        'deductions' => [],
+        'dues' => [],
+        'month' => '2024-03-01 00:00:00',
+        'bankable_type' => 'commercial',
+        'bankable_id' => $bank->id,
+    ]);
+
+    (new GenerateGroupAutopayScheduleAction)->execute($domain, $category, $beneficiaryType);
+    (new GenerateGroupAutopayScheduleAction)->execute($domain, $category->fresh(), $beneficiaryType);
+
+    // Beneficiary + PayComm I + PayComm II = 3 entries, not doubled.
+    expect(AutopaySchedule::all())->toHaveCount(3);
+});
+
 // ── helpers ────────────────────────────────────────────────────────────
 
 function buildGroupHierarchy(object $test): array
