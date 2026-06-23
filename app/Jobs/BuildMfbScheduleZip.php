@@ -10,6 +10,7 @@ use App\Models\BeneficiaryType;
 use App\Models\MicroFinanceBank;
 use App\Models\MicrofinanceBankSchedule;
 use App\Models\ScheduleZip;
+use DateTimeInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Str;
@@ -21,9 +22,17 @@ class BuildMfbScheduleZip implements ShouldQueue
 {
     use Queueable;
 
-    public int $tries = 5;
+    public int $timeout = 180;
 
     public function __construct(public int $categoryId) {}
+
+    // Bound retries on wall-clock instead of attempt count so a worker
+    // restart or release-on-missing-row doesn't burn the budget; must
+    // be < redis retry_after (210s) to avoid concurrent re-issue.
+    public function retryUntil(): DateTimeInterface
+    {
+        return now()->addMinutes(15);
+    }
 
     /**
      * @throws Throwable
@@ -34,7 +43,7 @@ class BuildMfbScheduleZip implements ShouldQueue
 
         // Under a burst dispatch the row can be momentarily invisible to this
         // worker; release and retry rather than failing. A row that is truly
-        // gone still surfaces once $tries is exhausted.
+        // gone still surfaces once retryUntil() lapses.
         if ($category === null) {
             $this->release(5);
 
@@ -54,7 +63,11 @@ class BuildMfbScheduleZip implements ShouldQueue
         );
 
         $finalPath = ScheduleZip::pathFor($this->categoryId, ScheduleZip::TYPE_MFB);
-        $tmpPath = $finalPath.'.building';
+
+        // Unique per attempt so a concurrent rebuild of the same category
+        // can't write to and corrupt this worker's in-progress archive
+        // before the atomic rename below.
+        $tmpPath = $finalPath.'.'.Str::random(8).'.building';
 
         @mkdir(dirname($finalPath), 0755, true);
 
