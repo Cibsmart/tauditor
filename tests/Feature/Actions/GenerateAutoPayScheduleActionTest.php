@@ -96,6 +96,18 @@ it('does not duplicate autopay rows when invoked twice for the same sub mda', fu
     expect(AutopaySchedule::all())->toHaveCount(3);
 });
 
+it('does nothing and does not throw when the sub mda has no pay schedules', function () {
+    ['domain' => $domain, 'subMda' => $subMda] = buildAutoPayHierarchy($this);
+    $this->createPayComms($domain);
+    $this->createCashPaymentMfb($domain);
+
+    // No AuditPaySchedule rows created for this sub MDA.
+    (new GenerateAutoPayScheduleAction)->execute($domain, $subMda);
+
+    expect(AutopaySchedule::all())->toHaveCount(0);
+    expect($subMda->refresh()->autopay_generated)->toBeNull();
+});
+
 // ── helpers ────────────────────────────────────────────────────────────
 
 function buildAutoPayHierarchy(object $test): array
