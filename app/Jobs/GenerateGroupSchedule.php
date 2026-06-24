@@ -9,6 +9,8 @@ use App\Models\Domain;
 use DateTimeInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class GenerateGroupSchedule implements ShouldQueue
 {
@@ -52,5 +54,26 @@ class GenerateGroupSchedule implements ShouldQueue
         }
 
         $action->execute($domain, $category, $beneficiaryType);
+    }
+
+    /**
+     * A terminal failure (timeout, exhausted retries, or thrown exception) would
+     * otherwise leave the category stuck on the 'running' status its controller
+     * set at dispatch. Mark it 'failed' so the UI reflects that generation
+     * errored, and record the reason for triage.
+     */
+    public function failed(?Throwable $exception): void
+    {
+        $category = AuditPayrollCategory::find($this->categoryId);
+
+        if ($category !== null && $category->autopay_status === 'running') {
+            $category->setAutopayStatus('failed');
+        }
+
+        Log::error('Autopay group-schedule generation failed.', [
+            'category_id' => $this->categoryId,
+            'beneficiary_type_id' => $this->beneficiaryTypeId,
+            'reason' => $exception?->getMessage(),
+        ]);
     }
 }

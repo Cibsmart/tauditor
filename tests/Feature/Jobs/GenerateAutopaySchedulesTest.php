@@ -60,3 +60,20 @@ it('skips generation when autopay was already produced by a prior attempt', func
 
     $job->handle($action);
 });
+
+it('marks the parent category failed when generation fails terminally', function () {
+    [$domain, $subMda] = makeSubMda($this);
+    $category = $subMda->payrollCategory();
+    $category->setAutopayStatus('running');
+
+    $job = new GenerateAutopaySchedules($domain, $subMda->id);
+    $job->failed(new RuntimeException('boom'));
+
+    expect($category->fresh()->autopay_status)->toBe('failed');
+});
+
+it('does not throw when the sub-MDA row is gone on failure', function () {
+    $job = new GenerateAutopaySchedules($this->createDomain(), 999999);
+
+    $job->failed(new RuntimeException('boom'));
+})->throwsNoExceptions();
