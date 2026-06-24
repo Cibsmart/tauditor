@@ -70,6 +70,14 @@ class GenerateAutoPayScheduleAction
 
         $schedules = $this->sub_mda->auditPaySchedules;
 
+        // An uploaded sub-MDA with no pay schedules has nothing to generate.
+        // Returning here avoids dereferencing a null $schedule below, which
+        // would otherwise throw on every attempt and burn the retry window
+        // until the job terminal-fails as MaxAttemptsExceeded.
+        if ($schedules->isEmpty()) {
+            return;
+        }
+
         $schedule = $schedules->first();
 
         $this->year = $schedule->month->year;

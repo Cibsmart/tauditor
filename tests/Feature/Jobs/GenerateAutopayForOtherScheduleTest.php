@@ -59,3 +59,29 @@ it('skips generation when autopay was already produced by a prior attempt', func
 
     $job->handle($action);
 });
+
+it('marks the category failed when generation fails terminally', function () {
+    $category = makeOtherCategory($this);
+    $category->setAutopayStatus('running');
+
+    $job = new GenerateAutopayForOtherSchedule($category->id);
+    $job->failed(new RuntimeException('boom'));
+
+    expect($category->fresh()->autopay_status)->toBe('failed');
+});
+
+it('leaves an already completed status untouched on failure', function () {
+    $category = makeOtherCategory($this);
+    $category->setAutopayStatus('completed');
+
+    $job = new GenerateAutopayForOtherSchedule($category->id);
+    $job->failed(new RuntimeException('boom'));
+
+    expect($category->fresh()->autopay_status)->toBe('completed');
+});
+
+it('does not throw when the category row is gone on failure', function () {
+    $job = new GenerateAutopayForOtherSchedule(999999);
+
+    $job->failed(new RuntimeException('boom'));
+})->throwsNoExceptions();

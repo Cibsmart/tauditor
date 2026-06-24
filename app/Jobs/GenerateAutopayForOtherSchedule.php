@@ -7,6 +7,8 @@ use App\Models\OtherAuditPayrollCategory;
 use DateTimeInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class GenerateAutopayForOtherSchedule implements ShouldQueue
 {
@@ -44,5 +46,25 @@ class GenerateAutopayForOtherSchedule implements ShouldQueue
         }
 
         $action->execute($category);
+    }
+
+    /**
+     * A terminal failure (timeout, exhausted retries, or thrown exception) would
+     * otherwise leave the category stuck on the 'running' status its controller
+     * set at dispatch. Mark it 'failed' so the UI reflects that generation
+     * errored, and record the reason for triage.
+     */
+    public function failed(?Throwable $exception): void
+    {
+        $category = OtherAuditPayrollCategory::find($this->categoryId);
+
+        if ($category !== null && $category->autopay_status === 'running') {
+            $category->setAutopayStatus('failed');
+        }
+
+        Log::error('Autopay other-schedule generation failed.', [
+            'category_id' => $this->categoryId,
+            'reason' => $exception?->getMessage(),
+        ]);
     }
 }

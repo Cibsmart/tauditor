@@ -58,3 +58,20 @@ it('skips analysis when it was already completed by a prior attempt', function (
 
     $job->handle($action);
 });
+
+it('marks the parent category failed when analysis fails terminally', function () {
+    $subMda = makeSubMdaForAnalysis($this);
+    $category = $subMda->payrollCategory();
+    $category->setAnalysisStatus('running');
+
+    $job = new AnalysePaySchedules($subMda->id);
+    $job->failed(new RuntimeException('boom'));
+
+    expect($category->fresh()->analysis_status)->toBe('failed');
+});
+
+it('does not throw when the sub-MDA row is gone on failure', function () {
+    $job = new AnalysePaySchedules(999999);
+
+    $job->failed(new RuntimeException('boom'));
+})->throwsNoExceptions();

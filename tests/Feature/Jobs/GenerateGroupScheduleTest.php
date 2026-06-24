@@ -35,3 +35,24 @@ it('generates the group schedule when the bound rows exist and are not yet gener
 
     $job->handle($action);
 });
+
+it('marks the category failed when generation fails terminally', function () {
+    $domain = $this->createDomain();
+    $user = $this->createUser($domain);
+    $paymentType = $this->createPaymentType();
+    $payroll = $this->createAuditPayroll($domain, $user);
+    $category = $this->createAuditPayrollCategory($payroll, $paymentType);
+    $beneficiaryType = $this->createBeneficiaryType($domain);
+    $category->setAutopayStatus('running');
+
+    $job = new GenerateGroupSchedule($domain->id, $category->id, $beneficiaryType->id);
+    $job->failed(new RuntimeException('boom'));
+
+    expect($category->fresh()->autopay_status)->toBe('failed');
+});
+
+it('does not throw when the category row is gone on failure', function () {
+    $job = new GenerateGroupSchedule('missing-domain', 999999, 'missing-type');
+
+    $job->failed(new RuntimeException('boom'));
+})->throwsNoExceptions();
