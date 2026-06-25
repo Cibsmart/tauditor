@@ -9,6 +9,7 @@ use App\Models\Domain;
 use DateTimeInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Throwable;
 
@@ -53,7 +54,26 @@ class GenerateGroupSchedule implements ShouldQueue
             return;
         }
 
-        $action->execute($domain, $category, $beneficiaryType);
+        // Serialize only concurrent re-issues of this same (category,
+        // beneficiary type) pair so a retry can't generate duplicate rows,
+        // while different beneficiary types of the category still run in
+        // parallel. This replaces the old category-wide row lock, which
+        // serialized every beneficiary type and timed out under MySQL's
+        // innodb_lock_wait_timeout. The TTL outlives the job timeout (180s)
+        // so the lock self-heals if a worker dies mid-run.
+        $lock = Cache::lock("group-autopay:{$this->categoryId}:{$this->beneficiaryTypeId}", 200);
+
+        if (! $lock->get()) {
+            $this->release(5);
+
+            return;
+        }
+
+        try {
+            $action->execute($domain, $category, $beneficiaryType);
+        } finally {
+            $lock->release();
+        }
     }
 
     /**
