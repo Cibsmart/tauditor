@@ -3,6 +3,7 @@
 use App\Actions\GenerateGroupAutopayScheduleAction;
 use App\Jobs\GenerateGroupSchedule;
 use Illuminate\Contracts\Queue\Job as QueueJob;
+use Illuminate\Support\Facades\Cache;
 use Tests\Feature\Actions\AutopayTestSetup;
 
 uses(AutopayTestSetup::class);
@@ -32,6 +33,29 @@ it('generates the group schedule when the bound rows exist and are not yet gener
 
     $action = Mockery::mock(GenerateGroupAutopayScheduleAction::class);
     $action->shouldReceive('execute')->once();
+
+    $job->handle($action);
+});
+
+it('releases for a later attempt when the same beneficiary type is already being generated', function () {
+    $domain = $this->createDomain();
+    $user = $this->createUser($domain);
+    $paymentType = $this->createPaymentType();
+    $payroll = $this->createAuditPayroll($domain, $user);
+    $category = $this->createAuditPayrollCategory($payroll, $paymentType);
+    $beneficiaryType = $this->createBeneficiaryType($domain);
+
+    // Simulate a concurrent worker already holding the per-pair lock.
+    Cache::lock("group-autopay:{$category->id}:{$beneficiaryType->id}", 200)->get();
+
+    $job = new GenerateGroupSchedule($domain->id, $category->id, $beneficiaryType->id);
+
+    $queueJob = Mockery::mock(QueueJob::class);
+    $queueJob->shouldReceive('release')->once()->with(5);
+    $job->setJob($queueJob);
+
+    $action = Mockery::mock(GenerateGroupAutopayScheduleAction::class);
+    $action->shouldNotReceive('execute');
 
     $job->handle($action);
 });
